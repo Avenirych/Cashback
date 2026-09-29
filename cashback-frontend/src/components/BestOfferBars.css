@@ -1,0 +1,36 @@
+.best-offer-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar {
+  flex: 1;
+  height: 10px;
+  background: #eee;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transform-origin: left;
+  animation-name: bar-fill-anim;
+  animation-timing-function: ease-out;
+}
+
+@keyframes bar-fill-anim {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--target-width, 100%);
+  }
+}

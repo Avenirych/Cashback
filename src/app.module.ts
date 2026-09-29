@@ -1,49 +1,52 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { createObserveModule } from '@nestjs/observe';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+// Observe
+import { createObserveModule } from '@nestjs/observe';
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
+// Основные модули
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { CashbackModule } from './cashback/cashback.module';
-import { ProductsModule } from './products/products.module';
-import { PartnersModule } from './partners/partners.module';
-import { BonusModule } from './bonus/bonus.module';
-import { PriceCalculationModule } from './price-calculation/price-calculation.module';
-import { ClicksModule } from './clicks/clicks.module';
-import { TransactionsModule } from './transactions/transactions.module';
-import { PromoModule } from './promo/promo.module';
-import { SearchModule } from './search/search.module';
-import { BalanceModule } from './balance/balance.module';
+import { UserSettingsModule } from './user-settings/user-settings.module';
+import { UserHistoryModule } from './user-history/user-history.module';
+import { ModerationModule } from './moderation/moderation.module';
+import { SellerRatingModule } from './seller-rating/seller-rating.module';
 
 @Module({
   imports: [
+    // .env
     ConfigModule.forRoot({
       isGlobal: true,
     }),
 
+    // Observe
     ObserveModule.forRoot({
-      appKey: process.env.OBSERVE_APP_KEY ?? '',
-      appSecret: process.env.OBSERVE_APP_SECRET ?? '',
+      appKey: process.env.OBSERVE_APP_KEY!,
+      appSecret: process.env.OBSERVE_APP_SECRET!,
       serviceId: 'cashback-plus-backend',
     }),
 
+    // TypeORM
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+
+    // Модули проекта
     UsersModule,
     AuthModule,
-    CashbackModule,
-    ProductsModule,
-    PartnersModule,
-    BonusModule,
-    PriceCalculationModule,
-    ClicksModule,
-    TransactionsModule,
-    PromoModule,
-    SearchModule,
-    BalanceModule,
+    UserSettingsModule,
+    UserHistoryModule,
+    ModerationModule,
+    SellerRatingModule,
   ],
 })
 export class AppModule {}
-
-
-

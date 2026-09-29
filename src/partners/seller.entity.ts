@@ -1,19 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('sellers')
+@Entity()
 export class Seller {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string; // Amazon, eBay, AliExpress
+  name: string;
 
-  @Column({ nullable: true })
-  logo_url: string;
+  @Column()
+  rating: number;
 
-  @Column({ nullable: true })
-  website_url: string;
-
-  @Column({ nullable: true })
-  api_source: string; // amazon_api / awin / cj / admitad / manual
+  @Column()
+  logoUrl: string;
 }

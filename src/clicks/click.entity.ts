@@ -1,25 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from '../users/user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Offer } from '../products/offer.entity';
 import { Seller } from '../partners/seller.entity';
 
-@Entity('clicks')
+@Entity()
 export class Click {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User)
-  user: User;
+  @Column()
+  timestamp: Date;
 
   @ManyToOne(() => Offer)
   offer: Offer;
 
   @ManyToOne(() => Seller)
   seller: Seller;
-
-  @Column()
-  click_id: string; // токен для партнёрской сети
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  clicked_at: Date;
 }

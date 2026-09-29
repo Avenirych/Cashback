@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { BalanceOperation } from './balance.entity';
 import { UsersService } from '../users/users.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class BalanceService {
@@ -11,6 +12,7 @@ export class BalanceService {
     @InjectRepository(BalanceOperation)
     private readonly balanceRepo: Repository<BalanceOperation>,
     private readonly usersService: UsersService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async addOperation(userId: number, type: string, amount: number, description?: string) {
@@ -26,7 +28,6 @@ export class BalanceService {
 
     await this.balanceRepo.save(op);
 
-    // Обновляем баланс пользователя
     if (type === 'cashback' || type === 'bonus' || type === 'unfreeze') {
       user.balance = Number(user.balance) + Number(amount);
     }
@@ -36,6 +37,15 @@ export class BalanceService {
     }
 
     await this.usersService.updateBalance(userId, user.balance);
+
+    if (type === 'cashback') {
+      await this.notificationsService.send(
+        userId,
+        'cashback',
+        'Cashback added',
+        `You received £${amount} cashback`,
+      );
+    }
 
     return op;
   }

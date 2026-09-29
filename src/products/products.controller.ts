@@ -1,42 +1,58 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { PriceCalculationService } from '../price-calculation/price-calculation.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(
-    private readonly productsService: ProductsService,
-    private readonly priceService: PriceCalculationService,
-  ) {}
+  constructor(private readonly productsService: ProductsService) {}
 
-  @Get(':id/comparison/:userId')
-  async compareOffers(
-    @Param('id') id: number,
-    @Param('userId') userId: number,
-  ) {
-    const product = await this.productsService.getProduct(id);
+  @Get()
+  getAll(@Query('sort') sort?: string) {
+    return this.productsService.getAll(sort);
+  }
 
-    if (!product) {
-      throw new Error('Product not found');
-    }
+  @Get(':id/best-offer')
+  getBestOffer(@Param('id') id: string) {
+    return this.productsService.getBestOfferById(+id);
+  }
 
-    const results = [];
+  @Get('compare')
+  compare(@Query('id1') id1: string, @Query('id2') id2: string) {
+    return this.productsService.compareProducts(+id1, +id2);
+  }
 
-    for (const offer of product.offers) {
-      const calc = await this.priceService.calculateFinalPrice(userId, offer);
+  @Get('compare/table')
+  compareTable(@Query('id1') id1: string, @Query('id2') id2: string) {
+    return this.productsService.compareProducts(+id1, +id2);
+  }
 
-      results.push({
-        seller: offer.seller?.name || 'Unknown seller',
-        ...calc,
-      });
-    }
+  @Get('top/day')
+  getTopDay() {
+    return this.productsService.getTopDayBestOffers();
+  }
 
-    results.sort((a, b) => a.final_price - b.final_price);
+  @Get('top/month')
+  getTopMonth() {
+    return this.productsService.getTopMonthBestOffers();
+  }
 
-    return {
-      product: product.title,
-      best_offer: results[0],
-      offers: results,
-    };
+  @Get('top/year')
+  getTopYear() {
+    return this.productsService.getTopYearBestOffers();
+  }
+
+  @Get('top/favorites')
+  getTopFavorites(@Query('ids') ids: string) {
+    const arr = ids.split(',').map(Number);
+    return this.productsService.getTopFavorites(arr);
+  }
+
+  @Get('top/brand/:brand')
+  getTopBrand(@Param('brand') brand: string) {
+    return this.productsService.getTopBrandBestOffers(brand);
+  }
+
+  @Get('top/seller/:sellerId')
+  getTopSeller(@Param('sellerId') sellerId: string) {
+    return this.productsService.getTopSellerBestOffers(+sellerId);
   }
 }

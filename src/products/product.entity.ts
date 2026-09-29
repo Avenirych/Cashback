@@ -1,25 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Offer } from './offer.entity';
 
-@Entity('products')
+@Entity()
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
-
-  @Column()
-  brand: string;
+  name: string;
 
   @Column()
   category: string;
 
-  @Column({ nullable: true })
-  description: string;
-
-  @Column({ nullable: true })
-  image_url: string;
+  @Column()
+  imageUrl: string;
 
   @OneToMany(() => Offer, offer => offer.product)
   offers: Offer[];

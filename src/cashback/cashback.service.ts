@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -9,39 +9,23 @@ import { UsersService } from '../users/users.service';
 export class CashbackService {
   constructor(
     @InjectRepository(Transaction)
-    private readonly txRepo: Repository<Transaction>,
+    private readonly cashbackRepo: Repository<Transaction>,
     private readonly usersService: UsersService,
   ) {}
 
-  async addCashback(userId: number, amount: number, description: string) {
-    const user = await this.usersService.findOne(userId);
+  async addCashback(userId: number, amount: number) {
+    const user = await this.usersService.getById(userId);
+    if (!user) throw new BadRequestException('User not found');
 
-    if (!user) {
-      throw new Error('User not found');
-    }
+    user.balance = Number(user.balance) + Number(amount);
 
-    const tx = this.txRepo.create({
-      amount,
-      description,
+    await this.usersService.updateBalance(user.id, user.balance);
+
+    const cashback = this.cashbackRepo.create({
       user,
+      amount,
     });
 
-    await this.txRepo.save(tx);
-
-    user.balance += amount;
-    await this.usersService.update(user);
-
-    return {
-      message: 'Cashback added',
-      balance: user.balance,
-      transaction: tx,
-    };
-  }
-
-  async getHistory(userId: number) {
-    return this.txRepo.find({
-      where: { user: { id: userId } },
-      order: { createdAt: 'DESC' },
-    });
+    return this.cashbackRepo.save(cashback);
   }
 }

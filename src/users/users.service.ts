@@ -18,16 +18,20 @@ export class UsersService {
     return this.userRepo.findOne({ where: { id } });
   }
 
+  getByEmail(email: string) {
+    return this.userRepo.findOne({ where: { email } });
+  }
+
   create(data: Partial<User>) {
     const user = this.userRepo.create(data);
     return this.userRepo.save(user);
   }
 
-  async updateBalance(userId: number, amount: number) {
+  async updateBalance(userId: number, newBalance: number) {
     const user = await this.getById(userId);
     if (!user) throw new Error('User not found');
 
-    user.balance = Number(user.balance) + Number(amount);
+    user.balance = Number(newBalance);
     return this.userRepo.save(user);
   }
 }

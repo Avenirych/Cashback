@@ -1,4 +1,4 @@
-import { Controller, Post, Param } from '@nestjs/common';
+import { Controller, Post, Body, NotFoundException } from '@nestjs/common';
 import { ClicksService } from './clicks.service';
 import { ProductsService } from '../products/products.service';
 
@@ -9,19 +9,14 @@ export class ClicksController {
     private readonly productsService: ProductsService,
   ) {}
 
-  @Post(':userId/offer/:offerId')
-  async clickOffer(
-    @Param('userId') userId: number,
-    @Param('offerId') offerId: number,
-  ) {
-    const offer = await this.productsService.getOfferById(offerId);
+  @Post()
+  async registerClick(@Body() body: { offerId: number }) {
+    const offer = await this.productsService.getOfferById(body.offerId);
 
     if (!offer) {
-      throw new Error('Offer not found');
+      throw new NotFoundException(`Offer with id ${body.offerId} not found`);
     }
 
-    const result = await this.clicksService.registerClick(userId, offer);
-
-    return result;
+    return this.clicksService.registerClick(offer);
   }
 }

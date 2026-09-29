@@ -1,0 +1,81 @@
+.menu {
+  width: 240px;
+  height: 100vh;
+  background: var(--sidebar-bg);
+  color: var(--text);
+  padding: 20px;
+  box-sizing: border-box;
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+}
+
+.menu.collapsed {
+  width: 80px;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.collapse-btn,
+.theme-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.collapse-btn:hover,
+.theme-btn:hover {
+  background: var(--hover);
+}
+
+.menu-items {
+  margin-top: 20px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 17px;
+  transition: 0.25s;
+}
+
+.menu-item:hover {
+  background: var(--hover);
+  color: var(--text);
+  transform: translateX(4px);
+}
+
+.menu-item.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.menu.collapsed .menu-item {
+  justify-content: center;
+}
+
+.menu.collapsed .menu-item.active {
+  background: var(--accent);
+}
