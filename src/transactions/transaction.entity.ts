@@ -1,6 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Offer } from '../products/offer.entity';
-import { Seller } from '../partners/seller.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
+import { User } from '../users/user.entity';
+import { Click } from '../clicks/click.entity';
 
 @Entity()
 export class Transaction {
@@ -10,9 +16,12 @@ export class Transaction {
   @Column()
   amount: number;
 
-  @ManyToOne(() => Offer)
-  offer: Offer;
+  @ManyToOne(() => User)
+  user: User;
 
-  @ManyToOne(() => Seller)
-  seller: Seller;
+  @ManyToOne(() => Click, { nullable: true })
+  click: Click | null;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 }

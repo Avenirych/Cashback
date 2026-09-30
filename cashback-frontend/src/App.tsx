@@ -1,46 +1,58 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "./theme/ThemeContext";
-import "./theme/theme.css";
 
-import Menu from "./components/Menu";
+import { AuthProvider } from "./context/AuthContext";
+import { LangProvider } from "./context/LangContext";
 
-import Home from "./pages/Home";
-import BestOffers from "./pages/BestOffers";
-import Catalog from "./pages/Catalog";
-import ProductPage from "./pages/ProductPage";
-import Compare from "./pages/Compare";
-import Search from "./pages/Search";
-import Partners from "./pages/Partners";
-import Transactions from "./pages/Transactions";
-import Clicks from "./pages/Clicks";
-import Offers from "./pages/Offers";
-import Analytics from "./pages/Analytics";
-import Profile from "./pages/Profile";
+import Welcome from "./pages/Welcome";
+import Bonuses from "./pages/Bonuses";
+import BonusAds from "./pages/BonusAds";
+import BonusResearch from "./pages/BonusResearch";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import TermsAndConditions from "./pages/TermsAndConditions";
 
-export default function App() {
+import CookieConsent from "./components/CookieConsent";
+
+function App() {
   return (
-    <ThemeProvider>
-      <Router>
-        <div style={{ display: "flex", minHeight: "100vh", background: "var(--bg)" }}>
-          <Menu />
-          <main style={{ padding: "20px", flexGrow: 1 }}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/best" element={<BestOffers />} />
-              <Route path="/catalog" element={<Catalog />} />
-              <Route path="/product/:id" element={<ProductPage />} />
-              <Route path="/compare" element={<Compare />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/partners" element={<Partners />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/clicks" element={<Clicks />} />
-              <Route path="/offers" element={<Offers />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/profile" element={<Profile />} />
-            </Routes>
-          </main>
-        </div>
-      </Router>
-    </ThemeProvider>
+    <AuthProvider>
+      <LangProvider>
+        <Router>
+          {/* Cookie window appears automatically on first visit */}
+          <CookieConsent />
+
+          <Routes>
+            {/* Welcome page */}
+            <Route path="/" element={<Welcome />} />
+            <Route path="/welcome" element={<Welcome />} />
+
+            {/* Bonuses */}
+            <Route path="/bonuses" element={<Bonuses />} />
+            <Route path="/bonuses/ads" element={<BonusAds />} />
+            <Route path="/bonuses/research" element={<BonusResearch />} />
+
+            {/* Auth */}
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+
+            {/* Terms */}
+            <Route path="/terms" element={<TermsAndConditions />} />
+
+            {/* Fallback */}
+            <Route
+              path="*"
+              element={
+                <div style={{ padding: "40px", fontSize: "20px" }}>
+                  Page not found
+                </div>
+              }
+            />
+          </Routes>
+        </Router>
+      </LangProvider>
+    </AuthProvider>
   );
 }
+
+export default App;

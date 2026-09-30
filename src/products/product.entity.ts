@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Offer } from './offer.entity';
+import { Seller } from '../partners/seller.entity';
 
 @Entity()
 export class Product {
@@ -14,6 +15,9 @@ export class Product {
 
   @Column()
   imageUrl: string;
+
+  @ManyToOne(() => Seller, seller => seller.products, { nullable: true })
+  seller: Seller;
 
   @OneToMany(() => Offer, offer => offer.product)
   offers: Offer[];

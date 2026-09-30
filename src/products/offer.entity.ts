@@ -13,9 +13,15 @@ export class Offer {
   @Column()
   cashback: number;
 
+  @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
+  cashback_rate_percent: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  seller_discount: number;
+
   @ManyToOne(() => Product, product => product.offers)
   product: Product;
 
-  @ManyToOne(() => Seller)
+  @ManyToOne(() => Seller, seller => seller.offers)
   seller: Seller;
 }

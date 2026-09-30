@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Query, Param } from '@nestjs/common';
 import { ProductsService } from './products.service';
 
 @Controller('products')
@@ -10,18 +10,8 @@ export class ProductsController {
     return this.productsService.getAll(sort);
   }
 
-  @Get(':id/best-offer')
-  getBestOffer(@Param('id') id: string) {
-    return this.productsService.getBestOfferById(+id);
-  }
-
-  @Get('compare')
-  compare(@Query('id1') id1: string, @Query('id2') id2: string) {
-    return this.productsService.compareProducts(+id1, +id2);
-  }
-
-  @Get('compare/table')
-  compareTable(@Query('id1') id1: string, @Query('id2') id2: string) {
+  @Get('compare/:id1/:id2')
+  compare(@Param('id1') id1: string, @Param('id2') id2: string) {
     return this.productsService.compareProducts(+id1, +id2);
   }
 
@@ -41,18 +31,19 @@ export class ProductsController {
   }
 
   @Get('top/favorites')
-  getTopFavorites(@Query('ids') ids: string) {
-    const arr = ids.split(',').map(Number);
-    return this.productsService.getTopFavorites(arr);
+  getFavorites(@Query('ids') ids: string) {
+    return this.productsService.getTopFavorites(
+      ids.split(',').map(Number),
+    );
   }
 
   @Get('top/brand/:brand')
-  getTopBrand(@Param('brand') brand: string) {
+  getBrand(@Param('brand') brand: string) {
     return this.productsService.getTopBrandBestOffers(brand);
   }
 
   @Get('top/seller/:sellerId')
-  getTopSeller(@Param('sellerId') sellerId: string) {
+  getSeller(@Param('sellerId') sellerId: string) {
     return this.productsService.getTopSellerBestOffers(+sellerId);
   }
 }
