@@ -1,102 +1,136 @@
 import React from "react";
-import Coint1 from "../assets/Coint1.png"; // ✔ исправленный путь (без пробела)
-import { t, setLanguage, currentLanguage } from "../api";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useLang } from "../context/LangContext";
+import { translations } from "../i18n";
 
-const Welcome: React.FC = () => {
+export default function Welcome() {
+  const { user } = useAuth();
+  const isAuth = Boolean(user);
+  const navigate = useNavigate();
+  const { lang } = useLang();
+  const t = translations[lang];
+
+  const goToShopping = () => {
+    if (!isAuth) return navigate("/register");
+    navigate("/catalog");
+  };
+
+  const goToBonuses = () => {
+    if (!isAuth) return navigate("/register");
+    navigate("/bonuses");
+  };
+
   return (
     <div
       style={{
-        fontFamily: "sans-serif",
-        maxWidth: "900px",
-        margin: "0 auto",
-        padding: "20px",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: "var(--bg)",
+        color: "var(--text)",
+        fontFamily: "Segoe UI, system-ui, sans-serif",
       }}
     >
-      {/* HEADER */}
-      <header
+      <Header />
+
+      <main
         style={{
+          flex: 1,
           display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "30px",
+          alignItems: "center",
+          padding: "40px 60px",
         }}
       >
-        {/* LOGO INSTEAD OF TEXT */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div style={{ maxWidth: "520px" }}>
+          <h1 style={{ fontSize: "40px", fontWeight: 700, marginBottom: "20px" }}>
+            {t.title}
+          </h1>
+
+          <p style={{ fontSize: "18px", lineHeight: 1.6, marginBottom: "30px" }}>
+            {t.description}
+          </p>
+
+          <div style={{ display: "flex", gap: "20px" }}>
+            <button
+              onClick={goToShopping}
+              style={{
+                padding: "14px 24px",
+                background: "#0078ff",
+                color: "white",
+                borderRadius: "12px",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "16px",
+                fontWeight: 600,
+              }}
+            >
+              {t.goShopping}
+            </button>
+
+            <button
+              onClick={goToBonuses}
+              style={{
+                padding: "14px 24px",
+                background: "#ff3b3b",
+                color: "white",
+                borderRadius: "12px",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "16px",
+                fontWeight: 600,
+              }}
+            >
+              {t.getBonuses}
+            </button>
+          </div>
+
+          {!isAuth && (
+            <p
+              style={{
+                marginTop: "16px",
+                fontSize: "14px",
+                color: "var(--text-secondary)",
+              }}
+            >
+              {t.needRegister}
+            </p>
+          )}
+        </div>
+
+        {/* RIGHT IMAGE WITH TEXT */}
+        <div style={{ maxWidth: "420px", position: "relative" }}>
           <img
-            src={Coint1}
-            alt={t("logoAlt")}
-            title={t("logoTooltip")}
+            src="/assets/Oduvanchiki.jpeg"
+            alt="Oduvanchiki"
             style={{
-              width: "48px",
-              height: "48px",
-              objectFit: "contain",
+              width: "100%",
+              borderRadius: "20px",
+              boxShadow: "0 12px 32px rgba(0,0,0,0.15)",
+              objectFit: "cover",
             }}
           />
 
-          <span
+          <div
             style={{
+              position: "absolute",
+              bottom: "12px",
+              right: "16px",
+              color: "white",
               fontSize: "22px",
-              fontWeight: 700,
+              fontFamily: "'Brush Script MT', cursive",
+              textShadow: "0 0 6px rgba(0,0,0,0.6)",
             }}
           >
-            {t("logoTitle")}
-          </span>
+            {t.everythingFine}
+          </div>
         </div>
+      </main>
 
-        {/* LANGUAGE SWITCHER */}
-        <select
-          value={currentLanguage}
-          onChange={(e) => setLanguage(e.target.value as "EN" | "RU")}
-          style={{
-            padding: "6px 10px",
-            fontSize: "14px",
-          }}
-        >
-          <option value="EN">EN</option>
-          <option value="RU">RU</option>
-        </select>
-      </header>
-
-      {/* MAIN CONTENT */}
-      <h1>{t("title")}</h1>
-
-      <p style={{ fontSize: "18px", marginBottom: "10px" }}>
-        {t("description")}
-      </p>
-
-      <p style={{ fontSize: "18px", marginBottom: "20px" }}>
-        {t("everythingFine")}
-      </p>
-
-      <div style={{ display: "flex", gap: "15px", marginBottom: "20px" }}>
-        <button style={{ padding: "10px 20px", fontSize: "16px" }}>
-          {t("goShopping")}
-        </button>
-
-        <button style={{ padding: "10px 20px", fontSize: "16px" }}>
-          {t("getBonuses")}
-        </button>
-      </div>
-
-      <p style={{ color: "#888", marginBottom: "40px" }}>
-        {t("needRegister")}
-      </p>
-
-      {/* FOOTER */}
-      <footer
-        style={{
-          borderTop: "1px solid #ddd",
-          paddingTop: "20px",
-          marginTop: "40px",
-          fontSize: "14px",
-          color: "#666",
-        }}
-      >
-        © 2026 Cashback+ — {t("footerPrivacy")} • {t("footerTerms")}
-      </footer>
+      <Footer />
     </div>
   );
-};
-
-export default Welcome; // ✔ default export
+}
