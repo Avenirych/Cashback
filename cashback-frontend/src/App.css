@@ -23,9 +23,112 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+/* ВРАЩЕНИЕ МОНЕТЫ */
+@keyframes spinCoin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.logo-coin {
+  animation: spinCoin 6s linear infinite;
+  transform-style: preserve-3d;
+}
 
 .App-link {
   color: #61dafb;
+}
+
+/* ⭐ Бледно-жёлтая кнопка Necessary only */
+.cookie-btn-necessary {
+  background: #fff7c2; /* бледно-жёлтый */
+  color: #333;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.App-link {
+  color: #61dafb;
+}
+@keyframes spinCoin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+/* Вращение монеты */
+@keyframes spinCoin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+/* Увеличение по диагонали */
+.logo-wrapper {
+  display: inline-block;
+  transition: transform 0.35s ease;
+}
+
+.logo-wrapper:hover {
+  transform: 
+    scale(2.2)           /* увеличение */
+    translate(-15px, -15px) /* диагональ вверх-влево */
+    rotateZ(-4deg);      /* лёгкий наклон для глубины */
+}
+.logo-coin {
+  animation: spinCoin 6s linear infinite;
+  transform-style: preserve-3d;
+}
+
+/* Увеличение при наведении */
+.logo-wrapper {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.logo-wrapper:hover {
+  transform: scale(1.25);
+}
+
+.logo-coin {
+  animation: spinCoin 6s linear infinite;
+  transform-style: preserve-3d;
 }
 
 @keyframes App-logo-spin {

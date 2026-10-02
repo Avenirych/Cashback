@@ -4,6 +4,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LangContext";
 import { translations } from "../i18n";
+import Logo from "../assets/Coint1.png";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -22,13 +23,30 @@ export default function Header() {
         borderBottom: "1px solid var(--sidebar-border)",
       }}
     >
+      {/* ЛОГОТИП + НАЗВАНИЕ */}
       <div
-        style={{ fontSize: "26px", fontWeight: 700, cursor: "pointer" }}
+        style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
         onClick={() => navigate("/")}
       >
-        Cashback+
+        {/* Обёртка для увеличения при наведении */}
+        <div className="logo-wrapper">
+          <img
+            src={Logo}
+            alt="Cashback+ Logo"
+            className="logo-coin"
+            style={{
+              height: "48px",
+              width: "48px",
+              objectFit: "contain",
+              marginRight: "12px",
+            }}
+          />
+        </div>
+
+        <span style={{ fontSize: "26px", fontWeight: 700 }}>Cashback+</span>
       </div>
 
+      {/* МЕНЮ */}
       <nav style={{ display: "flex", gap: "24px", fontSize: "15px" }}>
         <span onClick={() => navigate("/catalog")} style={{ cursor: "pointer" }}>
           {t.menuCatalog}
@@ -44,9 +62,9 @@ export default function Header() {
         </span>
       </nav>
 
+      {/* ЯЗЫК + КНОПКА */}
       <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
         <LanguageSwitcher />
-
         <button
           onClick={() => navigate("/register")}
           style={{

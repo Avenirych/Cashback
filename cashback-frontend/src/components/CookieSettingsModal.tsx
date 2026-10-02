@@ -101,7 +101,7 @@ export default function CookieSettingsModal({ onClose }: Props) {
             fontSize: "18px",
           }}
         >
-          Настройки Cookies
+          Cookie Settings
         </h2>
 
         <p
@@ -111,34 +111,34 @@ export default function CookieSettingsModal({ onClose }: Props) {
             marginBottom: "16px",
           }}
         >
-          Вы можете выбрать, какие категории Cookies разрешены. Ваши настройки
-          сохраняются в браузере и учитываются в аналитике Cashback+.
+          You can choose which categories of cookies are allowed. Your preferences
+          are saved in your browser and used to improve Cashback+ analytics.
         </p>
 
         <Toggle
-          label="Строго необходимые"
-          description="Обеспечивают работу сервиса и корректное начисление кэшбэка."
+          label="Strictly necessary"
+          description="Ensure the service works correctly and cashback is tracked."
           value={settings.necessary}
           disabled
         />
 
         <Toggle
-          label="Аналитические"
-          description="Помогают улучшать сервис и интерфейс."
+          label="Analytics"
+          description="Help improve the service and interface."
           value={settings.analytics}
           onChange={() => update("analytics", !settings.analytics)}
         />
 
         <Toggle
-          label="Функциональные"
-          description="Сохраняют ваши настройки интерфейса и предпочтения."
+          label="Functional"
+          description="Save your interface preferences and settings."
           value={settings.functional}
           onChange={() => update("functional", !settings.functional)}
         />
 
         <Toggle
-          label="Маркетинговые"
-          description="Используются для персонализированных предложений и акций."
+          label="Marketing"
+          description="Used for personalized offers and promotions."
           value={settings.marketing}
           onChange={() => update("marketing", !settings.marketing)}
         />
@@ -152,9 +152,8 @@ export default function CookieSettingsModal({ onClose }: Props) {
             fontSize: "13px",
           }}
         >
-          GDPR: вы можете изменить своё согласие в любой момент. Настройки
-          Cookies не используются для продажи ваших персональных данных третьим
-          лицам.
+          GDPR: You can change your consent at any time. Cookie settings are not
+          used to sell your personal data to third parties.
         </div>
 
         <div
@@ -176,7 +175,7 @@ export default function CookieSettingsModal({ onClose }: Props) {
               fontSize: "13px",
             }}
           >
-            Экспорт настроек (JSON)
+            Export settings (JSON)
           </button>
 
           <button
@@ -190,7 +189,7 @@ export default function CookieSettingsModal({ onClose }: Props) {
               fontSize: "13px",
             }}
           >
-            Закрыть
+            Close
           </button>
         </div>
       </div>

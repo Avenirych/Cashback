@@ -1,0 +1,62 @@
+.cookie-window {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  z-index: 9999;
+  max-width: 600px;
+  margin: auto;
+}
+
+.cookie-text {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.cookie-buttons {
+  display: flex;
+  flex-direction: row;   /* кнопки в один ряд */
+  justify-content: flex-start; /* выравнивание слева */
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;     /* запрет переноса */
+}
+
+
+.cookie-btn-decline {
+  background: #e0e0e0;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.cookie-btn-necessary {
+  background: #f5f5f5;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.cookie-btn-settings {
+  background: #0066ff;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.cookie-btn-accept {
+  background: #00c853;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}

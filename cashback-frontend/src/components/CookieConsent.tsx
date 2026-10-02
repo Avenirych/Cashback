@@ -1,53 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import "./CookieConsent.css";
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const accepted = localStorage.getItem("cookiesAccepted");
-    if (!accepted) setVisible(true);
+    if (!accepted) {
+      setVisible(true);
+    }
   }, []);
 
-  const acceptCookies = () => {
-    localStorage.setItem("cookiesAccepted", "true");
+  const acceptAll = () => {
+    localStorage.setItem("cookiesAccepted", "all");
+    setVisible(false);
+  };
+
+  const decline = () => {
+    localStorage.setItem("cookiesAccepted", "decline");
+    setVisible(false);
+  };
+
+  const necessaryOnly = () => {
+    localStorage.setItem("cookiesAccepted", "necessary");
     setVisible(false);
   };
 
   if (!visible) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: "20px",
-        left: "20px",
-        right: "20px",
-        padding: "20px",
-        background: "var(--sidebar-bg)",
-        border: "1px solid var(--sidebar-border)",
-        borderRadius: "12px",
-        boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
-        zIndex: 9999,
-      }}
-    >
-      <p style={{ marginBottom: "16px", fontSize: "15px", lineHeight: 1.6 }}>
-        Мы используем cookies для улучшения работы сайта.
+    <div className="cookie-window">
+      <h3>Мы используем Cookies</h3>
+
+      <p className="cookie-text">
+        Cookies помогают улучшать работу сайта, сохранять ваши настройки,
+        анализировать посещаемость и показывать персональные предложения.
       </p>
 
-      <button
-        onClick={acceptCookies}
-        style={{
-          padding: "10px 18px",
-          background: "#0078ff",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: 600,
-        }}
-      >
-        Принять
-      </button>
+      <div className="cookie-buttons">
+        <button className="cookie-btn-decline" onClick={decline}>
+          Отклонить
+        </button>
+
+        <button className="cookie-btn-necessary" onClick={necessaryOnly}>
+          Только необходимые
+        </button>
+
+        <button className="cookie-btn-settings">
+          Настроить Cookies
+        </button>
+
+        <button className="cookie-btn-accept" onClick={acceptAll}>
+          Принять всё
+        </button>
+      </div>
     </div>
   );
 }

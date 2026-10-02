@@ -1,78 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import "./CookieConsent.css";
+import CookieSettingsModal from "../components/CookieSettingsModal";
+
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
-    // Проверяем, принимал ли пользователь cookies ранее
     const accepted = localStorage.getItem("cookiesAccepted");
-
-    // Если нет — показываем окно
     if (!accepted) {
       setVisible(true);
     }
   }, []);
 
-  const acceptCookies = () => {
-    // Сохраняем согласие навсегда
-    localStorage.setItem("cookiesAccepted", "true");
+  const acceptAll = () => {
+    localStorage.setItem("cookiesAccepted", "all");
+    setVisible(false);
+  };
+
+  const decline = () => {
+    localStorage.setItem("cookiesAccepted", "decline");
+    setVisible(false);
+  };
+
+  const necessaryOnly = () => {
+    localStorage.setItem("cookiesAccepted", "necessary");
     setVisible(false);
   };
 
   if (!visible) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: "20px",
-        left: "20px",
-        right: "20px",
-        padding: "20px",
-        background: "var(--sidebar-bg)",
-        border: "1px solid var(--sidebar-border)",
-        borderRadius: "12px",
-        boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
-        zIndex: 9999,
-      }}
-    >
-      <p style={{ marginBottom: "16px", fontSize: "15px", lineHeight: 1.6 }}>
-        Мы используем cookies для улучшения работы сайта и персонализации
-        контента. Продолжая пользоваться сайтом, вы соглашаетесь с нашей
-        политикой использования cookies.
+    <div className="cookie-window">
+      <h3>Allow Cookies for a better Cashback+ experience</h3>
+
+      <p className="cookie-text">
+        We use cookies to track your cashback, improve the service, and provide the best shopping experience.
+        This includes necessary cookies, analytics cookies, functional cookies, and marketing cookies.
+        You can change your cookie preferences at any time.
       </p>
 
-      <div style={{ display: "flex", gap: "12px" }}>
-        <button
-          onClick={acceptCookies}
-          style={{
-            padding: "10px 18px",
-            background: "#0078ff",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
-        >
-          Принять
+      <div className="cookie-buttons">
+        <button className="cookie-btn-decline" onClick={decline}>
+          Decline
+        </button>
+
+        <button className="cookie-btn-necessary" onClick={necessaryOnly}>
+          Necessary only
         </button>
 
         <button
-          onClick={() => alert("Настройки cookies будут доступны позже")}
-          style={{
-            padding: "10px 18px",
-            background: "var(--bg)",
-            color: "var(--text)",
-            border: "1px solid var(--sidebar-border)",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
+          className="cookie-btn-settings"
+          onClick={() => setShowSettings(true)}
         >
-          Настроить
+          Manage cookies
+        </button>
+
+        <button className="cookie-btn-accept" onClick={acceptAll}>
+          Accept all
         </button>
       </div>
+
+      {showSettings && (
+        <CookieSettingsModal onClose={() => setShowSettings(false)} />
+      )}
     </div>
   );
 }

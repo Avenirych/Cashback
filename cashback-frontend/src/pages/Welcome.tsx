@@ -29,7 +29,7 @@ export default function Welcome() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "var(--bg)",
+        background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
         color: "var(--text)",
         fontFamily: "Segoe UI, system-ui, sans-serif",
       }}
@@ -40,11 +40,13 @@ export default function Welcome() {
         style={{
           flex: 1,
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "40px 60px",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          padding: "20px 40px",
+          gap: "80px",
         }}
       >
+        {/* LEFT TEXT BLOCK */}
         <div style={{ maxWidth: "520px" }}>
           <h1 style={{ fontSize: "40px", fontWeight: 700, marginBottom: "20px" }}>
             {t.title}
