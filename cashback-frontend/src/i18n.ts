@@ -6,11 +6,21 @@ export const translations = {
     goShopping: "Go shopping",
     getBonuses: "Get bonuses",
     needRegister: "You need to register to access bonuses and shopping.",
+    everythingFine: "Everything will be fine",
+
+    // Header
+    menuCatalog: "Catalog",
+    menuPartners: "Partners",
+    menuOffers: "Offers",
+    menuTerms: "Terms",
+
+    // Footer
     footerPrivacy: "Privacy Policy",
     footerTerms: "Terms of Use",
+
+    // Auth
     profile: "Profile",
     loginRegister: "Login / Register",
-    everythingFine: "Everything will be fine",
   },
 
   RU: {
@@ -20,12 +30,20 @@ export const translations = {
     goShopping: "Перейти к покупкам",
     getBonuses: "Получить бонусы",
     needRegister: "Для доступа к бонусам и покупкам необходимо зарегистрироваться.",
+    everythingFine: "Всё будет хорошо",
+
+    // Header
+    menuCatalog: "Каталог",
+    menuPartners: "Партнёры",
+    menuOffers: "Предложения",
+    menuTerms: "Условия",
+
+    // Footer
     footerPrivacy: "Политика конфиденциальности",
     footerTerms: "Условия использования",
+
+    // Auth
     profile: "Профиль",
     loginRegister: "Вход / Регистрация",
-    everythingFine: "Everything will be fine",
   },
-
-  // остальные языки можно добавить позже
 };

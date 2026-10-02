@@ -10,7 +10,8 @@ export default function Header() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { lang } = useLang();
-  const t = translations[lang];
+  const t = translations[lang?.toUpperCase()] ?? translations["EN"];
+
   const isAuth = Boolean(user);
 
   return (

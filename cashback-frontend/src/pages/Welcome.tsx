@@ -11,7 +11,9 @@ export default function Welcome() {
   const isAuth = Boolean(user);
   const navigate = useNavigate();
   const { lang } = useLang();
-  const t = translations[lang];
+
+  // безопасное обращение к переводам
+  const t = translations[lang?.toUpperCase()] ?? translations["EN"];
 
   const goToShopping = () => {
     if (!isAuth) return navigate("/register");
@@ -49,11 +51,11 @@ export default function Welcome() {
         {/* LEFT TEXT BLOCK */}
         <div style={{ maxWidth: "520px" }}>
           <h1 style={{ fontSize: "40px", fontWeight: 700, marginBottom: "20px" }}>
-            {t.title}
+            {t.title ?? "Welcome"}
           </h1>
 
           <p style={{ fontSize: "18px", lineHeight: 1.6, marginBottom: "30px" }}>
-            {t.description}
+            {t.description ?? "Enjoy your visit!"}
           </p>
 
           <div style={{ display: "flex", gap: "20px" }}>
@@ -70,7 +72,7 @@ export default function Welcome() {
                 fontWeight: 600,
               }}
             >
-              {t.goShopping}
+              {t.goShopping ?? "Go shopping"}
             </button>
 
             <button
@@ -86,7 +88,7 @@ export default function Welcome() {
                 fontWeight: 600,
               }}
             >
-              {t.getBonuses}
+              {t.getBonuses ?? "Get bonuses"}
             </button>
           </div>
 
@@ -98,7 +100,7 @@ export default function Welcome() {
                 color: "var(--text-secondary)",
               }}
             >
-              {t.needRegister}
+              {t.needRegister ?? "Please register to continue"}
             </p>
           )}
         </div>
@@ -127,7 +129,7 @@ export default function Welcome() {
               textShadow: "0 0 6px rgba(0,0,0,0.6)",
             }}
           >
-            {t.everythingFine}
+            {t.everythingFine ?? "Everything will be fine"}
           </div>
         </div>
       </main>
