@@ -46,4 +46,52 @@ export const translations = {
     profile: "Профиль",
     loginRegister: "Вход / Регистрация",
   },
+
+  DE: {
+    title: "Smartes Einkaufen mit Cashback+",
+    description:
+      "Erhalten Sie Cashback von Geschäften, Boni für das Ansehen von Werbung und die Teilnahme an Umfragen. Kombinieren Sie sie und kompensieren Sie bis zu 100% Ihrer Einkäufe.",
+    goShopping: "Einkaufen",
+    getBonuses: "Bonus erhalten",
+    needRegister: "Sie müssen sich registrieren, um Zugriff auf Boni und Einkäufe zu erhalten.",
+    everythingFine: "Alles wird gut",
+
+    // Header
+    menuCatalog: "Katalog",
+    menuPartners: "Partner",
+    menuOffers: "Angebote",
+    menuTerms: "Bedingungen",
+
+    // Footer
+    footerPrivacy: "Datenschutzrichtlinie",
+    footerTerms: "Nutzungsbedingungen",
+
+    // Auth
+    profile: "Profil",
+    loginRegister: "Login / Registrierung",
+  },
+
+  FR: {
+    title: "Achats intelligents avec Cashback+",
+    description:
+      "Recevez du cashback des magasins, des bonus pour regarder des publicités et participer à des études. Combinez-les et compensez jusqu'à 100% de vos achats.",
+    goShopping: "Faire du shopping",
+    getBonuses: "Obtenir des bonus",
+    needRegister: "Vous devez vous inscrire pour accéder aux bonus et aux achats.",
+    everythingFine: "Tout ira bien",
+
+    // Header
+    menuCatalog: "Catalogue",
+    menuPartners: "Partenaires",
+    menuOffers: "Offres",
+    menuTerms: "Conditions",
+
+    // Footer
+    footerPrivacy: "Politique de confidentialité",
+    footerTerms: "Conditions d'utilisation",
+
+    // Auth
+    profile: "Profil",
+    loginRegister: "Connexion / Inscription",
+  },
 };

@@ -1,25 +1,33 @@
 import React from "react";
-import { useLang } from "../context/LangContext";
+import { Link } from "react-router-dom";
 import { translations } from "../i18n";
 
-export default function Footer() {
-  const { lang } = useLang();
+interface FooterProps {
+  lang: string;
+}
+
+export default function Footer({ lang }: FooterProps) {
   const t = translations[lang?.toUpperCase()] ?? translations["EN"];
 
   return (
     <footer
       style={{
-        borderTop: "1px solid var(--sidebar-border)",
-        padding: "20px 40px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        fontSize: "14px",
-        color: "var(--text-secondary)",
+        padding: "20px",
+        background: "rgba(0,0,0,0.05)",
+        textAlign: "center",
+        marginTop: "40px",
       }}
     >
-      <span>{t.footerPrivacy}</span>
-      <span>{t.footerTerms}</span>
+      <div style={{ marginBottom: "10px" }}>
+        <Link to="/terms" style={{ marginRight: "20px" }}>
+          {t.terms ?? "Terms"}
+        </Link>
+        <Link to="/contacts">{t.contacts ?? "Contacts"}</Link>
+      </div>
+
+      <div style={{ fontSize: "14px", color: "#555" }}>
+        © 2026 Cashback+
+      </div>
     </footer>
   );
 }

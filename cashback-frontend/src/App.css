@@ -31,6 +31,13 @@
   height: 40vmin;
   pointer-events: none;
 }
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #f5e8d3, #e3d2b8);
+  background-attachment: fixed;
+  background-size: cover;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -47,6 +54,22 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+.coin-spin {
+  animation: spin 6s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+nav a:hover {
+  opacity: 0.7;
 }
 
 /* ВРАЩЕНИЕ МОНЕТЫ */

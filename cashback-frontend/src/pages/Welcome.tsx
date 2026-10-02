@@ -1,18 +1,18 @@
 import React from "react";
-import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useLang } from "../context/LangContext";
 import { translations } from "../i18n";
 
-export default function Welcome() {
+interface WelcomeProps {
+  lang: string;
+}
+
+export default function Welcome({ lang }: WelcomeProps) {
   const { user } = useAuth();
   const isAuth = Boolean(user);
   const navigate = useNavigate();
-  const { lang } = useLang();
 
-  // безопасное обращение к переводам
   const t = translations[lang?.toUpperCase()] ?? translations["EN"];
 
   const goToShopping = () => {
@@ -36,8 +36,6 @@ export default function Welcome() {
         fontFamily: "Segoe UI, system-ui, sans-serif",
       }}
     >
-      <Header />
-
       <main
         style={{
           flex: 1,
@@ -48,7 +46,6 @@ export default function Welcome() {
           gap: "80px",
         }}
       >
-        {/* LEFT TEXT BLOCK */}
         <div style={{ maxWidth: "520px" }}>
           <h1 style={{ fontSize: "40px", fontWeight: 700, marginBottom: "20px" }}>
             {t.title ?? "Welcome"}
@@ -105,7 +102,6 @@ export default function Welcome() {
           )}
         </div>
 
-        {/* RIGHT IMAGE WITH TEXT */}
         <div style={{ maxWidth: "420px", position: "relative" }}>
           <img
             src="/assets/Oduvanchiki.jpeg"
@@ -134,7 +130,7 @@ export default function Welcome() {
         </div>
       </main>
 
-      <Footer />
+      <Footer lang={lang} />
     </div>
   );
 }

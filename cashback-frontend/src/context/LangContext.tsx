@@ -1,27 +1,23 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-const LangContext = createContext(null);
+interface LangContextType {
+  lang: string;
+  setLang: (lang: string) => void;
+}
 
-export function LangProvider({ children }) {
-  const [lang, setLang] = useState("EN");
+const LangContext = createContext<LangContextType>({
+  lang: "en",
+  setLang: () => {}, // заглушка, чтобы TS не ругался
+});
 
-  useEffect(() => {
-    const saved = localStorage.getItem("lang");
-    if (saved) setLang(saved);
-  }, []);
-
-  const changeLang = (newLang) => {
-    setLang(newLang);
-    localStorage.setItem("lang", newLang);
-  };
+export const LangProvider = ({ children }: { children: React.ReactNode }) => {
+  const [lang, setLang] = useState("en");
 
   return (
-    <LangContext.Provider value={{ lang, changeLang }}>
+    <LangContext.Provider value={{ lang, setLang }}>
       {children}
     </LangContext.Provider>
   );
-}
+};
 
-export function useLang() {
-  return useContext(LangContext);
-}
+export const useLang = () => useContext(LangContext);

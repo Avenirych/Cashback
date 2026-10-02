@@ -1,9 +1,8 @@
 import "./App.css";
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext";
-import { LangProvider } from "./context/LangContext";
 
 import Welcome from "./pages/Welcome";
 import Bonuses from "./pages/Bonuses";
@@ -14,46 +13,41 @@ import Login from "./pages/Login";
 import TermsAndConditions from "./pages/TermsAndConditions";
 
 import CookieConsent from "./components/CookieConsent";
-
-
+import Header from "./components/Header";
 
 function App() {
+  const [lang, setLang] = useState("en");
+
   return (
     <AuthProvider>
-      <LangProvider>
-        <Router>
-          {/* Cookie window appears automatically on first visit */}
-          <CookieConsent />
+      <Router>
+        <Header lang={lang} setLang={setLang} />
 
-          <Routes>
-            {/* Welcome page */}
-            <Route path="/" element={<Welcome />} />
-            <Route path="/welcome" element={<Welcome />} />
+        <CookieConsent />
 
-            {/* Bonuses */}
-            <Route path="/bonuses" element={<Bonuses />} />
-            <Route path="/bonuses/ads" element={<BonusAds />} />
-            <Route path="/bonuses/research" element={<BonusResearch />} />
+        <Routes>
+          <Route path="/" element={<Welcome lang={lang} />} />
+          <Route path="/welcome" element={<Welcome lang={lang} />} />
 
-            {/* Auth */}
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
+          <Route path="/bonuses" element={<Bonuses />} />
+          <Route path="/bonuses/ads" element={<BonusAds />} />
+          <Route path="/bonuses/research" element={<BonusResearch />} />
 
-            {/* Terms */}
-            <Route path="/terms" element={<TermsAndConditions />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
 
-            {/* Fallback */}
-            <Route
-              path="*"
-              element={
-                <div style={{ padding: "40px", fontSize: "20px" }}>
-                  Page not found
-                </div>
-              }
-            />
-          </Routes>
-        </Router>
-      </LangProvider>
+          <Route path="/terms" element={<TermsAndConditions />} />
+
+          <Route
+            path="*"
+            element={
+              <div style={{ padding: "40px", fontSize: "20px" }}>
+                Page not found
+              </div>
+            }
+          />
+        </Routes>
+      </Router>
     </AuthProvider>
   );
 }
