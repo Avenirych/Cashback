@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import AboutUs from "./pages/AboutUs";
+import Services from "./pages/Services";
 
 import CookieConsent from "./components/CookieConsent";
 import Header from "./components/Header";
@@ -27,21 +28,27 @@ function App() {
         <CookieConsent />
 
         <Routes>
+          {/* Main */}
           <Route path="/" element={<Welcome lang={lang} />} />
           <Route path="/welcome" element={<Welcome lang={lang} />} />
 
+          {/* Bonuses */}
           <Route path="/bonuses" element={<Bonuses />} />
           <Route path="/bonuses/ads" element={<BonusAds />} />
           <Route path="/bonuses/research" element={<BonusResearch />} />
 
+          {/* Auth */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
+          {/* Legal */}
           <Route path="/terms" element={<TermsAndConditions />} />
 
-          {/* передаём lang в AboutUs */}
+          {/* Info Pages */}
           <Route path="/about" element={<AboutUs lang={lang} />} />
+          <Route path="/services" element={<Services lang={lang} />} />
 
+          {/* Fallback */}
           <Route
             path="*"
             element={

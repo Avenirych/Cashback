@@ -1,0 +1,15 @@
+.services-container {
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.services-container section {
+  margin-bottom: 40px;
+}
+
+.services-container h2 {
+  margin-top: 20px;
+}

@@ -30,6 +30,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
         borderBottom: "1px solid rgba(255,255,255,0.2)",
       }}
     >
+      {/* LOGO */}
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
         <img
           src={Coint1}
@@ -51,15 +52,19 @@ export default function Header({ lang, setLang }: HeaderProps) {
         </Link>
       </div>
 
+      {/* NAVIGATION */}
       <nav style={{ display: "flex", alignItems: "center", gap: "24px" }}>
         <Link to="/about" style={navLinkStyle}>About us</Link>
         <Link to="/services" style={navLinkStyle}>Services</Link>
         <Link to="/forum" style={navLinkStyle}>Forum</Link>
         <Link to="/contacts" style={navLinkStyle}>Contacts</Link>
-        <Link to="/terms" style={navLinkStyle}>Terms</Link>
+
+        {/* ❌ Terms removed */}
       </nav>
 
+      {/* RIGHT PANEL */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        {/* SEARCH */}
         <input
           type="text"
           placeholder="Search..."
@@ -72,6 +77,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
           }}
         />
 
+        {/* LANGUAGE SWITCHER */}
         <select
           value={lang}
           onChange={(e) => setLang(e.target.value)}
@@ -89,6 +95,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
           <option value="fr">FR</option>
         </select>
 
+        {/* LOGIN BUTTON */}
         {!user && (
           <button
             onClick={() => navigate("/login")}
@@ -107,6 +114,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
           </button>
         )}
 
+        {/* USER MENU */}
         {user && (
           <div style={{ position: "relative" }}>
             <img
