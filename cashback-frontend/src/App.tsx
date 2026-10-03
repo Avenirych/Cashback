@@ -11,6 +11,7 @@ import BonusResearch from "./pages/BonusResearch";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import TermsAndConditions from "./pages/TermsAndConditions";
+import AboutUs from "./pages/AboutUs";
 
 import CookieConsent from "./components/CookieConsent";
 import Header from "./components/Header";
@@ -37,6 +38,9 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           <Route path="/terms" element={<TermsAndConditions />} />
+
+          {/* передаём lang в AboutUs */}
+          <Route path="/about" element={<AboutUs lang={lang} />} />
 
           <Route
             path="*"
