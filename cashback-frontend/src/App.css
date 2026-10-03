@@ -153,7 +153,16 @@ nav a:hover {
   animation: spinCoin 6s linear infinite;
   transform-style: preserve-3d;
 }
-
+h1 {
+color: #2c3e50;
+}
+ 
+.topic {
+padding: 10px;
+margin: 8px 0;
+border: 1px solid #ddd;
+border-radius: 6px;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -1,22 +1,28 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { TopicsService } from './topics.service';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Topic } from './topics.entity';
 
 @Controller('topics')
 export class TopicsController {
-  constructor(private readonly topicsService: TopicsService) {}
+  constructor(
+    @InjectRepository(Topic)
+    private topicRepository: Repository<Topic>,
+  ) {}
 
   @Get()
-  getAll() {
-    return this.topicsService.getAll();
+  getTopics() {
+    return this.topicRepository.find({
+      order: { id: 'DESC' },
+    });
   }
 
   @Post()
-  create(@Body() body: { title: string; content: string; authorId: number }) {
-    return this.topicsService.create(body);
-  }
+  async createTopic(@Body() body: any) {
+    const topic = this.topicRepository.create({
+      title: body.title,
+    });
 
-  @Get(':id')
-  getOne(@Param('id') id: number) {
-    return this.topicsService.getOne(id);
+    return this.topicRepository.save(topic);
   }
 }

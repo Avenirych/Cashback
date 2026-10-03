@@ -15,24 +15,38 @@ interface ForumProps {
 
 export default function Forum({ lang }: ForumProps) {
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3000/topics")
-      .then((res) => res.json())
-      .then((data) => setTopics(data))
-      .catch((err) => console.error("Failed to load topics", err));
+    loadTopics();
   }, []);
+
+  const loadTopics = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/topics"
+      );
+
+      const data = await response.json();
+
+      setTopics(data || []);
+    } catch (err) {
+      console.error("Failed to load topics", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="forum-container">
       <h1>Community Forum</h1>
 
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: "20px" }}>
         <Link
           to="/forum/new"
           style={{
             padding: "10px 16px",
-            borderRadius: 8,
+            borderRadius: "8px",
             background: "#0078ff",
             color: "#fff",
             textDecoration: "none",
@@ -43,19 +57,42 @@ export default function Forum({ lang }: ForumProps) {
         </Link>
       </div>
 
-      {topics.length === 0 ? (
+      {loading ? (
+        <p>Loading topics...</p>
+      ) : topics.length === 0 ? (
         <p>No topics yet. Be the first to create one!</p>
       ) : (
-        <ul className="forum-topics-list">
-          {topics.map((t) => (
-            <li key={t.id} className="forum-topic-item">
-              <Link to={`/forum/${t.id}`} className="forum-topic-title">
-                {t.title}
+        <ul
+          style={{
+            listStyle: "none",
+            padding: 0,
+          }}
+        >
+          {topics.map((topic) => (
+            <li
+              key={topic.id}
+              style={{
+                padding: "16px",
+                marginBottom: "12px",
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+              }}
+            >
+              <Link
+                to={`/forum/${topic.id}`}
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  textDecoration: "none",
+                }}
+              >
+                {topic.title}
               </Link>
-              <p className="forum-topic-preview">
-                {t.content.length > 160
-                  ? t.content.slice(0, 160) + "..."
-                  : t.content}
+
+              <p style={{ marginTop: "10px" }}>
+                {topic.content.length > 160
+                  ? topic.content.slice(0, 160) + "..."
+                  : topic.content}
               </p>
             </li>
           ))}

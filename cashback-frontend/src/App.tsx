@@ -1,90 +1,57 @@
 import "./App.css";
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import { AuthProvider } from "./context/AuthContext";
-
-/* Main pages */
-import Welcome from "./pages/Welcome";
-
-/* Bonuses */
-import Bonuses from "./pages/Bonuses";
-import BonusAds from "./pages/BonusAds";
-import BonusResearch from "./pages/BonusResearch";
-
-/* Auth */
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-
-/* Info pages */
-import AboutUs from "./pages/AboutUs";
-import Services from "./pages/Services";
-
-import Contacts from "./pages/Contacts";
-
-/* Forum-specific */
-import Forum from "./pages/Forum";
-import NewTopic from "./pages/NewTopic";
-import Topic from "./pages/Topic";
-import ForumRegister from "./pages/ForumRegister";
-import Profile from "./pages/Profile";
-
-/* Legal */
-import TermsAndConditions from "./pages/TermsAndConditions";
-
-/* Components */
-import CookieConsent from "./components/CookieConsent";
-import Header from "./components/Header";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [lang, setLang] = useState("en");
+  const [title, setTitle] = useState("");
+  const [topics, setTopics] = useState<any[]>([]);
+
+  const loadTopics = () => {
+    fetch("http://localhost:3001/topics")
+      .then((res) => res.json())
+      .then((data) => setTopics(data));
+  };
+
+  useEffect(() => {
+    loadTopics();
+  }, []);
+
+  const createTopic = async () => {
+    if (!title.trim()) return;
+
+    await fetch("http://localhost:3001/topics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+      }),
+    });
+
+    setTitle("");
+    loadTopics();
+  };
 
   return (
-    <AuthProvider>
-      <Router>
-        <Header lang={lang} setLang={setLang} />
+    <div>
+      <h1>Cashback+ Forum</h1>
 
-        <CookieConsent />
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Topic title"
+      />
 
-        <Routes>
-          {/* Main */}
-          <Route path="/" element={<Welcome lang={lang} />} />
-          <Route path="/welcome" element={<Welcome lang={lang} />} />
+      <button onClick={createTopic}>
+        New Topic
+      </button>
 
-          {/* Bonuses */}
-          <Route path="/bonuses" element={<Bonuses />} />
-          <Route path="/bonuses/ads" element={<BonusAds />} />
-          <Route path="/bonuses/research" element={<BonusResearch />} />
-
-          {/* Auth */}
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-
-          {/* Info Pages */}
-          <Route path="/about" element={<AboutUs lang={lang} />} />
-          <Route path="/services" element={<Services lang={lang} />} />
-          <Route path="/forum" element={<Forum lang={lang} />} />
-          <Route path="/contacts" element={<Contacts lang={lang} />} />
-
-          {/* Forum-specific */}
-          <Route path="/forum-register" element={<ForumRegister />} />
-          <Route path="/profile" element={<Profile />} />
-
-          {/* Legal (hidden from header) */}
-          <Route path="/terms" element={<TermsAndConditions />} />
-
-          {/* Fallback */}
-          <Route
-            path="*"
-            element={
-              <div style={{ padding: "40px", fontSize: "20px" }}>
-                Page not found
-              </div>
-            }
-          />
-        </Routes>
-      </Router>
-    </AuthProvider>
+      {topics.map((topic) => (
+        <div key={topic.id}>
+          {topic.title}
+        </div>
+      ))}
+    </div>
   );
 }
 

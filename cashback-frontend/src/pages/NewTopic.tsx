@@ -24,15 +24,21 @@ export default function NewTopic() {
     }
 
     try {
-      await fetch("http://localhost:3000/topics", {
+      const response = await fetch("http://localhost:3000/topics", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           title,
           content,
-          authorId: 1, // временно, пока нет реального id пользователя
+          authorId: 1,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to create topic");
+      }
 
       navigate("/forum");
     } catch (err) {
@@ -42,44 +48,59 @@ export default function NewTopic() {
   };
 
   return (
-    <div style={{ padding: 40 }}>
+    <div style={{ padding: "40px" }}>
       <h1>Create New Topic</h1>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && (
+        <p style={{ color: "red" }}>
+          {error}
+        </p>
+      )}
 
       <form
         onSubmit={submit}
-        style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 600 }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
+          maxWidth: "700px",
+        }}
       >
         <input
           type="text"
           placeholder="Topic title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          style={{ padding: 8 }}
+          style={{
+            padding: "10px",
+            fontSize: "16px",
+          }}
         />
 
         <textarea
           placeholder="Topic content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          rows={8}
-          style={{ padding: 8 }}
+          rows={10}
+          style={{
+            padding: "10px",
+            fontSize: "16px",
+          }}
         />
 
         <button
           type="submit"
           style={{
             padding: "10px 16px",
-            borderRadius: 8,
+            borderRadius: "8px",
             background: "#0078ff",
-            color: "#fff",
+            color: "#ffffff",
             border: "none",
             cursor: "pointer",
             fontWeight: 600,
           }}
         >
-          Publish
+          Publish Topic
         </button>
       </form>
     </div>

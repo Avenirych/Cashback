@@ -27,10 +27,14 @@ export default function Topic() {
 
   const loadTopic = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/topics/${id}`);
-      const data = await res.json();
+      const response = await fetch(
+        `http://localhost:3000/topics/${id}`
+      );
+
+      const data = await response.json();
+
       setTopic(data.topic);
-      setPosts(data.posts);
+      setPosts(data.posts || []);
     } catch (err) {
       console.error(err);
       setError("Failed to load topic.");
@@ -55,11 +59,13 @@ export default function Topic() {
     try {
       await fetch("http://localhost:3000/posts", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           topicId: Number(id),
           content: reply,
-          authorId: 1, // временно
+          authorId: 1,
         }),
       });
 
@@ -73,59 +79,76 @@ export default function Topic() {
 
   if (!topic) {
     return (
-      <div style={{ padding: 40 }}>
+      <div style={{ padding: "40px" }}>
         <p>Loading topic...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: 40 }}>
+    <div style={{ padding: "40px" }}>
       <h1>{topic.title}</h1>
+
       <p>{topic.content}</p>
 
-      <h2 style={{ marginTop: 30 }}>Replies</h2>
+      <h2 style={{ marginTop: "30px" }}>
+        Replies
+      </h2>
 
       {posts.length === 0 ? (
         <p>No replies yet.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {posts.map((p) => (
+        <ul
+          style={{
+            listStyle: "none",
+            padding: 0,
+          }}
+        >
+          {posts.map((post) => (
             <li
-              key={p.id}
+              key={post.id}
               style={{
                 padding: "10px 0",
                 borderBottom: "1px solid #ddd",
               }}
             >
-              <p>{p.content}</p>
+              <p>{post.content}</p>
+
               <small>
-                by user {p.author_id} at {new Date(p.created_at).toLocaleString()}
+                User {post.author_id} •{" "}
+                {new Date(post.created_at).toLocaleString()}
               </small>
             </li>
           ))}
         </ul>
       )}
 
-      <div style={{ marginTop: 20 }}>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+      <div style={{ marginTop: "20px" }}>
+        {error && (
+          <p style={{ color: "red" }}>
+            {error}
+          </p>
+        )}
 
         <textarea
           value={reply}
           onChange={(e) => setReply(e.target.value)}
           placeholder="Write your reply..."
-          rows={4}
-          style={{ width: "100%", padding: 8 }}
+          rows={5}
+          style={{
+            width: "100%",
+            padding: "10px",
+          }}
         />
 
         <button
           onClick={sendReply}
           style={{
-            marginTop: 10,
-            padding: "8px 14px",
-            borderRadius: 8,
+            marginTop: "10px",
+            padding: "10px 16px",
+            borderRadius: "8px",
             background: "#0078ff",
-            color: "#fff",
+            color: "#ffffff",
             border: "none",
             cursor: "pointer",
             fontWeight: 600,

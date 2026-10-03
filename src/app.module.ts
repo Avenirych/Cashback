@@ -1,15 +1,11 @@
-// cashback+/src/app.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-// твои модули
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-// добавь сюда остальные, которые у тебя есть
-
-// модуль аналитики
 import { AnalyticsModule } from './analytics/analytics.module';
+import { TopicsModule } from './topics.module';
 
 @Module({
   imports: [
@@ -18,20 +14,19 @@ import { AnalyticsModule } from './analytics/analytics.module';
     }),
 
     TypeOrmModule.forRoot({
-  type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
-  password: 'Lsa5295685',
-  database: 'cashback',
-
-  autoLoadEntities: true,
-  synchronize: true,
-}),
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'Lsa5295685',
+      database: 'cashback',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
 
     UsersModule,
     AuthModule,
-
+    TopicsModule,
     AnalyticsModule,
   ],
 })
