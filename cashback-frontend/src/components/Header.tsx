@@ -18,6 +18,12 @@ export default function Header({ lang, setLang }: HeaderProps) {
     navigate("/");
   };
 
+  const initials =
+    user?.fullName
+      ?.split(" ")
+      .map((p) => p[0]?.toUpperCase())
+      .join("") || "U";
+
   return (
     <header
       style={{
@@ -59,7 +65,12 @@ export default function Header({ lang, setLang }: HeaderProps) {
         <Link to="/forum" style={navLinkStyle}>Forum</Link>
         <Link to="/contacts" style={navLinkStyle}>Contacts</Link>
 
-        {/* ❌ Terms removed */}
+        {/* Forum Registration (only if user logged in but not registered for forum) */}
+        {user && !user.agreedRules && (
+          <Link to="/forum-register" style={navLinkStyle}>
+            Forum Registration
+          </Link>
+        )}
       </nav>
 
       {/* RIGHT PANEL */}
@@ -117,20 +128,43 @@ export default function Header({ lang, setLang }: HeaderProps) {
         {/* USER MENU */}
         {user && (
           <div style={{ position: "relative" }}>
-            <img
-              src={user.avatarUrl || "/assets/default-avatar.png"}
-              alt="avatar"
-              style={{
-                width: "42px",
-                height: "42px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                cursor: "pointer",
-                border: "2px solid rgba(255,255,255,0.4)",
-              }}
-              onClick={() => setMenuOpen(!menuOpen)}
-            />
+            {/* Avatar or initials */}
+            {user.forumAvatar ? (
+              <img
+                src={user.forumAvatar}
+                alt="avatar"
+                style={{
+                  width: "42px",
+                  height: "42px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                  border: "2px solid rgba(255,255,255,0.4)",
+                }}
+                onClick={() => setMenuOpen(!menuOpen)}
+              />
+            ) : (
+              <div
+                style={{
+                  width: "42px",
+                  height: "42px",
+                  borderRadius: "50%",
+                  background: "#ccc",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  border: "2px solid rgba(255,255,255,0.4)",
+                }}
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
+                {initials}
+              </div>
+            )}
 
+            {/* Dropdown */}
             {menuOpen && (
               <div
                 style={{
@@ -150,7 +184,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
                 }}
               >
                 <Link to="/profile" style={menuLinkStyle}>Profile</Link>
-                <Link to="/cabinet" style={menuLinkStyle}>Cabinet</Link>
+
                 <button
                   onClick={handleLogout}
                   style={{

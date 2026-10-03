@@ -1,0 +1,39 @@
+.forum-container {
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.forum-search {
+  width: 100%;
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.forum-categories {
+  list-style: none;
+  padding-left: 0;
+}
+
+.forum-categories li {
+  padding: 6px 0;
+}
+
+.forum-new-topic {
+  padding: 12px 20px;
+  background: #0078ff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 20px 0;
+}
+
+.forum-rules {
+  list-style: disc;
+  padding-left: 20px;
+}

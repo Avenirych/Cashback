@@ -1,0 +1,30 @@
+.contacts-container {
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.contacts-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.contacts-form input,
+.contacts-form textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.contacts-form button {
+  padding: 12px;
+  background: #0078ff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
