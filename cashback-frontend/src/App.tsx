@@ -19,10 +19,13 @@ import Login from "./pages/Login";
 /* Info pages */
 import AboutUs from "./pages/AboutUs";
 import Services from "./pages/Services";
-import Forum from "./pages/Forum";
+
 import Contacts from "./pages/Contacts";
 
 /* Forum-specific */
+import Forum from "./pages/Forum";
+import NewTopic from "./pages/NewTopic";
+import Topic from "./pages/Topic";
 import ForumRegister from "./pages/ForumRegister";
 import Profile from "./pages/Profile";
 

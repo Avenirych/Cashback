@@ -18,15 +18,16 @@ import { AnalyticsModule } from './analytics/analytics.module';
     }),
 
     TypeOrmModule.forRoot({
-      type: 'mysql', // или postgres — как у тебя
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+  type: 'postgres',
+  host: 'localhost',
+  port: 5432,
+  username: 'postgres',
+  password: 'Lsa5295685',
+  database: 'cashback',
+
+  autoLoadEntities: true,
+  synchronize: true,
+}),
 
     UsersModule,
     AuthModule,

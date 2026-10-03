@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { Product } from './product.entity';
 import { Offer } from './offer.entity';
 
@@ -9,36 +10,77 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
+
     @InjectRepository(Offer)
     private readonly offerRepo: Repository<Offer>,
   ) {}
 
+  async getOfferById(id: number) {
+    return this.offerRepo.findOne({
+      where: { id },
+      relations: {
+        product: true,
+        seller: true,
+      },
+    });
+  }
+
+  async searchProducts(query: string) {
+    return this.productRepo
+      .createQueryBuilder('product')
+      .where('LOWER(product.name) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+      .leftJoinAndSelect('product.offers', 'offers')
+      .leftJoinAndSelect('product.seller', 'seller')
+      .getMany();
+  }
+
   async getAll(sort?: string) {
     return this.productRepo.find({
-      order: { name: sort === 'asc' ? 'ASC' : 'DESC' },
-      relations: { offers: true, seller: true },
+      order: {
+        name: sort === 'asc' ? 'ASC' : 'DESC',
+      },
+      relations: {
+        offers: true,
+        seller: true,
+      },
     });
   }
 
   async compareProducts(id1: number, id2: number) {
     const p1 = await this.productRepo.findOne({
       where: { id: id1 },
-      relations: { offers: true, seller: true },
+      relations: {
+        offers: true,
+        seller: true,
+      },
     });
 
     const p2 = await this.productRepo.findOne({
       where: { id: id2 },
-      relations: { offers: true, seller: true },
+      relations: {
+        offers: true,
+        seller: true,
+      },
     });
 
-    return { product1: p1, product2: p2 };
+    return {
+      product1: p1,
+      product2: p2,
+    };
   }
 
   async getTopDayBestOffers() {
     return this.offerRepo.find({
-      order: { cashback_rate_percent: 'DESC' },
+      order: {
+        cashback_rate_percent: 'DESC',
+      },
       take: 10,
-      relations: { product: true, seller: true },
+      relations: {
+        product: true,
+        seller: true,
+      },
     });
   }
 
@@ -52,22 +94,37 @@ export class ProductsService {
 
   async getTopFavorites(ids: number[]) {
     return this.productRepo.find({
-      where: ids.map(id => ({ id })),
-      relations: { offers: true, seller: true },
+      where: ids.map((id) => ({ id })),
+      relations: {
+        offers: true,
+        seller: true,
+      },
     });
   }
 
   async getTopBrandBestOffers(brand: string) {
     return this.productRepo.find({
-      where: { category: brand },
-      relations: { offers: true, seller: true },
+      where: {
+        category: brand,
+      },
+      relations: {
+        offers: true,
+        seller: true,
+      },
     });
   }
 
   async getTopSellerBestOffers(sellerId: number) {
     return this.productRepo.find({
-      where: { seller: { id: sellerId } },
-      relations: { offers: true, seller: true },
+      where: {
+        seller: {
+          id: sellerId,
+        },
+      },
+      relations: {
+        offers: true,
+        seller: true,
+      },
     });
   }
 }

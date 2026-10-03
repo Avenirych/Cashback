@@ -1,29 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { AnalyticsEvent } from './analytics.entity';
+import { Controller, Get, Query } from '@nestjs/common';
+import { AnalyticsService } from './analytics.service';
 
-export interface EventFilter {
-  userId?: number;
-  type?: string;
-}
-
-@Injectable()
-export class AnalyticsService {
+@Controller('analytics')
+export class AnalyticsController {
   constructor(
-    @InjectRepository(AnalyticsEvent)
-    private readonly repo: Repository<AnalyticsEvent>,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
-  async getEvents(filters: EventFilter) {
-    const where: any = {};
-
-    if (filters.userId) where.userId = filters.userId;
-    if (filters.type) where.type = filters.type;
-
-    return this.repo.find({
-      where,
-      order: { createdAt: 'DESC' },
+  @Get()
+  async getEvents(
+    @Query('userId') userId?: number,
+    @Query('type') type?: string,
+  ) {
+    return this.analyticsService.getEvents({
+      userId,
+      type,
     });
   }
 }
