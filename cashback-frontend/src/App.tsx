@@ -23,9 +23,7 @@ function App() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        title,
-      }),
+      body: JSON.stringify({ title }),
     });
 
     setTitle("");
