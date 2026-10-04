@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-export default function Topic() {
-  console.log("REAL TOPIC COMPONENT");
+function TopicPage() {
   const { id } = useParams();
 
   const [posts, setPosts] = useState<any[]>([]);
@@ -15,7 +14,7 @@ export default function Topic() {
 
     const data = await response.json();
 
-    setPosts(Array.isArray(data) ? data : []);
+    setPosts(data);
   };
 
   useEffect(() => {
@@ -37,6 +36,7 @@ export default function Topic() {
     });
 
     setMessage("");
+
     await loadPosts();
   };
 
@@ -64,3 +64,5 @@ export default function Topic() {
     </div>
   );
 }
+
+export default TopicPage;
