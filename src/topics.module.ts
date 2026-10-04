@@ -5,6 +5,9 @@ import { Topic } from './topics.entity';
 import { Post } from './posts.entity';
 
 import { TopicsController } from './topics.controller';
+import { PostsController } from './posts.controller';
+
+import { PostsService } from './posts.service';
 
 @Module({
   imports: [
@@ -13,6 +16,12 @@ import { TopicsController } from './topics.controller';
       Post,
     ]),
   ],
-  controllers: [TopicsController],
+  controllers: [
+    TopicsController,
+    PostsController,
+  ],
+  providers: [
+    PostsService,
+  ],
 })
 export class TopicsModule {}

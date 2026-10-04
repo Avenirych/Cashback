@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
 } from 'typeorm';
+
 import { Topic } from './topics.entity';
 
 @Entity()
@@ -12,7 +13,7 @@ export class Post {
   id: number;
 
   @Column('text')
-  text: string;
+  content: string;
 
   @ManyToOne(() => Topic, (topic) => topic.posts)
   topic: Topic;

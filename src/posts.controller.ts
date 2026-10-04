@@ -1,4 +1,11 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+} from '@nestjs/common';
+
 import { PostsService } from './posts.service';
 
 @Controller('posts')
@@ -7,15 +14,26 @@ export class PostsController {
     private readonly postsService: PostsService,
   ) {}
 
+  @Get('topic/:id')
+  findByTopic(
+    @Param('id') id: string,
+  ) {
+    return this.postsService.findByTopic(
+      Number(id),
+    );
+  }
+
   @Post()
   create(
     @Body()
     body: {
       topicId: number;
       content: string;
-      authorId: number;
-    }
+    },
   ) {
-    return this.postsService.create(body);
+    return this.postsService.create(
+      body.topicId,
+      body.content,
+    );
   }
 }

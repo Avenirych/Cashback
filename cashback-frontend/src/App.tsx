@@ -2,8 +2,8 @@ import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
-  const [title, setTitle] = useState("");
   const [topics, setTopics] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
 
   const loadTopics = () => {
     fetch("http://localhost:3001/topics")
@@ -11,42 +11,39 @@ function App() {
       .then((data) => setTopics(data));
   };
 
+  const loadPosts = (topicId: number) => {
+    fetch(`http://localhost:3001/posts/topic/${topicId}`)
+      .then((res) => res.json())
+      .then((data) => setPosts(data));
+  };
+
   useEffect(() => {
     loadTopics();
   }, []);
-
-  const createTopic = async () => {
-    if (!title.trim()) return;
-
-    await fetch("http://localhost:3001/topics", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title }),
-    });
-
-    setTitle("");
-    loadTopics();
-  };
 
   return (
     <div>
       <h1>Cashback+ Forum</h1>
 
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Topic title"
-      />
-
-      <button onClick={createTopic}>
-        New Topic
-      </button>
-
       {topics.map((topic) => (
-        <div key={topic.id}>
+        <div
+          key={topic.id}
+          onClick={() => loadPosts(topic.id)}
+          style={{
+            cursor: "pointer",
+            color: "blue",
+            marginBottom: "10px",
+          }}
+        >
           {topic.title}
+        </div>
+      ))}
+
+      <hr />
+
+      {posts.map((post) => (
+        <div key={post.id}>
+          {post.content}
         </div>
       ))}
     </div>

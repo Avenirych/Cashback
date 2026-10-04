@@ -1,26 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { Pool } from 'pg';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Post } from './posts.entity';
+import { Topic } from './topics.entity';
 
 @Injectable()
 export class PostsService {
-  private pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+  constructor(
+    @InjectRepository(Post)
+    private postRepository: Repository<Post>,
+
+    @InjectRepository(Topic)
+    private topicRepository: Repository<Topic>,
+  ) {}
+
+  async findByTopic(topicId: number) {
+  return this.postRepository.find({
+    where: {
+      topic: {
+        id: topicId,
+      },
+    },
+    relations: {
+      topic: true,
+    },
+    order: {
+      id: 'ASC',
+    },
   });
+}
 
-  async create(data: {
-    topicId: number;
-    content: string;
-    authorId: number;
-  }) {
-    const res = await this.pool.query(
-      'INSERT INTO posts (topic_id, content, author_id) VALUES ($1, $2, $3) RETURNING *',
-      [
-        data.topicId,
-        data.content,
-        data.authorId,
-      ],
-    );
 
-    return res.rows[0];
+  async create(topicId: number, content: string) {
+    const topic = await this.topicRepository.findOneBy({
+      id: topicId,
+    });
+
+    if (!topic) {
+      throw new Error('Topic not found');
+    }
+
+    const post = this.postRepository.create({
+      content,
+      topic,
+    });
+
+    return this.postRepository.save(post);
   }
 }
