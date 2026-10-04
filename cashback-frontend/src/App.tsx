@@ -4,17 +4,57 @@ import { useEffect, useState } from "react";
 function App() {
   const [topics, setTopics] = useState<any[]>([]);
   const [posts, setPosts] = useState<any[]>([]);
+  const [message, setMessage] = useState("");
+  const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
 
-  const loadTopics = () => {
-    fetch("http://localhost:3001/topics")
-      .then((res) => res.json())
-      .then((data) => setTopics(data));
+  const loadTopics = async () => {
+    const response = await fetch(
+      "http://localhost:3001/topics"
+    );
+
+    const data = await response.json();
+
+    setTopics(data);
   };
 
-  const loadPosts = (topicId: number) => {
-    fetch(`http://localhost:3001/posts/topic/${topicId}`)
-      .then((res) => res.json())
-      .then((data) => setPosts(data));
+  const loadPosts = async (topicId: number) => {
+    setSelectedTopicId(topicId);
+
+    const response = await fetch(
+      `http://localhost:3001/posts/topic/${topicId}`
+    );
+
+    const data = await response.json();
+
+    setPosts(data);
+  };
+
+  const sendMessage = async () => {
+    if (!selectedTopicId) return;
+
+    if (!message.trim()) return;
+
+    const response = await fetch(
+      "http://localhost:3001/posts",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          topicId: selectedTopicId,
+          content: message,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    console.log(result);
+
+    setMessage("");
+
+    await loadPosts(selectedTopicId);
   };
 
   useEffect(() => {
@@ -38,6 +78,22 @@ function App() {
           {topic.title}
         </div>
       ))}
+
+      <hr />
+
+      <div>
+        Topic: {selectedTopicId ?? "not selected"}
+      </div>
+
+      <input
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Message"
+      />
+
+      <button onClick={sendMessage}>
+        Send
+      </button>
 
       <hr />
 
