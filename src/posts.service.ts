@@ -47,4 +47,29 @@ export class PostsService {
 
     return this.postRepository.save(post);
   }
+
+  async update(id: number, content: string) {
+    const post = await this.postRepository.findOne({
+      where: { id },
+    });
+
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    post.content = content;
+    return this.postRepository.save(post);
+  }
+
+  async remove(id: number) {
+    const post = await this.postRepository.findOne({
+      where: { id },
+    });
+
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    return this.postRepository.remove(post);
+  }
 }
