@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -34,6 +35,15 @@ export class PostsController {
     return this.postsService.create(
       body.topicId,
       body.content,
+    );
+  }
+
+  @Delete(':id')
+  remove(
+    @Param('id') id: string,
+  ) {
+    return this.postsService.remove(
+      Number(id),
     );
   }
 }

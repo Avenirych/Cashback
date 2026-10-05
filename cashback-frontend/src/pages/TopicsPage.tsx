@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function TopicsPage() {
   const [topics, setTopics] = useState<any[]>([]);
   const [title, setTitle] = useState("");
+  const [search, setSearch] = useState("");
 
   const navigate = useNavigate();
 
@@ -14,7 +15,37 @@ export default function TopicsPage() {
 
     const data = await response.json();
 
-    setTopics(Array.isArray(data) ? data : []);
+    const sortedTopics = [...data].sort((a, b) => {
+      const aLastPost =
+        a.posts?.length > 0
+          ? a.posts[a.posts.length - 1]
+          : null;
+
+      const bLastPost =
+        b.posts?.length > 0
+          ? b.posts[b.posts.length - 1]
+          : null;
+
+      const aTime = aLastPost
+        ? new Date(
+            aLastPost.createdAt ?? 0
+          ).getTime()
+        : new Date(
+            a.createdAt ?? 0
+          ).getTime();
+
+      const bTime = bLastPost
+        ? new Date(
+            bLastPost.createdAt ?? 0
+          ).getTime()
+        : new Date(
+            b.createdAt ?? 0
+          ).getTime();
+
+      return bTime - aTime;
+    });
+
+    setTopics(sortedTopics);
   };
 
   useEffect(() => {
@@ -44,6 +75,14 @@ export default function TopicsPage() {
     navigate(`/topic/${topic.id}`);
   };
 
+  const filteredTopics = useMemo(() => {
+    return topics.filter((topic) =>
+      topic.title
+        ?.toLowerCase()
+        .includes(search.toLowerCase())
+    );
+  }, [topics, search]);
+
   return (
     <div
       style={{
@@ -57,12 +96,14 @@ export default function TopicsPage() {
         style={{
           display: "flex",
           gap: "10px",
-          marginBottom: "20px",
+          marginBottom: "15px",
         }}
       >
         <input
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) =>
+            setTitle(e.target.value)
+          }
           placeholder="Topic title"
           style={{
             flex: 1,
@@ -75,27 +116,107 @@ export default function TopicsPage() {
         </button>
       </div>
 
-      <hr />
+      <input
+        value={search}
+        onChange={(e) =>
+          setSearch(e.target.value)
+        }
+        placeholder="Search topics..."
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "20px",
+        }}
+      />
 
-      {topics.map((topic) => (
-        <div
-          key={topic.id}
-          style={{
-            padding: "10px 0",
-            borderBottom: "1px solid #eee",
-          }}
-        >
-          <Link to={`/topic/${topic.id}`}>
-            {topic.title}
-          </Link>
+      {filteredTopics.map((topic) => {
+        const lastPost =
+          topic.posts?.length > 0
+            ? topic.posts[
+                topic.posts.length - 1
+              ]
+            : null;
 
-          {" "}
+        return (
+          <div
+            key={topic.id}
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: "10px",
+              padding: "15px",
+              marginBottom: "12px",
+              background: "#fafafa",
+              transition:
+                "box-shadow 0.2s ease",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "18px",
+                fontWeight: 600,
+              }}
+            >
+              <Link
+                to={`/topic/${topic.id}`}
+              >
+                {topic.title}
+              </Link>{" "}
+              <strong>
+                ({topic.posts?.length ?? 0})
+              </strong>
+            </div>
 
-          <strong>
-            ({topic.posts?.length ?? 0})
-          </strong>
-        </div>
-      ))}
+            {topic.createdAt && (
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "12px",
+                  color: "#666",
+                }}
+              >
+                Created:{" "}
+                {new Date(
+                  topic.createdAt
+                ).toLocaleString()}
+              </div>
+            )}
+
+            {lastPost && (
+              <div
+                style={{
+                  marginTop: "12px",
+                }}
+              >
+                <strong>
+                  Last message:
+                </strong>
+
+                <div
+                  style={{
+                    marginTop: "4px",
+                  }}
+                >
+                  {lastPost.content}
+                </div>
+
+                {lastPost.createdAt && (
+                  <div
+                    style={{
+                      marginTop: "4px",
+                      fontSize: "12px",
+                      color: "#666",
+                    }}
+                  >
+                    {new Date(
+                      lastPost.createdAt
+                    ).toLocaleString()}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

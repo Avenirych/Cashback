@@ -16,36 +16,52 @@ export class PostsService {
   ) {}
 
   async findByTopic(topicId: number) {
-  return this.postRepository.find({
-    where: {
-      topic: {
-        id: topicId,
+    return this.postRepository.find({
+      where: {
+        topic: {
+          id: topicId,
+        },
       },
-    },
-    relations: {
-      topic: true,
-    },
-    order: {
-      id: 'ASC',
-    },
-  });
-}
-
-
-  async create(topicId: number, content: string) {
-    const topic = await this.topicRepository.findOneBy({
-      id: topicId,
+      relations: {
+        topic: true,
+      },
+      order: {
+        id: 'ASC',
+      },
     });
+  }
+
+  async create(
+    topicId: number,
+    content: string,
+  ) {
+    const topic =
+      await this.topicRepository.findOneBy({
+        id: topicId,
+      });
 
     if (!topic) {
-      throw new Error('Topic not found');
+      throw new Error(
+        'Topic not found',
+      );
     }
 
-    const post = this.postRepository.create({
-      content,
-      topic,
-    });
+    const post =
+      this.postRepository.create({
+        content,
+        topic,
+      });
 
-    return this.postRepository.save(post);
+    return this.postRepository.save(
+      post,
+    );
+  }
+
+  async remove(id: number) {
+    await this.postRepository.delete(id);
+
+    return {
+      success: true,
+    };
   }
 }

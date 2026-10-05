@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
+  CreateDateColumn,
 } from 'typeorm';
 
 import { Post } from './posts.entity';
@@ -14,6 +15,9 @@ export class Topic {
 
   @Column()
   title: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @OneToMany(() => Post, (post) => post.topic)
   posts: Post[];

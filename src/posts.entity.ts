@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  CreateDateColumn,
 } from 'typeorm';
 
 import { Topic } from './topics.entity';
@@ -14,6 +15,9 @@ export class Post {
 
   @Column('text')
   content: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @ManyToOne(() => Topic, (topic) => topic.posts)
   topic: Topic;
