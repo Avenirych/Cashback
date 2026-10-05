@@ -7,6 +7,9 @@ export default function Topic() {
   const [posts, setPosts] = useState<any[]>([]);
   const [message, setMessage] = useState("");
 
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
+
   const loadPosts = async () => {
     if (!id) return;
 
@@ -39,6 +42,7 @@ export default function Topic() {
     });
 
     setMessage("");
+
     await loadPosts();
   };
 
@@ -53,13 +57,40 @@ export default function Topic() {
     await loadPosts();
   };
 
+  const savePost = async () => {
+    if (!editingId) return;
+
+    await fetch(
+      `http://localhost:3001/posts/${editingId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: editText,
+        }),
+      }
+    );
+
+    setEditingId(null);
+    setEditText("");
+
+    await loadPosts();
+  };
+
   const topic =
     posts.length > 0
       ? posts[0].topic
       : null;
 
   return (
-    <div style={{ maxWidth: "900px", margin: "30px auto" }}>
+    <div
+      style={{
+        maxWidth: "900px",
+        margin: "30px auto",
+      }}
+    >
       <Link to="/">
         ← Back to Topics
       </Link>
@@ -145,19 +176,36 @@ export default function Topic() {
             style={{
               display: "flex",
               justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
             <strong>
               Message #{post.id}
             </strong>
 
-            <button
-              onClick={() =>
-                deletePost(post.id)
-              }
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+              }}
             >
-              Delete
-            </button>
+              <button
+                onClick={() => {
+                  setEditingId(post.id);
+                  setEditText(post.content);
+                }}
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={() =>
+                  deletePost(post.id)
+                }
+              >
+                Delete
+              </button>
+            </div>
           </div>
 
           <div
@@ -166,7 +214,43 @@ export default function Topic() {
               marginBottom: "8px",
             }}
           >
-            {post.content}
+            {editingId === post.id ? (
+              <>
+                <input
+                  value={editText}
+                  onChange={(e) =>
+                    setEditText(e.target.value)
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                  }}
+                />
+
+                <div
+                  style={{
+                    marginTop: "10px",
+                    display: "flex",
+                    gap: "10px",
+                  }}
+                >
+                  <button onClick={savePost}>
+                    Save
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setEditingId(null);
+                      setEditText("");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              post.content
+            )}
           </div>
 
           {post.createdAt && (
