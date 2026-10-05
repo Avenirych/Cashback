@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import ForumLogo from "../components/ForumLogo";
 
 export default function Login() {
   const { login } = useAuth();
@@ -28,79 +29,86 @@ export default function Login() {
   };
 
   return (
-    <div style={{ padding: "40px", maxWidth: "480px", margin: "0 auto" }}>
-      <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "24px", display: "inline-block" }}>
-        ← Вернуться на главную
-      </Link>
-
-      <h1>Вход</h1>
-
-      {error && (
-        <div
-          style={{
-            backgroundColor: "#fee",
-            color: "#c33",
-            padding: "12px",
-            borderRadius: "8px",
-            marginBottom: "16px",
-            border: "1px solid #fcc",
-          }}
-        >
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={submit} style={{ marginTop: "20px", display: "grid", gap: "12px" }}>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          required
-          autoComplete="email"
-          disabled={loading}
-          style={{ padding: "12px", borderRadius: "6px", border: "1px solid #ddd" }}
-        />
-
-        <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Пароль"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          required
-          autoComplete="current-password"
-          disabled={loading}
-          style={{ padding: "12px", borderRadius: "6px", border: "1px solid #ddd" }}
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            padding: "12px",
-            backgroundColor: "#0d6efd",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: loading ? "not-allowed" : "pointer",
-            fontSize: "16px",
-            fontWeight: 500,
-          }}
-        >
-          {loading ? "Загрузка..." : "Войти"}
-        </button>
-      </form>
-
-      <p style={{ marginTop: "24px", textAlign: "center", color: "#666" }}>
-        Нет аккаунта?{" "}
-        <Link to="/register" style={{ color: "#0d6efd", textDecoration: "none" }}>
-          Зарегистрироваться
+    <div style={{ minHeight: "100vh", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)" }}>
+      <div style={{ maxWidth: "480px", margin: "0 auto", padding: "40px 24px" }}>
+        <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "24px", display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}>
+          ← На главную
         </Link>
-      </p>
+
+        <div style={{ backgroundColor: "white", padding: "32px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
+            <ForumLogo size={32} />
+            <h1 style={{ margin: 0, fontSize: "24px" }}>Вход</h1>
+          </div>
+
+          {error && (
+            <div
+              style={{
+                backgroundColor: "#fee",
+                color: "#c33",
+                padding: "12px",
+                borderRadius: "8px",
+                marginBottom: "16px",
+                border: "1px solid #fcc",
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={submit} style={{ display: "grid", gap: "12px" }}>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
+              autoComplete="email"
+              disabled={loading}
+              style={{ padding: "12px", borderRadius: "6px", border: "1px solid #ddd" }}
+            />
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Пароль"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required
+              autoComplete="current-password"
+              disabled={loading}
+              style={{ padding: "12px", borderRadius: "6px", border: "1px solid #ddd" }}
+            />
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                padding: "12px",
+                backgroundColor: "#0d6efd",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                cursor: loading ? "not-allowed" : "pointer",
+                fontSize: "16px",
+                fontWeight: 500,
+              }}
+            >
+              {loading ? "Загрузка..." : "Войти"}
+            </button>
+          </form>
+
+          <p style={{ marginTop: "24px", textAlign: "center", color: "#666" }}>
+            Нет аккаунта?{" "}
+            <Link to="/register" style={{ color: "#0d6efd", textDecoration: "none" }}>
+              Зарегистрироваться
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
