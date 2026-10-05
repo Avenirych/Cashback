@@ -3,22 +3,29 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [error, setError] = useState("");
 
-  const submit = (e) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login(form);
-    navigate("/welcome");
+    try {
+      await register(form);
+      navigate("/");
+    } catch (err) {
+      setError("Не удалось зарегистрировать пользователя");
+    }
   };
 
   return (
     <div style={{ padding: "40px", maxWidth: "480px", margin: "0 auto" }}>
       <h1>Регистрация</h1>
 
-      <form onSubmit={submit} style={{ marginTop: "20px" }}>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <form onSubmit={submit} style={{ marginTop: "20px", display: "grid", gap: "12px" }}>
         <input
           type="text"
           placeholder="Имя"

@@ -7,18 +7,25 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
 
-  const submit = (e) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login(form);
-    navigate("/welcome");
+    try {
+      await login(form);
+      navigate("/");
+    } catch (err) {
+      setError("Неверный email или пароль");
+    }
   };
 
   return (
     <div style={{ padding: "40px", maxWidth: "480px", margin: "0 auto" }}>
       <h1>Вход</h1>
 
-      <form onSubmit={submit} style={{ marginTop: "20px" }}>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <form onSubmit={submit} style={{ marginTop: "20px", display: "grid", gap: "12px" }}>
         <input
           type="email"
           placeholder="Email"

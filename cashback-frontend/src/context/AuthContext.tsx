@@ -1,24 +1,18 @@
 import React, { createContext, useContext, useState } from "react";
 
 interface User {
+  id: number;
   email: string;
-  fullName: string;
-  address: string;
-
-  forumUsername?: string;
-  forumAvatar?: string;
-  agreedRules?: boolean;
-
-  initials?: string;
+  name: string;
+  avatar_url?: string | null;
 }
 
 interface AuthContextType {
   user: User | null;
-
-  login: (data: { email: string; password?: string }) => void;
-  register: (data: { email: string; fullName: string; address: string }) => void;
+  token: string | null;
+  login: (data: { email: string; password: string }) => Promise<void>;
+  register: (data: { name: string; email: string; password: string }) => Promise<void>;
   logout: () => void;
-
   updateForumProfile: (data: {
     forumUsername: string;
     forumAvatar: string | null;
@@ -30,48 +24,71 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem("cashback_token"));
 
-  const login = (data: { email: string; password?: string }) => {
-    setUser({
-      email: data.email,
-      fullName: "Unknown",
-      address: "Unknown",
-    });
+  const applySession = (newToken: string, newUser: User) => {
+    localStorage.setItem("cashback_token", newToken);
+    setToken(newToken);
+    setUser(newUser);
   };
 
-  const register = (data: { email: string; fullName: string; address: string }) => {
-    setUser({
-      email: data.email,
-      fullName: data.fullName,
-      address: data.address,
+  const login = async (data: { email: string; password: string }) => {
+    const response = await fetch("http://localhost:3001/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
+
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
+
+    const result = await response.json();
+    applySession(result.access_token, result.user);
   };
 
-  const logout = () => setUser(null);
+  const register = async (data: { name: string; email: string; password: string }) => {
+    const response = await fetch("http://localhost:3001/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Registration failed");
+    }
+
+    const result = await response.json();
+    applySession(result.access_token, result.user);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("cashback_token");
+    setToken(null);
+    setUser(null);
+  };
 
   const updateForumProfile = (data: {
     forumUsername: string;
     forumAvatar: string | null;
     agreedRules: boolean;
   }) => {
-    if (!user) return;
-
-    const initials = user.fullName
-      .split(" ")
-      .map((p) => p[0].toUpperCase())
-      .join("");
-
-    setUser({
-      ...user,
-      ...data,
-      initials,
-    });
+    setUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            name: data.forumUsername,
+            avatar_url: data.forumAvatar ?? prev.avatar_url ?? null,
+          }
+        : prev,
+    );
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        token,
         login,
         register,
         logout,
@@ -83,7 +100,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext)!;
-
-// 👇 Обязательный пустой экспорт для TS1208
-export {};
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used inside AuthProvider");
+  }
+  return context;
+};

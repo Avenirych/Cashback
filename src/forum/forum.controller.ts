@@ -5,6 +5,11 @@ import { ForumService } from './forum.service';
 export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
+  @Get('topics')
+  getTopics() {
+    return this.forumService.getTopics();
+  }
+
   @Post('topic')
   createTopic(
     @Body('userId') userId: number,

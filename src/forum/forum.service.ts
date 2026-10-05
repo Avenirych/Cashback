@@ -24,7 +24,7 @@ export class ForumService {
 
     const topic = this.topicRepo.create({
       title,
-      author: { id: user.id }, // ✔ передаём только id
+      author: { id: user.id },
     });
 
     return this.topicRepo.save(topic);
@@ -39,11 +39,18 @@ export class ForumService {
 
     const post = this.postRepo.create({
       content,
-      author: { id: user.id }, // ✔ только id
-      topic: { id: topic.id }, // ✔ только id
+      author: { id: user.id },
+      topic: { id: topic.id },
     });
 
     return this.postRepo.save(post);
+  }
+
+  getTopics() {
+    return this.topicRepo.find({
+      relations: { author: true },
+      order: { created_at: 'DESC' },
+    });
   }
 
   getTopic(id: number) {

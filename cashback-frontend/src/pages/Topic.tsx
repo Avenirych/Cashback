@@ -1,272 +1,102 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
+const defaultAvatar = "https://ui-avatars.com/api/?name=User&background=0d6efd&color=fff";
 
 export default function Topic() {
   const { id } = useParams();
 
+  const [topic, setTopic] = useState<any | null>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [message, setMessage] = useState("");
 
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editText, setEditText] = useState("");
-
   const loadPosts = async () => {
-    if (!id) return;
-
-    const response = await fetch(
-      `http://localhost:3001/posts/topic/${id}`
-    );
-
+    const response = await fetch(`http://localhost:3001/forum/posts/${id}`);
     const data = await response.json();
-
     setPosts(Array.isArray(data) ? data : []);
   };
 
   useEffect(() => {
+    const loadTopic = async () => {
+      const response = await fetch(`http://localhost:3001/forum/topic/${id}`);
+      const data = await response.json();
+      setTopic(data);
+    };
+
+    loadTopic();
     loadPosts();
   }, [id]);
 
   const sendMessage = async () => {
-    if (!id) return;
     if (!message.trim()) return;
 
-    await fetch("http://localhost:3001/posts", {
+    await fetch("http://localhost:3001/forum/post", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        userId: 1,
         topicId: Number(id),
         content: message,
       }),
     });
 
     setMessage("");
-
     await loadPosts();
   };
-
-  const deletePost = async (postId: number) => {
-    await fetch(
-      `http://localhost:3001/posts/${postId}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    await loadPosts();
-  };
-
-  const savePost = async () => {
-    if (!editingId) return;
-
-    await fetch(
-      `http://localhost:3001/posts/${editingId}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: editText,
-        }),
-      }
-    );
-
-    setEditingId(null);
-    setEditText("");
-
-    await loadPosts();
-  };
-
-  const topic =
-    posts.length > 0
-      ? posts[0].topic
-      : null;
 
   return (
-    <div
-      style={{
-        maxWidth: "900px",
-        margin: "30px auto",
-      }}
-    >
-      <Link to="/">
-        ← Back to Topics
-      </Link>
+    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "24px" }}>
+      {topic && (
+        <div style={{ marginBottom: "24px", borderBottom: "1px solid #ddd", paddingBottom: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
+            <img
+              src={topic.author?.avatar_url || defaultAvatar}
+              alt={topic.author?.name || "User"}
+              style={{ width: "48px", height: "48px", borderRadius: "50%" }}
+            />
+            <div>
+              <div style={{ fontWeight: 700 }}>{topic.author?.name || "Unknown user"}</div>
+              <small>{new Date(topic.created_at).toLocaleDateString("ru-RU")}</small>
+            </div>
+          </div>
 
-      <h1 style={{ marginTop: "20px" }}>
-        {topic?.title ?? `Topic #${id}`}
-      </h1>
-
-      {topic?.createdAt && (
-        <div
-          style={{
-            color: "#666",
-            marginBottom: "10px",
-          }}
-        >
-          Created:{" "}
-          {new Date(
-            topic.createdAt
-          ).toLocaleString()}
+          <h1>Topic #{topic.id}</h1>
+          <h2>{topic.title}</h2>
         </div>
       )}
 
-      <div
-        style={{
-          marginBottom: "20px",
-          fontWeight: 600,
-        }}
-      >
-        Messages: {posts.length}
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          marginBottom: "20px",
-        }}
-      >
+      <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
         <input
           value={message}
-          onChange={(e) =>
-            setMessage(e.target.value)
-          }
-          placeholder="Write a message..."
-          style={{
-            flex: 1,
-            padding: "10px",
-          }}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Write a message"
+          style={{ flex: 1, padding: "10px 12px" }}
         />
-
-        <button onClick={sendMessage}>
-          Send
-        </button>
+        <button onClick={sendMessage}>Send</button>
       </div>
 
-      {posts.length === 0 && (
-        <div
-          style={{
-            padding: "20px",
-            border: "1px dashed #ccc",
-            borderRadius: "10px",
-            color: "#666",
-          }}
-        >
-          No messages yet.
-          <br />
-          Be the first to reply.
-        </div>
-      )}
-
-      {posts.map((post) => (
-        <div
-          key={post.id}
-          style={{
-            border: "1px solid #ddd",
-            padding: "15px",
-            marginBottom: "12px",
-            borderRadius: "10px",
-            backgroundColor: "#fafafa",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <strong>
-              Message #{post.id}
-            </strong>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "8px",
-              }}
-            >
-              <button
-                onClick={() => {
-                  setEditingId(post.id);
-                  setEditText(post.content);
-                }}
-              >
-                Edit
-              </button>
-
-              <button
-                onClick={() =>
-                  deletePost(post.id)
-                }
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-
-          <div
-            style={{
-              marginTop: "8px",
-              marginBottom: "8px",
-            }}
-          >
-            {editingId === post.id ? (
-              <>
-                <input
-                  value={editText}
-                  onChange={(e) =>
-                    setEditText(e.target.value)
-                  }
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                  }}
+      <div style={{ display: "grid", gap: "12px" }}>
+        {posts.length === 0 ? (
+          <p>No messages yet.</p>
+        ) : (
+          posts.map((post) => (
+            <div key={post.id} style={{ border: "1px solid #ddd", borderRadius: "12px", padding: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+                <img
+                  src={post.author?.avatar_url || defaultAvatar}
+                  alt={post.author?.name || "User"}
+                  style={{ width: "36px", height: "36px", borderRadius: "50%" }}
                 />
-
-                <div
-                  style={{
-                    marginTop: "10px",
-                    display: "flex",
-                    gap: "10px",
-                  }}
-                >
-                  <button onClick={savePost}>
-                    Save
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setEditingId(null);
-                      setEditText("");
-                    }}
-                  >
-                    Cancel
-                  </button>
+                <div>
+                  <div style={{ fontWeight: 700 }}>{post.author?.name || "Unknown user"}</div>
+                  <small>{new Date(post.created_at).toLocaleDateString("ru-RU")}</small>
                 </div>
-              </>
-            ) : (
-              post.content
-            )}
-          </div>
-
-          {post.createdAt && (
-            <div
-              style={{
-                fontSize: "12px",
-                color: "#666",
-              }}
-            >
-              {new Date(
-                post.createdAt
-              ).toLocaleString()}
+              </div>
+              <div>{post.content}</div>
             </div>
-          )}
-        </div>
-      ))}
+          ))
+        )}
+      </div>
     </div>
   );
 }
