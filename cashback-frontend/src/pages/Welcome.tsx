@@ -1,10 +1,9 @@
 import React from "react";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
-import LanguageSwitcher from "../components/LanguageSwitcher";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { translations } from "../i18n";
-import ForumLogo from "../components/ForumLogo";
 
 interface WelcomeProps {
   lang: string;
@@ -38,25 +37,7 @@ export default function Welcome({ lang }: WelcomeProps) {
         fontFamily: "Segoe UI, system-ui, sans-serif",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "16px 40px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <ForumLogo size={40} />
-          <span style={{ fontSize: "24px", fontWeight: 700 }}>Cashback+</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Link to="/forum" style={{ color: "#0d6efd", textDecoration: "none", fontSize: "14px" }}>
-            {t.goToForum}
-          </Link>
-          <LanguageSwitcher />
-        </div>
-      </div>
+      <Header />
 
       <main
         style={{
