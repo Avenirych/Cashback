@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { Topic } from './topics.entity';
 
 @Controller('topics')
@@ -13,7 +14,12 @@ export class TopicsController {
   @Get()
   getTopics() {
     return this.topicRepository.find({
-      order: { id: 'DESC' },
+      relations: {
+        posts: true,
+      },
+      order: {
+        id: 'DESC',
+      },
     });
   }
 
