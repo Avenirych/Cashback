@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
@@ -14,6 +15,7 @@ export default function Header() {
     textDecoration: "none",
     color: "inherit",
     marginLeft: "20px",
+    fontSize: "14px",
   };
 
   return (
@@ -27,12 +29,24 @@ export default function Header() {
         backgroundColor: "#fff",
       }}
     >
-      <h1>Cashback+</h1>
+      <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+        <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 700 }}>Cashback+</h1>
+      </Link>
 
-      <nav style={{ display: "flex", alignItems: "center" }}>
+      <nav style={{ display: "flex", alignItems: "center", gap: "0" }}>
+        <Link to="/how-it-works" style={navLinkStyle}>
+          How It Works
+        </Link>
+        <Link to="/about" style={navLinkStyle}>
+          About
+        </Link>
+        <Link to="/forum" style={navLinkStyle}>
+          Forum
+        </Link>
+
         {user ? (
           <>
-            <span>Welcome, {user.name}!</span>
+            <span style={{ marginLeft: "20px" }}>Welcome, {user.name}!</span>
             <button
               onClick={logout}
               style={{
@@ -50,12 +64,12 @@ export default function Header() {
           </>
         ) : (
           <>
-            <a href="/login" style={navLinkStyle}>
+            <Link to="/login" style={navLinkStyle}>
               Login
-            </a>
-            <a href="/register" style={navLinkStyle}>
+            </Link>
+            <Link to="/register" style={navLinkStyle}>
               Register
-            </a>
+            </Link>
           </>
         )}
       </nav>
