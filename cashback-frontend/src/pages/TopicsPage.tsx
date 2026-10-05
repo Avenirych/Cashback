@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ForumLogo from "../components/ForumLogo";
+import { translations } from "../i18n";
 
 const defaultAvatar = "https://ui-avatars.com/api/?name=User&background=0d6efd&color=fff";
 
-export default function TopicsPage() {
+export default function TopicsPage({ lang, onLangChange }: { lang: string; onLangChange: (lang: string) => void }) {
   const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
   const [topics, setTopics] = useState<any[]>([]);
@@ -14,6 +15,8 @@ export default function TopicsPage() {
   const [newTopicTitle, setNewTopicTitle] = useState("");
   const [creatingTopic, setCreatingTopic] = useState(false);
   const [error, setError] = useState("");
+
+  const t = translations[lang as keyof typeof translations] ?? translations.EN;
 
   useEffect(() => {
     const loadTopics = async () => {
@@ -41,7 +44,7 @@ export default function TopicsPage() {
     setError("");
 
     if (!newTopicTitle.trim()) {
-      setError("Название не может быть пустым");
+      setError(t.enterTopicName);
       return;
     }
 
@@ -67,7 +70,7 @@ export default function TopicsPage() {
       setNewTopicTitle("");
       setShowCreateForm(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка при создании темы");
+      setError(err instanceof Error ? err.message : t.creating);
     } finally {
       setCreatingTopic(false);
     }
@@ -76,7 +79,7 @@ export default function TopicsPage() {
   if (loading) {
     return (
       <div style={{ minHeight: "100vh", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        Загрузка...
+        {t.topicsLoading}
       </div>
     );
   }
@@ -84,9 +87,11 @@ export default function TopicsPage() {
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "24px" }}>
-        <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "20px", display: "inline-block", fontSize: "14px" }}>
-          ← На главную
-        </Link>
+        <div style={{ marginBottom: "20px" }}>
+          <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", fontSize: "14px" }}>
+            {t.backToHome}
+          </Link>
+        </div>
 
         <div
           style={{
@@ -102,7 +107,7 @@ export default function TopicsPage() {
         >
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <ForumLogo size={40} />
-            <h1 style={{ margin: 0, fontSize: "32px" }}>Forum</h1>
+            <h1 style={{ margin: 0, fontSize: "32px" }}>{t.forumTitle}</h1>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
@@ -128,7 +133,7 @@ export default function TopicsPage() {
                     fontSize: "14px",
                   }}
                 >
-                  Выход
+                  {t.logout}
                 </button>
               </>
             ) : (
@@ -144,7 +149,7 @@ export default function TopicsPage() {
                     fontSize: "14px",
                   }}
                 >
-                  Вход
+                  {t.login}
                 </Link>
                 <Link
                   to="/register"
@@ -157,7 +162,7 @@ export default function TopicsPage() {
                     fontSize: "14px",
                   }}
                 >
-                  Регистрация
+                  {t.register}
                 </Link>
               </>
             )}
@@ -179,13 +184,13 @@ export default function TopicsPage() {
               >
                 <div style={{ marginBottom: "12px" }}>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
-                    Название темы
+                    {t.topicName}
                   </label>
                   <input
                     type="text"
                     value={newTopicTitle}
                     onChange={(e) => setNewTopicTitle(e.target.value)}
-                    placeholder="Введите название темы..."
+                    placeholder={t.enterTopicName}
                     disabled={creatingTopic}
                     style={{
                       width: "100%",
@@ -226,7 +231,7 @@ export default function TopicsPage() {
                       fontSize: "14px",
                     }}
                   >
-                    {creatingTopic ? "Создание..." : "Создать тему"}
+                    {creatingTopic ? t.creating : t.createTopic}
                   </button>
                   <button
                     type="button"
@@ -245,7 +250,7 @@ export default function TopicsPage() {
                       fontSize: "14px",
                     }}
                   >
-                    Отмена
+                    {t.cancel}
                   </button>
                 </div>
               </form>
@@ -263,7 +268,7 @@ export default function TopicsPage() {
                   fontWeight: 500,
                 }}
               >
-                + Создать новую тему
+                {t.newTopic}
               </button>
             )}
           </div>
@@ -271,10 +276,10 @@ export default function TopicsPage() {
 
         <div style={{ backgroundColor: "white", padding: "24px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
           {topicsLoading ? (
-            <p>Загрузка тем...</p>
+            <p>{t.topicsLoading}</p>
           ) : topics.length === 0 ? (
             <p style={{ color: "#666", textAlign: "center", padding: "40px 0" }}>
-              {user ? "Начните дискуссию, создав первую тему!" : "Нет тем. Войдите, чтобы создать одну."}
+              {user ? t.startDiscussion : t.noTopics}
             </p>
           ) : (
             <div style={{ display: "grid", gap: "16px" }}>
@@ -306,7 +311,7 @@ export default function TopicsPage() {
                     <div>
                       <div style={{ fontWeight: 700 }}>{topic.author?.name || "Unknown user"}</div>
                       <small style={{ color: "#666" }}>
-                        {new Date(topic.created_at).toLocaleDateString("ru-RU", {
+                        {new Date(topic.created_at).toLocaleDateString(lang === "RU" ? "ru-RU" : "en-US", {
                           year: "numeric",
                           month: "long",
                           day: "numeric",

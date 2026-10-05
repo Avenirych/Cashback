@@ -2,10 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ForumLogo from "../components/ForumLogo";
+import { translations } from "../i18n";
 
 const defaultAvatar = "https://ui-avatars.com/api/?name=User&background=0d6efd&color=fff";
 
-export default function Topic() {
+export default function Topic({ lang, onLangChange }: { lang: string; onLangChange: (lang: string) => void }) {
   const { id } = useParams();
   const { user, token } = useAuth();
 
@@ -14,6 +15,8 @@ export default function Topic() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
+
+  const t = translations[lang as keyof typeof translations] ?? translations.EN;
 
   const loadPosts = useCallback(async () => {
     const response = await fetch(`http://localhost:3001/forum/posts/${id}`);
@@ -53,13 +56,13 @@ export default function Topic() {
 
       if (!response.ok) {
         const text = await response.text();
-        throw new Error(`Ошибка ${response.status}: ${text}`);
+        throw new Error(`Error ${response.status}: ${text}`);
       }
 
       setMessage("");
       await loadPosts();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Не удалось отправить сообщение");
+      setError(err instanceof Error ? err.message : t.send);
     } finally {
       setSending(false);
     }
@@ -68,9 +71,15 @@ export default function Topic() {
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "24px" }}>
-        <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "20px", display: "inline-block", fontSize: "14px" }}>
-          ← На главную
-        </Link>
+        <div style={{ display: "flex", gap: "16px", marginBottom: "20px" }}>
+          <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", fontSize: "14px" }}>
+            {t.backToHome}
+          </Link>
+          <span style={{ color: "#ccc" }}>|</span>
+          <Link to="/forum" style={{ color: "#0d6efd", textDecoration: "none", fontSize: "14px" }}>
+            {t.backToForum}
+          </Link>
+        </div>
 
         <div
           style={{
@@ -85,14 +94,10 @@ export default function Topic() {
           }}
         >
           <ForumLogo size={40} />
-          <Link to="/" style={{ fontSize: "32px", fontWeight: 700, color: "#000", textDecoration: "none" }}>
-            Forum
+          <Link to="/forum" style={{ fontSize: "32px", fontWeight: 700, color: "#000", textDecoration: "none" }}>
+            {t.forumTitle}
           </Link>
         </div>
-
-        <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "20px", display: "inline-block", fontSize: "14px" }}>
-          ← Ко всем темам
-        </Link>
 
         <div style={{ backgroundColor: "white", padding: "24px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)", marginBottom: "24px" }}>
           {topic && (
@@ -105,7 +110,7 @@ export default function Topic() {
                 />
                 <div>
                   <div style={{ fontWeight: 700 }}>{topic.author?.name || "Unknown user"}</div>
-                  <small>{new Date(topic.created_at).toLocaleString("ru-RU")}</small>
+                  <small>{new Date(topic.created_at).toLocaleString(lang === "RU" ? "ru-RU" : "en-US")}</small>
                 </div>
               </div>
 
@@ -122,7 +127,7 @@ export default function Topic() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") sendMessage();
               }}
-              placeholder="Напишите сообщение"
+              placeholder={t.writeMessage}
               disabled={sending}
               style={{
                 flex: 1,
@@ -144,12 +149,12 @@ export default function Topic() {
                 cursor: sending ? "not-allowed" : "pointer",
               }}
             >
-              {sending ? "..." : "Отправить"}
+              {sending ? "..." : t.send}
             </button>
           </div>
         ) : (
           <p style={{ marginBottom: "12px" }}>
-            <Link to="/login">Войдите</Link>, чтобы писать сообщения.
+            <Link to="/login">{t.pleaseLogin}</Link> {t.toWriteMessages}
           </p>
         )}
 
@@ -162,7 +167,7 @@ export default function Topic() {
         <div style={{ backgroundColor: "white", padding: "24px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
           <div style={{ display: "grid", gap: "12px" }}>
             {posts.length === 0 ? (
-              <p>Сообщений пока нет.</p>
+              <p>{t.noMessages}</p>
             ) : (
               posts.map((post) => (
                 <div key={post.id} style={{ border: "1px solid #ddd", borderRadius: "12px", padding: "16px" }}>
@@ -174,7 +179,7 @@ export default function Topic() {
                     />
                     <div>
                       <div style={{ fontWeight: 700 }}>{post.author?.name || "Unknown user"}</div>
-                      <small>{new Date(post.created_at).toLocaleString("ru-RU")}</small>
+                      <small>{new Date(post.created_at).toLocaleString(lang === "RU" ? "ru-RU" : "en-US")}</small>
                     </div>
                   </div>
                   <div>{post.content}</div>

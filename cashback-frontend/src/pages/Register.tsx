@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import ForumLogo from "../components/ForumLogo";
+import { translations } from "../i18n";
 
-export default function Register() {
+export default function Register({ lang, onLangChange }: { lang: string; onLangChange: (lang: string) => void }) {
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const t = translations[lang as keyof typeof translations] ?? translations.EN;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,9 +21,9 @@ export default function Register() {
 
     try {
       await register(form);
-      navigate("/", { replace: true });
+      navigate("/forum", { replace: true });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Не удалось зарегистрировать пользователя";
+      const errorMessage = err instanceof Error ? err.message : t.loginRegister;
       setError(errorMessage);
       console.error("Register error:", err);
     } finally {
@@ -31,15 +34,17 @@ export default function Register() {
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)" }}>
       <div style={{ maxWidth: "480px", margin: "0 auto", padding: "40px 24px" }}>
-        <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "24px", display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}>
-          ← На главную
+        <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "24px", display: "inline-block", fontSize: "14px" }}>
+          {t.backToHome}
         </Link>
 
         <div style={{ backgroundColor: "white", padding: "32px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-            <ForumLogo size={32} />
-            <h1 style={{ margin: 0, fontSize: "24px" }}>Регистрация</h1>
-          </div>
+          <Link to="/" style={{ display: "inline-block", marginBottom: "24px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
+              <ForumLogo size={32} />
+              <h1 style={{ margin: 0, fontSize: "24px", color: "#000" }}>{t.register}</h1>
+            </div>
+          </Link>
 
           {error && (
             <div
@@ -61,7 +66,7 @@ export default function Register() {
               id="name"
               name="name"
               type="text"
-              placeholder="Имя"
+              placeholder={t.name}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
@@ -74,7 +79,7 @@ export default function Register() {
               id="email"
               name="email"
               type="email"
-              placeholder="Email"
+              placeholder={t.email}
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
@@ -87,7 +92,7 @@ export default function Register() {
               id="password"
               name="password"
               type="password"
-              placeholder="Пароль (мин. 3 символа)"
+              placeholder={t.minPassword}
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               required
@@ -110,14 +115,14 @@ export default function Register() {
                 fontWeight: 500,
               }}
             >
-              {loading ? "Загрузка..." : "Зарегистрироваться"}
+              {loading ? t.creating : t.register}
             </button>
           </form>
 
           <p style={{ marginTop: "24px", textAlign: "center", color: "#666" }}>
-            Уже есть аккаунт?{" "}
+            {t.haveAccount}{" "}
             <Link to="/login" style={{ color: "#0d6efd", textDecoration: "none" }}>
-              Войти
+              {t.login}
             </Link>
           </p>
         </div>
