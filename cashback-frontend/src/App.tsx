@@ -9,12 +9,18 @@ import { AuthProvider } from "./context/AuthContext";
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Routes>
           <Route path="/" element={<TopicsPage />} />
           <Route path="/topic/:id" element={<Topic />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="*" element={<TopicsPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
