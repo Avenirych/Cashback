@@ -1,68 +1,70 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function TopicPage() {
-  const { id } = useParams();
+export default function TopicsPage() {
+  const [topics, setTopics] = useState<any[]>([]);
+  const [title, setTitle] = useState("");
 
-  const [posts, setPosts] = useState<any[]>([]);
-  const [message, setMessage] = useState("");
+  const loadTopics = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3001/topics"
+      );
 
-  const loadPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/topic/${id}`
-    );
+      const data = await response.json();
 
-    const data = await response.json();
+      console.log("TOPICS:", data);
 
-    setPosts(data);
+      setTopics(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
-    loadPosts();
-  }, [id]);
+    loadTopics();
+  }, []);
 
-  const sendMessage = async () => {
-    if (!message.trim()) return;
+  const createTopic = async () => {
+    if (!title.trim()) return;
 
-    await fetch("http://localhost:3001/posts", {
+    await fetch("http://localhost:3001/topics", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        topicId: Number(id),
-        content: message,
+        title,
       }),
     });
 
-    setMessage("");
-
-    await loadPosts();
+    setTitle("");
+    await loadTopics();
   };
 
   return (
     <div>
-      <h1>Topic #{id}</h1>
+      <h1>Cashback+ Forum</h1>
 
       <input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Message"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Topic title"
       />
 
-      <button onClick={sendMessage}>
-        Send
+      <button onClick={createTopic}>
+        Create Topic
       </button>
 
       <hr />
 
-      {posts.map((post) => (
-        <div key={post.id}>
-          {post.content}
+      {topics.map((topic) => (
+        <div key={topic.id}>
+          <Link to={`/topic/${topic.id}`}>
+            {topic.title}
+          </Link>
         </div>
       ))}
     </div>
   );
 }
-
-export default TopicPage;

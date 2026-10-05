@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 
 export default function Topic() {
-  console.log("REAL TOPIC COMPONENT");
-  const { id } = useParams();
-
   const [posts, setPosts] = useState<any[]>([]);
   const [message, setMessage] = useState("");
 
   const loadPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/topic/${id}`
+      "http://localhost:3001/posts/topic/1"
     );
 
     const data = await response.json();
@@ -20,7 +16,7 @@ export default function Topic() {
 
   useEffect(() => {
     loadPosts();
-  }, [id]);
+  }, []);
 
   const sendMessage = async () => {
     if (!message.trim()) return;
@@ -31,7 +27,7 @@ export default function Topic() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        topicId: Number(id),
+        topicId: 1,
         content: message,
       }),
     });
@@ -42,7 +38,7 @@ export default function Topic() {
 
   return (
     <div>
-      <h1>Topic #{id}</h1>
+      <h1>postgres test</h1>
 
       <input
         value={message}
