@@ -1,8 +1,7 @@
 import React from "react";
 import Footer from "../components/Footer";
-import LanguageSwitcher from "../components/LanguageSwitcher";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { translations } from "../i18n";
 
 interface WelcomeProps {
@@ -29,7 +28,7 @@ export default function Welcome({ lang }: WelcomeProps) {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "calc(100vh - 72px)",
         display: "flex",
         flexDirection: "column",
         background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
@@ -37,25 +36,6 @@ export default function Welcome({ lang }: WelcomeProps) {
         fontFamily: "Segoe UI, system-ui, sans-serif",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "16px 40px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <span style={{ fontSize: "24px", fontWeight: 700 }}>Cashback+</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Link to="/forum" style={{ color: "#0d6efd", textDecoration: "none", fontSize: "14px" }}>
-            Forum
-          </Link>
-          <LanguageSwitcher />
-        </div>
-      </div>
-
       <main
         style={{
           flex: 1,
@@ -78,45 +58,21 @@ export default function Welcome({ lang }: WelcomeProps) {
           <div style={{ display: "flex", gap: "20px" }}>
             <button
               onClick={goToShopping}
-              style={{
-                padding: "14px 24px",
-                background: "#0078ff",
-                color: "white",
-                borderRadius: "12px",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "16px",
-                fontWeight: 600,
-              }}
+              style={{ padding: "14px 24px", background: "#0078ff", color: "white", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "16px", fontWeight: 600 }}
             >
               {t.goShopping ?? "Go shopping"}
             </button>
 
             <button
               onClick={goToBonuses}
-              style={{
-                padding: "14px 24px",
-                background: "#ff3b3b",
-                color: "white",
-                borderRadius: "12px",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "16px",
-                fontWeight: 600,
-              }}
+              style={{ padding: "14px 24px", background: "#ff3b3b", color: "white", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "16px", fontWeight: 600 }}
             >
               {t.getBonuses ?? "Get bonuses"}
             </button>
           </div>
 
           {!isAuth && (
-            <p
-              style={{
-                marginTop: "16px",
-                fontSize: "14px",
-                color: "var(--text-secondary)",
-              }}
-            >
+            <p style={{ marginTop: "16px", fontSize: "14px", color: "var(--text-secondary)" }}>
               {t.needRegister ?? "Please register to continue"}
             </p>
           )}
@@ -126,12 +82,7 @@ export default function Welcome({ lang }: WelcomeProps) {
           <img
             src="/assets/Oduvanchiki.jpeg"
             alt="Oduvanchiki"
-            style={{
-              width: "100%",
-              borderRadius: "20px",
-              boxShadow: "0 12px 32px rgba(0,0,0,0.15)",
-              objectFit: "cover",
-            }}
+            style={{ width: "100%", borderRadius: "20px", boxShadow: "0 12px 32px rgba(0,0,0,0.15)", objectFit: "cover" }}
           />
 
           <div
