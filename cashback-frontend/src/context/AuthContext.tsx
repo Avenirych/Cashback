@@ -5,6 +5,7 @@ interface User {
   email: string;
   name: string;
   avatar_url?: string | null;
+  balance?: number;
 }
 
 interface AuthContextType {
@@ -13,11 +14,6 @@ interface AuthContextType {
   login: (data: { email: string; password: string }) => Promise<void>;
   register: (data: { name: string; email: string; password: string }) => Promise<void>;
   logout: () => void;
-  updateForumProfile: (data: {
-    forumUsername: string;
-    forumAvatar: string | null;
-    agreedRules: boolean;
-  }) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -68,22 +64,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
   };
 
-  const updateForumProfile = (data: {
-    forumUsername: string;
-    forumAvatar: string | null;
-    agreedRules: boolean;
-  }) => {
-    setUser((prev) =>
-      prev
-        ? {
-            ...prev,
-            name: data.forumUsername,
-            avatar_url: data.forumAvatar ?? prev.avatar_url ?? null,
-          }
-        : prev,
-    );
-  };
-
   return (
     <AuthContext.Provider
       value={{
@@ -92,7 +72,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         login,
         register,
         logout,
-        updateForumProfile,
       }}
     >
       {children}

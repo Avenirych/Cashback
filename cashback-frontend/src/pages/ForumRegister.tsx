@@ -1,128 +1,51 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import "./ForumRegister.css";
 
 export default function ForumRegister() {
-  const { user, updateForumProfile } = useAuth();
-  const navigate = useNavigate();
-
-  const [username, setUsername] = useState("");
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [agreeRules, setAgreeRules] = useState(false);
+  const { user, logout } = useAuth();
   const [error, setError] = useState("");
 
-  const initials =
-    user?.fullName
-      ?.split(" ")
-      .map((p) => p[0]?.toUpperCase())
-      .join("") || "U";
+  if (!user) {
+    return (
+      <div style={{ padding: "40px", textAlign: "center" }}>
+        <p>You must be logged in to register for the forum.</p>
+      </div>
+    );
+  }
 
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!username.trim()) {
-      setError("Forum username is required.");
-      return;
-    }
-
-    if (!agreeRules) {
-      setError("You must agree with the forum rules.");
-      return;
-    }
-
-    let avatarUrl: string | null = null;
-
-    if (avatarFile) {
-      avatarUrl = avatarPreview; // локальный URL, пока без backend
-    }
-
-    updateForumProfile({
-      forumUsername: username,
-      forumAvatar: avatarUrl,
-      agreedRules: true,
-    });
-
-    navigate("/forum");
+    // TODO: Implement forum registration
+    setError("Forum registration coming soon");
   };
 
   return (
-    <div className="forum-register-container">
+    <div style={{ padding: "40px", maxWidth: "600px", margin: "0 auto" }}>
       <h1>Forum Registration</h1>
 
-      <p>Email: {user?.email}</p>
-      <p>Full name: {user?.fullName}</p>
-      <p>Address: {user?.address}</p>
+      <div style={{ marginBottom: "24px", padding: "16px", backgroundColor: "#f5f5f5", borderRadius: "8px" }}>
+        <p>Email: {user.email}</p>
+        <p>Name: {user.name}</p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="forum-register-form">
-        {error && <p className="error">{error}</p>}
+      <form onSubmit={handleSubmit} style={{ display: "grid", gap: "12px" }}>
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <input
-          type="text"
-          placeholder="Forum username (unique)"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <h3>Upload your avatar</h3>
-
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleAvatarUpload}
-        />
-
-        {/* Preview */}
-        <div style={{ marginTop: 10 }}>
-          {avatarPreview ? (
-            <img
-              src={avatarPreview}
-              alt="avatar preview"
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: "50%",
-                background: "#ccc",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 28,
-                fontWeight: 700,
-              }}
-            >
-              {initials}
-            </div>
-          )}
-        </div>
-
-        <label className="rules-check">
-          <input
-            type="checkbox"
-            checked={agreeRules}
-            onChange={(e) => setAgreeRules(e.target.checked)}
-          />
-          I have read and agree with the forum rules.
-        </label>
-
-        <button type="submit">Complete Forum Registration</button>
+        <button
+          type="submit"
+          style={{
+            padding: "10px 16px",
+            backgroundColor: "#0d6efd",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          Register for Forum
+        </button>
       </form>
     </div>
   );

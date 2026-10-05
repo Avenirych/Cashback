@@ -1,222 +1,64 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Coint1 from "../assets/Coint1.png";
+import React from "react";
 import { useAuth } from "../context/AuthContext";
 
-interface HeaderProps {
-  lang: string;
-  setLang: (lang: string) => void;
-}
-
-export default function Header({ lang, setLang }: HeaderProps) {
+export default function Header() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
 
   const initials =
-    user?.fullName
+    user?.name
       ?.split(" ")
       .map((p) => p[0]?.toUpperCase())
       .join("") || "U";
 
+  const navLinkStyle = {
+    textDecoration: "none",
+    color: "inherit",
+    marginLeft: "20px",
+  };
+
   return (
     <header
       style={{
-        width: "100%",
         display: "flex",
-        alignItems: "center",
         justifyContent: "space-between",
-        padding: "12px 24px",
-        background: "linear-gradient(90deg, #f5e8d3, #e3d2b8, #d9c4a8)",
-        borderBottom: "1px solid rgba(255,255,255,0.2)",
+        alignItems: "center",
+        padding: "16px 24px",
+        borderBottom: "1px solid #ddd",
+        backgroundColor: "#fff",
       }}
     >
-      {/* LOGO */}
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <img
-          src={Coint1}
-          alt="Cashback+ Logo"
-          className="coin-spin"
-          style={{ height: "48px", width: "48px", objectFit: "contain" }}
-        />
+      <h1>Cashback+</h1>
 
-        <Link
-          to="/"
-          style={{
-            fontSize: "22px",
-            fontWeight: 700,
-            color: "var(--text)",
-            textDecoration: "none",
-          }}
-        >
-          Cashback+
-        </Link>
-      </div>
-
-      {/* NAVIGATION */}
-      <nav style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-        <Link to="/about" style={navLinkStyle}>About us</Link>
-        <Link to="/services" style={navLinkStyle}>Services</Link>
-        <Link to="/forum" style={navLinkStyle}>Forum</Link>
-        <Link to="/contacts" style={navLinkStyle}>Contacts</Link>
-
-        {/* Forum Registration (only if user logged in but not registered for forum) */}
-        {user && !user.agreedRules && (
-          <Link to="/forum-register" style={navLinkStyle}>
-            Forum Registration
-          </Link>
+      <nav style={{ display: "flex", alignItems: "center" }}>
+        {user ? (
+          <>
+            <span>Welcome, {user.name}!</span>
+            <button
+              onClick={logout}
+              style={{
+                marginLeft: "20px",
+                padding: "8px 16px",
+                backgroundColor: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <a href="/login" style={navLinkStyle}>
+              Login
+            </a>
+            <a href="/register" style={navLinkStyle}>
+              Register
+            </a>
+          </>
         )}
       </nav>
-
-      {/* RIGHT PANEL */}
-      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-        {/* SEARCH */}
-        <input
-          type="text"
-          placeholder="Search..."
-          style={{
-            padding: "6px 10px",
-            borderRadius: "6px",
-            border: "1px solid rgba(255,255,255,0.3)",
-            background: "rgba(255,255,255,0.2)",
-            color: "var(--text)",
-          }}
-        />
-
-        {/* LANGUAGE SWITCHER */}
-        <select
-          value={lang}
-          onChange={(e) => setLang(e.target.value)}
-          style={{
-            padding: "6px 10px",
-            borderRadius: "6px",
-            background: "rgba(255,255,255,0.2)",
-            color: "var(--text)",
-            border: "1px solid rgba(255,255,255,0.3)",
-          }}
-        >
-          <option value="en">EN</option>
-          <option value="ru">RU</option>
-          <option value="de">DE</option>
-          <option value="fr">FR</option>
-        </select>
-
-        {/* LOGIN BUTTON */}
-        {!user && (
-          <button
-            onClick={() => navigate("/login")}
-            style={{
-              padding: "10px 18px",
-              background: "#0078ff",
-              color: "white",
-              borderRadius: "12px",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "16px",
-              fontWeight: 600,
-            }}
-          >
-            Login / Register
-          </button>
-        )}
-
-        {/* USER MENU */}
-        {user && (
-          <div style={{ position: "relative" }}>
-            {/* Avatar or initials */}
-            {user.forumAvatar ? (
-              <img
-                src={user.forumAvatar}
-                alt="avatar"
-                style={{
-                  width: "42px",
-                  height: "42px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  cursor: "pointer",
-                  border: "2px solid rgba(255,255,255,0.4)",
-                }}
-                onClick={() => setMenuOpen(!menuOpen)}
-              />
-            ) : (
-              <div
-                style={{
-                  width: "42px",
-                  height: "42px",
-                  borderRadius: "50%",
-                  background: "#ccc",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  fontSize: "18px",
-                  fontWeight: 700,
-                  border: "2px solid rgba(255,255,255,0.4)",
-                }}
-                onClick={() => setMenuOpen(!menuOpen)}
-              >
-                {initials}
-              </div>
-            )}
-
-            {/* Dropdown */}
-            {menuOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50px",
-                  right: 0,
-                  background: "white",
-                  color: "black",
-                  borderRadius: "10px",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                  padding: "10px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                  minWidth: "160px",
-                  zIndex: 100,
-                }}
-              >
-                <Link to="/profile" style={menuLinkStyle}>Profile</Link>
-
-                <button
-                  onClick={handleLogout}
-                  style={{
-                    ...menuLinkStyle,
-                    background: "none",
-                    border: "none",
-                    textAlign: "left",
-                    cursor: "pointer",
-                  }}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
     </header>
   );
 }
-
-const navLinkStyle: React.CSSProperties = {
-  color: "var(--text)",
-  textDecoration: "none",
-  fontSize: "16px",
-  fontWeight: 500,
-};
-
-const menuLinkStyle: React.CSSProperties = {
-  color: "black",
-  textDecoration: "none",
-  fontSize: "15px",
-  fontWeight: 500,
-  padding: "6px 4px",
-};
