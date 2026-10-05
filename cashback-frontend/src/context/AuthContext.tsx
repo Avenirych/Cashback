@@ -29,33 +29,45 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const login = async (data: { email: string; password: string }) => {
+    console.log("🔐 Frontend: Sending login request...", data.email);
     const response = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
 
+    const responseData = await response.text();
+    console.log("📨 Frontend: Login response status:", response.status);
+    console.log("📨 Frontend: Login response body:", responseData);
+
     if (!response.ok) {
-      throw new Error("Login failed");
+      throw new Error(responseData || "Login failed");
     }
 
-    const result = await response.json();
+    const result = JSON.parse(responseData);
     applySession(result.access_token, result.user);
+    console.log("✅ Frontend: Login successful");
   };
 
   const register = async (data: { name: string; email: string; password: string }) => {
+    console.log("🔐 Frontend: Sending register request...", data.email);
     const response = await fetch("http://localhost:3001/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
 
+    const responseData = await response.text();
+    console.log("📨 Frontend: Register response status:", response.status);
+    console.log("📨 Frontend: Register response body:", responseData);
+
     if (!response.ok) {
-      throw new Error("Registration failed");
+      throw new Error(responseData || "Registration failed");
     }
 
-    const result = await response.json();
+    const result = JSON.parse(responseData);
     applySession(result.access_token, result.user);
+    console.log("✅ Frontend: Register successful");
   };
 
   const logout = () => {

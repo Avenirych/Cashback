@@ -11,75 +11,86 @@ export class AuthService {
   ) {}
 
   async register(email: string, password: string, name: string) {
+    console.log('🔐 Register attempt:', { email, name });
+
     if (!email || !password || !name) {
       throw new BadRequestException('Email, password, and name are required');
     }
 
-    if (password.length < 6) {
-      throw new BadRequestException('Password must be at least 6 characters');
+    if (password.length < 3) {
+      throw new BadRequestException('Password must be at least 3 characters');
+    }
+
+    if (name.trim().length < 2) {
+      throw new BadRequestException('Name must be at least 2 characters');
+    }
+
+    const existing = await this.usersService.getByEmail(email);
+    if (existing) {
+      console.log('❌ User already exists:', email);
+      throw new BadRequestException('User with this email already exists');
     }
 
     try {
-      const existing = await this.usersService.getByEmail(email);
-      if (existing) {
-        throw new BadRequestException('User with this email already exists');
-      }
-
       const passwordHash = await bcrypt.hash(password, 10);
-      const user = await this.usersService.create({
-        email,
-        name,
+      console.log('🔒 Password hashed');
+
+      const userData = {
+        email: email.toLowerCase().trim(),
+        name: name.trim(),
         password: passwordHash,
         avatar_url: null,
         balance: 0,
-      });
+      };
+
+      console.log('💾 Creating user with data:', { email: userData.email, name: userData.name });
+      const user = await this.usersService.create(userData);
+      console.log('✅ User created:', { id: user.id, email: user.email });
 
       const payload = { sub: user.id, email: user.email, name: user.name };
       const token = this.jwtService.sign(payload);
+      console.log('🎫 Token generated for user:', user.id);
 
       return {
         access_token: token,
         user: this.safeUser(user),
       };
     } catch (error) {
+      console.error('❌ Register error:', error);
       if (error instanceof BadRequestException) {
         throw error;
       }
-      console.error('Register error:', error);
       throw new BadRequestException('Registration failed: ' + (error as any).message);
     }
   }
 
   async login(email: string, password: string) {
+    console.log('🔐 Login attempt:', email);
+
     if (!email || !password) {
       throw new BadRequestException('Email and password are required');
     }
 
-    try {
-      const user = await this.usersService.getByEmail(email);
-      if (!user) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
-
-      const valid = await bcrypt.compare(password, user.password || '');
-      if (!valid) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
-
-      const payload = { sub: user.id, email: user.email, name: user.name };
-      const token = this.jwtService.sign(payload);
-
-      return {
-        access_token: token,
-        user: this.safeUser(user),
-      };
-    } catch (error) {
-      if (error instanceof UnauthorizedException || error instanceof BadRequestException) {
-        throw error;
-      }
-      console.error('Login error:', error);
-      throw new BadRequestException('Login failed');
+    const user = await this.usersService.getByEmail(email);
+    if (!user) {
+      console.log('❌ User not found:', email);
+      throw new UnauthorizedException('Invalid credentials');
     }
+
+    const valid = await bcrypt.compare(password, user.password || '');
+    if (!valid) {
+      console.log('❌ Invalid password for user:', email);
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const payload = { sub: user.id, email: user.email, name: user.name };
+    const token = this.jwtService.sign(payload);
+    console.log('✅ Login successful for:', email);
+
+    return {
+      access_token: token,
+      user: this.safeUser(user),
+    };
   }
 
   async profile(user: { id: number; email: string; name?: string }) {
