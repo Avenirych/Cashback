@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface User {
   id: number;
@@ -11,6 +11,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
+  loading: boolean;
   login: (data: { email: string; password: string }) => Promise<void>;
   register: (data: { name: string; email: string; password: string }) => Promise<void>;
   logout: () => void;
@@ -20,57 +21,109 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("cashback_token"));
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Restore session on app load
+  useEffect(() => {
+    const restoreSession = async () => {
+      const savedToken = localStorage.getItem("cashback_token");
+      console.log("🔐 Restoring session...", savedToken ? "token found" : "no token");
+
+      if (!savedToken) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3001/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Invalid token");
+        }
+
+        const userData = await response.json();
+        console.log("✅ Session restored for user:", userData.name);
+        setUser(userData);
+        setToken(savedToken);
+      } catch (error) {
+        console.error("❌ Failed to restore session:", error);
+        localStorage.removeItem("cashback_token");
+        setUser(null);
+        setToken(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    restoreSession();
+  }, []);
 
   const applySession = (newToken: string, newUser: User) => {
+    console.log("💾 Saving session for user:", newUser.name);
     localStorage.setItem("cashback_token", newToken);
     setToken(newToken);
     setUser(newUser);
   };
 
   const login = async (data: { email: string; password: string }) => {
-    console.log("🔐 Frontend: Sending login request...", data.email);
-    const response = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    console.log("🔐 Login attempt:", data.email);
+    try {
+      const response = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    const responseData = await response.text();
-    console.log("📨 Frontend: Login response status:", response.status);
-    console.log("📨 Frontend: Login response body:", responseData);
+      const text = await response.text();
+      console.log("📨 Login response status:", response.status);
 
-    if (!response.ok) {
-      throw new Error(responseData || "Login failed");
+      if (!response.ok) {
+        console.error("❌ Login failed:", text);
+        throw new Error(text || "Login failed");
+      }
+
+      const result = JSON.parse(text);
+      applySession(result.access_token, result.user);
+      console.log("✅ Login successful");
+    } catch (error) {
+      console.error("❌ Login error:", error);
+      throw error;
     }
-
-    const result = JSON.parse(responseData);
-    applySession(result.access_token, result.user);
-    console.log("✅ Frontend: Login successful");
   };
 
   const register = async (data: { name: string; email: string; password: string }) => {
-    console.log("🔐 Frontend: Sending register request...", data.email);
-    const response = await fetch("http://localhost:3001/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    console.log("🔐 Register attempt:", data.email);
+    try {
+      const response = await fetch("http://localhost:3001/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    const responseData = await response.text();
-    console.log("📨 Frontend: Register response status:", response.status);
-    console.log("📨 Frontend: Register response body:", responseData);
+      const text = await response.text();
+      console.log("📨 Register response status:", response.status);
 
-    if (!response.ok) {
-      throw new Error(responseData || "Registration failed");
+      if (!response.ok) {
+        console.error("❌ Register failed:", text);
+        throw new Error(text || "Registration failed");
+      }
+
+      const result = JSON.parse(text);
+      applySession(result.access_token, result.user);
+      console.log("✅ Register successful");
+    } catch (error) {
+      console.error("❌ Register error:", error);
+      throw error;
     }
-
-    const result = JSON.parse(responseData);
-    applySession(result.access_token, result.user);
-    console.log("✅ Frontend: Register successful");
   };
 
   const logout = () => {
+    console.log("👋 Logging out");
     localStorage.removeItem("cashback_token");
     setToken(null);
     setUser(null);
@@ -81,6 +134,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         user,
         token,
+        loading,
         login,
         register,
         logout,
