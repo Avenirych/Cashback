@@ -15,7 +15,7 @@ export default function Login() {
       await login(form);
       navigate("/");
     } catch (err) {
-      setError("Неверный email или пароль");
+      setError(err instanceof Error ? err.message : "Неверный email или пароль");
     }
   };
 
@@ -27,19 +27,25 @@ export default function Login() {
 
       <form onSubmit={submit} style={{ marginTop: "20px", display: "grid", gap: "12px" }}>
         <input
+          id="email"
+          name="email"
           type="email"
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
+          autoComplete="email"
         />
 
         <input
+          id="password"
+          name="password"
           type="password"
           placeholder="Пароль"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
+          autoComplete="current-password"
         />
 
         <button type="submit">Войти</button>

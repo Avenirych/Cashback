@@ -15,7 +15,7 @@ export default function Register() {
       await register(form);
       navigate("/");
     } catch (err) {
-      setError("Не удалось зарегистрировать пользователя");
+      setError(err instanceof Error ? err.message : "Не удалось зарегистрировать пользователя");
     }
   };
 
@@ -27,27 +27,36 @@ export default function Register() {
 
       <form onSubmit={submit} style={{ marginTop: "20px", display: "grid", gap: "12px" }}>
         <input
+          id="name"
+          name="name"
           type="text"
           placeholder="Имя"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           required
+          autoComplete="name"
         />
 
         <input
+          id="email"
+          name="email"
           type="email"
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
+          autoComplete="email"
         />
 
         <input
+          id="password"
+          name="password"
           type="password"
           placeholder="Пароль"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
+          autoComplete="new-password"
         />
 
         <button type="submit">Зарегистрироваться</button>
