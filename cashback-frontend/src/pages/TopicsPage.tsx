@@ -53,37 +53,54 @@ export default function TopicsPage() {
   }, []);
 
   const createTopic = async () => {
-    if (!title.trim()) return;
+if (!title.trim()) return;
+ 
+const response = await fetch(
+"http://localhost:3001/topics",
+{
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+},
+body: JSON.stringify({
+title,
+}),
+}
+);
+ 
+const topic = await response.json();
+ 
+setTitle("");
+ 
+navigate(`/topic/${topic.id}`);
+};
+ 
+const deleteTopic = async (id: number) => {
+const confirmed = window.confirm(
+"Delete this topic?"
+);
+ 
+if (!confirmed) return;
+ 
+await fetch(
+`http://localhost:3001/topics/${id}`,
+{
+method: "DELETE",
+}
+);
+ 
+await loadTopics();
+};
+ 
+const filteredTopics = useMemo(() => {
+return topics.filter((topic) =>
+topic.title
+?.toLowerCase()
+.includes(search.toLowerCase())
+);
+}, [topics, search]);
 
-    const response = await fetch(
-      "http://localhost:3001/topics",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-        }),
-      }
-    );
-
-    const topic = await response.json();
-
-    setTitle("");
-
-    navigate(`/topic/${topic.id}`);
-  };
-
-  const filteredTopics = useMemo(() => {
-    return topics.filter((topic) =>
-      topic.title
-        ?.toLowerCase()
-        .includes(search.toLowerCase())
-    );
-  }, [topics, search]);
-
-  return (
+    return (
     <div
       style={{
         maxWidth: "900px",
@@ -156,11 +173,31 @@ export default function TopicsPage() {
                 fontWeight: 600,
               }}
             >
-              <Link
-                to={`/topic/${topic.id}`}
-              >
-                {topic.title}
-              </Link>{" "}
+              <div
+style={{
+display: "flex",
+justifyContent: "space-between",
+alignItems: "center",
+}}
+>
+<div>
+<Link to={`/topic/${topic.id}`}>
+{topic.title}
+</Link>{" "}
+<strong>
+({topic.posts?.length ?? 0})
+</strong>
+</div>
+ 
+<button
+onClick={() =>
+deleteTopic(topic.id)
+}
+>
+Delete
+</button>
+</div>
+
               <strong>
                 ({topic.posts?.length ?? 0})
               </strong>
