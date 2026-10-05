@@ -1,4 +1,4 @@
-import { Controller, Body, Post, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Body, Post, Get, Req, UseGuards, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
@@ -7,20 +7,30 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  register(
+  async register(
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('name') name: string,
   ) {
-    return this.authService.register(email, password, name);
+    try {
+      return await this.authService.register(email, password, name);
+    } catch (error) {
+      console.error('Register endpoint error:', error);
+      throw error;
+    }
   }
 
   @Post('login')
-  login(
+  async login(
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    return this.authService.login(email, password);
+    try {
+      return await this.authService.login(email, password);
+    } catch (error) {
+      console.error('Login endpoint error:', error);
+      throw error;
+    }
   }
 
   @Get('profile')
