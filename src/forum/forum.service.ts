@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -19,11 +19,15 @@ export class ForumService {
   ) {}
 
   async createTopic(userId: number, title: string) {
+    if (!title || title.trim().length < 3) {
+      throw new BadRequestException('Title must be at least 3 characters');
+    }
+
     const user = await this.usersService.getById(userId);
     if (!user) throw new BadRequestException('User not found');
 
     const topic = this.topicRepo.create({
-      title,
+      title: title.trim(),
       author: { id: user.id },
     });
 
@@ -31,6 +35,10 @@ export class ForumService {
   }
 
   async createPost(userId: number, topicId: number, content: string) {
+    if (!content || content.trim().length < 1) {
+      throw new BadRequestException('Content is required');
+    }
+
     const user = await this.usersService.getById(userId);
     if (!user) throw new BadRequestException('User not found');
 
@@ -38,7 +46,7 @@ export class ForumService {
     if (!topic) throw new BadRequestException('Topic not found');
 
     const post = this.postRepo.create({
-      content,
+      content: content.trim(),
       author: { id: user.id },
       topic: { id: topic.id },
     });
@@ -46,25 +54,40 @@ export class ForumService {
     return this.postRepo.save(post);
   }
 
-  getTopics() {
+  async getTopics() {
     return this.topicRepo.find({
       relations: { author: true },
       order: { created_at: 'DESC' },
     });
   }
 
-  getTopic(id: number) {
+  async getTopic(id: number) {
     return this.topicRepo.findOne({
       where: { id },
       relations: { author: true },
     });
   }
 
-  getPosts(topicId: number) {
+  async getPosts(topicId: number) {
     return this.postRepo.find({
       where: { topic: { id: topicId } },
       relations: { author: true },
       order: { created_at: 'ASC' },
     });
+  }
+
+  async deleteTopic(id: number, userId: number) {
+    const topic = await this.topicRepo.findOne({
+      where: { id },
+      relations: { author: true },
+    });
+
+    if (!topic) throw new BadRequestException('Topic not found');
+    if (topic.author.id !== userId) {
+      throw new ForbiddenException('You can only delete your own topics');
+    }
+
+    await this.postRepo.delete({ topic: { id } });
+    await this.topicRepo.delete(id);
   }
 }

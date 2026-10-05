@@ -9,6 +9,10 @@ export default function TopicsPage() {
   const navigate = useNavigate();
   const [topics, setTopics] = useState<any[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newTopicTitle, setNewTopicTitle] = useState("");
+  const [creatingTopic, setCreatingTopic] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const loadTopics = async () => {
@@ -31,6 +35,43 @@ export default function TopicsPage() {
     navigate("/", { replace: true });
   };
 
+  const handleCreateTopic = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!newTopicTitle.trim()) {
+      setError("Название не может быть пустым");
+      return;
+    }
+
+    setCreatingTopic(true);
+    try {
+      const token = localStorage.getItem("cashback_token");
+      const response = await fetch("http://localhost:3001/forum/topic", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title: newTopicTitle }),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error || "Failed to create topic");
+      }
+
+      const newTopic = await response.json();
+      setTopics([newTopic, ...topics]);
+      setNewTopicTitle("");
+      setShowCreateForm(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Ошибка при создании темы");
+    } finally {
+      setCreatingTopic(false);
+    }
+  };
+
   if (loading) {
     return <div style={{ padding: "40px", textAlign: "center" }}>Загрузка...</div>;
   }
@@ -47,7 +88,18 @@ export default function TopicsPage() {
           paddingBottom: "16px",
         }}
       >
-        <h1 style={{ margin: 0 }}>Forum</h1>
+        <Link
+          to="/"
+          style={{
+            fontSize: "32px",
+            fontWeight: 700,
+            color: "#000",
+            textDecoration: "none",
+            cursor: "pointer",
+          }}
+        >
+          Forum
+        </Link>
 
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           {user ? (
@@ -69,6 +121,7 @@ export default function TopicsPage() {
                   border: "none",
                   borderRadius: "6px",
                   cursor: "pointer",
+                  fontSize: "14px",
                 }}
               >
                 Выход
@@ -84,6 +137,7 @@ export default function TopicsPage() {
                   textDecoration: "none",
                   border: "1px solid #0d6efd",
                   borderRadius: "6px",
+                  fontSize: "14px",
                 }}
               >
                 Вход
@@ -96,6 +150,7 @@ export default function TopicsPage() {
                   color: "white",
                   textDecoration: "none",
                   borderRadius: "6px",
+                  fontSize: "14px",
                 }}
               >
                 Регистрация
@@ -105,10 +160,116 @@ export default function TopicsPage() {
         </div>
       </div>
 
+      {user && (
+        <div style={{ marginBottom: "24px" }}>
+          {showCreateForm ? (
+            <form
+              onSubmit={handleCreateTopic}
+              style={{
+                backgroundColor: "#f8f9fa",
+                padding: "16px",
+                borderRadius: "12px",
+                border: "1px solid #dee2e6",
+              }}
+            >
+              <div style={{ marginBottom: "12px" }}>
+                <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
+                  Название темы
+                </label>
+                <input
+                  type="text"
+                  value={newTopicTitle}
+                  onChange={(e) => setNewTopicTitle(e.target.value)}
+                  placeholder="Введите название темы..."
+                  disabled={creatingTopic}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    borderRadius: "6px",
+                    border: "1px solid #ddd",
+                    fontSize: "16px",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              {error && (
+                <div
+                  style={{
+                    backgroundColor: "#fee",
+                    color: "#c33",
+                    padding: "12px",
+                    borderRadius: "6px",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+
+              <div style={{ display: "flex", gap: "12px" }}>
+                <button
+                  type="submit"
+                  disabled={creatingTopic}
+                  style={{
+                    padding: "12px 24px",
+                    backgroundColor: "#0d6efd",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: creatingTopic ? "not-allowed" : "pointer",
+                    fontSize: "14px",
+                  }}
+                >
+                  {creatingTopic ? "Создание..." : "Создать тему"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateForm(false);
+                    setError("");
+                  }}
+                  disabled={creatingTopic}
+                  style={{
+                    padding: "12px 24px",
+                    backgroundColor: "#e9ecef",
+                    color: "#000",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                  }}
+                >
+                  Отмена
+                </button>
+              </div>
+            </form>
+          ) : (
+            <button
+              onClick={() => setShowCreateForm(true)}
+              style={{
+                padding: "12px 24px",
+                backgroundColor: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "16px",
+                fontWeight: 500,
+              }}
+            >
+              + Создать новую тему
+            </button>
+          )}
+        </div>
+      )}
+
       {topicsLoading ? (
         <p>Загрузка тем...</p>
       ) : topics.length === 0 ? (
-        <p>No topics yet.</p>
+        <p style={{ color: "#666", textAlign: "center", padding: "40px 0" }}>
+          {user ? "Начните дискуссию, создав первую тему!" : "Нет тем. Войдите, чтобы создать одну."}
+        </p>
       ) : (
         <div style={{ display: "grid", gap: "16px" }}>
           {topics.map((topic) => (
@@ -143,6 +304,8 @@ export default function TopicsPage() {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
                     })}
                   </small>
                 </div>
