@@ -5,8 +5,6 @@ import { Repository } from 'typeorm';
 import { Post } from './posts.entity';
 import { Topic } from './topics.entity';
 
-import { User } from './users/user.entity';
-
 @Injectable()
 export class PostsService {
   constructor(
@@ -15,9 +13,6 @@ export class PostsService {
 
     @InjectRepository(Topic)
     private topicRepository: Repository<Topic>,
-
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
   ) {}
 
   async findByTopic(topicId: number) {
@@ -29,7 +24,6 @@ export class PostsService {
       },
       relations: {
         topic: true,
-        author: true,
       },
       order: {
         id: 'ASC',
@@ -37,71 +31,20 @@ export class PostsService {
     });
   }
 
-  async create(
-    topicId: number,
-    content: string,
-  ) {
-    const topic =
-      await this.topicRepository.findOneBy({
-        id: topicId,
-      });
+  async create(topicId: number, content: string) {
+    const topic = await this.topicRepository.findOneBy({
+      id: topicId,
+    });
 
     if (!topic) {
-      throw new Error(
-        'Topic not found',
-      );
+      throw new Error('Topic not found');
     }
 
-    const author =
-      await this.userRepository.findOneBy({
-        id: 1,
-      });
-
-    if (!author) {
-      throw new Error(
-        'User not found',
-      );
-    }
-
-    const post =
-      this.postRepository.create({
-        content,
-        topic,
-        author,
-      });
-
-    return this.postRepository.save(
-      post,
-    );
-  }
-
-  async update(
-    id: number,
-    content: string,
-  ) {
-    await this.postRepository.update(
-      id,
-      {
-        content,
-      },
-    );
-
-    return this.postRepository.findOne({
-      where: {
-        id,
-      },
-      relations: {
-        topic: true,
-        author: true,
-      },
+    const post = this.postRepository.create({
+      content,
+      topic,
     });
-  }
 
-  async remove(id: number) {
-    await this.postRepository.delete(id);
-
-    return {
-      success: true,
-    };
+    return this.postRepository.save(post);
   }
 }

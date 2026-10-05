@@ -8,7 +8,7 @@ async function bootstrap() {
 
   await app.listen(3001);
 
-  console.log('Backend: http://localhost:3001');
+  console.log('Backend running at http://localhost:3001');
 }
 
 bootstrap();

@@ -27,6 +27,11 @@ export class UsersService {
     return this.userRepo.save(user);
   }
 
+  async update(id: number, data: Partial<User>) {
+    await this.userRepo.update(id, data);
+    return this.userRepo.findOne({ where: { id } });
+  }
+
   async updateBalance(userId: number, newBalance: number) {
     const user = await this.getById(userId);
     if (!user) throw new Error('User not found');
