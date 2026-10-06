@@ -60,14 +60,13 @@ export const translations = {
 
     // Shop
     shopTitle: "Shop",
-    backToHome: "← Back to home",
     noProducts: "No products available",
   },
 
   RU: {
     title: "Умные покупки с Cashback+",
     description:
-      "Получайте кэшбэк, бонусы за просмотр рекламы и участие в исследованиях. Комбинируйте их и компенсируйт[...]",
+      "Получайте кэшбэк, бонусы за просмотр рекламы и участие в исследованиях. Комбинируйте их и компенсируйте до 100% своих покупок.",
     goShopping: "Перейти к покупкам",
     getBonuses: "Получить бонусы",
     needRegister: "Для доступа к бонусам и покупкам необходимо зарегистрироваться.",
@@ -103,7 +102,7 @@ export const translations = {
     cancel: "Отмена",
     topicsLoading: "Загрузка тем...",
     noTopics: "Нет тем. Войдите, чтобы создать одну.",
-    startDiscription: "Начните дискуссию, создав первую тему!",
+    startDiscussion: "Начните дискуссию, создав первую тему!",
     writeMessage: "Напишите сообщение",
     send: "Отправить",
     pleaseLogin: "Войдите",
