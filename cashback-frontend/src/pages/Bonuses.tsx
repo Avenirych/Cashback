@@ -1,22 +1,8 @@
-import React, { useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Bonuses() {
-  const { user } = useAuth();
   const navigate = useNavigate();
-
-  // Редирект делаем через useEffect
-  useEffect(() => {
-    if (!user) {
-      navigate("/register");
-    }
-  }, [user, navigate]);
-
-  // Если пользователь не авторизован — временно показываем пустой экран
-  if (!user) {
-    return <div style={{ padding: "40px" }}>Перенаправление...</div>;
-  }
 
   return (
     <div style={{ padding: "40px" }}>

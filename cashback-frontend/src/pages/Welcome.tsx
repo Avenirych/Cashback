@@ -1,15 +1,18 @@
 import React from "react";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { translations } from "../i18n";
+import { getOnboardingMessages, readOnboarding, useOnboarding } from "../onboarding";
 
 interface WelcomeProps {
   lang: string;
 }
 
 export default function Welcome({ lang }: WelcomeProps) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const { eligible } = useOnboarding();
+  const onboarding = getOnboardingMessages(lang);
   const isAuth = Boolean(user);
   const navigate = useNavigate();
 
@@ -21,7 +24,11 @@ export default function Welcome({ lang }: WelcomeProps) {
   };
 
   const goToBonuses = () => {
+    if (loading) return;
     if (!isAuth) return navigate("/register");
+    if (!readOnboarding(user?.id).eligible) {
+      return navigate("/profile", { state: { bonusOnboardingRequired: true } });
+    }
     navigate("/bonuses");
   };
 
@@ -65,11 +72,19 @@ export default function Welcome({ lang }: WelcomeProps) {
 
             <button
               onClick={goToBonuses}
-              style={{ padding: "14px 24px", background: "#ff3b3b", color: "white", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "16px", fontWeight: 600 }}
+              disabled={loading || (isAuth && !eligible)}
+              aria-describedby={isAuth && !eligible ? "bonus-onboarding-help" : undefined}
+              style={{ padding: "14px 24px", background: "#ff3b3b", color: "white", borderRadius: "12px", border: "none", cursor: isAuth && !eligible ? "not-allowed" : "pointer", opacity: isAuth && !eligible ? 0.6 : 1, fontSize: "16px", fontWeight: 600 }}
             >
               {t.getBonuses ?? "Get bonuses"}
             </button>
           </div>
+          {isAuth && !eligible && (
+            <>
+              <p id="bonus-onboarding-help" role="status">{onboarding.explanation}</p>
+              <Link to="/profile">{onboarding.profile}</Link>
+            </>
+          )}
 
           {!isAuth && (
             <p style={{ marginTop: "16px", fontSize: "14px", color: "var(--text-secondary)" }}>

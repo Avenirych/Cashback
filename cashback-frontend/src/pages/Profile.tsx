@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
+import {
+  WiseForm, validateWiseForm, useOnboarding,
+  saveCredentials, enrollInProgram, validUserId, getOnboardingMessages,
+} from "../onboarding";
 import "./Profile.css";
 
 const PROFILE_URL = "http://localhost:3001/auth/profile";
@@ -208,100 +212,26 @@ interface ProfileData {
   balance?: unknown;
 }
 
-interface WiseForm {
-  fullName: string;
-  email: string;
-  currency: string;
-  accountType: string;
-  wiseEmail: string;
-}
-
-const emptyWiseForm: WiseForm = {
-  fullName: "",
-  email: "",
-  currency: "",
-  accountType: "",
-  wiseEmail: "",
-};
-const wiseKey = "cashback_wise_data";
-const enrollmentKey = "cashback_program_enrolled";
-
-function validateWiseForm(data: WiseForm) {
-  const errors: Partial<Record<keyof WiseForm, "required" | "invalidEmail">> = {};
-  (Object.keys(emptyWiseForm) as (keyof WiseForm)[]).forEach((field) => {
-    if (!data[field].trim()) errors[field] = "required";
-  });
-  (["email", "wiseEmail"] as const).forEach((field) => {
-    if (data[field].trim() && !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(data[field].trim())) {
-      errors[field] = "invalidEmail";
-    }
-  });
-  if (!["EUR", "GBP", "USD"].includes(data.currency)) errors.currency = "required";
-  if (!["Personal", "Business"].includes(data.accountType)) errors.accountType = "required";
-  return errors;
-}
-
-function readLocalData(key: string, userId: number) {
-  try {
-    const raw = localStorage.getItem(`${key}:${userId}`) ?? localStorage.getItem(key);
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    return data && typeof data === "object" && data.userId === userId ? data : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveLocalData(key: string, userId: number, data: object) {
-  const serialized = JSON.stringify({ ...data, userId });
-  const scopedKey = `${key}:${userId}`;
-  const previous = localStorage.getItem(scopedKey);
-  // Keep the requested key visible, with per-account copies for shared browsers.
-  localStorage.setItem(scopedKey, serialized);
-  try {
-    localStorage.setItem(key, serialized);
-  } catch (error) {
-    if (previous === null) localStorage.removeItem(scopedKey);
-    else localStorage.setItem(scopedKey, previous);
-    throw error;
-  }
-}
-
 function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
   const t = getMessages(lang);
-  const [savedData] = useState(() => readLocalData(wiseKey, userId));
-  const [formData, setFormData] = useState<WiseForm>(() => {
-    const data = { ...emptyWiseForm };
-    (Object.keys(data) as (keyof WiseForm)[]).forEach((field) => {
-      if (typeof savedData?.[field] === "string") data[field] = savedData[field];
-    });
-    return data;
-  });
-  const [isFormFilled, setIsFormFilled] = useState(() =>
-    Object.keys(validateWiseForm(formData)).length === 0
-  );
-  const [enrolledAt, setEnrolledAt] = useState<string | null>(() => {
-    const date = readLocalData(enrollmentKey, userId)?.enrolledAt;
-    return typeof date === "string" && Number.isFinite(Date.parse(date)) ? date : null;
-  });
+  const { form, credentialsSaved: isFormFilled, enrolledAt } = useOnboarding();
+  const savedForm = JSON.stringify(form);
+  const [formData, setFormData] = useState<WiseForm>(form);
+  useEffect(() => {
+    setFormData(JSON.parse(savedForm));
+  }, [savedForm]);
   const [showErrors, setShowErrors] = useState(false);
   const [storageFailed, setStorageFailed] = useState(false);
   const errors = validateWiseForm(formData);
   const isFormValid = Object.keys(errors).length === 0;
-  const readonly = isFormFilled || !!enrolledAt;
+  const readonly = isFormFilled;
 
   function handleSaveCredentials(event: React.FormEvent) {
     event.preventDefault();
     setShowErrors(true);
     if (!isFormValid || readonly) return;
-    const data = { ...formData };
-    (Object.keys(data) as (keyof WiseForm)[]).forEach((field) => {
-      data[field] = data[field].trim();
-    });
     try {
-      saveLocalData(wiseKey, userId, { ...data, savedAt: new Date().toISOString() });
-      setFormData(data);
-      setIsFormFilled(true);
+      saveCredentials(userId, formData);
       setStorageFailed(false);
     } catch {
       setStorageFailed(true);
@@ -310,10 +240,8 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
 
   function handleEnroll() {
     if (!isFormFilled || !isFormValid || enrolledAt) return;
-    const date = new Date().toISOString();
     try {
-      saveLocalData(enrollmentKey, userId, { enrolledAt: date });
-      setEnrolledAt(date);
+      enrollInProgram(userId);
       setStorageFailed(false);
     } catch {
       setStorageFailed(true);
@@ -378,7 +306,7 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
             {fieldError("accountType")}
           </div>
         </fieldset>
-        {!readonly && <button type="submit" disabled={!isFormValid}>{t.saveCredentials}</button>}
+        {!readonly && <button type="submit" disabled={!isFormValid || !validUserId(userId)}>{t.saveCredentials}</button>}
       </form>
       {storageFailed && <p role="alert">{t.storageError}</p>}
       {enrolledAt ? (
@@ -455,6 +383,7 @@ export default function Profile() {
   return (
     <main className="profile-container" aria-labelledby="profile-title">
       <h1 id="profile-title">{t.title}</h1>
+      <p>{getOnboardingMessages(lang).explanation}</p>
 
       <section className="profile-card">
         {profile.avatar_url && (

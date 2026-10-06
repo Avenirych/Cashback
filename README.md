@@ -25,6 +25,54 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Demo bonus onboarding
+
+Bonus access requires **valid saved Wise credentials for the current account AND
+explicit program enrollment**. Registering, logging in, accepting terms, or merely
+typing a valid form does not enroll an account.
+
+Sequence: `/profile` → fill every Wise field → **Save Credentials** →
+**Enroll in Program** → **Get bonuses**. Welcome explains the sequence in
+English, Russian, German and French and provides a separate profile link while
+the bonus button is disabled. `/bonuses`, `/bonuses/ads` and
+`/bonuses/research` share the same guard: guests go to `/register`; signed-in
+ineligible accounts go to `/profile`. Shop access is unchanged.
+
+State remains browser-only, scoped to a positive integer user ID. Matching-owner
+legacy records are supported; malformed, incomplete, invalid, unowned,
+other-account records and storage errors cannot grant access. Valid saved
+credentials need a valid `savedAt`; enrollment needs a valid `enrolledAt` no
+earlier than that save. Old enrollment without valid credentials does not lock
+the form. Repairing/saving credentials discards that account's old enrollment
+and requires explicit enrollment again. Save/enrollment events and relevant
+cross-tab storage events update open views; refresh and account changes re-read
+only the current owner's records. Authentication storage is not cleared.
+
+This is **demo UI gating, not production payout authorization**. Browser storage
+can be edited by its owner. No Wise service is contacted and no real payouts
+are made by this flow. Backend bonus settings/sources, bonus-transfer and balance
+mutation controllers exist, but their modules are not imported by the current
+`src/app.module.ts`. They do not implement current-user Wise/enrollment checks;
+do not enable them for real transactions without server-side identity,
+authorization and enrollment enforcement. This frontend fix does not secure
+those dormant endpoints.
+
+Manual verification:
+1. Register a new account after accepting terms. On Welcome, verify Get bonuses
+   is disabled and the profile link opens an editable empty form.
+2. Try partial/invalid input and valid **unsaved** input: bonuses remain disabled.
+   Save valid input: enrollment enables, but bonus access remains blocked.
+3. Explicitly enroll, return home, and open each bonus route; refresh still works.
+4. Log out and use another account in the same browser: no credentials/status
+   are inherited. Direct bonus URLs redirect appropriately; shops still work.
+5. Remove/corrupt the owner's Wise record while retaining enrollment and reload:
+   bonuses are blocked and the form is editable. Repair, save and enroll again.
+   Removing credentials in another tab also revokes access in an open bonus view.
+
+Frontend checks (from `cashback-frontend`):
+`CI=true npm test -- --watchAll=false --runInBand src/onboarding.test.tsx src/pages/Profile.test.tsx src/pages/RegistrationOnboarding.test.tsx`
+and `npm run build`.
+
 ## Project setup
 
 ```bash
