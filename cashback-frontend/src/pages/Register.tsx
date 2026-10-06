@@ -29,7 +29,7 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
 
     try {
       await register(form);
-      navigate("/forum", { replace: true });
+      navigate("/", { replace: true });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t.loginRegister;
       setError(errorMessage);
