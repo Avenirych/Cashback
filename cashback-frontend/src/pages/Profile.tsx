@@ -23,6 +23,23 @@ interface ProfileMessages {
   home: string;
   shop: string;
   avatarAlt: string;
+  wiseCredentials: string;
+  fullName: string;
+  currency: string;
+  accountType: string;
+  wiseEmail: string;
+  selectOption: string;
+  personal: string;
+  business: string;
+  saveCredentials: string;
+  enroll: string;
+  credentialsSaved: string;
+  enrolled: string;
+  enrollmentDate: string;
+  required: string;
+  invalidEmail: string;
+  storageError: string;
+  wiseNotice: string;
 }
 
 export const messages: Record<ProfileLang, ProfileMessages> = {
@@ -42,6 +59,24 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     home: "Home",
     shop: "Shop",
     avatarAlt: "User avatar",
+    wiseCredentials: "Wise Business credentials",
+    fullName: "Full Name",
+    currency: "Currency",
+    accountType: "Account Type",
+    wiseEmail: "Wise Account Email",
+    selectOption: "Select an option",
+    personal: "Personal",
+    business: "Business",
+    saveCredentials: "Save Credentials",
+    enroll: "Enroll in Program",
+    credentialsSaved: "Credentials saved",
+    enrolled: "You are enrolled",
+    enrollmentDate: "Enrollment date",
+    required: "All fields required",
+    invalidEmail: "Invalid email format",
+    storageError: "Unable to save in this browser. Please try again.",
+    wiseNotice:
+      "Development mode: partner services and real payments are not connected. Wise credentials are stored only in this browser and are not sent to any service.",
   },
   ru: {
     title: "Профиль",
@@ -59,6 +94,24 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     home: "Главная",
     shop: "Магазин",
     avatarAlt: "Аватар пользователя",
+    wiseCredentials: "Реквизиты Wise Business",
+    fullName: "ФИО",
+    currency: "Валюта",
+    accountType: "Тип аккаунта",
+    wiseEmail: "Email аккаунта Wise",
+    selectOption: "Выберите вариант",
+    personal: "Личный",
+    business: "Бизнес",
+    saveCredentials: "Сохранить реквизиты",
+    enroll: "Присоединиться к программе",
+    credentialsSaved: "Реквизиты сохранены",
+    enrolled: "Вы участник программы",
+    enrollmentDate: "Дата присоединения",
+    required: "Все поля обязательны",
+    invalidEmail: "Неверный формат email",
+    storageError: "Не удалось сохранить данные в браузере. Попробуйте ещё раз.",
+    wiseNotice:
+      "Режим разработки: партнёрские сервисы и реальные платежи не подключены. Реквизиты Wise хранятся только в этом браузере и никуда не отправляются.",
   },
   de: {
     title: "Profil",
@@ -76,6 +129,24 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     home: "Startseite",
     shop: "Shop",
     avatarAlt: "Benutzeravatar",
+    wiseCredentials: "Wise-Business-Kontodaten",
+    fullName: "Vollständiger Name",
+    currency: "Währung",
+    accountType: "Kontotyp",
+    wiseEmail: "E-Mail des Wise-Kontos",
+    selectOption: "Option auswählen",
+    personal: "Privat",
+    business: "Geschäftlich",
+    saveCredentials: "Kontodaten speichern",
+    enroll: "Am Programm teilnehmen",
+    credentialsSaved: "Kontodaten gespeichert",
+    enrolled: "Sie nehmen am Programm teil",
+    enrollmentDate: "Teilnahmedatum",
+    required: "Alle Felder sind erforderlich",
+    invalidEmail: "Ungültiges E-Mail-Format",
+    storageError: "Speichern im Browser nicht möglich. Bitte versuchen Sie es erneut.",
+    wiseNotice:
+      "Entwicklungsmodus: Partnerdienste und echte Zahlungen sind nicht verbunden. Wise-Kontodaten werden nur in diesem Browser gespeichert und an keinen Dienst gesendet.",
   },
   fr: {
     title: "Profil",
@@ -93,6 +164,24 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     home: "Accueil",
     shop: "Boutique",
     avatarAlt: "Avatar de l'utilisateur",
+    wiseCredentials: "Coordonnées Wise Business",
+    fullName: "Nom complet",
+    currency: "Devise",
+    accountType: "Type de compte",
+    wiseEmail: "E-mail du compte Wise",
+    selectOption: "Sélectionnez une option",
+    personal: "Personnel",
+    business: "Professionnel",
+    saveCredentials: "Enregistrer les coordonnées",
+    enroll: "Rejoindre le programme",
+    credentialsSaved: "Coordonnées enregistrées",
+    enrolled: "Vous êtes inscrit",
+    enrollmentDate: "Date d'inscription",
+    required: "Tous les champs sont obligatoires",
+    invalidEmail: "Format d'e-mail invalide",
+    storageError: "Impossible d'enregistrer dans ce navigateur. Veuillez réessayer.",
+    wiseNotice:
+      "Mode développement : les services partenaires et les paiements réels ne sont pas connectés. Les coordonnées Wise sont conservées uniquement dans ce navigateur et ne sont envoyées à aucun service.",
   },
 };
 
@@ -117,6 +206,197 @@ interface ProfileData {
   name?: string;
   avatar_url?: string | null;
   balance?: unknown;
+}
+
+interface WiseForm {
+  fullName: string;
+  email: string;
+  currency: string;
+  accountType: string;
+  wiseEmail: string;
+}
+
+const emptyWiseForm: WiseForm = {
+  fullName: "",
+  email: "",
+  currency: "",
+  accountType: "",
+  wiseEmail: "",
+};
+const wiseKey = "cashback_wise_data";
+const enrollmentKey = "cashback_program_enrolled";
+
+function validateWiseForm(data: WiseForm) {
+  const errors: Partial<Record<keyof WiseForm, "required" | "invalidEmail">> = {};
+  (Object.keys(emptyWiseForm) as (keyof WiseForm)[]).forEach((field) => {
+    if (!data[field].trim()) errors[field] = "required";
+  });
+  (["email", "wiseEmail"] as const).forEach((field) => {
+    if (data[field].trim() && !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(data[field].trim())) {
+      errors[field] = "invalidEmail";
+    }
+  });
+  if (!["EUR", "GBP", "USD"].includes(data.currency)) errors.currency = "required";
+  if (!["Personal", "Business"].includes(data.accountType)) errors.accountType = "required";
+  return errors;
+}
+
+function readLocalData(key: string, userId: number) {
+  try {
+    const raw = localStorage.getItem(`${key}:${userId}`) ?? localStorage.getItem(key);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    return data && typeof data === "object" && data.userId === userId ? data : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveLocalData(key: string, userId: number, data: object) {
+  const serialized = JSON.stringify({ ...data, userId });
+  const scopedKey = `${key}:${userId}`;
+  const previous = localStorage.getItem(scopedKey);
+  // Keep the requested key visible, with per-account copies for shared browsers.
+  localStorage.setItem(scopedKey, serialized);
+  try {
+    localStorage.setItem(key, serialized);
+  } catch (error) {
+    if (previous === null) localStorage.removeItem(scopedKey);
+    else localStorage.setItem(scopedKey, previous);
+    throw error;
+  }
+}
+
+function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
+  const t = getMessages(lang);
+  const [savedData] = useState(() => readLocalData(wiseKey, userId));
+  const [formData, setFormData] = useState<WiseForm>(() => {
+    const data = { ...emptyWiseForm };
+    (Object.keys(data) as (keyof WiseForm)[]).forEach((field) => {
+      if (typeof savedData?.[field] === "string") data[field] = savedData[field];
+    });
+    return data;
+  });
+  const [isFormFilled, setIsFormFilled] = useState(() =>
+    Object.keys(validateWiseForm(formData)).length === 0
+  );
+  const [enrolledAt, setEnrolledAt] = useState<string | null>(() => {
+    const date = readLocalData(enrollmentKey, userId)?.enrolledAt;
+    return typeof date === "string" && Number.isFinite(Date.parse(date)) ? date : null;
+  });
+  const [showErrors, setShowErrors] = useState(false);
+  const [storageFailed, setStorageFailed] = useState(false);
+  const errors = validateWiseForm(formData);
+  const isFormValid = Object.keys(errors).length === 0;
+  const readonly = isFormFilled || !!enrolledAt;
+
+  function handleSaveCredentials(event: React.FormEvent) {
+    event.preventDefault();
+    setShowErrors(true);
+    if (!isFormValid || readonly) return;
+    const data = { ...formData };
+    (Object.keys(data) as (keyof WiseForm)[]).forEach((field) => {
+      data[field] = data[field].trim();
+    });
+    try {
+      saveLocalData(wiseKey, userId, { ...data, savedAt: new Date().toISOString() });
+      setFormData(data);
+      setIsFormFilled(true);
+      setStorageFailed(false);
+    } catch {
+      setStorageFailed(true);
+    }
+  }
+
+  function handleEnroll() {
+    if (!isFormFilled || !isFormValid || enrolledAt) return;
+    const date = new Date().toISOString();
+    try {
+      saveLocalData(enrollmentKey, userId, { enrolledAt: date });
+      setEnrolledAt(date);
+      setStorageFailed(false);
+    } catch {
+      setStorageFailed(true);
+    }
+  }
+
+  function updateField(field: keyof WiseForm, value: string) {
+    setFormData((data) => ({ ...data, [field]: value }));
+    setShowErrors(true);
+  }
+
+  function fieldError(field: keyof WiseForm) {
+    const error = showErrors && !readonly && errors[field];
+    return error ? <p id={`wise-${field}-error`} role="alert">{t[error]}</p> : null;
+  }
+
+  function fieldProps(field: keyof WiseForm) {
+    const invalid = !!(showErrors && !readonly && errors[field]);
+    return {
+      id: `wise-${field}`,
+      name: field,
+      value: formData[field],
+      required: true,
+      "aria-invalid": invalid,
+      "aria-describedby": invalid ? `wise-${field}-error` : undefined,
+      onBlur: () => setShowErrors(true),
+      onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+        updateField(field, event.target.value),
+    };
+  }
+
+  return (
+    <section aria-label={t.wiseCredentials}>
+      <form onSubmit={handleSaveCredentials} noValidate>
+        <fieldset>
+          <legend>{t.wiseCredentials}</legend>
+          {(["fullName", "email", "wiseEmail"] as const).map((field) => (
+            <div key={field}>
+              <label htmlFor={`wise-${field}`}>{t[field]}</label>
+              <input {...fieldProps(field)} type={field === "fullName" ? "text" : "email"}
+                readOnly={readonly} />
+              {fieldError(field)}
+            </div>
+          ))}
+          <div>
+            <label htmlFor="wise-currency">{t.currency}</label>
+            <select {...fieldProps("currency")} disabled={readonly}>
+              <option value="">{t.selectOption}</option>
+              {["EUR", "GBP", "USD"].map((currency) => (
+                <option key={currency} value={currency}>{currency}</option>
+              ))}
+            </select>
+            {fieldError("currency")}
+          </div>
+          <div>
+            <label htmlFor="wise-accountType">{t.accountType}</label>
+            <select {...fieldProps("accountType")} disabled={readonly}>
+              <option value="">{t.selectOption}</option>
+              <option value="Personal">{t.personal}</option>
+              <option value="Business">{t.business}</option>
+            </select>
+            {fieldError("accountType")}
+          </div>
+        </fieldset>
+        {!readonly && <button type="submit" disabled={!isFormValid}>{t.saveCredentials}</button>}
+      </form>
+      {storageFailed && <p role="alert">{t.storageError}</p>}
+      {enrolledAt ? (
+        <p role="status">
+          {t.enrolled}. {t.enrollmentDate}:{" "}
+          <time dateTime={enrolledAt}>
+            {new Date(enrolledAt).toLocaleDateString(getMessages(lang) === messages.en ? "en" : lang)}
+          </time>
+        </p>
+      ) : (
+        <>
+          {isFormFilled && <p role="status">{t.credentialsSaved}</p>}
+          <button type="button" onClick={handleEnroll} disabled={!isFormFilled}>{t.enroll}</button>
+        </>
+      )}
+      <p>{t.wiseNotice}</p>
+    </section>
+  );
 }
 
 export default function Profile() {
@@ -196,6 +476,8 @@ export default function Profile() {
           </div>
         </dl>
       </section>
+
+      <WiseEnrollment key={user.id} userId={user.id} lang={lang} />
 
       <p className="profile-demo-notice" role="note">
         {t.demoNotice}
