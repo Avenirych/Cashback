@@ -176,6 +176,7 @@ const wiseData = {
   accountType: "Business",
   wiseEmail: "wise@example.com",
   savedAt: "2026-10-06T10:30:00Z",
+  userId: testUser.id,
 };
 
 function fillWiseForm(overrides: Partial<typeof wiseData> = {}) {
@@ -304,7 +305,9 @@ describe("Wise credentials and enrollment", () => {
 
   test("restores enrollment and readonly credentials from localStorage", () => {
     localStorage.setItem("cashback_wise_data", JSON.stringify(wiseData));
-    localStorage.setItem("cashback_program_enrolled", JSON.stringify({ enrolledAt: wiseData.savedAt }));
+    localStorage.setItem("cashback_program_enrolled", JSON.stringify({
+      userId: testUser.id, enrolledAt: wiseData.savedAt,
+    }));
     renderProfile();
     expectReadonlyCredentials();
     expect(screen.getByRole("status")).toHaveTextContent(messages.en.enrolled);
@@ -361,6 +364,15 @@ describe("Wise credentials and enrollment", () => {
     expect(screen.getByRole("status")).toHaveTextContent(messages.en.enrolled);
   });
 
+  test("does not expose unowned credentials or enrollment to authenticated accounts", () => {
+    localStorage.setItem("cashback_wise_data", JSON.stringify({ ...wiseData, userId: undefined }));
+    localStorage.setItem("cashback_program_enrolled", JSON.stringify({ enrolledAt: wiseData.savedAt }));
+    renderProfile();
+    expect(screen.getByLabelText(messages.en.fullName)).toHaveValue("");
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
   test("reports storage failures without claiming credentials were saved or enrolling", () => {
     renderProfile();
     fillWiseForm();
@@ -372,6 +384,28 @@ describe("Wise credentials and enrollment", () => {
       expect(screen.getByRole("alert")).toHaveTextContent(messages.en.storageError);
       expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
       expect(screen.getByLabelText(messages.en.fullName)).not.toHaveAttribute("readonly");
+    } finally {
+      setItem.mockRestore();
+    }
+  });
+
+  test("rolls back the account copy if saving the main storage key fails", () => {
+    const { unmount } = renderProfile();
+    fillWiseForm();
+    const originalSetItem = Storage.prototype.setItem;
+    const setItem = jest.spyOn(Storage.prototype, "setItem").mockImplementation(function (
+      this: Storage, key: string, value: string
+    ) {
+      if (key === "cashback_wise_data") throw new Error("storage full");
+      originalSetItem.call(this, key, value);
+    });
+    try {
+      fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
+      expect(screen.getByRole("alert")).toHaveTextContent(messages.en.storageError);
+      expect(localStorage.getItem(`cashback_wise_data:${testUser.id}`)).toBeNull();
+      unmount();
+      renderProfile();
+      expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
     } finally {
       setItem.mockRestore();
     }

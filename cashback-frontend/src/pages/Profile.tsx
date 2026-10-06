@@ -246,8 +246,7 @@ function readLocalData(key: string, userId: number) {
     const raw = localStorage.getItem(`${key}:${userId}`) ?? localStorage.getItem(key);
     if (!raw) return null;
     const data = JSON.parse(raw);
-    return data && typeof data === "object" &&
-      (data.userId === undefined || data.userId === userId) ? data : null;
+    return data && typeof data === "object" && data.userId === userId ? data : null;
   } catch {
     return null;
   }
@@ -255,9 +254,17 @@ function readLocalData(key: string, userId: number) {
 
 function saveLocalData(key: string, userId: number, data: object) {
   const serialized = JSON.stringify({ ...data, userId });
+  const scopedKey = `${key}:${userId}`;
+  const previous = localStorage.getItem(scopedKey);
   // Keep the requested key visible, with per-account copies for shared browsers.
-  localStorage.setItem(`${key}:${userId}`, serialized);
-  localStorage.setItem(key, serialized);
+  localStorage.setItem(scopedKey, serialized);
+  try {
+    localStorage.setItem(key, serialized);
+  } catch (error) {
+    if (previous === null) localStorage.removeItem(scopedKey);
+    else localStorage.setItem(scopedKey, previous);
+    throw error;
+  }
 }
 
 function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
