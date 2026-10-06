@@ -6,6 +6,7 @@ import { LanguageProvider, useLang } from "./context/LanguageContext";
 
 import Header from "./components/Header";
 import CookieConsent from "./components/CookieConsent";
+import BonusGuard from "./components/BonusGuard";
 
 import Welcome from "./pages/Welcome";
 import AboutUs from "./pages/AboutUs";
@@ -22,7 +23,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Shop from "./pages/Shop";
 
-function AppRoutes() {
+export function AppRoutes() {
   const { lang, setLang } = useLang();
   const L = lang.toUpperCase();
 
@@ -41,9 +42,11 @@ function AppRoutes() {
         <Route path="/contacts" element={<Contacts lang={lang} />} />
         <Route path="/terms" element={<TermsAndConditions />} />
 
-        <Route path="/bonuses" element={<Bonuses />} />
-        <Route path="/bonuses/ads" element={<BonusAds />} />
-        <Route path="/bonuses/research" element={<BonusResearch />} />
+        <Route path="/bonuses" element={<BonusGuard />}>
+          <Route index element={<Bonuses />} />
+          <Route path="ads" element={<BonusAds />} />
+          <Route path="research" element={<BonusResearch />} />
+        </Route>
         <Route path="/profile" element={<Profile />} />
 
         <Route path="/forum" element={<TopicsPage lang={L} onLangChange={setLang} />} />
