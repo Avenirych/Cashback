@@ -17,7 +17,7 @@ export default function Welcome({ lang }: WelcomeProps) {
 
   const goToShopping = () => {
     if (!isAuth) return navigate("/register");
-    navigate("/catalog");
+    navigate("/shop");
   };
 
   const goToBonuses = () => {
