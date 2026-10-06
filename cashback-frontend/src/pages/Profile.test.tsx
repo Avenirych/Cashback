@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { render, screen, waitFor, act, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Profile, { formatBalance, getMessages, messages } from "./Profile";
 import { useAuth } from "../context/AuthContext";
@@ -166,5 +166,250 @@ describe("getMessages", () => {
     expect(getMessages("es")).toBe(messages.en);
     expect(getMessages(undefined)).toBe(messages.en);
     expect(getMessages("RU")).toBe(messages.ru);
+  });
+});
+
+const wiseData = {
+  fullName: "Anna Example",
+  email: "anna@example.com",
+  currency: "EUR",
+  accountType: "Business",
+  wiseEmail: "wise@example.com",
+  savedAt: "2026-10-06T10:30:00Z",
+};
+
+function fillWiseForm(overrides: Partial<typeof wiseData> = {}) {
+  const data = { ...wiseData, ...overrides };
+  const t = messages.en;
+  fireEvent.change(screen.getByLabelText(t.fullName), { target: { value: data.fullName } });
+  fireEvent.change(screen.getByLabelText(t.email), { target: { value: data.email } });
+  fireEvent.change(screen.getByLabelText(t.wiseEmail), { target: { value: data.wiseEmail } });
+  fireEvent.change(screen.getByLabelText(t.currency), { target: { value: data.currency } });
+  fireEvent.change(screen.getByLabelText(t.accountType), { target: { value: data.accountType } });
+}
+
+function expectReadonlyCredentials() {
+  expect(screen.getByLabelText(messages.en.fullName)).toHaveAttribute("readonly");
+  expect(screen.getByLabelText(messages.en.email)).toHaveAttribute("readonly");
+  expect(screen.getByLabelText(messages.en.wiseEmail)).toHaveAttribute("readonly");
+  expect(screen.getByLabelText(messages.en.currency)).toBeDisabled();
+  expect(screen.getByLabelText(messages.en.accountType)).toBeDisabled();
+}
+
+describe("Wise credentials and enrollment", () => {
+  beforeEach(() => mockAuth({ user: testUser }));
+
+  test("shows an empty form with disabled save and enrollment buttons", () => {
+    renderProfile();
+    expect(screen.getByLabelText(messages.en.fullName)).toHaveValue("");
+    expect(screen.getByLabelText(messages.en.email)).toHaveValue("");
+    expect(screen.getByLabelText(messages.en.wiseEmail)).toHaveValue("");
+    expect(screen.getByLabelText(messages.en.currency)).toHaveValue("");
+    expect(screen.getByLabelText(messages.en.accountType)).toHaveValue("");
+    expect(screen.getByRole("button", { name: messages.en.saveCredentials })).toBeDisabled();
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+    expect(screen.getByText(messages.en.wiseNotice)).toBeInTheDocument();
+  });
+
+  test.each(["fullName", "email", "wiseEmail", "currency", "accountType"] as const)(
+    "requires %s, including whitespace-only text",
+    (field) => {
+      renderProfile();
+      fillWiseForm({ [field]: field === "currency" || field === "accountType" ? "" : "   " });
+      expect(screen.getByLabelText(messages.en[field])).toHaveAttribute("aria-invalid", "true");
+      expect(screen.getByRole("alert")).toHaveTextContent(messages.en.required);
+      expect(screen.getByRole("button", { name: messages.en.saveCredentials })).toBeDisabled();
+      expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+      expect(localStorage.getItem("cashback_wise_data")).toBeNull();
+    }
+  );
+
+  test.each([
+    "not-an-email", "anna@", "@example.com", "anna@example", "anna @example.com",
+    "anna@example..com",
+  ])("rejects invalid email format: %s", (email) => {
+    renderProfile();
+    fillWiseForm({ email, wiseEmail: email });
+    expect(screen.getAllByRole("alert")).toHaveLength(2);
+    screen.getAllByRole("alert").forEach((error) =>
+      expect(error).toHaveTextContent(messages.en.invalidEmail)
+    );
+    expect(screen.getByRole("button", { name: messages.en.saveCredentials })).toBeDisabled();
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+  });
+
+  test("shows errors on blur and prevents invalid form submission", () => {
+    const { container } = renderProfile();
+    fireEvent.blur(screen.getByLabelText(messages.en.fullName));
+    expect(screen.getAllByRole("alert")).toHaveLength(5);
+    fireEvent.submit(container.querySelector("form")!);
+    expect(localStorage.getItem("cashback_wise_data")).toBeNull();
+  });
+
+  test("saves valid trimmed credentials locally, then enables enrollment", () => {
+    renderProfile();
+    fillWiseForm({ fullName: " Anna Example ", email: " anna@example.com " });
+    const save = screen.getByRole("button", { name: messages.en.saveCredentials });
+    expect(save).toBeEnabled();
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+    fireEvent.click(save);
+
+    const saved = JSON.parse(localStorage.getItem("cashback_wise_data")!);
+    expect(saved).toEqual({
+      ...wiseData,
+      savedAt: expect.any(String),
+      userId: testUser.id,
+    });
+    expect(Number.isFinite(Date.parse(saved.savedAt))).toBe(true);
+    expect(screen.getByRole("status")).toHaveTextContent(messages.en.credentialsSaved);
+    expectReadonlyCredentials();
+    expect(screen.queryByRole("button", { name: messages.en.saveCredentials })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeEnabled();
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  test("restores saved credentials in readonly mode for an unenrolled user", () => {
+    localStorage.setItem("cashback_wise_data", JSON.stringify(wiseData));
+    renderProfile();
+    expectReadonlyCredentials();
+    expect(screen.getByLabelText(messages.en.fullName)).toHaveValue(wiseData.fullName);
+    expect(screen.getByLabelText(messages.en.currency)).toHaveValue(wiseData.currency);
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeEnabled();
+  });
+
+  test("enrollment shows confirmation and date, and survives a page remount", () => {
+    const { unmount } = renderProfile();
+    fillWiseForm();
+    fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
+    fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
+
+    const { enrolledAt } = JSON.parse(localStorage.getItem("cashback_program_enrolled")!);
+    expect(Number.isFinite(Date.parse(enrolledAt))).toBe(true);
+    expect(screen.getByRole("status")).toHaveTextContent(messages.en.enrolled);
+    expect(screen.getByRole("status")).toHaveTextContent(messages.en.enrollmentDate);
+    expect(screen.getByText(new Date(enrolledAt).toLocaleDateString("en"))).toHaveAttribute(
+      "datetime", enrolledAt
+    );
+    expectReadonlyCredentials();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+
+    unmount();
+    renderProfile();
+    expectReadonlyCredentials();
+    expect(screen.getByLabelText(messages.en.wiseEmail)).toHaveValue(wiseData.wiseEmail);
+    expect(screen.getByRole("status")).toHaveTextContent(messages.en.enrolled);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  test("restores enrollment and readonly credentials from localStorage", () => {
+    localStorage.setItem("cashback_wise_data", JSON.stringify(wiseData));
+    localStorage.setItem("cashback_program_enrolled", JSON.stringify({ enrolledAt: wiseData.savedAt }));
+    renderProfile();
+    expectReadonlyCredentials();
+    expect(screen.getByRole("status")).toHaveTextContent(messages.en.enrolled);
+    expect(screen.getByText(new Date(wiseData.savedAt).toLocaleDateString("en"))).toHaveAttribute(
+      "datetime", wiseData.savedAt
+    );
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  test("saved credentials persist before enrollment", () => {
+    const { unmount } = renderProfile();
+    fillWiseForm();
+    fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
+    unmount();
+    renderProfile();
+    expectReadonlyCredentials();
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeEnabled();
+    expect(screen.getByLabelText(messages.en.email)).toHaveValue(wiseData.email);
+  });
+
+  test.each(["invalid-json", "null", "[]", JSON.stringify({ ...wiseData, email: "bad" }),
+    JSON.stringify({ ...wiseData, currency: "CAD", accountType: "Other" })])(
+    "does not allow enrollment with malformed or invalid stored credentials: %s",
+    (raw) => {
+      localStorage.setItem("cashback_wise_data", raw);
+      localStorage.setItem("cashback_program_enrolled", JSON.stringify({ enrolledAt: "invalid-date" }));
+      renderProfile();
+      expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+      expect(screen.getByRole("button", { name: messages.en.saveCredentials })).toBeDisabled();
+      expect(screen.getByLabelText(messages.en.fullName)).not.toHaveAttribute("readonly");
+    }
+  );
+
+  test("keeps each user's credentials and enrollment separate on account switches", () => {
+    const view = renderProfile();
+    fillWiseForm();
+    fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
+    fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
+
+    mockAuth({ user: { ...testUser, id: 2 } });
+    view.rerender(
+      <LanguageProvider><MemoryRouter><Profile /></MemoryRouter></LanguageProvider>
+    );
+    expect(screen.getByLabelText(messages.en.fullName)).toHaveValue("");
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+    fillWiseForm({ fullName: "Second User" });
+    fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
+
+    mockAuth({ user: testUser });
+    view.rerender(
+      <LanguageProvider><MemoryRouter><Profile /></MemoryRouter></LanguageProvider>
+    );
+    expect(screen.getByLabelText(messages.en.fullName)).toHaveValue(wiseData.fullName);
+    expect(screen.getByRole("status")).toHaveTextContent(messages.en.enrolled);
+  });
+
+  test("reports storage failures without claiming credentials were saved or enrolling", () => {
+    renderProfile();
+    fillWiseForm();
+    const setItem = jest.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("storage unavailable");
+    });
+    try {
+      fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
+      expect(screen.getByRole("alert")).toHaveTextContent(messages.en.storageError);
+      expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+      expect(screen.getByLabelText(messages.en.fullName)).not.toHaveAttribute("readonly");
+    } finally {
+      setItem.mockRestore();
+    }
+  });
+
+  test("translates every label, option, validation message, saved and enrolled status", () => {
+    renderProfile();
+    fillWiseForm({ email: "invalid", wiseEmail: "" });
+    for (const lang of ["ru", "de", "fr", "en"] as const) {
+      act(() => switchLang(lang));
+      const t = messages[lang];
+      expect(screen.getByRole("group", { name: t.wiseCredentials })).toBeInTheDocument();
+      for (const field of ["fullName", "email", "wiseEmail", "currency", "accountType"] as const) {
+        expect(screen.getByLabelText(t[field])).toBeInTheDocument();
+      }
+      expect(screen.getByRole("option", { name: t.personal })).toHaveValue("Personal");
+      expect(screen.getByRole("option", { name: t.business })).toHaveValue("Business");
+      for (const currency of ["EUR", "GBP", "USD"]) {
+        expect(screen.getByRole("option", { name: currency })).toHaveValue(currency);
+      }
+      expect(screen.getByRole("button", { name: t.saveCredentials })).toBeDisabled();
+      expect(screen.getByRole("button", { name: t.enroll })).toBeDisabled();
+      expect(screen.getByText(t.required)).toBeInTheDocument();
+      expect(screen.getByText(t.invalidEmail)).toBeInTheDocument();
+      expect(screen.getByText(t.wiseNotice)).toBeInTheDocument();
+    }
+    fillWiseForm();
+    fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
+    for (const lang of ["ru", "de", "fr", "en"] as const) {
+      act(() => switchLang(lang));
+      expect(screen.getByRole("status")).toHaveTextContent(messages[lang].credentialsSaved);
+      expect(screen.getByRole("button", { name: messages[lang].enroll })).toBeEnabled();
+    }
+    fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
+    for (const lang of ["ru", "de", "fr", "en"] as const) {
+      act(() => switchLang(lang));
+      expect(screen.getByRole("status")).toHaveTextContent(messages[lang].enrolled);
+      expect(screen.getByRole("status")).toHaveTextContent(messages[lang].enrollmentDate);
+    }
   });
 });
