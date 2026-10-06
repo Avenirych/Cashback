@@ -34,9 +34,9 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
 
   return (
     <div style={{ minHeight: "calc(100vh - 72px)", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 24px", display: "flex", gap: "80px", alignItems: "flex-start" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 24px", display: "flex", justifyContent: "center", gap: "80px", alignItems: "flex-start" }}>
         {/* LEFT: Register Form */}
-        <div style={{ flex: 1, minWidth: "300px" }}>
+        <div style={{ flex: 1, maxWidth: "480px", minWidth: "300px" }}>
           <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "24px", display: "inline-block", fontSize: "14px" }}>
             ← {t.backToHome}
           </Link>
@@ -131,9 +131,9 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
           </div>
         </div>
 
-        {/* RIGHT: Money Tree Animation */}
-        <div style={{ flex: 1, minWidth: "300px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <MoneyTree coinCount={18} />
+        {/* RIGHT: Money Tree Animation (как "Одуванчики" на Welcome) */}
+        <div style={{ flex: 1, maxWidth: "420px", minWidth: "300px" }}>
+          <MoneyTree />
         </div>
       </div>
     </div>
