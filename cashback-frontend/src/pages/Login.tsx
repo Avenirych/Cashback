@@ -22,7 +22,7 @@ export default function Login({ lang, onLangChange }: { lang: string; onLangChan
 
     try {
       await login(form);
-      navigate("/forum", { replace: true });
+      navigate("/", { replace: true });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t.loginRegister;
       setError(errorMessage);
