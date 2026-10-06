@@ -10,6 +10,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  private normalizeEmail(email: string) {
+    return (email || '').toLowerCase().trim();
+  }
+
   async register(email: string, password: string, name: string) {
     console.log('🔐 Register attempt:', { email, name });
 
@@ -25,9 +29,11 @@ export class AuthService {
       throw new BadRequestException('Name must be at least 2 characters');
     }
 
-    const existing = await this.usersService.getByEmail(email);
+    const normalizedEmail = this.normalizeEmail(email);
+
+    const existing = await this.usersService.getByEmail(normalizedEmail);
     if (existing) {
-      console.log('❌ User already exists:', email);
+      console.log('❌ User already exists:', normalizedEmail);
       throw new BadRequestException('User with this email already exists');
     }
 
@@ -36,7 +42,7 @@ export class AuthService {
       console.log('🔒 Password hashed');
 
       const userData = {
-        email: email.toLowerCase().trim(),
+        email: normalizedEmail,
         name: name.trim(),
         password: passwordHash,
         avatar_url: null,
@@ -71,21 +77,23 @@ export class AuthService {
       throw new BadRequestException('Email and password are required');
     }
 
-    const user = await this.usersService.getByEmail(email);
+    const normalizedEmail = this.normalizeEmail(email);
+
+    const user = await this.usersService.getByEmail(normalizedEmail);
     if (!user) {
-      console.log('❌ User not found:', email);
+      console.log('❌ User not found:', normalizedEmail);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const valid = await bcrypt.compare(password, user.password || '');
     if (!valid) {
-      console.log('❌ Invalid password for user:', email);
+      console.log('❌ Invalid password for user:', normalizedEmail);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = { sub: user.id, email: user.email, name: user.name };
     const token = this.jwtService.sign(payload);
-    console.log('✅ Login successful for:', email);
+    console.log('✅ Login successful for:', normalizedEmail);
 
     return {
       access_token: token,

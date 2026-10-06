@@ -20,6 +20,7 @@ import TopicsPage from "./pages/TopicsPage";
 import Topic from "./pages/Topic";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Shop from "./pages/Shop";
 
 function AppRoutes() {
   const { lang, setLang } = useLang();
@@ -32,6 +33,8 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Welcome lang={L} />} />
         <Route path="/welcome" element={<Welcome lang={L} />} />
+
+        <Route path="/shop" element={<Shop lang={L} />} />
 
         <Route path="/about" element={<AboutUs lang={lang} />} />
         <Route path="/services" element={<Services lang={lang} />} />
