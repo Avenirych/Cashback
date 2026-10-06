@@ -1,7 +1,14 @@
 import React from "react";
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { render, screen, waitFor, act, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import Profile, { formatBalance, getMessages, messages } from "./Profile";
+import Profile, {
+  ENROLLED_AT_KEY,
+  ENROLLED_KEY,
+  formatBalance,
+  formatEnrollmentDate,
+  getMessages,
+  messages,
+} from "./Profile";
 import { useAuth } from "../context/AuthContext";
 import { LanguageProvider, useLang } from "../context/LanguageContext";
 
@@ -142,6 +149,113 @@ describe("Profile page", () => {
     act(() => switchLang("fr"));
     expect(screen.getByText(messages.fr.balance)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: messages.fr.shop })).toBeInTheDocument();
+  });
+});
+
+describe("Program enrollment", () => {
+  const enrolledAt = "2026-03-05T10:00:00.000Z";
+
+  test("unenrolled user sees the enroll button", () => {
+    mockAuth({ user: testUser });
+    renderProfile();
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeEnabled();
+    expect(screen.queryByText(messages.en.enrolled)).not.toBeInTheDocument();
+  });
+
+  test("clicking the button saves status and date and shows confirmation", () => {
+    mockAuth({ user: testUser });
+    renderProfile();
+
+    fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
+
+    expect(localStorage.getItem(ENROLLED_KEY)).toBe("true");
+    const stored = localStorage.getItem(ENROLLED_AT_KEY);
+    expect(stored).not.toBeNull();
+    expect(Number.isNaN(new Date(stored as string).getTime())).toBe(false);
+
+    expect(screen.queryByRole("button", { name: messages.en.enroll })).not.toBeInTheDocument();
+    expect(screen.queryAllByRole("button")).toHaveLength(0);
+    expect(screen.getByText(messages.en.enrolled)).toBeInTheDocument();
+    expect(screen.getByTestId("profile-enrollment-date")).toHaveTextContent(
+      formatEnrollmentDate(stored, "en")
+    );
+  });
+
+  test("enrolled user sees confirmation and enrollment date", () => {
+    localStorage.setItem(ENROLLED_KEY, "true");
+    localStorage.setItem(ENROLLED_AT_KEY, enrolledAt);
+    mockAuth({ user: testUser });
+    renderProfile();
+
+    expect(screen.getByText(messages.en.enrolled)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(messages.en.enrolledSince))).toBeInTheDocument();
+    expect(screen.getByTestId("profile-enrollment-date")).toHaveTextContent("05/03/2026");
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.getByTestId("profile-name")).toHaveTextContent("Anna");
+    expect(screen.getByTestId("profile-balance")).toHaveTextContent("12.50");
+  });
+
+  test("enrollment status persists after page refresh", () => {
+    mockAuth({ user: testUser });
+    const { unmount } = renderProfile();
+    fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
+    unmount();
+
+    renderProfile();
+    expect(screen.getByText(messages.en.enrolled)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: messages.en.enroll })).not.toBeInTheDocument();
+  });
+
+  test("treats a non-true stored value as not enrolled", () => {
+    localStorage.setItem(ENROLLED_KEY, "false");
+    mockAuth({ user: testUser });
+    renderProfile();
+    expect(screen.getByRole("button", { name: messages.en.enroll })).toBeInTheDocument();
+  });
+
+  test("button and enrollment messages are translated in all languages", () => {
+    mockAuth({ user: testUser });
+    renderProfile();
+
+    (["ru", "de", "fr", "en"] as const).forEach((lang) => {
+      act(() => switchLang(lang));
+      expect(screen.getByRole("button", { name: messages[lang].enroll })).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
+
+    (["ru", "de", "fr", "en"] as const).forEach((lang) => {
+      act(() => switchLang(lang));
+      expect(screen.getByText(messages[lang].enrolled)).toBeInTheDocument();
+      expect(screen.getByText(new RegExp(messages[lang].enrolledSince))).toBeInTheDocument();
+    });
+  });
+
+  test("all languages define enrollment messages", () => {
+    Object.values(messages).forEach((m) => {
+      expect(m.enroll).toBeTruthy();
+      expect(m.enrolled).toBeTruthy();
+      expect(m.enrolledSince).toBeTruthy();
+    });
+  });
+});
+
+describe("formatEnrollmentDate", () => {
+  const date = "2026-03-05T10:00:00.000Z";
+
+  test.each([
+    ["en", "05/03/2026"],
+    ["ru", "05.03.2026"],
+    ["de", "05.03.2026"],
+    ["fr", "05/03/2026"],
+    ["es", "05/03/2026"],
+  ])("formats date for %s", (lang, expected) => {
+    expect(formatEnrollmentDate(date, lang)).toBe(expected);
+  });
+
+  test("returns empty string for missing or invalid dates", () => {
+    expect(formatEnrollmentDate(null, "en")).toBe("");
+    expect(formatEnrollmentDate("not-a-date", "en")).toBe("");
   });
 });
 

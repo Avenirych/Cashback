@@ -6,6 +6,9 @@ import "./Profile.css";
 
 const PROFILE_URL = "http://localhost:3001/auth/profile";
 
+export const ENROLLED_KEY = "cashback_program_enrolled";
+export const ENROLLED_AT_KEY = "cashback_program_enrolled_at";
+
 type ProfileLang = "en" | "ru" | "de" | "fr";
 
 interface ProfileMessages {
@@ -23,6 +26,9 @@ interface ProfileMessages {
   home: string;
   shop: string;
   avatarAlt: string;
+  enroll: string;
+  enrolled: string;
+  enrolledSince: string;
 }
 
 export const messages: Record<ProfileLang, ProfileMessages> = {
@@ -42,6 +48,9 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     home: "Home",
     shop: "Shop",
     avatarAlt: "User avatar",
+    enroll: "Enroll in Program",
+    enrolled: "You are enrolled in the Cashback Program",
+    enrolledSince: "Joined program on",
   },
   ru: {
     title: "Профиль",
@@ -59,6 +68,9 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     home: "Главная",
     shop: "Магазин",
     avatarAlt: "Аватар пользователя",
+    enroll: "Присоединиться к программе",
+    enrolled: "Вы участник программы кэшбэка",
+    enrolledSince: "Дата вступления в программу",
   },
   de: {
     title: "Profil",
@@ -76,6 +88,9 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     home: "Startseite",
     shop: "Shop",
     avatarAlt: "Benutzeravatar",
+    enroll: "Am Programm teilnehmen",
+    enrolled: "Sie nehmen am Cashback-Programm teil",
+    enrolledSince: "Dem Programm beigetreten am",
   },
   fr: {
     title: "Profil",
@@ -93,6 +108,9 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     home: "Accueil",
     shop: "Boutique",
     avatarAlt: "Avatar de l'utilisateur",
+    enroll: "Rejoindre le programme",
+    enrolled: "Vous êtes inscrit au programme de cashback",
+    enrolledSince: "Inscrit au programme le",
   },
 };
 
@@ -112,6 +130,37 @@ export function formatBalance(value: unknown): string {
   return (Number.isFinite(num) ? num : 0).toFixed(2);
 }
 
+const DATE_LOCALES: Record<ProfileLang, string> = {
+  en: "en-GB",
+  ru: "ru-RU",
+  de: "de-DE",
+  fr: "fr-FR",
+};
+
+// Returns a locale-appropriate DD.MM.YYYY-style date, or "" for invalid input.
+export function formatEnrollmentDate(value: string | null, lang: string | undefined): string {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const key = (lang || "en").toLowerCase() as ProfileLang;
+  return new Intl.DateTimeFormat(DATE_LOCALES[key] || DATE_LOCALES.en, {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
+
+function readEnrollment(): { enrolled: boolean; enrolledAt: string | null } {
+  try {
+    return {
+      enrolled: localStorage.getItem(ENROLLED_KEY) === "true",
+      enrolledAt: localStorage.getItem(ENROLLED_AT_KEY),
+    };
+  } catch {
+    return { enrolled: false, enrolledAt: null };
+  }
+}
+
 interface ProfileData {
   email?: string;
   name?: string;
@@ -124,6 +173,26 @@ export default function Profile() {
   const { lang } = useLang();
   const t = getMessages(lang);
   const [freshProfile, setFreshProfile] = useState<ProfileData | null>(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [enrolledAt, setEnrolledAt] = useState<string | null>(null);
+
+  useEffect(() => {
+    const stored = readEnrollment();
+    setIsEnrolled(stored.enrolled);
+    setEnrolledAt(stored.enrolledAt);
+  }, []);
+
+  const handleEnroll = () => {
+    const now = new Date().toISOString();
+    try {
+      localStorage.setItem(ENROLLED_KEY, "true");
+      localStorage.setItem(ENROLLED_AT_KEY, now);
+    } catch {
+      // Storage may be unavailable (e.g. blocked); still reflect enrollment for this session.
+    }
+    setIsEnrolled(true);
+    setEnrolledAt(now);
+  };
 
   useEffect(() => {
     if (!token) {
@@ -171,6 +240,7 @@ export default function Profile() {
   }
 
   const profile: ProfileData = { ...user, ...(freshProfile || {}) };
+  const enrolledDate = formatEnrollmentDate(enrolledAt, lang);
 
   return (
     <main className="profile-container" aria-labelledby="profile-title">
@@ -195,6 +265,26 @@ export default function Profile() {
             <dd data-testid="profile-balance">{formatBalance(profile.balance)}</dd>
           </div>
         </dl>
+      </section>
+
+      <section className="profile-enrollment" aria-live="polite">
+        {isEnrolled ? (
+          <div data-testid="profile-enrollment-status">
+            <p className="profile-enrollment-message">{t.enrolled}</p>
+            {enrolledDate && (
+              <p>
+                {t.enrolledSince}:{" "}
+                <time dateTime={enrolledAt || undefined} data-testid="profile-enrollment-date">
+                  {enrolledDate}
+                </time>
+              </p>
+            )}
+          </div>
+        ) : (
+          <button type="button" className="profile-enroll-button" onClick={handleEnroll}>
+            {t.enroll}
+          </button>
+        )}
       </section>
 
       <p className="profile-demo-notice" role="note">
