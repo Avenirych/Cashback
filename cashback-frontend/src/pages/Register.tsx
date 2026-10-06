@@ -10,6 +10,7 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -17,6 +18,12 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!termsAccepted) {
+      setError(t.mustAcceptTerms || "You must accept the terms and conditions to register");
+      return;
+    }
+
     setError("");
     setLoading(true);
 
@@ -104,18 +111,42 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
                 style={{ padding: "12px", borderRadius: "6px", border: "1px solid #ddd", fontSize: "14px" }}
               />
 
+              {/* Terms and Conditions Checkbox */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginTop: "8px" }}>
+                <input
+                  id="terms"
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  disabled={loading}
+                  style={{ marginTop: "4px", cursor: "pointer", width: "18px", height: "18px" }}
+                />
+                <label htmlFor="terms" style={{ fontSize: "13px", color: "#333", cursor: "pointer", lineHeight: "1.4" }}>
+                  {t.agreeTerms || "I agree to the"} {" "}
+                  <Link to="/terms" target="_blank" style={{ color: "#0d6efd", textDecoration: "none" }}>
+                    {t.termsAndConditions || "Terms and Conditions"}
+                  </Link>
+                  {" "} {t.and || "and"} {" "}
+                  <Link to="/contacts" target="_blank" style={{ color: "#0d6efd", textDecoration: "none" }}>
+                    {t.privacyPolicy || "Privacy Policy"}
+                  </Link>
+                </label>
+              </div>
+
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !termsAccepted}
                 style={{
                   padding: "12px",
-                  backgroundColor: "#0d6efd",
+                  backgroundColor: termsAccepted ? "#0d6efd" : "#ccc",
                   color: "white",
                   border: "none",
                   borderRadius: "6px",
-                  cursor: loading ? "not-allowed" : "pointer",
+                  cursor: termsAccepted && !loading ? "pointer" : "not-allowed",
                   fontSize: "16px",
                   fontWeight: 500,
+                  marginTop: "8px",
+                  transition: "background-color 0.3s ease",
                 }}
               >
                 {loading ? t.creating : t.register}
