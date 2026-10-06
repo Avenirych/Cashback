@@ -18,6 +18,7 @@ describe('OnboardingService', () => {
   let users: { getById: jest.Mock };
   let accountLock: jest.Mock;
   let persistedRow: jest.Mock;
+  let encryptionKey: string | undefined;
   const valid = {
     programmeOptIn: true,
     privacyAcknowledged: true,
@@ -27,12 +28,13 @@ describe('OnboardingService', () => {
     accountNumber: '00123456',
   };
   const encryption = new RecipientEncryptionService({
-    get: () => Buffer.alloc(32, 4).toString('base64'),
+    get: () => encryptionKey,
   } as unknown as ConfigService);
 
   beforeEach(() => {
     persisted = new Map();
     failMembership = false;
+    encryptionKey = Buffer.alloc(32, 4).toString('base64');
     accountLock = jest.fn().mockResolvedValue({ id: 7 });
     persistedRow = jest.fn();
     users = {
@@ -159,6 +161,9 @@ describe('OnboardingService', () => {
     await service.save(7, valid);
     const recipient = persisted.get(Recipient);
     recipient.authTag = Buffer.alloc(16).toString('base64');
+    await expect(service.getRecipientId(7)).rejects.toThrow(
+      'Recipient storage unavailable',
+    );
     await expect(service.save(7, valid)).rejects.toThrow(
       'Recipient storage unavailable',
     );
@@ -169,6 +174,20 @@ describe('OnboardingService', () => {
     );
     await expect(service.getRecipientId(7)).rejects.toThrow(
       'Complete programme onboarding first',
+    );
+    expect(persistedRow).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not expose payout recipient references when the encryption key is missing or invalid', async () => {
+    await service.save(7, valid);
+    expect(await service.getRecipientId(7)).toBe(7);
+    encryptionKey = undefined;
+    await expect(service.getRecipientId(7)).rejects.toThrow(
+      'Recipient storage unavailable',
+    );
+    encryptionKey = 'invalid-key';
+    await expect(service.getRecipientId(7)).rejects.toThrow(
+      'Recipient storage unavailable',
     );
     expect(persistedRow).toHaveBeenCalledTimes(2);
   });

@@ -174,6 +174,10 @@ export class OnboardingService {
 
   async getRecipientId(userId: number): Promise<number> {
     await this.assertEligible(userId);
-    return userId;
+    const recipient = await this.recipients.findOne({ where: { userId } });
+    if (!recipient)
+      throw new ServiceUnavailableException('Recipient storage unavailable');
+    this.encryption.decrypt(userId, recipient);
+    return recipient.userId;
   }
 }

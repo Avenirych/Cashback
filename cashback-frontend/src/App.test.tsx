@@ -12,7 +12,8 @@ const saved = {
   ...state, bonusEligible: true,
   recipient: { accountHolderNameMasked: "A***", sortCodeMasked: "**-**-56", accountNumberMasked: "****1234" },
 };
-const response = (data: unknown, ok = true) => ({ ok, json: async () => data } as Response);
+const response = (data: unknown, ok = true, status = ok ? 200 : 400) =>
+  ({ ok, status, json: async () => data } as Response);
 let eligible: boolean;
 let saveOk: boolean;
 let fetchMock: jest.Mock;
@@ -88,6 +89,10 @@ test("modal validates locally, traps keyboard focus, and cancels without saving"
   expect(scope.getAllByRole("checkbox").every((box) => !(box as HTMLInputElement).checked)).toBe(true);
   fireEvent.click(scope.getByRole("button", { name: translations.EN.onboarding.save }));
   expect(scope.getByRole("alert")).toHaveTextContent(translations.EN.onboarding.invalid);
+  for (const input of [...scope.getAllByRole("textbox"), ...scope.getAllByRole("checkbox")]) {
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(input).toHaveAttribute("aria-describedby", scope.getByRole("alert").id);
+  }
   expect(posts()).toHaveLength(0);
   const cancel = scope.getByRole("button", { name: "Cancel" });
   cancel.focus();
@@ -264,16 +269,34 @@ test("malformed successful save does not grant eligibility or navigate", async (
   expect(window.location.pathname).toBe("/profile");
 });
 
-test("failed auth refresh after save keeps the modal open and readiness locked", async () => {
+test("auth rejection after save never grants readiness to a rejected session", async () => {
   const dialog = await openModal();
   fill(dialog);
   fetchMock
     .mockImplementationOnce(async () => response(saved))
-    .mockImplementationOnce(async () => response({ message: "private error" }, false));
+    .mockImplementationOnce(async () => response({ message: "private error" }, false, 401));
   fireEvent.click(within(dialog).getByRole("button", { name: translations.EN.onboarding.save }));
-  expect(await within(dialog).findByRole("alert")).toHaveTextContent(translations.EN.onboarding.failure);
+  expect(await within(dialog).findByRole("alert")).toHaveTextContent(translations.EN.onboarding.savedSessionUnavailable);
+  expect(within(dialog).getByLabelText(translations.EN.onboarding.holder)).toHaveValue("");
+  expect(within(dialog).getByLabelText(translations.EN.onboarding.sortCode)).toHaveValue("");
+  expect(within(dialog).getByLabelText(translations.EN.onboarding.account)).toHaveValue("");
   expect(screen.getByText(translations.EN.bonusNotReady)).toBeInTheDocument();
   expect(window.location.pathname).toBe("/profile");
+});
+
+test("validated save with a network-failed profile refresh closes modal and opens ready home", async () => {
+  const dialog = await openModal();
+  fill(dialog);
+  fetchMock
+    .mockImplementationOnce(async () => response(saved))
+    .mockRejectedValueOnce(new TypeError("Network unavailable"));
+  fireEvent.click(within(dialog).getByRole("button", { name: translations.EN.onboarding.save }));
+  await waitFor(() => expect(window.location.pathname).toBe("/"));
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  expect(screen.getByText(translations.EN.bonusReady)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Get bonuses" }));
+  expect(window.location.pathname).toBe("/bonuses");
 });
 
 test("StrictMode modal can save after effect cleanup and replay", async () => {

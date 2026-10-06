@@ -13,9 +13,10 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
+  sessionVersion: number;
   login: (data: { email: string; password: string }) => Promise<void>;
   register: (data: { name: string; email: string; password: string }) => Promise<void>;
-  refreshUser: () => Promise<User>;
+  refreshUser: (confirmedEligibility?: { token: string; sessionVersion: number; bonusEligible: true }) => Promise<User>;
   logout: () => void;
 }
 
@@ -83,18 +84,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const refreshUser = async () => {
-    const operation = ++generation.current;
+  const refreshUser = async (confirmedEligibility?: { token: string; sessionVersion: number; bonusEligible: true }) => {
     const activeToken = currentToken.current;
     if (!activeToken) throw new Error("Session unavailable");
-    const response = await fetch(`${AUTH_API}/auth/profile`, {
-      headers: { Authorization: "Bearer " + activeToken },
-    });
-    if (!response.ok) throw new Error("Session unavailable");
-    const refreshedUser: User = await response.json();
-    if (operation !== generation.current) throw new Error("Session changed");
-    setUser(refreshedUser);
-    return refreshedUser;
+    if (confirmedEligibility && (confirmedEligibility.token !== activeToken ||
+      confirmedEligibility.sessionVersion !== generation.current)) throw new Error("Session changed");
+    const operation = ++generation.current;
+    const activeUser = user;
+    let canUseConfirmation = true;
+    try {
+      const response = await fetch(`${AUTH_API}/auth/profile`, {
+        headers: { Authorization: "Bearer " + activeToken },
+      });
+      if (!response.ok) {
+        canUseConfirmation = response.status >= 500;
+        throw new Error("Session unavailable");
+      }
+      const refreshedUser: User = await response.json();
+      if (operation !== generation.current) throw new Error("Session changed");
+      setUser(refreshedUser);
+      return refreshedUser;
+    } catch {
+      if (operation !== generation.current || currentToken.current !== activeToken) {
+        throw new Error("Session changed");
+      }
+      // A validated save already confirmed eligibility; a network-only refresh failure
+      // must not misrepresent that save as failed or change another session's profile.
+      if (!canUseConfirmation || !confirmedEligibility || !activeUser) throw new Error("Session unavailable");
+      const confirmedUser = { ...activeUser, bonusEligible: confirmedEligibility.bonusEligible };
+      setUser(confirmedUser);
+      return confirmedUser;
+    }
   };
 
   const logout = () => {
@@ -108,7 +128,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{
-      user, token, loading,
+      user, token, loading, sessionVersion: generation.current,
       login: (data) => authenticate("login", data),
       register: (data) => authenticate("register", data),
       refreshUser, logout,

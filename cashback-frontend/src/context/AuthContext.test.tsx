@@ -4,7 +4,8 @@ import { AuthProvider, useAuth } from "./AuthContext";
 
 const oldUser = { id: 1, name: "Old", email: "old@example.test", bonusEligible: false };
 const newUser = { id: 2, name: "New", email: "new@example.test", bonusEligible: true };
-const response = (data: unknown, ok = true) => ({ ok, json: async () => data } as Response);
+const response = (data: unknown, ok = true, status = ok ? 200 : 400) =>
+  ({ ok, status, json: async () => data } as Response);
 const deferred = () => {
   let resolve!: (value: Response) => void;
   const promise = new Promise<Response>((done) => { resolve = done; });
@@ -12,13 +13,23 @@ const deferred = () => {
 };
 
 function Probe() {
-  const { user, token, loading, login, register, logout, refreshUser } = useAuth();
+  const { user, token, loading, sessionVersion, login, register, logout, refreshUser } = useAuth();
+  const captured = React.useRef<{ token: string; sessionVersion: number; bonusEligible: true } | null>(null);
   return <div>
     <span data-testid="session">{loading ? "loading" : `${user?.name ?? "guest"}:${token ?? "none"}:${user?.bonusEligible ?? false}`}</span>
     <button onClick={() => { void login({ email: "new@example.test", password: "pass" }).catch(() => {}); }}>login</button>
     <button onClick={() => { void register({ name: "New", email: "new@example.test", password: "pass" }).catch(() => {}); }}>register</button>
     <button onClick={logout}>logout</button>
     <button onClick={() => { void refreshUser().catch(() => {}); }}>refresh</button>
+    <button onClick={() => {
+      if (token) void refreshUser({ token, sessionVersion, bonusEligible: true }).catch(() => {});
+    }}>confirmed refresh</button>
+    <button onClick={() => {
+      if (token) captured.current = { token, sessionVersion, bonusEligible: true };
+    }}>capture confirmation</button>
+    <button onClick={() => {
+      if (captured.current) void refreshUser(captured.current).catch(() => {});
+    }}>stale confirmation</button>
   </div>;
 }
 
@@ -114,4 +125,39 @@ test("invalid session clears token and finishes loading", async () => {
   mount();
   await waitFor(() => expect(screen.getByTestId("session")).toHaveTextContent("guest:none:false"));
   expect(localStorage.getItem("cashback_token")).toBeNull();
+});
+
+test.each(["login", "register", "logout"])("confirmed refresh fallback cannot affect a newer %s session", async (action) => {
+  localStorage.setItem("cashback_token", "old-token");
+  const refresh = deferred();
+  const newerUser = { ...newUser, bonusEligible: false };
+  (fetch as jest.Mock)
+    .mockResolvedValueOnce(response(oldUser))
+    .mockReturnValueOnce(refresh.promise)
+    .mockResolvedValueOnce(response({ access_token: "new-token", user: newerUser }));
+  mount();
+  await screen.findByText("Old:old-token:false");
+  fireEvent.click(screen.getByText("confirmed refresh"));
+  fireEvent.click(screen.getByText(action));
+  await screen.findByText(action === "logout" ? "guest:none:false" : "New:new-token:false");
+  await act(async () => { refresh.resolve(response({}, false, 503)); });
+  expect(screen.getByTestId("session")).toHaveTextContent(
+    action === "logout" ? "guest:none:false" : "New:new-token:false",
+  );
+});
+
+test("a late POST confirmation cannot update a newer login even when the token string is reused", async () => {
+  localStorage.setItem("cashback_token", "reused-token");
+  (fetch as jest.Mock)
+    .mockResolvedValueOnce(response(oldUser))
+    .mockResolvedValueOnce(response({ access_token: "reused-token", user: { ...newUser, bonusEligible: false } }))
+    .mockRejectedValueOnce(new TypeError("Network unavailable"));
+  mount();
+  await screen.findByText("Old:reused-token:false");
+  fireEvent.click(screen.getByText("capture confirmation"));
+  fireEvent.click(screen.getByText("login"));
+  await screen.findByText("New:reused-token:false");
+  fireEvent.click(screen.getByText("stale confirmation"));
+  expect(screen.getByTestId("session")).toHaveTextContent("New:reused-token:false");
+  expect(fetch).toHaveBeenCalledTimes(2);
 });

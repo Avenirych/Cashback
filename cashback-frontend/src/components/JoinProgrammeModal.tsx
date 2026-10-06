@@ -25,7 +25,7 @@ export function isOnboardingState(value: any): value is OnboardingState {
 export default function JoinProgrammeModal({
   t, onClose,
 }: { t: typeof translations.EN; onClose: () => void }) {
-  const { token, refreshUser } = useAuth();
+  const { token, sessionVersion, refreshUser } = useAuth();
   const navigate = useNavigate();
   const dialog = useRef<HTMLDivElement>(null);
   const pending = useRef(false);
@@ -37,6 +37,9 @@ export default function JoinProgrammeModal({
   const [accuracy, setAccuracy] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [invalidFields, setInvalidFields] = useState({
+    holder: false, sortCode: false, account: false, privacy: false, accuracy: false,
+  });
 
   useEffect(() => {
     controller.current = new AbortController();
@@ -82,15 +85,22 @@ export default function JoinProgrammeModal({
     const canonicalSortCode = sortCode.replace(/[ -]/g, "");
     const invalidName = Array.from(holder).some((character) =>
       character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127);
-    if (holder.trim().length < 2 || holder.trim().length > 120 || invalidName ||
-      !/^[0-9 -]+$/.test(sortCode) || !/^\d{6}$/.test(canonicalSortCode) ||
-      !/^\d{8}$/.test(account) || !privacy || !accuracy) {
+    const invalid = {
+      holder: holder.trim().length < 2 || holder.trim().length > 120 || invalidName,
+      sortCode: !/^[0-9 -]+$/.test(sortCode) || !/^\d{6}$/.test(canonicalSortCode),
+      account: !/^\d{8}$/.test(account),
+      privacy: !privacy,
+      accuracy: !accuracy,
+    };
+    setInvalidFields(invalid);
+    if (Object.values(invalid).some(Boolean)) {
       setError(t.onboarding.invalid);
       return;
     }
     pending.current = true;
     setSaving(true);
     setError("");
+    let saveConfirmed = false;
     try {
       const response = await fetch(`${AUTH_API}/onboarding`, {
         method: "POST",
@@ -107,16 +117,20 @@ export default function JoinProgrammeModal({
         throw new Error("Enrolment unavailable");
       }
       if (controller.current.signal.aborted) return;
-      const refreshed = await refreshUser();
-      if (controller.current.signal.aborted) return;
-      if (refreshed.bonusEligible !== true) throw new Error("Enrolment unavailable");
+      saveConfirmed = true;
       setHolder("");
       setSortCode("");
       setAccount("");
+      if (!token) throw new Error("Session unavailable");
+      const refreshed = await refreshUser({ token, sessionVersion, bonusEligible: true });
+      if (controller.current.signal.aborted) return;
+      if (refreshed.bonusEligible !== true) throw new Error("Enrolment unavailable");
       onClose();
       navigate("/", { replace: true });
     } catch {
-      if (!controller.current.signal.aborted) setError(t.onboarding.failure);
+      if (!controller.current.signal.aborted) {
+        setError(saveConfirmed ? t.onboarding.savedSessionUnavailable : t.onboarding.failure);
+      }
     } finally {
       pending.current = false;
       if (!controller.current.signal.aborted) setSaving(false);
@@ -139,22 +153,30 @@ export default function JoinProgrammeModal({
         <form onSubmit={submit} noValidate aria-busy={saving}>
           <label htmlFor="account-holder">{t.onboarding.holder}</label>
           <input id="account-holder" value={holder} onChange={(e) => setHolder(e.target.value)}
-            autoComplete="off" maxLength={120} disabled={saving} required />
+            autoComplete="off" maxLength={120} disabled={saving} required
+            aria-invalid={invalidFields.holder || undefined}
+            aria-describedby={invalidFields.holder ? "programme-error" : undefined} />
           <label htmlFor="sort-code">{t.onboarding.sortCode}</label>
           <input id="sort-code" value={sortCode} onChange={(e) => setSortCode(e.target.value)}
-            autoComplete="off" inputMode="numeric" maxLength={12} disabled={saving} required />
+            autoComplete="off" inputMode="numeric" maxLength={12} disabled={saving} required
+            aria-invalid={invalidFields.sortCode || undefined}
+            aria-describedby={invalidFields.sortCode ? "programme-error" : undefined} />
           <label htmlFor="account-number">{t.onboarding.account}</label>
           <input id="account-number" value={account} onChange={(e) => setAccount(e.target.value)}
-            autoComplete="off" inputMode="numeric" maxLength={8} disabled={saving} required />
+            autoComplete="off" inputMode="numeric" maxLength={8} disabled={saving} required
+            aria-invalid={invalidFields.account || undefined}
+            aria-describedby={invalidFields.account ? "programme-error" : undefined} />
           <label className="programme-confirmation">
             <input type="checkbox" checked={privacy} onChange={(e) => setPrivacy(e.target.checked)}
-              disabled={saving} />{t.onboarding.privacyAck}
+              disabled={saving} required aria-invalid={invalidFields.privacy || undefined}
+              aria-describedby={invalidFields.privacy ? "programme-error" : undefined} />{t.onboarding.privacyAck}
           </label>
           <label className="programme-confirmation">
             <input type="checkbox" checked={accuracy} onChange={(e) => setAccuracy(e.target.checked)}
-              disabled={saving} />{t.onboarding.accuracy}
+              disabled={saving} required aria-invalid={invalidFields.accuracy || undefined}
+              aria-describedby={invalidFields.accuracy ? "programme-error" : undefined} />{t.onboarding.accuracy}
           </label>
-          {error && <p role="alert" className="programme-error">{error}</p>}
+          {error && <p id="programme-error" role="alert" className="programme-error">{error}</p>}
           <div className="programme-actions">
             <button type="submit" disabled={saving}>{saving ? t.creating : t.onboarding.save}</button>
             <button type="button" onClick={onClose} disabled={saving}>{t.cancel}</button>

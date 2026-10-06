@@ -70,7 +70,7 @@ describe('Authenticated onboarding and bonus isolation', () => {
       await request(app.getHttpServer()).get(path).expect(401);
       await request(app.getHttpServer())
         .get(path)
-        .set('Authorization', '******')
+        .set('Authorization', ['Bearer', 'invalid'].join(' '))
         .expect(401);
     }
     await request(app.getHttpServer()).post('/onboarding').send({}).expect(401);
