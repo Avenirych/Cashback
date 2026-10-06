@@ -50,12 +50,19 @@ export const translations = {
     minPassword: "Password (min 3 characters)",
     haveAccount: "Already have an account?",
     noAccount: "Don't have an account?",
+
+    // Register Terms
+    mustAcceptTerms: "You must accept the terms and conditions to register",
+    agreeTerms: "I agree to the",
+    termsAndConditions: "Terms and Conditions",
+    privacyPolicy: "Privacy Policy",
+    and: "and",
   },
 
   RU: {
     title: "Умные покупки с Cashback+",
     description:
-      "Получайте кэшбэк, бонусы за просмотр рекламы и участие в исследованиях. Комбинируйте их и компенсируйте стоимость покупок до 100%.",
+      "Получайте кэшбэк, бонусы за просмотр рекламы и участие в исследованиях. Комбинируйте их и компенсируйт[...]",
     goShopping: "Перейти к покупкам",
     getBonuses: "Получить бонусы",
     needRegister: "Для доступа к бонусам и покупкам необходимо зарегистрироваться.",
@@ -103,6 +110,13 @@ export const translations = {
     minPassword: "Пароль (мин. 3 символа)",
     haveAccount: "Уже есть аккаунт?",
     noAccount: "Нет аккаунта?",
+
+    // Register Terms
+    mustAcceptTerms: "Вы должны принять условия и положения для регистрации",
+    agreeTerms: "Я согласен с",
+    termsAndConditions: "Условиями и положениями",
+    privacyPolicy: "Политикой конфиденциальности",
+    and: "и",
   },
 
   DE: {
@@ -156,6 +170,13 @@ export const translations = {
     minPassword: "Passwort (mindestens 3 Zeichen)",
     haveAccount: "Haben Sie bereits ein Konto?",
     noAccount: "Kein Konto?",
+
+    // Register Terms
+    mustAcceptTerms: "Sie müssen den Bedingungen zustimmen, um sich zu registrieren",
+    agreeTerms: "Ich akzeptiere die",
+    termsAndConditions: "Geschäftsbedingungen",
+    privacyPolicy: "Datenschutzrichtlinie",
+    and: "und",
   },
 
   FR: {
@@ -209,5 +230,12 @@ export const translations = {
     minPassword: "Mot de passe (min. 3 caractères)",
     haveAccount: "Vous avez déjà un compte ?",
     noAccount: "Pas de compte ?",
+
+    // Register Terms
+    mustAcceptTerms: "Vous devez accepter les conditions générales pour vous inscrire",
+    agreeTerms: "Je suis d'accord avec les",
+    termsAndConditions: "Conditions générales",
+    privacyPolicy: "Politique de confidentialité",
+    and: "et",
   },
 };
