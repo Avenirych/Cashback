@@ -57,6 +57,11 @@ export const translations = {
     termsAndConditions: "Terms and Conditions",
     privacyPolicy: "Privacy Policy",
     and: "and",
+
+    // Shop
+    shopTitle: "Shop",
+    backToHome: "← Back to home",
+    noProducts: "No products available",
   },
 
   RU: {
@@ -98,7 +103,7 @@ export const translations = {
     cancel: "Отмена",
     topicsLoading: "Загрузка тем...",
     noTopics: "Нет тем. Войдите, чтобы создать одну.",
-    startDiscussion: "Начните дискуссию, создав первую тему!",
+    startDiscription: "Начните дискуссию, создав первую тему!",
     writeMessage: "Напишите сообщение",
     send: "Отправить",
     pleaseLogin: "Войдите",
@@ -117,6 +122,10 @@ export const translations = {
     termsAndConditions: "Условиями и положениями",
     privacyPolicy: "Политикой конфиденциальности",
     and: "и",
+
+    // Shop
+    shopTitle: "Магазин",
+    noProducts: "Нет доступных товаров",
   },
 
   DE: {
@@ -177,6 +186,10 @@ export const translations = {
     termsAndConditions: "Geschäftsbedingungen",
     privacyPolicy: "Datenschutzrichtlinie",
     and: "und",
+
+    // Shop
+    shopTitle: "Shop",
+    noProducts: "Keine Produkte verfügbar",
   },
 
   FR: {
@@ -237,5 +250,9 @@ export const translations = {
     termsAndConditions: "Conditions générales",
     privacyPolicy: "Politique de confidentialité",
     and: "et",
+
+    // Shop
+    shopTitle: "Boutique",
+    noProducts: "Aucun produit disponible",
   },
 };
