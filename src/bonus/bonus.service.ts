@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -20,16 +24,44 @@ export class BonusService {
     });
   }
 
-  async updateSettings(userId: number, data: Partial<UserBonusSettings>) {
+  async updateSettings(userId: number, data: unknown) {
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      throw new BadRequestException('Invalid bonus settings');
+    }
+    const input = data as Record<string, unknown>;
+    if (
+      Object.keys(input).some(
+        (key) => !['ad_bonus_percent', 'research_bonus_percent'].includes(key),
+      )
+    ) {
+      throw new BadRequestException('Invalid bonus settings');
+    }
+    const allowed: Partial<UserBonusSettings> = {};
+    for (const key of ['ad_bonus_percent', 'research_bonus_percent'] as const) {
+      if (input[key] !== undefined) {
+        const value = input[key];
+        if (
+          typeof value !== 'number' ||
+          !Number.isFinite(value) ||
+          value < 0 ||
+          value > 100
+        ) {
+          throw new BadRequestException(
+            'Bonus percentages must be between 0 and 100',
+          );
+        }
+        allowed[key] = value;
+      }
+    }
     let settings = await this.getSettings(userId);
 
     if (!settings) {
       settings = this.settingsRepo.create({
         user: { id: userId },
-        ...data,
+        ...allowed,
       });
     } else {
-      Object.assign(settings, data);
+      Object.assign(settings, allowed);
     }
 
     return this.settingsRepo.save(settings);
@@ -42,12 +74,10 @@ export class BonusService {
     });
   }
 
-  async addSources(userId: number, data: Partial<UserBonusSources>) {
-    const source = this.sourcesRepo.create({
-      user: { id: userId },
-      ...data,
-    });
-
-    return this.sourcesRepo.save(source);
+  async addSources(_userId: number, _data: unknown): Promise<never> {
+    // This entity has only ownership and trusted earnings, no client-writable fields.
+    throw new ForbiddenException(
+      'Bonus earnings are recorded by trusted server processes only',
+    );
   }
 }

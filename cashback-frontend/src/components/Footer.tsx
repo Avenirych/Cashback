@@ -20,9 +20,11 @@ export default function Footer({ lang }: FooterProps) {
     >
       <div style={{ marginBottom: "10px" }}>
         <Link to="/terms" style={{ marginRight: "20px" }}>
-          {t.terms ?? "Terms"}
+          {t.footerTerms}
         </Link>
         <Link to="/contacts">{t.contacts ?? "Contacts"}</Link>
+        {" · "}
+        <Link to="/privacy">{t.footerPrivacy}</Link>
       </div>
 
       <div style={{ fontSize: "14px", color: "#555" }}>

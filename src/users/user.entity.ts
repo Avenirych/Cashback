@@ -18,7 +18,7 @@ export class User {
   password: string;
 
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
-  balance: number;
+  balance: number | string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

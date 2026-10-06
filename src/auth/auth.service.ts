@@ -1,13 +1,20 @@
-import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
+import { OnboardingService } from '../onboarding/onboarding.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly onboarding: OnboardingService,
   ) {}
 
   private normalizeEmail(email: string) {
@@ -15,9 +22,14 @@ export class AuthService {
   }
 
   async register(email: string, password: string, name: string) {
-    console.log('🔐 Register attempt:', { email, name });
-
-    if (!email || !password || !name) {
+    if (
+      typeof email !== 'string' ||
+      !email ||
+      typeof password !== 'string' ||
+      !password ||
+      typeof name !== 'string' ||
+      !name
+    ) {
       throw new BadRequestException('Email, password, and name are required');
     }
 
@@ -33,13 +45,11 @@ export class AuthService {
 
     const existing = await this.usersService.getByEmail(normalizedEmail);
     if (existing) {
-      console.log('❌ User already exists:', normalizedEmail);
       throw new BadRequestException('User with this email already exists');
     }
 
     try {
       const passwordHash = await bcrypt.hash(password, 10);
-      console.log('🔒 Password hashed');
 
       const userData = {
         email: normalizedEmail,
@@ -49,31 +59,30 @@ export class AuthService {
         balance: 0,
       };
 
-      console.log('💾 Creating user with data:', { email: userData.email, name: userData.name });
       const user = await this.usersService.create(userData);
-      console.log('✅ User created:', { id: user.id, email: user.email });
 
-      const payload = { sub: user.id, email: user.email, name: user.name };
+      const payload = { sub: user.id };
       const token = this.jwtService.sign(payload);
-      console.log('🎫 Token generated for user:', user.id);
 
       return {
         access_token: token,
-        user: this.safeUser(user),
+        user: await this.safeUser(user),
       };
     } catch (error) {
-      console.error('❌ Register error:', error);
       if (error instanceof BadRequestException) {
         throw error;
       }
-      throw new BadRequestException('Registration failed: ' + (error as any).message);
+      throw new BadRequestException('Registration failed');
     }
   }
 
   async login(email: string, password: string) {
-    console.log('🔐 Login attempt:', email);
-
-    if (!email || !password) {
+    if (
+      typeof email !== 'string' ||
+      !email ||
+      typeof password !== 'string' ||
+      !password
+    ) {
       throw new BadRequestException('Email and password are required');
     }
 
@@ -81,27 +90,24 @@ export class AuthService {
 
     const user = await this.usersService.getByEmail(normalizedEmail);
     if (!user) {
-      console.log('❌ User not found:', normalizedEmail);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const valid = await bcrypt.compare(password, user.password || '');
     if (!valid) {
-      console.log('❌ Invalid password for user:', normalizedEmail);
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { sub: user.id, email: user.email, name: user.name };
+    const payload = { sub: user.id };
     const token = this.jwtService.sign(payload);
-    console.log('✅ Login successful for:', normalizedEmail);
 
     return {
       access_token: token,
-      user: this.safeUser(user),
+      user: await this.safeUser(user),
     };
   }
 
-  async profile(user: { id: number; email: string; name?: string }) {
+  async profile(user: { id: number }) {
     const dbUser = await this.usersService.getById(user.id);
     if (!dbUser) {
       throw new UnauthorizedException('User not found');
@@ -110,8 +116,15 @@ export class AuthService {
     return this.safeUser(dbUser);
   }
 
-  private safeUser(user: any) {
-    const { password, ...safeUser } = user;
-    return safeUser;
+  private async safeUser(user: User) {
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      avatar_url: user.avatar_url,
+      balance: user.balance,
+      created_at: user.created_at,
+      bonusEligible: await this.onboarding.isEligible(user.id),
+    };
   }
 }

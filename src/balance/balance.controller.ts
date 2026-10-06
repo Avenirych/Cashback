@@ -1,22 +1,14 @@
-import { Controller, Post, Get, Param, Body } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { BalanceService } from './balance.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('balance')
+@UseGuards(JwtAuthGuard)
 export class BalanceController {
   constructor(private readonly balanceService: BalanceService) {}
 
-  @Post(':userId')
-  addOperation(
-    @Param('userId') userId: number,
-    @Body('type') type: string,
-    @Body('amount') amount: number,
-    @Body('description') description?: string,
-  ) {
-    return this.balanceService.addOperation(userId, type, amount, description);
-  }
-
   @Get(':userId')
-  getHistory(@Param('userId') userId: number) {
-    return this.balanceService.getUserBalanceHistory(userId);
+  getHistory(@Req() req: { user: { id: number } }) {
+    return this.balanceService.getUserBalanceHistory(req.user.id);
   }
 }

@@ -9,20 +9,22 @@ interface WelcomeProps {
 }
 
 export default function Welcome({ lang }: WelcomeProps) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const isAuth = Boolean(user);
   const navigate = useNavigate();
 
   const t = (translations as any)[lang?.toUpperCase()] ?? translations.EN;
 
   const goToShopping = () => {
+    if (loading) return;
     if (!isAuth) return navigate("/register");
     navigate("/shop");
   };
 
   const goToBonuses = () => {
+    if (loading) return;
     if (!isAuth) return navigate("/register");
-    navigate("/bonuses");
+    navigate(user?.bonusEligible === true ? "/bonuses" : "/profile");
   };
 
   return (
@@ -42,11 +44,12 @@ export default function Welcome({ lang }: WelcomeProps) {
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
-          padding: "20px 40px",
-          gap: "80px",
+          padding: "20px 24px",
+          gap: "40px",
+          flexWrap: "wrap",
         }}
       >
-        <div style={{ maxWidth: "520px" }}>
+        <div style={{ maxWidth: "520px", flex: "1 1 320px", minWidth: 0 }}>
           <h1 style={{ fontSize: "40px", fontWeight: 700, marginBottom: "20px" }}>
             {t.title ?? "Welcome"}
           </h1>
@@ -55,8 +58,9 @@ export default function Welcome({ lang }: WelcomeProps) {
             {t.description ?? "Enjoy your visit!"}
           </p>
 
-          <div style={{ display: "flex", gap: "20px" }}>
+          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
             <button
+              disabled={loading}
               onClick={goToShopping}
               style={{ padding: "14px 24px", background: "#0078ff", color: "white", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "16px", fontWeight: 600 }}
             >
@@ -64,21 +68,25 @@ export default function Welcome({ lang }: WelcomeProps) {
             </button>
 
             <button
+              disabled={loading}
               onClick={goToBonuses}
-              style={{ padding: "14px 24px", background: "#ff3b3b", color: "white", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "16px", fontWeight: 600 }}
+              style={{ padding: "14px 24px", background: user?.bonusEligible === true ? "#167246" : "#a33422", color: "white", borderRadius: "12px", border: "none", cursor: loading ? "wait" : "pointer", fontSize: "16px", fontWeight: 600 }}
             >
               {t.getBonuses ?? "Get bonuses"}
             </button>
           </div>
+          <p role="status">
+            {loading ? t.creating : user?.bonusEligible === true ? t.bonusReady : t.bonusNotReady}
+          </p>
 
-          {!isAuth && (
+          {!loading && !isAuth && (
             <p style={{ marginTop: "16px", fontSize: "14px", color: "var(--text-secondary)" }}>
               {t.needRegister ?? "Please register to continue"}
             </p>
           )}
         </div>
 
-        <div style={{ maxWidth: "420px", position: "relative" }}>
+        <div style={{ maxWidth: "420px", flex: "1 1 300px", minWidth: 0, position: "relative" }}>
           <img
             src="/assets/Oduvanchiki.jpeg"
             alt="Oduvanchiki"

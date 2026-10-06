@@ -127,7 +127,7 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
                     {t.termsAndConditions || "Terms and Conditions"}
                   </Link>
                   {" "} {t.and || "and"} {" "}
-                  <Link to="/contacts" target="_blank" style={{ color: "#0d6efd", textDecoration: "none" }}>
+                  <Link to="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#0d6efd", textDecoration: "none" }}>
                     {t.privacyPolicy || "Privacy Policy"}
                   </Link>
                 </label>

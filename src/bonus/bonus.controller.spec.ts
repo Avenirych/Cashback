@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BonusController } from './bonus.controller';
+import { BonusService } from './bonus.service';
+import { BonusEligibilityGuard } from '../onboarding/bonus-eligibility.guard';
 
 describe('BonusController', () => {
   let controller: BonusController;
@@ -7,7 +9,11 @@ describe('BonusController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [BonusController],
-    }).compile();
+      providers: [{ provide: BonusService, useValue: {} }],
+    })
+      .overrideGuard(BonusEligibilityGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<BonusController>(BonusController);
   });

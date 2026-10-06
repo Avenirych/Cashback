@@ -4,14 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Withdrawal } from './withdrawal.entity';
 import { WithdrawalService } from './withdrawal.service';
 import { WithdrawalController } from './withdrawal.controller';
-import { UsersModule } from '../users/users.module';
 import { BalanceModule } from '../balance/balance.module';
+import { OnboardingModule } from '../onboarding/onboarding.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Withdrawal]),
-    UsersModule,
     BalanceModule,
+    OnboardingModule,
   ],
   providers: [WithdrawalService],
   controllers: [WithdrawalController],

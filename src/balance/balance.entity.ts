@@ -13,7 +13,13 @@ export class BalanceOperation {
   type: string; // 'cashback', 'bonus', 'withdraw', 'freeze', 'unfreeze'
 
   @Column('decimal', { precision: 10, scale: 2 })
-  amount: number;
+  amount: number | string;
+
+  @Column({ default: 'pending' })
+  status: string; // pending | confirmed | reversed
+
+  @Column({ default: 'GBP' })
+  currency: string;
 
   @Column({ nullable: true })
   description: string;

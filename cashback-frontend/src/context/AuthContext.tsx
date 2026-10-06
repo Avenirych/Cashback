@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 
-interface User {
+export interface User {
   id: number;
   email: string;
   name: string;
   avatar_url?: string | null;
   balance?: number;
+  bonusEligible: boolean;
 }
 
 interface AuthContextType {
@@ -14,132 +15,104 @@ interface AuthContextType {
   loading: boolean;
   login: (data: { email: string; password: string }) => Promise<void>;
   register: (data: { name: string; email: string; password: string }) => Promise<void>;
+  refreshUser: () => Promise<User>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+export const AUTH_API = "http://localhost:3001";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const generation = useRef(0);
+  const currentToken = useRef<string | null>(null);
 
-  // Restore session on app load
   useEffect(() => {
-    const restoreSession = async () => {
-      const savedToken = localStorage.getItem("cashback_token");
-      console.log("🔐 Restoring session...", savedToken ? "token found" : "no token");
-
-      if (!savedToken) {
-        setLoading(false);
-        return;
-      }
-
+    const sessionGeneration = generation;
+    const operation = ++generation.current;
+    const savedToken = localStorage.getItem("cashback_token");
+    if (!savedToken) {
+      setLoading(false);
+      return;
+    }
+    const restore = async () => {
       try {
-        const response = await fetch("http://localhost:3001/auth/profile", {
-          headers: {
-            Authorization: `Bearer ${savedToken}`,
-          },
+        const response = await fetch(`${AUTH_API}/auth/profile`, {
+          headers: { Authorization: "Bearer " + savedToken },
         });
-
-        if (!response.ok) {
-          throw new Error("Invalid token");
-        }
-
-        const userData = await response.json();
-        console.log("✅ Session restored for user:", userData.name);
-        setUser(userData);
+        if (!response.ok) throw new Error("Session unavailable");
+        const restoredUser = await response.json();
+        if (operation !== generation.current) return;
+        currentToken.current = savedToken;
         setToken(savedToken);
-      } catch (error) {
-        console.error("❌ Failed to restore session:", error);
+        setUser(restoredUser);
+      } catch {
+        if (operation !== generation.current) return;
         localStorage.removeItem("cashback_token");
-        setUser(null);
+        currentToken.current = null;
         setToken(null);
+        setUser(null);
       } finally {
-        setLoading(false);
+        if (operation === generation.current) setLoading(false);
       }
     };
-
-    restoreSession();
+    void restore();
+    return () => { ++sessionGeneration.current; };
   }, []);
 
-  const applySession = (newToken: string, newUser: User) => {
-    console.log("💾 Saving session for user:", newUser.name);
-    localStorage.setItem("cashback_token", newToken);
-    setToken(newToken);
-    setUser(newUser);
-  };
-
-  const login = async (data: { email: string; password: string }) => {
-    console.log("🔐 Login attempt:", data.email);
+  const authenticate = async (path: string, data: object) => {
+    const operation = ++generation.current;
+    setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/auth/login", {
+      const response = await fetch(`${AUTH_API}/auth/${path}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
-      const text = await response.text();
-      console.log("📨 Login response status:", response.status);
-
-      if (!response.ok) {
-        console.error("❌ Login failed:", text);
-        throw new Error(text || "Login failed");
-      }
-
-      const result = JSON.parse(text);
-      applySession(result.access_token, result.user);
-      console.log("✅ Login successful");
-    } catch (error) {
-      console.error("❌ Login error:", error);
-      throw error;
+      if (!response.ok) throw new Error("Authentication failed");
+      const result = await response.json();
+      if (operation !== generation.current) throw new Error("Session changed");
+      localStorage.setItem("cashback_token", result.access_token);
+      currentToken.current = result.access_token;
+      setToken(result.access_token);
+      setUser(result.user);
+    } finally {
+      if (operation === generation.current) setLoading(false);
     }
   };
 
-  const register = async (data: { name: string; email: string; password: string }) => {
-    console.log("🔐 Register attempt:", data.email);
-    try {
-      const response = await fetch("http://localhost:3001/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const text = await response.text();
-      console.log("📨 Register response status:", response.status);
-
-      if (!response.ok) {
-        console.error("❌ Register failed:", text);
-        throw new Error(text || "Registration failed");
-      }
-
-      const result = JSON.parse(text);
-      applySession(result.access_token, result.user);
-      console.log("✅ Register successful");
-    } catch (error) {
-      console.error("❌ Register error:", error);
-      throw error;
-    }
+  const refreshUser = async () => {
+    const operation = ++generation.current;
+    const activeToken = currentToken.current;
+    if (!activeToken) throw new Error("Session unavailable");
+    const response = await fetch(`${AUTH_API}/auth/profile`, {
+      headers: { Authorization: "Bearer " + activeToken },
+    });
+    if (!response.ok) throw new Error("Session unavailable");
+    const refreshedUser: User = await response.json();
+    if (operation !== generation.current) throw new Error("Session changed");
+    setUser(refreshedUser);
+    return refreshedUser;
   };
 
   const logout = () => {
-    console.log("👋 Logging out");
+    ++generation.current;
+    currentToken.current = null;
     localStorage.removeItem("cashback_token");
     setToken(null);
     setUser(null);
+    setLoading(false);
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        loading,
-        login,
-        register,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={{
+      user, token, loading,
+      login: (data) => authenticate("login", data),
+      register: (data) => authenticate("register", data),
+      refreshUser, logout,
+    }}>
       {children}
     </AuthContext.Provider>
   );
@@ -147,8 +120,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used inside AuthProvider");
   return context;
 };

@@ -13,3 +13,86 @@
   object-fit: cover;
   margin-top: 10px;
 }
+
+.programme-panel, .programme-dialog {
+  background: var(--card-bg, #fff);
+  color: var(--text, #222);
+  padding: 24px;
+  border: 1px solid #d3c6b4;
+  border-radius: 12px;
+}
+
+.programme-panel button, .programme-dialog button {
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid #3169aa;
+  background: #175ca5;
+  color: #fff;
+  cursor: pointer;
+}
+
+.programme-panel button:disabled, .programme-dialog button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.programme-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, .6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.programme-dialog {
+  width: min(100%, 580px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.programme-dialog form {
+  display: grid;
+  gap: 12px;
+}
+
+.programme-dialog input:not([type="checkbox"]) {
+  padding: 12px;
+  min-width: 0;
+  border: 1px solid #777;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.programme-confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.programme-confirmation input {
+  margin-top: 6px;
+}
+
+.programme-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.programme-error {
+  color: #a32222;
+}
+
+.programme-dialog :focus-visible, .programme-panel :focus-visible {
+  outline: 3px solid #175ca5;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .profile-container { padding: 20px 16px; }
+  .programme-dialog { padding: 20px 16px; }
+}

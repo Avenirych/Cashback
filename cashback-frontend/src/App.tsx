@@ -21,6 +21,8 @@ import Topic from "./pages/Topic";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Shop from "./pages/Shop";
+import BonusGuard from "./components/BonusGuard";
+import ProgrammeDraft from "./pages/ProgrammeDraft";
 
 function AppRoutes() {
   const { lang, setLang } = useLang();
@@ -40,10 +42,12 @@ function AppRoutes() {
         <Route path="/services" element={<Services lang={lang} />} />
         <Route path="/contacts" element={<Contacts lang={lang} />} />
         <Route path="/terms" element={<TermsAndConditions />} />
+        <Route path="/privacy" element={<ProgrammeDraft privacy />} />
+        <Route path="/programme" element={<ProgrammeDraft />} />
 
-        <Route path="/bonuses" element={<Bonuses />} />
-        <Route path="/bonuses/ads" element={<BonusAds />} />
-        <Route path="/bonuses/research" element={<BonusResearch />} />
+        <Route path="/bonuses" element={<BonusGuard><Bonuses /></BonusGuard>} />
+        <Route path="/bonuses/ads" element={<BonusGuard><BonusAds /></BonusGuard>} />
+        <Route path="/bonuses/research" element={<BonusGuard><BonusResearch /></BonusGuard>} />
         <Route path="/profile" element={<Profile />} />
 
         <Route path="/forum" element={<TopicsPage lang={L} onLangChange={setLang} />} />
