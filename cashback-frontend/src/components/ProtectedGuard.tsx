@@ -1,10 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useOnboarding } from "../onboarding";
 
-export default function BonusGuard() {
+/**
+ * Защита для защищённых страниц: форум, магазин, профиль.
+ * Неподтверждённый пользователь редирект на /verify-email.
+ */
+export default function ProtectedGuard() {
   const { user, loading, isEmailVerificationPending } = useAuth();
-  const { eligible } = useOnboarding();
 
   if (loading) return null;
 
@@ -14,11 +16,6 @@ export default function BonusGuard() {
   // Email не подтверждён → на страницу подтверждения
   if (isEmailVerificationPending || !user.email_verified) {
     return <Navigate to="/verify-email" replace />;
-  }
-
-  // Не прошёл onboarding → на профиль
-  if (!eligible) {
-    return <Navigate to="/profile" replace state={{ bonusOnboardingRequired: true }} />;
   }
 
   return <Outlet />;

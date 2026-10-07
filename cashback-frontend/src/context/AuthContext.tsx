@@ -26,6 +26,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
+  isEmailVerificationPending: boolean;
   login: (data: { email: string; password: string }) => Promise<void>;
   register: (data: { name: string; email: string; password: string }) => Promise<RegisterResult>;
   verifyEmail: (token: string) => Promise<void>;
@@ -51,6 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isEmailVerificationPending, setIsEmailVerificationPending] = useState(false);
 
   useEffect(() => {
     const restoreSession = async () => {
@@ -71,6 +73,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         const userData = await response.json();
+        
+        // Проверяем, подтверждена ли почта
+        if (!userData.email_verified) {
+          // Почта не подтверждена — не восстанавливаем сессию
+          localStorage.removeItem("cashback_token");
+          setLoading(false);
+          return;
+        }
+
         setUser(userData);
         setToken(savedToken);
       } catch (error) {
@@ -86,10 +97,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     restoreSession();
   }, []);
 
-  const applySession = (newToken: string, newUser: User) => {
+  const applySessionTemporary = (newToken: string, newUser: User) => {
+    // Сохраняем в памяти, но НЕ в localStorage — до подтверждения почты
+    setToken(newToken);
+    setUser(newUser);
+    setIsEmailVerificationPending(!newUser.email_verified);
+  };
+
+  const applySessionPersistent = (newToken: string, newUser: User) => {
+    // Сохраняем в localStorage — только после подтверждения почты
     localStorage.setItem("cashback_token", newToken);
     setToken(newToken);
     setUser(newUser);
+    setIsEmailVerificationPending(false);
   };
 
   const login = async (data: { email: string; password: string }) => {
@@ -106,7 +126,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const result = JSON.parse(text);
-    applySession(result.access_token, result.user);
+    applySessionPersistent(result.access_token, result.user);
   };
 
   const register = async (data: {
@@ -127,7 +147,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const result = JSON.parse(text);
-    applySession(result.access_token, result.user);
+    // Сохраняем во временной памяти — в localStorage не добавляем
+    applySessionTemporary(result.access_token, result.user);
 
     return {
       message: result.message,
@@ -148,7 +169,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const result = JSON.parse(text);
-    applySession(result.access_token, result.user);
+    // Теперь сохраняем в localStorage — почта подтверждена
+    applySessionPersistent(result.access_token, result.user);
   };
 
   const resendVerification = async (email: string): Promise<ResendResult> => {
@@ -171,6 +193,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("cashback_token");
     setToken(null);
     setUser(null);
+    setIsEmailVerificationPending(false);
   };
 
   return (
@@ -179,6 +202,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         user,
         token,
         loading,
+        isEmailVerificationPending,
         login,
         register,
         verifyEmail,

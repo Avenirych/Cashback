@@ -16,7 +16,8 @@ const verifyText = {
     resend: "Send the email again",
     resent: "A new verification email has been requested.",
     later: "Continue to the site",
-    note: "Some features stay locked until your email is verified.",
+    note: "Access to all functions is blocked until email confirmation: bonuses, cashback, forum, store.",
+    restrictedAccess: "Until you verify your email, you cannot access bonuses, forum, shop, or full profile. Verify above.",
   },
   ru: {
     title: "Проверьте почту",
@@ -27,7 +28,8 @@ const verifyText = {
     resend: "Отправить письмо ещё раз",
     resent: "Новое письмо с подтверждением запрошено.",
     later: "Перейти на сайт",
-    note: "Часть функций будет недоступна, пока почта не подтверждена.",
+    note: "Доступ ко всем функциям заблокирован до подтверждения почты: бонусы, кэшбэк, форум, магазин.",
+    restrictedAccess: "Пока ваша почта не подтверждена, вы не сможете открыть бонусы, форум, магазин или полный профиль. Подтвердите почту выше.",
   },
 };
 
