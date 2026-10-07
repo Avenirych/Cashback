@@ -73,6 +73,55 @@ Frontend checks (from `cashback-frontend`):
 `CI=true npm test -- --watchAll=false --runInBand src/onboarding.test.tsx src/pages/Profile.test.tsx src/pages/RegistrationOnboarding.test.tsx`
 and `npm run build`.
 
+## Forum registration
+
+After confirming the main account's email, open `/forum/register` to choose a
+unique forum username (3–30 ASCII letters, digits or underscores) and accept the
+forum rules. Email and name remain read-only. Rules are available publicly at
+`/forum/rules` in English and Russian and explain that violations may lead to
+content removal, account deletion or a ban.
+
+Forum membership is separate from the main-site session. **Exit Forum** disables
+forum participation without signing out of the main site. Verified users can
+still read topics; posting requires an active forum session. The server checks
+verified email, forum registration, rules agreement and ban status for writes,
+regardless of browser state. Banned accounts retain read-only access.
+
+Optional avatars accept JPEG, PNG or WebP up to **500 KiB (512,000 bytes)**.
+Uploads are stored in the project's `public/avatars/` directory and served by
+the API as `/avatars/{filename}`. Runtime uploads are ignored by Git; keep this
+directory writable and persist it when deploying. Public profiles and post
+authors expose forum identity, not main-account email or password data.
+
+The reversible TypeORM migration
+`src/migrations/1791394800000-AddForumUsers.ts` is registered in AppModule and
+runs at startup. It creates `forum_users` against the existing `users` table.
+The existing development `synchronize: true` setting is retained; on an empty
+development database, synchronization creates both tables after the migration
+checks for the prerequisite schema. Production deployments should use managed
+migrations rather than automatic schema synchronization.
+
+Manual verification:
+1. With an unverified account, open forum registration or topics: email
+   verification is required. Forum rules remain public.
+2. With a verified account, read topics before registering; posting is disabled.
+   Register with an available username and accepted rules, optionally uploading
+   an avatar, then confirm the success message and redirect.
+3. Try an existing username, missing rules agreement, an unsupported image, and
+   an oversized upload: each must be rejected without creating invalid data.
+4. Create a topic/comment and check its forum username, avatar and joined date.
+   Exit Forum, reload and confirm that posting stays disabled while the main
+   profile remains accessible; re-enter the forum to participate again.
+5. Ban the forum account through the service and confirm that direct API writes
+   are denied, but reading remains available and public profiles omit ban status.
+
+Focused backend checks (from the project root):
+`npm test -- --runInBand src/forum` and `npm run build`.
+Focused frontend checks (from `cashback-frontend`):
+`CI=true npm test -- --watchAll=false --runInBand src/context/AuthContext.test.tsx src/pages/Forum.test.tsx`
+and `npm run build`. Existing unrelated lint/build warnings should be reviewed
+separately rather than suppressing validation of the forum changes.
+
 ## Project setup
 
 ```bash

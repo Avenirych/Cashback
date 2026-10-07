@@ -1,50 +1,119 @@
-import { Controller, Post, Get, Param, Body, UseGuards, Req, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Param,
+  Body,
+  UseGuards,
+  Req,
+  Delete,
+  Patch,
+  UseInterceptors,
+  UploadedFile,
+  ParseIntPipe,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ForumService } from './forum.service';
+import { AVATAR_MAX_SIZE, ForumUserService } from './forum-user.service';
+import type { AvatarUpload } from './forum-user.service';
+import { FORUM_RULES } from './forum-rules';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
+interface ForumRequest {
+  user: { id: number };
+}
 
 @Controller('forum')
 export class ForumController {
-  constructor(private readonly forumService: ForumService) {}
+  constructor(
+    private readonly forumService: ForumService,
+    private readonly forumUserService: ForumUserService,
+  ) {}
+
+  @Post('register')
+  @UseGuards(JwtAuthGuard)
+  register(
+    @Req() req: ForumRequest,
+    @Body('username') username: unknown,
+    @Body('agreedToRules') agreedToRules: unknown,
+  ) {
+    return this.forumUserService.register(req.user.id, username, agreedToRules);
+  }
+
+  @Get('status')
+  @UseGuards(JwtAuthGuard)
+  status(@Req() req: ForumRequest) {
+    return this.forumUserService.status(req.user.id);
+  }
+
+  @Get('rules')
+  rules() {
+    return FORUM_RULES;
+  }
+
+  @Get('user/:username')
+  publicProfile(@Param('username') username: string) {
+    return this.forumUserService.publicProfile(username);
+  }
+
+  @Patch('profile')
+  @UseGuards(JwtAuthGuard)
+  updateProfile(@Req() req: ForumRequest, @Body() body: unknown) {
+    return this.forumUserService.updateProfile(req.user.id, body);
+  }
+
+  @Post('avatar')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: AVATAR_MAX_SIZE, files: 1 },
+    }),
+  )
+  uploadAvatar(
+    @Req() req: ForumRequest,
+    @UploadedFile() file: AvatarUpload | undefined,
+  ) {
+    return this.forumUserService.uploadAvatar(req.user.id, file);
+  }
 
   @Get('topics')
-  async getTopics() {
+  getTopics() {
     return this.forumService.getTopics();
   }
 
   @Post('topic')
   @UseGuards(JwtAuthGuard)
-  async createTopic(@Req() req: any, @Body('title') title: string) {
-    // JwtStrategy.validate returns { id, email }
-    const userId = req.user.id;
-    console.log('Creating topic:', { userId, title });
-    return this.forumService.createTopic(userId, title);
+  createTopic(@Req() req: ForumRequest, @Body('title') title: unknown) {
+    return this.forumService.createTopic(req.user.id, title);
   }
 
   @Post('post')
   @UseGuards(JwtAuthGuard)
-  async createPost(
-    @Req() req: any,
-    @Body('topicId') topicId: number,
-    @Body('content') content: string,
+  createPost(
+    @Req() req: ForumRequest,
+    @Body('topicId', ParseIntPipe) topicId: number,
+    @Body('content') content: unknown,
   ) {
-    const userId = req.user.id;
-    return this.forumService.createPost(userId, Number(topicId), content);
+    return this.forumService.createPost(req.user.id, topicId, content);
   }
 
   @Get('topic/:id')
-  async getTopic(@Param('id') id: string) {
-    return this.forumService.getTopic(Number(id));
+  getTopic(@Param('id', ParseIntPipe) id: number) {
+    return this.forumService.getTopic(id);
   }
 
   @Get('posts/:topicId')
-  async getPosts(@Param('topicId') topicId: string) {
-    return this.forumService.getPosts(Number(topicId));
+  getPosts(@Param('topicId', ParseIntPipe) topicId: number) {
+    return this.forumService.getPosts(topicId);
   }
 
   @Delete('topic/:id')
   @UseGuards(JwtAuthGuard)
-  async deleteTopic(@Req() req: any, @Param('id') id: string) {
-    await this.forumService.deleteTopic(Number(id), req.user.id);
+  async deleteTopic(
+    @Req() req: ForumRequest,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    await this.forumService.deleteTopic(id, req.user.id);
     return { success: true };
   }
 }

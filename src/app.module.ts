@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { TopicsModule } from './topics.module';
 import { ForumModule } from './forum/forum.module';
+import { AddForumUsers1791394800000 } from './migrations/1791394800000-AddForumUsers';
 
 @Module({
   imports: [
@@ -22,6 +23,8 @@ import { ForumModule } from './forum/forum.module';
       password: 'Lsa5295685',
       database: 'cashback',
       autoLoadEntities: true,
+      migrations: [AddForumUsers1791394800000],
+      migrationsRun: true,
       synchronize: true,
     }),
 

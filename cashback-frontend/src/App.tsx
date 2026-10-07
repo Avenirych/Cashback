@@ -8,6 +8,9 @@ import Header from "./components/Header";
 import CookieConsent from "./components/CookieConsent";
 import BonusGuard from "./components/BonusGuard";
 import ProtectedGuard from "./components/ProtectedGuard";
+import ForumGuard from "./components/ForumGuard";
+import ForumRegister from "./pages/ForumRegister";
+import ForumRules from "./pages/ForumRules";
 
 import Welcome from "./pages/Welcome";
 import AboutUs from "./pages/AboutUs";
@@ -41,6 +44,7 @@ export function AppRoutes() {
         <Route path="/services" element={<Services lang={lang} />} />
         <Route path="/contacts" element={<Contacts lang={lang} />} />
         <Route path="/terms" element={<TermsAndConditions />} />
+        <Route path="/forum/rules" element={<ForumRules />} />
 
         <Route path="/login" element={<Login lang={L} onLangChange={setLang} />} />
         <Route path="/register" element={<Register lang={L} onLangChange={setLang} />} />
@@ -50,7 +54,15 @@ export function AppRoutes() {
         <Route element={<ProtectedGuard />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/shop" element={<Shop lang={L} />} />
-          <Route path="/forum" element={<TopicsPage lang={L} onLangChange={setLang} />} />
+          <Route path="/forum/register" element={<ForumRegister />} />
+        </Route>
+        <Route element={<ForumGuard readOnly />}>
+          <Route path="/forum">
+            <Route index element={<TopicsPage lang={L} onLangChange={setLang} />} />
+            <Route path="topics" element={<TopicsPage lang={L} onLangChange={setLang} />} />
+            <Route path="topics/:id" element={<Topic lang={L} onLangChange={setLang} />} />
+            <Route path="topic/:id" element={<Topic lang={L} onLangChange={setLang} />} />
+          </Route>
           <Route path="/topic/:id" element={<Topic lang={L} onLangChange={setLang} />} />
         </Route>
 

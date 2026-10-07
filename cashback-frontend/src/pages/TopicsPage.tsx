@@ -1,344 +1,70 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import ForumLogo from "../components/ForumLogo";
+import ForumHeader from "../components/ForumHeader";
+import ForumAuthor from "../components/ForumAuthor";
+import { FORUM_API_URL, ForumAuthor as Author } from "../forum";
 import { translations } from "../i18n";
+import "./Forum.css";
 
-const defaultAvatar = "https://ui-avatars.com/api/?name=User&background=0d6efd&color=fff";
+interface ForumTopic { id: number; title: string; created_at: string; author: Author }
 
-export default function TopicsPage({ lang, onLangChange }: { lang: string; onLangChange: (lang: string) => void }) {
-  const { user, logout, loading } = useAuth();
-  const navigate = useNavigate();
-  const [topics, setTopics] = useState<any[]>([]);
-  const [topicsLoading, setTopicsLoading] = useState(true);
+export default function TopicsPage({ lang }: { lang: string; onLangChange?: (lang: string) => void }) {
+  const { user, token, forumUser, forumSessionActive, forumBanned } = useAuth();
+  const canWrite = !!user?.email_verified && !!token && forumSessionActive && !!forumUser && !forumUser.banned && !forumBanned;
+  const [topics, setTopics] = useState<ForumTopic[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newTopicTitle, setNewTopicTitle] = useState("");
-  const [creatingTopic, setCreatingTopic] = useState(false);
+  const [title, setTitle] = useState("");
+  const [creating, setCreating] = useState(false);
   const [error, setError] = useState("");
-
-  const t = translations[lang as keyof typeof translations] ?? translations.EN;
+  const t = translations[lang.toUpperCase() as keyof typeof translations] ?? translations.EN;
 
   useEffect(() => {
-    const loadTopics = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/forum/topics");
+    const controller = new AbortController();
+    fetch(`${FORUM_API_URL}/forum/topics`, { signal: controller.signal })
+      .then(async response => {
+        if (!response.ok) throw new Error("Could not load topics");
         const data = await response.json();
-        setTopics(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error("Failed to load topics", error);
-      } finally {
-        setTopicsLoading(false);
-      }
-    };
-
-    loadTopics();
+        if (!controller.signal.aborted) setTopics(Array.isArray(data) ? data : []);
+      })
+      .catch(err => { if (!controller.signal.aborted) setError(err.message); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/", { replace: true });
-  };
-
-  const handleCreateTopic = async (e: React.FormEvent) => {
+  const createTopic = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
-    if (!newTopicTitle.trim()) {
-      setError(t.enterTopicName);
-      return;
-    }
-
-    setCreatingTopic(true);
+    if (!canWrite || creating) return;
+    if (!title.trim()) { setError(t.enterTopicName); return; }
+    setError(""); setCreating(true);
     try {
-      const token = localStorage.getItem("cashback_token");
-      const response = await fetch("http://localhost:3001/forum/topic", {
+      const response = await fetch(`${FORUM_API_URL}/forum/topic`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title: newTopicTitle }),
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({ title: title.trim() }),
       });
-
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || "Failed to create topic");
-      }
-
-      const newTopic = await response.json();
-      setTopics([newTopic, ...topics]);
-      setNewTopicTitle("");
-      setShowCreateForm(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t.creating);
-    } finally {
-      setCreatingTopic(false);
-    }
+      if (!response.ok) throw new Error(await response.text() || "Failed to create topic");
+      const topic = await response.json();
+      setTopics(previous => [topic, ...previous]); setTitle(""); setShowCreateForm(false);
+    } catch (err) { setError(err instanceof Error ? err.message : "Failed to create topic"); }
+    finally { setCreating(false); }
   };
 
-  if (loading) {
-    return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {t.topicsLoading}
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)" }}>
-      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "24px" }}>
-        <div style={{ marginBottom: "20px" }}>
-          <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", fontSize: "14px" }}>
-            {t.backToHome}
-          </Link>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "24px",
-            backgroundColor: "white",
-            padding: "16px",
-            borderRadius: "12px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <ForumLogo size={40} />
-            <h1 style={{ margin: 0, fontSize: "32px" }}>{t.forumTitle}</h1>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            {user ? (
-              <>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <img
-                    src={user.avatar_url || defaultAvatar}
-                    alt={user.name}
-                    style={{ width: "36px", height: "36px", borderRadius: "50%" }}
-                  />
-                  <span style={{ fontWeight: 500 }}>{user.name}</span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#dc3545",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                  }}
-                >
-                  {t.logout}
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  style={{
-                    padding: "8px 16px",
-                    color: "#0d6efd",
-                    textDecoration: "none",
-                    border: "1px solid #0d6efd",
-                    borderRadius: "6px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {t.login}
-                </Link>
-                <Link
-                  to="/register"
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#0d6efd",
-                    color: "white",
-                    textDecoration: "none",
-                    borderRadius: "6px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {t.register}
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-
-        {user && (
-          <div style={{ marginBottom: "24px" }}>
-            {showCreateForm ? (
-              <form
-                onSubmit={handleCreateTopic}
-                style={{
-                  backgroundColor: "white",
-                  padding: "16px",
-                  borderRadius: "12px",
-                  border: "1px solid #dee2e6",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                }}
-              >
-                <div style={{ marginBottom: "12px" }}>
-                  <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
-                    {t.topicName}
-                  </label>
-                  <input
-                    type="text"
-                    value={newTopicTitle}
-                    onChange={(e) => setNewTopicTitle(e.target.value)}
-                    placeholder={t.enterTopicName}
-                    disabled={creatingTopic}
-                    style={{
-                      width: "100%",
-                      padding: "12px",
-                      borderRadius: "6px",
-                      border: "1px solid #ddd",
-                      fontSize: "16px",
-                      boxSizing: "border-box",
-                    }}
-                  />
-                </div>
-
-                {error && (
-                  <div
-                    style={{
-                      backgroundColor: "#fee",
-                      color: "#c33",
-                      padding: "12px",
-                      borderRadius: "6px",
-                      marginBottom: "12px",
-                    }}
-                  >
-                    {error}
-                  </div>
-                )}
-
-                <div style={{ display: "flex", gap: "12px" }}>
-                  <button
-                    type="submit"
-                    disabled={creatingTopic}
-                    style={{
-                      padding: "12px 24px",
-                      backgroundColor: "#0d6efd",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: creatingTopic ? "not-allowed" : "pointer",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {creatingTopic ? t.creating : t.createTopic}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCreateForm(false);
-                      setError("");
-                    }}
-                    disabled={creatingTopic}
-                    style={{
-                      padding: "12px 24px",
-                      backgroundColor: "#e9ecef",
-                      color: "#000",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {t.cancel}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <button
-                onClick={() => setShowCreateForm(true)}
-                style={{
-                  padding: "12px 24px",
-                  backgroundColor: "#28a745",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  fontSize: "16px",
-                  fontWeight: 500,
-                }}
-              >
-                {t.newTopic}
-              </button>
-            )}
-          </div>
-        )}
-
-        <div style={{ backgroundColor: "white", padding: "24px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
-          {topicsLoading ? (
-            <p>{t.topicsLoading}</p>
-          ) : topics.length === 0 ? (
-            <p style={{ color: "#666", textAlign: "center", padding: "40px 0" }}>
-              {user ? t.startDiscussion : t.noTopics}
-            </p>
-          ) : (
-            <div style={{ display: "grid", gap: "16px" }}>
-              {topics.map((topic) => (
-                <div
-                  key={topic.id}
-                  style={{
-                    border: "1px solid #ddd",
-                    borderRadius: "12px",
-                    padding: "16px",
-                    transition: "all 0.3s ease",
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "#0d6efd";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
-                    (e.currentTarget as HTMLElement).style.borderColor = "#ddd";
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
-                    <img
-                      src={topic.author?.avatar_url || defaultAvatar}
-                      alt={topic.author?.name || "User"}
-                      style={{ width: "42px", height: "42px", borderRadius: "50%" }}
-                    />
-                    <div>
-                      <div style={{ fontWeight: 700 }}>{topic.author?.name || "Unknown user"}</div>
-                      <small style={{ color: "#666" }}>
-                        {new Date(topic.created_at).toLocaleDateString(lang === "RU" ? "ru-RU" : "en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </small>
-                    </div>
-                  </div>
-
-                  <Link
-                    to={`/topic/${topic.id}`}
-                    style={{
-                      fontSize: "20px",
-                      fontWeight: 700,
-                      color: "#0d6efd",
-                      textDecoration: "none",
-                    }}
-                  >
-                    {topic.title}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="forum-page"><main style={{ maxWidth: 900, margin: "auto", padding: 24 }}>
+    <Link to="/">{t.backToHome}</Link>
+    <ForumHeader lang={lang} />
+    {canWrite && (showCreateForm ? <form className="forum-card" onSubmit={createTopic}>
+      <label>{t.topicName}<input className="forum-input" value={title} onChange={e => setTitle(e.target.value)} disabled={creating} /></label>
+      <button className="forum-button" disabled={creating}>{creating ? t.creating : t.createTopic}</button>
+      <button type="button" onClick={() => setShowCreateForm(false)} disabled={creating}>{t.cancel}</button>
+    </form> : <button className="forum-new-topic" onClick={() => setShowCreateForm(true)}>{t.newTopic}</button>)}
+    {error && <p role="alert">{error}</p>}
+    <section className="forum-card" style={{ marginTop: 24 }}>{loading ? <p>{t.topicsLoading}</p> : topics.length === 0 ? <p>{canWrite ? t.startDiscussion : t.noTopics}</p> :
+      <div style={{ display: "grid", gap: 16 }}>{topics.map(topic => <article key={topic.id} style={{ border: "1px solid #ddd", borderRadius: 12, padding: 16 }}>
+        <ForumAuthor author={topic.author} lang={lang} />
+        <h2><Link to={`/forum/topics/${topic.id}`}>{topic.title}</Link></h2>
+        <time dateTime={topic.created_at}>{new Date(topic.created_at).toLocaleString(lang.toLowerCase() === "ru" ? "ru-RU" : "en-GB")}</time>
+      </article>)}</div>}</section>
+  </main></div>;
 }
