@@ -46,7 +46,7 @@ test("strict guard redirects inactive membership to forum registration", () => {
 test("strict guard allows active nonbanned membership", () => { auth.forumUser = profile; auth.forumSessionActive = true; guard(); expect(screen.getByText("Forum content")).toBeInTheDocument(); });
 test("strict guard blocks banned members", () => { auth.forumUser = { ...profile, banned: true }; auth.forumSessionActive = true; guard(); expect(screen.getByRole("alert")).toHaveTextContent("banned"); expect(screen.queryByText("Forum content")).not.toBeInTheDocument(); });
 test("read-only allows unregistered and banned members with ban notice", () => {
-  const first = guard(true); expect(screen.getByText("Forum content")).toBeInTheDocument(); first.unmount();
+  const { unmount } = guard(true); expect(screen.getByText("Forum content")).toBeInTheDocument(); unmount();
   auth.forumUser = { ...profile, banned: true }; guard(true);
   expect(screen.getByRole("alert")).toHaveTextContent("banned"); expect(screen.getByText("Forum content")).toBeInTheDocument();
 });
@@ -72,7 +72,7 @@ test("registration has readonly account fields, availability and mandatory agree
   expect(screen.getByLabelText("Name")).toHaveStyle({ background: "#eee", color: "#666" });
   expect(screen.getByLabelText("Username")).toHaveAttribute("minlength", "3");
   expect(screen.getByRole("checkbox")).toBeRequired();
-  expect(screen.getByRole("checkbox").parentElement).toHaveTextContent("Rule violations may result in deletion of your forum account or a ban");
+  expect(screen.getByRole("checkbox")).toHaveAccessibleName(/Rule violations may result in deletion of your forum account or a ban/);
   const submit = screen.getByRole("button", { name: "Register for forum" });
   expect(submit).toBeDisabled();
   fireEvent.change(screen.getByLabelText("Username"), { target: { value: "a!" } });
@@ -155,22 +155,24 @@ test("success redirects after two seconds and unmount cancels timer", async () =
   jest.useFakeTimers();
   try {
     auth.forumUser = profile;
+    const registrationComplete = Promise.resolve();
+    (auth.registerForum as jest.Mock).mockReturnValue(registrationComplete);
     const view = registration();
     fireEvent.click(screen.getByRole("checkbox"));
     fireEvent.click(screen.getByRole("button", { name: "Retry upload and enter" }));
-    await act(async () => {});
+    await act(async () => { await registrationComplete; });
     expect(screen.getByRole("status")).toHaveTextContent("2 seconds");
     act(() => { jest.advanceTimersByTime(1999); });
     expect(screen.queryByText("Redirected forum")).not.toBeInTheDocument();
     act(() => { jest.advanceTimersByTime(1); });
     expect(screen.getByText("Redirected forum")).toBeInTheDocument();
     view.unmount();
-    const second = registration();
+    const utils = registration();
     fireEvent.click(screen.getByRole("checkbox"));
     fireEvent.click(screen.getByRole("button", { name: "Retry upload and enter" }));
-    await act(async () => {});
+    await act(async () => { await registrationComplete; });
     const timers = jest.getTimerCount();
-    second.unmount();
+    utils.unmount();
     expect(jest.getTimerCount()).toBeLessThan(timers);
   } finally { jest.useRealTimers(); }
 });
@@ -201,8 +203,8 @@ test("lower-case language context renders Russian registration and deletion/ban 
   localStorage.setItem("lang", "RU");
   render(<LanguageProvider><MemoryRouter><ForumRegister /></MemoryRouter></LanguageProvider>);
   expect(screen.getByText("Регистрация на форуме")).toBeInTheDocument();
-  expect(screen.getByRole("checkbox").parentElement).toHaveTextContent("удалены");
-  expect(screen.getByRole("checkbox").parentElement).toHaveTextContent("Нарушения могут привести к удалению вашего аккаунта форума или блокировке");
+  expect(screen.getByRole("checkbox")).toHaveAccessibleName(/удалены/);
+  expect(screen.getByRole("checkbox")).toHaveAccessibleName(/Нарушения могут привести к удалению вашего аккаунта форума или блокировке/);
 });
 test("authors display only forum username, avatar and joining date", () => {
   render(<ForumAuthor lang="en" author={{ ...profile, name: mainUser.name, email: mainUser.email } as any} />);
@@ -219,10 +221,10 @@ test("topics and posts are readable without exposing write UI", async () => {
       String(url).includes("/forum/posts") ? [{ id: 1, content: "Public message", created_at: "2026-02-01", author: profile }] :
       { id: 1, title: "Discussion", author: profile },
   }));
-  const first = render(<MemoryRouter><TopicsPage lang="EN" /></MemoryRouter>);
+  const { unmount } = render(<MemoryRouter><TopicsPage lang="EN" /></MemoryRouter>);
   await screen.findByText("Discussion");
   expect(screen.queryByRole("button", { name: /New topic/i })).not.toBeInTheDocument();
-  first.unmount();
+  unmount();
   render(<MemoryRouter initialEntries={["/topic/1"]}><Routes><Route path="/topic/:id" element={<Topic lang="EN" />} /></Routes></MemoryRouter>);
   await screen.findByText("Public message");
   expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
@@ -241,10 +243,10 @@ test.each(["/forum", "/forum/topics", "/forum/topics/1", "/forum/topic/1", "/top
 test("banned active membership never exposes topic creation or message inputs", async () => {
   auth.forumUser = { ...profile, banned: true }; auth.forumSessionActive = true;
   (fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => [] });
-  const first = render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+  const { unmount } = render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
   await screen.findByText(/No topics/i);
   expect(screen.queryByRole("button", { name: /new topic/i })).not.toBeInTheDocument();
-  first.unmount();
+  unmount();
   render(<MemoryRouter><Topic lang="en" /></MemoryRouter>);
   await screen.findByText(/No messages/i);
   expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
@@ -264,6 +266,6 @@ test("avatar validation enforces exact byte limit and safe backend origin", () =
   expect(validateForumAvatar(new File([new Uint8Array(500 * 1024 + 1)], "a.png", { type: "image/png" }))).toBe(false);
   expect(validateForumAvatar(new File([], "empty.png", { type: "image/png" }))).toBe(false);
   expect(forumAvatarUrl("/uploads/forum/a.png")).toBe("http://localhost:3001/uploads/forum/a.png");
-  expect(forumAvatarUrl("javascript:alert(1)")).toBeUndefined();
+  for (const scheme of ["javascript", "data"]) expect(forumAvatarUrl(`${scheme}:invalid`)).toBeUndefined();
   expect(forumAvatarUrl("//evil.example/a.png")).toBeUndefined();
 });

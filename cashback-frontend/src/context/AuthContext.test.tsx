@@ -33,14 +33,14 @@ beforeEach(() => {
 });
 
 test("forum exit leaves main session intact and survives refresh; existing membership can reenter", async () => {
-  const first = mount();
+  const { unmount } = mount();
   await screen.findByText("active:ForumUser:ready");
   fireEvent.click(screen.getByText("exit"));
   expect(auth.forumUser).toBeNull();
   expect(screen.getByTestId("main")).toHaveTextContent("42:main-token");
   expect(localStorage.getItem("cashback_token")).toBe("main-token");
   expect(sessionStorage.getItem("cashback_forum_exited:42")).toBe("1");
-  first.unmount(); mount();
+  unmount(); mount();
   await screen.findByText("42:main-token");
   await screen.findByText("inactive:none:ready");
   expect(auth.forumRegistered).toBe(true);
