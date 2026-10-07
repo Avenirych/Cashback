@@ -1,0 +1,335 @@
+
+> cashback+@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m13:22:24[0m] Starting compilation in watch mode...
+
+[[90m13:22:30[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +77ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMailModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +174ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAnalyticsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTopicsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mForumModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +11ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +5ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/balance, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/verify-email, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/resend-verification, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTopicsController {/topics}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPostsController {/posts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/topic/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mForumController {/forum}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/post, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/posts/:topicId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAnalyticsController {/analytics}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +4ms[39m
+Backend running at http://localhost:3001
+[32m[Nest] 24884  - [39m07.10.2026, 13:22:32 [32m    LOG[39m [38;5;3m[MailService] [39m[32mMail service initialized (development) with Ethereal. Test account: uig6dmmcxd75zod5@ethereal.email[39m
+[2J[3J[H[[90m13:26:37[0m] File change detected. Starting incremental compilation...
+
+[96msrc/auth/auth.module.ts[0m:[93m7[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"./jwt.strategy"' has no exported member 'JwtStrategy'.
+
+[7m7[0m import { JwtStrategy } from './jwt.strategy';
+[7m [0m [91m         ~~~~~~~~~~~[0m
+
+[[90m13:26:38[0m] Found 1 error. Watching for file changes.
+
+[2J[3J[H[[90m13:26:40[0m] File change detected. Starting incremental compilation...
+
+[[90m13:26:41[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +94ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMailModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +127ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAnalyticsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTopicsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mForumModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +10ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/balance, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/verify-email, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/resend-verification, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTopicsController {/topics}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPostsController {/posts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/topic/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mForumController {/forum}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/post, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/posts/:topicId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAnalyticsController {/analytics}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +8ms[39m
+Backend running at http://localhost:3001
+[32m[Nest] 21944  - [39m07.10.2026, 13:26:43 [32m    LOG[39m [38;5;3m[MailService] [39m[32mMail service initialized (development) with Ethereal. Test account: hyrke2mhbayiwtrf@ethereal.email[39m
+[2J[3J[H[[90m13:27:12[0m] File change detected. Starting incremental compilation...
+
+[96msrc/app.module.ts[0m:[93m6[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"./auth/auth.module"' has no exported member 'AuthModule'.
+
+[7m6[0m import { AuthModule } from './auth/auth.module';
+[7m [0m [91m         ~~~~~~~~~~[0m
+
+[[90m13:27:12[0m] Found 1 error. Watching for file changes.
+
+[2J[3J[H[[90m13:27:14[0m] File change detected. Starting incremental compilation...
+
+[[90m13:27:14[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +69ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMailModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +141ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAnalyticsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTopicsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mForumModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +7ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +6ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/balance, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/verify-email, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/resend-verification, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTopicsController {/topics}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPostsController {/posts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/topic/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mForumController {/forum}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/post, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/posts/:topicId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, DELETE} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAnalyticsController {/analytics}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +6ms[39m
+Backend running at http://localhost:3001
+[32m[Nest] 17012  - [39m07.10.2026, 13:27:16 [32m    LOG[39m [38;5;3m[MailService] [39m[32mMail service initialized (development) with Ethereal. Test account: hliugex46fu7kvcw@ethereal.email[39m
+[2J[3J[H[[90m13:28:12[0m] File change detected. Starting incremental compilation...
+
+[96msrc/auth/auth.service.ts[0m:[93m12[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../mail/mail.service"' has no exported member 'MailService'.
+
+[7m12[0m import { MailService } from '../mail/mail.service';
+[7m  [0m [91m         ~~~~~~~~~~~[0m
+
+[96msrc/mail/mail.module.ts[0m:[93m2[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"./mail.service"' has no exported member 'MailService'.
+
+[7m2[0m import { MailService } from './mail.service';
+[7m [0m [91m         ~~~~~~~~~~~[0m
+
+[[90m13:28:12[0m] Found 2 errors. Watching for file changes.
+
+[2J[3J[H[[90m13:28:14[0m] File change detected. Starting incremental compilation...
+
+[[90m13:28:15[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +83ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMailModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +141ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAnalyticsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTopicsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mForumModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +8ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +4ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/balance, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/verify-email, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/resend-verification, POST} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTopicsController {/topics}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPostsController {/posts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/topic/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mForumController {/forum}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/post, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/posts/:topicId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAnalyticsController {/analytics}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +6ms[39m
+Backend running at http://localhost:3001
+[32m[Nest] 8440  - [39m07.10.2026, 13:28:17 [32m    LOG[39m [38;5;3m[MailService] [39m[32mMail service initialized (development) with Ethereal. Test account: xb3fwfhu6u5xs64q@ethereal.email[39m
+[2J[3J[H[[90m13:28:51[0m] File change detected. Starting incremental compilation...
+
+[96msrc/auth/auth.controller.ts[0m:[93m11[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"./auth.service"' has no exported member 'AuthService'.
+
+[7m11[0m import { AuthService } from './auth.service';
+[7m  [0m [91m         ~~~~~~~~~~~[0m
+
+[96msrc/auth/auth.module.ts[0m:[93m5[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"./auth.service"' has no exported member 'AuthService'.
+
+[7m5[0m import { AuthService } from './auth.service';
+[7m [0m [91m         ~~~~~~~~~~~[0m
+
+[[90m13:28:51[0m] Found 2 errors. Watching for file changes.
+
+[2J[3J[H[[90m13:28:53[0m] File change detected. Starting incremental compilation...
+
+[[90m13:28:54[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +87ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMailModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +148ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAnalyticsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTopicsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mForumModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +7ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +5ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/balance, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/verify-email, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/resend-verification, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTopicsController {/topics}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/topics/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPostsController {/posts}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/topic/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/posts/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mForumController {/forum}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topics, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/post, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/posts/:topicId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/topic/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAnalyticsController {/analytics}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +8ms[39m
+Backend running at http://localhost:3001
+[32m[Nest] 12172  - [39m07.10.2026, 13:28:56 [32m    LOG[39m [38;5;3m[MailService] [39m[32mMail service initialized (development) with Ethereal. Test account: xid3yhkzu62k3fdy@ethereal.email[39m

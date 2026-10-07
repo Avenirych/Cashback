@@ -1,59 +1,95 @@
-import { Controller, Body, Post, Get, Req, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseGuards,
+  Request,
+  Query,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
+interface AuthenticatedRequest {
+  user: {
+    id: number;
+    email: string;
+    name?: string;
+  };
+}
+
+interface RegisterBody {
+  email: string;
+  password: string;
+  name: string;
+}
+
+interface LoginBody {
+  email: string;
+  password: string;
+}
+
+interface ResendVerificationBody {
+  email: string;
+}
+
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+  ) {}
 
   @Post('register')
-  async register(
-    @Body('email') email: string,
-    @Body('password') password: string,
-    @Body('name') name: string,
-  ) {
-    try {
-      console.log('📨 Register endpoint received:', { email, name });
-      const result = await this.authService.register(email, password, name);
-      console.log('✅ Register endpoint success');
-      return result;
-    } catch (error) {
-      console.error('📨 Register endpoint error:', error);
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        error instanceof Error ? error.message : 'Registration failed',
-        HttpStatus.BAD_REQUEST,
+  async register(@Body() body: RegisterBody) {
+    if (!body) {
+      throw new BadRequestException(
+        'Registration data is required',
       );
     }
+
+    return this.authService.register(
+      body.email,
+      body.password,
+      body.name,
+    );
+  }
+
+  @Get('verify-email')
+  async verifyEmail(@Query('token') token: string) {
+    return this.authService.verifyEmail(token);
+  }
+
+  @Post('resend-verification')
+  async resendVerification(
+    @Body() body: ResendVerificationBody,
+  ) {
+    if (!body) {
+      throw new BadRequestException('Email is required');
+    }
+
+    return this.authService.resendVerificationEmail(
+      body.email,
+    );
   }
 
   @Post('login')
-  async login(
-    @Body('email') email: string,
-    @Body('password') password: string,
-  ) {
-    try {
-      console.log('📨 Login endpoint received:', email);
-      const result = await this.authService.login(email, password);
-      console.log('✅ Login endpoint success');
-      return result;
-    } catch (error) {
-      console.error('📨 Login endpoint error:', error);
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        error instanceof Error ? error.message : 'Login failed',
-        HttpStatus.UNAUTHORIZED,
+  async login(@Body() body: LoginBody) {
+    if (!body) {
+      throw new BadRequestException(
+        'Email and password are required',
       );
     }
+
+    return this.authService.login(
+      body.email,
+      body.password,
+    );
   }
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  profile(@Req() req: any) {
+  async profile(@Request() req: AuthenticatedRequest) {
     return this.authService.profile(req.user);
   }
 }

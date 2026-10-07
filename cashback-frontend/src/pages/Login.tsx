@@ -4,27 +4,61 @@ import { useNavigate, Link } from "react-router-dom";
 import ForumLogo from "../components/ForumLogo";
 import MoneyTree from "../components/MoneyTree";
 import { translations } from "../i18n";
+import { validateEmail } from "../utils/emailValidator";
 
-export default function Login({ lang, onLangChange }: { lang: string; onLangChange: (lang: string) => void }) {
+export default function Login({
+  lang,
+  onLangChange,
+}: {
+  lang: string;
+  onLangChange: (lang: string) => void;
+}) {
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const t = translations[lang as keyof typeof translations] ?? translations.EN;
+  const t =
+    translations[lang as keyof typeof translations] ??
+    translations.EN;
+
+  const handleEmailChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newEmail = e.target.value;
+    setForm({ ...form, email: newEmail });
+
+    if (newEmail.trim()) {
+      const validation = validateEmail(newEmail);
+      setEmailError(validation.error || "");
+    } else {
+      setEmailError("");
+    }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const emailValidation = validateEmail(form.email);
+    if (!emailValidation.valid) {
+      setEmailError(emailValidation.error || "Invalid email");
+      setError(emailValidation.error || "Email validation failed");
+      return;
+    }
+
     setError("");
+    setEmailError("");
     setLoading(true);
 
     try {
       await login(form);
       navigate("/", { replace: true });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : t.loginRegister;
+      const errorMessage =
+        err instanceof Error ? err.message : t.loginRegister;
       setError(errorMessage);
       console.error("Login error:", err);
     } finally {
@@ -32,20 +66,85 @@ export default function Login({ lang, onLangChange }: { lang: string; onLangChan
     }
   };
 
+  const isFormValid =
+    form.email.trim() &&
+    form.password.trim() &&
+    validateEmail(form.email).valid;
+
   return (
-    <div style={{ minHeight: "calc(100vh - 72px)", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 24px", display: "flex", justifyContent: "center", gap: "80px", alignItems: "flex-start" }}>
+    <div
+      style={{
+        minHeight: "calc(100vh - 72px)",
+        background:
+          "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "40px 24px",
+          display: "flex",
+          justifyContent: "center",
+          gap: "80px",
+          alignItems: "flex-start",
+        }}
+      >
         {/* LEFT: Login Form */}
-        <div style={{ flex: 1, maxWidth: "480px", minWidth: "300px" }}>
-          <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "24px", display: "inline-block", fontSize: "14px" }}>
+        <div
+          style={{
+            flex: 1,
+            maxWidth: "480px",
+            minWidth: "300px",
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              color: "#0d6efd",
+              textDecoration: "none",
+              marginBottom: "24px",
+              display: "inline-block",
+              fontSize: "14px",
+            }}
+          >
             ← {t.backToHome}
           </Link>
 
-          <div style={{ backgroundColor: "white", padding: "32px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
-            <Link to="/" style={{ display: "inline-block", marginBottom: "24px", textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "32px",
+              borderRadius: "12px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            }}
+          >
+            <Link
+              to="/"
+              style={{
+                display: "inline-block",
+                marginBottom: "24px",
+                textDecoration: "none",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  cursor: "pointer",
+                }}
+              >
                 <ForumLogo size={32} />
-                <h1 style={{ margin: 0, fontSize: "24px", color: "#000" }}>{t.login}</h1>
+                <h1
+                  style={{
+                    margin: 0,
+                    fontSize: "24px",
+                    color: "#000",
+                  }}
+                >
+                  {t.login}
+                </h1>
               </div>
             </Link>
 
@@ -64,19 +163,55 @@ export default function Login({ lang, onLangChange }: { lang: string; onLangChan
               </div>
             )}
 
-            <form onSubmit={submit} style={{ display: "grid", gap: "12px" }}>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder={t.email}
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-                autoComplete="email"
-                disabled={loading}
-                style={{ padding: "12px", borderRadius: "6px", border: "1px solid #ddd", fontSize: "14px" }}
-              />
+            <form
+              onSubmit={submit}
+              style={{ display: "grid", gap: "12px" }}
+            >
+              <div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder={t.email}
+                  value={form.email}
+                  onChange={handleEmailChange}
+                  required
+                  autoComplete="email"
+                  disabled={loading}
+                  aria-invalid={emailError ? "true" : "false"}
+                  aria-describedby={
+                    emailError ? "email-error" : undefined
+                  }
+                  style={{
+                    padding: "12px",
+                    borderRadius: "6px",
+                    border: emailError
+                      ? "1px solid #dc3545"
+                      : "1px solid #ddd",
+                    fontSize: "14px",
+                    width: "100%",
+                    boxSizing: "border-box",
+                    backgroundColor: emailError
+                      ? "#ffe6e6"
+                      : "#fff",
+                  }}
+                />
+
+                {emailError && (
+                  <p
+                    id="email-error"
+                    role="alert"
+                    style={{
+                      color: "#dc3545",
+                      fontSize: "12px",
+                      marginTop: "6px",
+                      margin: "6px 0 0",
+                    }}
+                  >
+                    {emailError}
+                  </p>
+                )}
+              </div>
 
               <input
                 id="password"
@@ -84,42 +219,76 @@ export default function Login({ lang, onLangChange }: { lang: string; onLangChan
                 type="password"
                 placeholder={t.password}
                 value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
                 required
                 autoComplete="current-password"
                 disabled={loading}
-                style={{ padding: "12px", borderRadius: "6px", border: "1px solid #ddd", fontSize: "14px" }}
+                style={{
+                  padding: "12px",
+                  borderRadius: "6px",
+                  border: "1px solid #ddd",
+                  fontSize: "14px",
+                  width: "100%",
+                  boxSizing: "border-box",
+                }}
               />
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !isFormValid}
                 style={{
                   padding: "12px",
-                  backgroundColor: "#0d6efd",
+                  backgroundColor:
+                    isFormValid && !loading ? "#0d6efd" : "#ccc",
                   color: "white",
                   border: "none",
                   borderRadius: "6px",
-                  cursor: loading ? "not-allowed" : "pointer",
+                  cursor:
+                    isFormValid && !loading
+                      ? "pointer"
+                      : "not-allowed",
                   fontSize: "16px",
                   fontWeight: 500,
+                  transition:
+                    "background-color 0.3s ease",
                 }}
               >
                 {loading ? t.creating : t.login}
               </button>
             </form>
 
-            <p style={{ marginTop: "24px", textAlign: "center", color: "#666" }}>
+            <p
+              style={{
+                marginTop: "24px",
+                textAlign: "center",
+                color: "#666",
+              }}
+            >
               {t.noAccount}{" "}
-              <Link to="/register" style={{ color: "#0d6efd", textDecoration: "none", fontWeight: 600 }}>
+              <Link
+                to="/register"
+                style={{
+                  color: "#0d6efd",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                }}
+              >
                 {t.register}
               </Link>
             </p>
           </div>
         </div>
 
-        {/* RIGHT: Money Tree Animation (как "Одуванчики" на Welcome) */}
-        <div style={{ flex: 1, maxWidth: "420px", minWidth: "300px" }}>
+        {/* RIGHT: Money Tree Animation */}
+        <div
+          style={{
+            flex: 1,
+            maxWidth: "420px",
+            minWidth: "300px",
+          }}
+        >
           <MoneyTree />
         </div>
       </div>

@@ -1,4 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -10,33 +13,66 @@ export class UsersService {
     private readonly userRepo: Repository<User>,
   ) {}
 
-  getAll() {
+  async getAll(): Promise<User[]> {
     return this.userRepo.find();
   }
 
-  getById(id: number) {
-    return this.userRepo.findOne({ where: { id } });
+  async getById(id: number): Promise<User | null> {
+    return this.userRepo.findOne({
+      where: { id },
+    });
   }
 
-  getByEmail(email: string) {
-    return this.userRepo.findOne({ where: { email } });
+  async getByEmail(email: string): Promise<User | null> {
+    return this.userRepo.findOne({
+      where: { email },
+    });
   }
 
-  create(data: Partial<User>) {
+  async create(data: Partial<User>): Promise<User> {
     const user = this.userRepo.create(data);
     return this.userRepo.save(user);
   }
 
-  async update(id: number, data: Partial<User>) {
+  async update(
+    id: number,
+    data: Partial<User>,
+  ): Promise<User> {
     await this.userRepo.update(id, data);
-    return this.userRepo.findOne({ where: { id } });
+
+    const user = await this.getById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 
-  async updateBalance(userId: number, newBalance: number) {
+  async updateBalance(
+    userId: number,
+    newBalance: number,
+  ): Promise<User> {
     const user = await this.getById(userId);
-    if (!user) throw new Error('User not found');
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     user.balance = Number(newBalance);
+
     return this.userRepo.save(user);
+  }
+
+  async findByEmailToken(
+    token: string,
+  ): Promise<User | null> {
+    if (typeof token !== 'string' || !token.trim()) {
+      return null;
+    }
+
+    return this.userRepo.findOne({
+      where: { email_token: token },
+    });
   }
 }

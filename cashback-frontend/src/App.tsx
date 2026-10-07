@@ -21,6 +21,7 @@ import TopicsPage from "./pages/TopicsPage";
 import Topic from "./pages/Topic";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
 import Shop from "./pages/Shop";
 
 export function AppRoutes() {
@@ -54,6 +55,7 @@ export function AppRoutes() {
 
         <Route path="/login" element={<Login lang={L} onLangChange={setLang} />} />
         <Route path="/register" element={<Register lang={L} onLangChange={setLang} />} />
+        <Route path="/verify-email" element={<VerifyEmail lang={L} />} />
 
         <Route path="*" element={<Welcome lang={L} />} />
       </Routes>

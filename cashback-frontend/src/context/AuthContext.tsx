@@ -1,11 +1,25 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+const API_URL = "http://localhost:3001";
+
 interface User {
   id: number;
   email: string;
   name: string;
   avatar_url?: string | null;
   balance?: number;
+  email_verified?: boolean;
+}
+
+export interface RegisterResult {
+  message?: string;
+  verification_email_sent?: boolean;
+  preview_url?: string | null;
+}
+
+export interface ResendResult {
+  message?: string;
+  preview_url?: string | null;
 }
 
 interface AuthContextType {
@@ -13,22 +27,34 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   login: (data: { email: string; password: string }) => Promise<void>;
-  register: (data: { name: string; email: string; password: string }) => Promise<void>;
+  register: (data: { name: string; email: string; password: string }) => Promise<RegisterResult>;
+  verifyEmail: (token: string) => Promise<void>;
+  resendVerification: (email: string) => Promise<ResendResult>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
+function parseError(text: string, fallback: string): string {
+  try {
+    const parsed = JSON.parse(text);
+    const message = parsed?.message;
+    if (Array.isArray(message)) return message.join(", ");
+    if (typeof message === "string") return message;
+  } catch {
+    // not JSON
+  }
+  return text || fallback;
+}
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session on app load
   useEffect(() => {
     const restoreSession = async () => {
       const savedToken = localStorage.getItem("cashback_token");
-      console.log("🔐 Restoring session...", savedToken ? "token found" : "no token");
 
       if (!savedToken) {
         setLoading(false);
@@ -36,10 +62,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       try {
-        const response = await fetch("http://localhost:3001/auth/profile", {
-          headers: {
-            Authorization: `Bearer ${savedToken}`,
-          },
+        const response = await fetch(`${API_URL}/auth/profile`, {
+          headers: { Authorization: `Bearer ${savedToken}` },
         });
 
         if (!response.ok) {
@@ -47,11 +71,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         const userData = await response.json();
-        console.log("✅ Session restored for user:", userData.name);
         setUser(userData);
         setToken(savedToken);
       } catch (error) {
-        console.error("❌ Failed to restore session:", error);
+        console.error("Failed to restore session:", error);
         localStorage.removeItem("cashback_token");
         setUser(null);
         setToken(null);
@@ -64,66 +87,87 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const applySession = (newToken: string, newUser: User) => {
-    console.log("💾 Saving session for user:", newUser.name);
     localStorage.setItem("cashback_token", newToken);
     setToken(newToken);
     setUser(newUser);
   };
 
   const login = async (data: { email: string; password: string }) => {
-    console.log("🔐 Login attempt:", data.email);
-    try {
-      const response = await fetch("http://localhost:3001/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-      const text = await response.text();
-      console.log("📨 Login response status:", response.status);
+    const text = await response.text();
 
-      if (!response.ok) {
-        console.error("❌ Login failed:", text);
-        throw new Error(text || "Login failed");
-      }
-
-      const result = JSON.parse(text);
-      applySession(result.access_token, result.user);
-      console.log("✅ Login successful");
-    } catch (error) {
-      console.error("❌ Login error:", error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(parseError(text, "Login failed"));
     }
+
+    const result = JSON.parse(text);
+    applySession(result.access_token, result.user);
   };
 
-  const register = async (data: { name: string; email: string; password: string }) => {
-    console.log("🔐 Register attempt:", data.email);
-    try {
-      const response = await fetch("http://localhost:3001/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+  const register = async (data: {
+    name: string;
+    email: string;
+    password: string;
+  }): Promise<RegisterResult> => {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-      const text = await response.text();
-      console.log("📨 Register response status:", response.status);
+    const text = await response.text();
 
-      if (!response.ok) {
-        console.error("❌ Register failed:", text);
-        throw new Error(text || "Registration failed");
-      }
-
-      const result = JSON.parse(text);
-      applySession(result.access_token, result.user);
-      console.log("✅ Register successful");
-    } catch (error) {
-      console.error("❌ Register error:", error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(parseError(text, "Registration failed"));
     }
+
+    const result = JSON.parse(text);
+    applySession(result.access_token, result.user);
+
+    return {
+      message: result.message,
+      verification_email_sent: result.verification_email_sent,
+      preview_url: result.preview_url,
+    };
+  };
+
+  const verifyEmail = async (verificationToken: string) => {
+    const response = await fetch(
+      `${API_URL}/auth/verify-email?token=${encodeURIComponent(verificationToken)}`
+    );
+
+    const text = await response.text();
+
+    if (!response.ok) {
+      throw new Error(parseError(text, "Email verification failed"));
+    }
+
+    const result = JSON.parse(text);
+    applySession(result.access_token, result.user);
+  };
+
+  const resendVerification = async (email: string): Promise<ResendResult> => {
+    const response = await fetch(`${API_URL}/auth/resend-verification`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    const text = await response.text();
+
+    if (!response.ok) {
+      throw new Error(parseError(text, "Could not resend email"));
+    }
+
+    return JSON.parse(text);
   };
 
   const logout = () => {
-    console.log("👋 Logging out");
     localStorage.removeItem("cashback_token");
     setToken(null);
     setUser(null);
@@ -137,6 +181,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         loading,
         login,
         register,
+        verifyEmail,
+        resendVerification,
         logout,
       }}
     >

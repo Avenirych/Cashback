@@ -12,6 +12,7 @@ import {
   getOnboardingMessages,
 } from "../onboarding";
 import WiseAccountNotice from "../components/WiseAccountNotice";
+import { validateEmail } from "../utils/emailValidator";
 import "./Profile.css";
 
 const PROFILE_URL = "http://localhost:3001/auth/profile";
@@ -154,7 +155,8 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     enrollmentDate: "Teilnahmedatum",
     required: "Alle Felder sind erforderlich",
     invalidEmail: "Ungültiges E-Mail-Format",
-    storageError: "Speichern im Browser nicht möglich. Bitte versuchen Sie es erneut.",
+    storageError:
+      "Speichern im Browser nicht möglich. Bitte versuchen Sie es erneut.",
     wiseNotice:
       "Entwicklungsmodus: Partnerdienste und echte Zahlungen sind nicht verbunden. Wise-Kontodaten werden nur in diesem Browser gespeichert und an keinen Dienst gesendet.",
   },
@@ -189,7 +191,8 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     enrollmentDate: "Date d'inscription",
     required: "Tous les champs sont obligatoires",
     invalidEmail: "Format d'e-mail invalide",
-    storageError: "Impossible d'enregistrer dans ce navigateur. Veuillez réessayer.",
+    storageError:
+      "Impossible d'enregistrer dans ce navigateur. Veuillez réessayer.",
     wiseNotice:
       "Mode développement : les services partenaires et les paiements réels ne sont pas connectés. Les coordonnées Wise sont conservées uniquement dans ce navigateur et ne sont envoyées à aucun service.",
   },
@@ -218,19 +221,50 @@ interface ProfileData {
   balance?: unknown;
 }
 
-function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
+type WiseErrors = Partial<
+  Record<keyof WiseForm, "required" | "invalidEmail">
+>;
+
+function getWiseErrors(form: WiseForm): WiseErrors {
+  const errors: WiseErrors = { ...validateWiseForm(form) };
+
+  for (const field of ["email", "wiseEmail"] as const) {
+    if (!form[field].trim()) {
+      errors[field] = "required";
+    } else if (!validateEmail(form[field]).valid) {
+      errors[field] = "invalidEmail";
+    }
+  }
+
+  return errors;
+}
+
+function WiseEnrollment({
+  userId,
+  lang,
+}: {
+  userId: number;
+  lang: string;
+}) {
   const t = getMessages(lang);
-  const { form, credentialsSaved: isFormFilled, enrolledAt } = useOnboarding();
+  const {
+    form,
+    credentialsSaved: isFormFilled,
+    enrolledAt,
+  } = useOnboarding();
+
   const savedForm = JSON.stringify(form);
   const [formData, setFormData] = useState<WiseForm>(form);
-
-  useEffect(() => {
-    setFormData(JSON.parse(savedForm));
-  }, [savedForm]);
-
   const [showErrors, setShowErrors] = useState(false);
   const [storageFailed, setStorageFailed] = useState(false);
-  const errors = validateWiseForm(formData);
+
+  useEffect(() => {
+    setFormData(JSON.parse(savedForm) as WiseForm);
+    setShowErrors(false);
+    setStorageFailed(false);
+  }, [savedForm]);
+
+  const errors = getWiseErrors(formData);
   const isFormValid = Object.keys(errors).length === 0;
   const readonly = isFormFilled;
 
@@ -238,7 +272,15 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
     event.preventDefault();
     setShowErrors(true);
 
-    if (!isFormValid || readonly) return;
+    const currentErrors = getWiseErrors(formData);
+
+    if (
+      readonly ||
+      !validUserId(userId) ||
+      Object.keys(currentErrors).length > 0
+    ) {
+      return;
+    }
 
     try {
       saveCredentials(userId, formData);
@@ -249,7 +291,16 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
   }
 
   function handleEnroll() {
-    if (!isFormFilled || !isFormValid || enrolledAt) return;
+    const savedErrors = getWiseErrors(form);
+
+    if (
+      !validUserId(userId) ||
+      !isFormFilled ||
+      Object.keys(savedErrors).length > 0 ||
+      enrolledAt
+    ) {
+      return;
+    }
 
     try {
       enrollInProgram(userId);
@@ -260,22 +311,38 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
   }
 
   function updateField(field: keyof WiseForm, value: string) {
-    setFormData((data) => ({ ...data, [field]: value }));
+    setFormData((previous) => ({
+      ...previous,
+      [field]: value,
+    }));
     setShowErrors(true);
+    setStorageFailed(false);
   }
 
   function fieldError(field: keyof WiseForm) {
-    const error = showErrors && !readonly && errors[field];
+    const error = showErrors && !readonly ? errors[field] : undefined;
 
-    return error ? (
-      <p id={`wise-${field}-error`} role="alert">
+    if (!error) return null;
+
+    return (
+      <p
+        id={`wise-${field}-error`}
+        role="alert"
+        style={{
+          color: "#b42318",
+          fontSize: "13px",
+          margin: "6px 0 12px",
+        }}
+      >
         {t[error]}
       </p>
-    ) : null;
+    );
   }
 
   function fieldProps(field: keyof WiseForm) {
-    const invalid = !!(showErrors && !readonly && errors[field]);
+    const invalid: boolean = Boolean(
+      showErrors && !readonly && errors[field]
+    );
 
     return {
       id: `wise-${field}`,
@@ -283,13 +350,20 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
       value: formData[field],
       required: true,
       "aria-invalid": invalid,
-      "aria-describedby": invalid ? `wise-${field}-error` : undefined,
+      "aria-describedby": invalid
+        ? `wise-${field}-error`
+        : undefined,
       onBlur: () => setShowErrors(true),
       onChange: (
         event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
       ) => updateField(field, event.target.value),
     };
   }
+
+  const canEnroll =
+    validUserId(userId) &&
+    isFormFilled &&
+    Object.keys(getWiseErrors(form)).length === 0;
 
   return (
     <section aria-label={t.wiseCredentials}>
@@ -300,35 +374,42 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
           {(["fullName", "email", "wiseEmail"] as const).map((field) => (
             <div key={field}>
               <label htmlFor={`wise-${field}`}>{t[field]}</label>
+
               <input
                 {...fieldProps(field)}
                 type={field === "fullName" ? "text" : "email"}
                 readOnly={readonly}
               />
+
               {fieldError(field)}
             </div>
           ))}
 
           <div>
             <label htmlFor="wise-currency">{t.currency}</label>
+
             <select {...fieldProps("currency")} disabled={readonly}>
               <option value="">{t.selectOption}</option>
+
               {["EUR", "GBP", "USD"].map((currency) => (
                 <option key={currency} value={currency}>
                   {currency}
                 </option>
               ))}
             </select>
+
             {fieldError("currency")}
           </div>
 
           <div>
             <label htmlFor="wise-accountType">{t.accountType}</label>
+
             <select {...fieldProps("accountType")} disabled={readonly}>
               <option value="">{t.selectOption}</option>
               <option value="Personal">{t.personal}</option>
               <option value="Business">{t.business}</option>
             </select>
+
             {fieldError("accountType")}
           </div>
         </fieldset>
@@ -356,11 +437,14 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
         </p>
       ) : (
         <>
-          {isFormFilled && <p role="status">{t.credentialsSaved}</p>}
+          {isFormFilled && (
+            <p role="status">{t.credentialsSaved}</p>
+          )}
+
           <button
             type="button"
             onClick={handleEnroll}
-            disabled={!isFormFilled}
+            disabled={!canEnroll}
           >
             {t.enroll}
           </button>
@@ -376,13 +460,14 @@ export default function Profile() {
   const { user, loading, token } = useAuth();
   const { lang } = useLang();
   const t = getMessages(lang);
-  const [freshProfile, setFreshProfile] = useState<ProfileData | null>(null);
+
+  const [freshProfile, setFreshProfile] =
+    useState<ProfileData | null>(null);
 
   useEffect(() => {
-    if (!token) {
-      setFreshProfile(null);
-      return;
-    }
+    setFreshProfile(null);
+
+    if (!token) return;
 
     const controller = new AbortController();
 
@@ -390,12 +475,16 @@ export default function Profile() {
       headers: { Authorization: "Bearer " + token },
       signal: controller.signal,
     })
-      .then((res) => (res.ok ? res.json() : null))
+      .then((response) => (
+        response.ok ? response.json() : null
+      ))
       .then((data) => {
-        if (data) setFreshProfile(data);
+        if (!controller.signal.aborted && data) {
+          setFreshProfile(data);
+        }
       })
       .catch(() => {
-        // При ошибке используем данные из контекста авторизации.
+        // При ошибке остаются данные из контекста авторизации.
       });
 
     return () => controller.abort();
@@ -428,10 +517,16 @@ export default function Profile() {
     );
   }
 
-  const profile: ProfileData = { ...user, ...(freshProfile || {}) };
+  const profile: ProfileData = {
+    ...user,
+    ...(freshProfile || {}),
+  };
 
   return (
-    <main className="profile-container" aria-labelledby="profile-title">
+    <main
+      className="profile-container"
+      aria-labelledby="profile-title"
+    >
       <h1 id="profile-title">{t.title}</h1>
       <p>{getOnboardingMessages(lang).explanation}</p>
 
@@ -470,7 +565,11 @@ export default function Profile() {
 
       <WiseAccountNotice lang={lang} />
 
-      <WiseEnrollment key={user.id} userId={user.id} lang={lang} />
+      <WiseEnrollment
+        key={user.id}
+        userId={user.id}
+        lang={lang}
+      />
 
       <p className="profile-demo-notice" role="note">
         {t.demoNotice}
