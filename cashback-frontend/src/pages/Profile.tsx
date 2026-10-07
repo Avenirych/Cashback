@@ -3,9 +3,15 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import {
-  WiseForm, validateWiseForm, useOnboarding,
-  saveCredentials, enrollInProgram, validUserId, getOnboardingMessages,
+  WiseForm,
+  validateWiseForm,
+  useOnboarding,
+  saveCredentials,
+  enrollInProgram,
+  validUserId,
+  getOnboardingMessages,
 } from "../onboarding";
+import WiseAccountNotice from "../components/WiseAccountNotice";
 import "./Profile.css";
 
 const PROFILE_URL = "http://localhost:3001/auth/profile";
@@ -94,7 +100,7 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     balance: "Баланс",
     notSpecified: "Не указано",
     demoNotice:
-      "Демо-режим: баланс показан только для разработки и тестирования. Реальные платежи и выплаты партнёров не производятся.",
+      "Демо-режим: баланс показан только для разработки и тестирования. Реальные платежи и выплаты партнёров не выполняются.",
     home: "Главная",
     shop: "Магазин",
     avatarAlt: "Аватар пользователя",
@@ -115,7 +121,7 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
     invalidEmail: "Неверный формат email",
     storageError: "Не удалось сохранить данные в браузере. Попробуйте ещё раз.",
     wiseNotice:
-      "Режим разработки: партнёрские сервисы и реальные платежи не подключены. Реквизиты Wise хранятся только в этом браузере и никуда не отправляются.",
+      "Режим разработки: партнёрские сервисы и реальные платежи не подключены. Реквизиты Wise хранятся только в этом браузере и не отправляются ни в один сервис.",
   },
   de: {
     title: "Profil",
@@ -194,7 +200,6 @@ export function getMessages(lang: string | undefined): ProfileMessages {
   return messages[key] || messages.en;
 }
 
-// PostgreSQL decimal columns may arrive as strings (e.g. "12.50").
 export function formatBalance(value: unknown): string {
   const num =
     typeof value === "number"
@@ -202,6 +207,7 @@ export function formatBalance(value: unknown): string {
       : typeof value === "string" && value.trim() !== ""
       ? Number(value)
       : 0;
+
   return (Number.isFinite(num) ? num : 0).toFixed(2);
 }
 
@@ -217,9 +223,11 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
   const { form, credentialsSaved: isFormFilled, enrolledAt } = useOnboarding();
   const savedForm = JSON.stringify(form);
   const [formData, setFormData] = useState<WiseForm>(form);
+
   useEffect(() => {
     setFormData(JSON.parse(savedForm));
   }, [savedForm]);
+
   const [showErrors, setShowErrors] = useState(false);
   const [storageFailed, setStorageFailed] = useState(false);
   const errors = validateWiseForm(formData);
@@ -229,7 +237,9 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
   function handleSaveCredentials(event: React.FormEvent) {
     event.preventDefault();
     setShowErrors(true);
+
     if (!isFormValid || readonly) return;
+
     try {
       saveCredentials(userId, formData);
       setStorageFailed(false);
@@ -240,6 +250,7 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
 
   function handleEnroll() {
     if (!isFormFilled || !isFormValid || enrolledAt) return;
+
     try {
       enrollInProgram(userId);
       setStorageFailed(false);
@@ -255,11 +266,17 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
 
   function fieldError(field: keyof WiseForm) {
     const error = showErrors && !readonly && errors[field];
-    return error ? <p id={`wise-${field}-error`} role="alert">{t[error]}</p> : null;
+
+    return error ? (
+      <p id={`wise-${field}-error`} role="alert">
+        {t[error]}
+      </p>
+    ) : null;
   }
 
   function fieldProps(field: keyof WiseForm) {
     const invalid = !!(showErrors && !readonly && errors[field]);
+
     return {
       id: `wise-${field}`,
       name: field,
@@ -268,8 +285,9 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
       "aria-invalid": invalid,
       "aria-describedby": invalid ? `wise-${field}-error` : undefined,
       onBlur: () => setShowErrors(true),
-      onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-        updateField(field, event.target.value),
+      onChange: (
+        event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      ) => updateField(field, event.target.value),
     };
   }
 
@@ -278,24 +296,32 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
       <form onSubmit={handleSaveCredentials} noValidate>
         <fieldset>
           <legend>{t.wiseCredentials}</legend>
+
           {(["fullName", "email", "wiseEmail"] as const).map((field) => (
             <div key={field}>
               <label htmlFor={`wise-${field}`}>{t[field]}</label>
-              <input {...fieldProps(field)} type={field === "fullName" ? "text" : "email"}
-                readOnly={readonly} />
+              <input
+                {...fieldProps(field)}
+                type={field === "fullName" ? "text" : "email"}
+                readOnly={readonly}
+              />
               {fieldError(field)}
             </div>
           ))}
+
           <div>
             <label htmlFor="wise-currency">{t.currency}</label>
             <select {...fieldProps("currency")} disabled={readonly}>
               <option value="">{t.selectOption}</option>
               {["EUR", "GBP", "USD"].map((currency) => (
-                <option key={currency} value={currency}>{currency}</option>
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
               ))}
             </select>
             {fieldError("currency")}
           </div>
+
           <div>
             <label htmlFor="wise-accountType">{t.accountType}</label>
             <select {...fieldProps("accountType")} disabled={readonly}>
@@ -306,22 +332,41 @@ function WiseEnrollment({ userId, lang }: { userId: number; lang: string }) {
             {fieldError("accountType")}
           </div>
         </fieldset>
-        {!readonly && <button type="submit" disabled={!isFormValid || !validUserId(userId)}>{t.saveCredentials}</button>}
+
+        {!readonly && (
+          <button
+            type="submit"
+            disabled={!isFormValid || !validUserId(userId)}
+          >
+            {t.saveCredentials}
+          </button>
+        )}
       </form>
+
       {storageFailed && <p role="alert">{t.storageError}</p>}
+
       {enrolledAt ? (
         <p role="status">
           {t.enrolled}. {t.enrollmentDate}:{" "}
           <time dateTime={enrolledAt}>
-            {new Date(enrolledAt).toLocaleDateString(getMessages(lang) === messages.en ? "en" : lang)}
+            {new Date(enrolledAt).toLocaleDateString(
+              getMessages(lang) === messages.en ? "en" : lang
+            )}
           </time>
         </p>
       ) : (
         <>
           {isFormFilled && <p role="status">{t.credentialsSaved}</p>}
-          <button type="button" onClick={handleEnroll} disabled={!isFormFilled}>{t.enroll}</button>
+          <button
+            type="button"
+            onClick={handleEnroll}
+            disabled={!isFormFilled}
+          >
+            {t.enroll}
+          </button>
         </>
       )}
+
       <p>{t.wiseNotice}</p>
     </section>
   );
@@ -340,6 +385,7 @@ export default function Profile() {
     }
 
     const controller = new AbortController();
+
     fetch(PROFILE_URL, {
       headers: { Authorization: "Bearer " + token },
       signal: controller.signal,
@@ -349,7 +395,7 @@ export default function Profile() {
         if (data) setFreshProfile(data);
       })
       .catch(() => {
-        // Keep showing the user data from the auth context.
+        // При ошибке используем данные из контекста авторизации.
       });
 
     return () => controller.abort();
@@ -367,9 +413,13 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <main className="profile-container" aria-labelledby="profile-guest-title">
+      <main
+        className="profile-container"
+        aria-labelledby="profile-guest-title"
+      >
         <h1 id="profile-guest-title">{t.guestTitle}</h1>
         <p>{t.guestText}</p>
+
         <nav className="profile-links" aria-label={t.title}>
           <Link to="/login">{t.login}</Link>
           <Link to="/register">{t.register}</Link>
@@ -387,24 +437,38 @@ export default function Profile() {
 
       <section className="profile-card">
         {profile.avatar_url && (
-          <img className="profile-avatar" src={profile.avatar_url} alt={t.avatarAlt} />
+          <img
+            className="profile-avatar"
+            src={profile.avatar_url}
+            alt={t.avatarAlt}
+          />
         )}
 
         <dl className="profile-details">
           <div className="profile-row">
             <dt>{t.name}</dt>
-            <dd data-testid="profile-name">{profile.name || t.notSpecified}</dd>
+            <dd data-testid="profile-name">
+              {profile.name || t.notSpecified}
+            </dd>
           </div>
+
           <div className="profile-row">
             <dt>{t.email}</dt>
-            <dd data-testid="profile-email">{profile.email || t.notSpecified}</dd>
+            <dd data-testid="profile-email">
+              {profile.email || t.notSpecified}
+            </dd>
           </div>
+
           <div className="profile-row">
             <dt>{t.balance}</dt>
-            <dd data-testid="profile-balance">{formatBalance(profile.balance)}</dd>
+            <dd data-testid="profile-balance">
+              {formatBalance(profile.balance)}
+            </dd>
           </div>
         </dl>
       </section>
+
+      <WiseAccountNotice lang={lang} />
 
       <WiseEnrollment key={user.id} userId={user.id} lang={lang} />
 
