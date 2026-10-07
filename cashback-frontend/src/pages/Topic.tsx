@@ -24,11 +24,17 @@ export default function Topic({ lang }: { lang: string; onLangChange?: (lang: st
 
   useEffect(() => {
     const controller = new AbortController();
-    setTopic(null); setPosts([]); setError("");
+    setTopic(null); setPosts([]); setMessage(""); setError("");
     const load = async () => {
       const [topicResponse, postsResponse] = await Promise.all([
-        fetch(`${FORUM_API_URL}/forum/topic/${id}`, { signal: controller.signal }),
-        fetch(`${FORUM_API_URL}/forum/posts/${id}`, { signal: controller.signal }),
+        fetch(`${FORUM_API_URL}/forum/topic/${id}`, {
+          headers: { Authorization: "Bearer " + token },
+          signal: controller.signal,
+        }),
+        fetch(`${FORUM_API_URL}/forum/posts/${id}`, {
+          headers: { Authorization: "Bearer " + token },
+          signal: controller.signal,
+        }),
       ]);
       if (!topicResponse.ok || !postsResponse.ok) throw new Error("Could not load discussion");
       const [topicData, postsData] = await Promise.all([topicResponse.json(), postsResponse.json()]);
@@ -36,7 +42,7 @@ export default function Topic({ lang }: { lang: string; onLangChange?: (lang: st
     };
     void load().catch(err => { if (!controller.signal.aborted) setError(err.message); });
     return () => controller.abort();
-  }, [id, refresh]);
+  }, [id, refresh, token]);
 
   const sendMessage = async () => {
     if (!canWrite || !message.trim() || sending) return;

@@ -230,6 +230,54 @@ test("topics and posts are readable without exposing write UI", async () => {
   expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
 });
 
+test("read-only topic list and discussion requests authenticate with the current main token", async () => {
+  (fetch as jest.Mock).mockImplementation(async url => ({
+    ok: true, json: async () => String(url).endsWith("/forum/topics") ? [{ id: 1, title: "Authenticated discussion", created_at: "2026-02-01", author: profile }] :
+      String(url).includes("/forum/posts/") ? [] : { id: 1, title: "Authenticated discussion", author: profile },
+  }));
+  const view = render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+  await screen.findByText("Authenticated discussion");
+  expect(fetch).toHaveBeenCalledWith("http://localhost:3001/forum/topics", expect.objectContaining({
+    headers: { Authorization: "Bearer " + auth.token },
+    signal: expect.anything(),
+  }));
+  view.unmount();
+  render(<MemoryRouter initialEntries={["/forum/topics/1"]}><Routes>
+    <Route path="/forum/topics/:id" element={<Topic lang="en" />} />
+  </Routes></MemoryRouter>);
+  await screen.findByText("Authenticated discussion");
+  for (const endpoint of ["/forum/topic/1", "/forum/posts/1"]) {
+    expect(fetch).toHaveBeenCalledWith(`http://localhost:3001${endpoint}`, expect.objectContaining({
+      headers: { Authorization: "Bearer " + auth.token },
+      signal: expect.anything(),
+    }));
+  }
+  expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+});
+
+test("topic list token switches abort stale reads and clear old discussion data", async () => {
+  const initialToken = auth.token;
+  let oldSignal!: AbortSignal;
+  let resolveOld!: (data: unknown) => void;
+  (fetch as jest.Mock).mockImplementation(async (_url, options) => {
+    if (options.headers.Authorization === "Bearer " + initialToken) {
+      oldSignal = options.signal;
+      return new Promise(resolve => { resolveOld = resolve; });
+    }
+    return { ok: true, json: async () => [{ id: 2, title: "New session discussion", created_at: "2026-02-01", author: profile }] };
+  });
+  const view = render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+  auth.token = "new-session-token";
+  view.rerender(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+  await screen.findByText("New session discussion");
+  expect(oldSignal.aborted).toBe(true);
+  await act(async () => { resolveOld({ ok: true, json: async () => [{ id: 1, title: "Old session discussion", created_at: "2026-02-01", author: profile }] }); });
+  expect(screen.queryByText("Old session discussion")).not.toBeInTheDocument();
+  expect(fetch).toHaveBeenCalledWith("http://localhost:3001/forum/topics", expect.objectContaining({
+    headers: { Authorization: "Bearer " + auth.token },
+  }));
+});
+
 test.each(["/forum", "/forum/topics", "/forum/topics/1", "/forum/topic/1", "/topic/1"])("application route %s preserves read-only access and topic alias compatibility", async path => {
   (fetch as jest.Mock).mockImplementation(async url => ({
     ok: true, json: async () => String(url).includes("/forum/topics") ? [{ id: 1, title: "Contract discussion", created_at: "2026-02-01", author: profile }] :

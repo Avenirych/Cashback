@@ -86,6 +86,8 @@ forum participation without signing out of the main site. Verified users can
 still read topics; posting requires an active forum session. The server checks
 verified email, forum registration, rules agreement and ban status for writes,
 regardless of browser state. Banned accounts retain read-only access.
+Discussion reads also require authentication and verified email, but not forum
+membership or an unbanned account. Rules and public forum profiles remain public.
 
 Optional avatars accept JPEG, PNG or WebP up to **500 KiB (512,000 bytes)**.
 Uploads are stored in the project's `public/avatars/` directory and served by

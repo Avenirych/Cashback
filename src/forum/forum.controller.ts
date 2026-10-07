@@ -77,7 +77,9 @@ export class ForumController {
   }
 
   @Get('topics')
-  getTopics() {
+  @UseGuards(JwtAuthGuard)
+  async getTopics(@Req() req: ForumRequest) {
+    await this.forumUserService.assertVerifiedUser(req.user.id);
     return this.forumService.getTopics();
   }
 
@@ -98,12 +100,22 @@ export class ForumController {
   }
 
   @Get('topic/:id')
-  getTopic(@Param('id', ParseIntPipe) id: number) {
+  @UseGuards(JwtAuthGuard)
+  async getTopic(
+    @Req() req: ForumRequest,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    await this.forumUserService.assertVerifiedUser(req.user.id);
     return this.forumService.getTopic(id);
   }
 
   @Get('posts/:topicId')
-  getPosts(@Param('topicId', ParseIntPipe) topicId: number) {
+  @UseGuards(JwtAuthGuard)
+  async getPosts(
+    @Req() req: ForumRequest,
+    @Param('topicId', ParseIntPipe) topicId: number,
+  ) {
+    await this.forumUserService.assertVerifiedUser(req.user.id);
     return this.forumService.getPosts(topicId);
   }
 

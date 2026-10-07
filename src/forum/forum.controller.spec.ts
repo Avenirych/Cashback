@@ -15,6 +15,7 @@ describe('ForumController HTTP contract', () => {
   let app: INestApplication;
   const service = {
     register: jest.fn(),
+    assertVerifiedUser: jest.fn(),
     status: jest.fn(),
     publicProfile: jest.fn(),
     updateProfile: jest.fn(),
@@ -85,6 +86,9 @@ describe('ForumController HTTP contract', () => {
     ['post', '/forum/post'],
     ['delete', '/forum/topic/4'],
     ['get', '/forum/status'],
+    ['get', '/forum/topics'],
+    ['get', '/forum/topic/4'],
+    ['get', '/forum/posts/4'],
   ] as const)('requires authentication for %s %s', async (method, path) => {
     await request(app.getHttpServer())[method](path).expect(401);
   });
@@ -148,9 +152,18 @@ describe('ForumController HTTP contract', () => {
     service.getTopics.mockResolvedValue([]);
     service.getPosts.mockResolvedValue([]);
     service.getTopic.mockResolvedValue({ id: 4 });
-    await request(app.getHttpServer()).get('/forum/topics').expect(200);
-    await request(app.getHttpServer()).get('/forum/topic/4').expect(200);
-    await request(app.getHttpServer()).get('/forum/posts/4').expect(200);
+    await request(app.getHttpServer())
+      .get('/forum/topics')
+      .set('Authorization', '******')
+      .expect(200);
+    await request(app.getHttpServer())
+      .get('/forum/topic/4')
+      .set('Authorization', '******')
+      .expect(200);
+    await request(app.getHttpServer())
+      .get('/forum/posts/4')
+      .set('Authorization', '******')
+      .expect(200);
     await request(app.getHttpServer())
       .post('/forum/topic')
       .set('Authorization', '******')
@@ -174,6 +187,7 @@ describe('ForumController HTTP contract', () => {
   it('rejects nonnumeric IDs rather than coercing them', async () => {
     await request(app.getHttpServer())
       .get('/forum/topic/not-a-number')
+      .set('Authorization', '******')
       .expect(400);
     await request(app.getHttpServer())
       .post('/forum/post')

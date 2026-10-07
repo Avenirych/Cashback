@@ -22,7 +22,13 @@ export default function TopicsPage({ lang }: { lang: string; onLangChange?: (lan
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`${FORUM_API_URL}/forum/topics`, { signal: controller.signal })
+    setTopics([]);
+    setLoading(true);
+    setError("");
+    fetch(`${FORUM_API_URL}/forum/topics`, {
+      headers: { Authorization: "Bearer " + token },
+      signal: controller.signal,
+    })
       .then(async response => {
         if (!response.ok) throw new Error("Could not load topics");
         const data = await response.json();
@@ -31,7 +37,7 @@ export default function TopicsPage({ lang }: { lang: string; onLangChange?: (lan
       .catch(err => { if (!controller.signal.aborted) setError(err.message); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, []);
+  }, [token]);
 
   const createTopic = async (e: React.FormEvent) => {
     e.preventDefault();

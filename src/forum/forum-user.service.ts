@@ -56,6 +56,10 @@ export class ForumUserService {
     return user;
   }
 
+  async assertVerifiedUser(userId: number): Promise<void> {
+    await this.verifiedUser(userId);
+  }
+
   async activeMember(userId: number) {
     await this.verifiedUser(userId);
     const member = await this.getByUserId(userId);
