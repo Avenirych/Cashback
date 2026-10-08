@@ -5,65 +5,152 @@ import { useAuth } from "../context/AuthContext";
 type Status = "loading" | "success" | "error";
 
 export default function VerifyEmail({ lang }: { lang: string }) {
-  const { verifyEmail } = useAuth();
+  const { verifyEmail, user, loading: authLoading } = useAuth();
   const [params] = useSearchParams();
+  const verificationToken = params.get("token") || "";
+
   const [status, setStatus] = useState<Status>("loading");
   const [message, setMessage] = useState("");
-  const started = useRef(false);
+
+  // Одна попытка на токен, в том числе при React StrictMode.
+  const attempt = useRef<{
+    token: string;
+    promise: Promise<void>;
+  } | null>(null);
 
   const ru = lang.toLowerCase() === "ru";
-  const text = {
-    loading: ru ? "Подтверждаем почту..." : "Verifying your email...",
-    success: ru ? "Почта подтверждена. Спасибо!" : "Your email has been verified. Thank you!",
-    missing: ru ? "В ссылке нет токена подтверждения." : "The link does not contain a verification token.",
-    home: ru ? "На главную" : "Go to home page",
-    profile: ru ? "Открыть профиль" : "Open profile",
-    register: ru ? "Зарегистрироваться" : "Register",
-  };
+  const missingMessage = ru
+    ? "Ваша почта пока не подтверждена. Вернитесь в окно подтверждения, чтобы повторно запросить письмо."
+    : "Your email has not been verified. Return to the verification screen to request another email.";
 
   useEffect(() => {
-    // The token is single-use; guard against React StrictMode double effects.
-    if (started.current) return;
-    started.current = true;
-
-    const token = params.get("token");
-
-    if (!token) {
+    if (!verificationToken) {
       setStatus("error");
-      setMessage(text.missing);
+      setMessage(missingMessage);
       return;
     }
 
-    verifyEmail(token)
-      .then(() => setStatus("success"))
-      .catch((err) => {
+    let active = true;
+    setStatus("loading");
+    setMessage("");
+
+    if (attempt.current?.token !== verificationToken) {
+      attempt.current = {
+        token: verificationToken,
+        promise: verifyEmail(verificationToken),
+      };
+    }
+
+    attempt.current.promise.then(
+      () => {
+        if (active) setStatus("success");
+      },
+      (error: unknown) => {
+        if (!active) return;
+
         setStatus("error");
-        setMessage(err instanceof Error ? err.message : "Verification failed");
-      });
+        setMessage(
+          error instanceof Error
+            ? error.message
+            : ru
+              ? "Не удалось подтвердить почту."
+              : "Email verification failed."
+        );
+      }
+    );
+
+    return () => {
+      active = false;
+    };
+
+    // verifyEmail получает актуальное значение при смене токена.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [verificationToken, missingMessage]);
+
+  const alreadyVerified =
+    !authLoading &&
+    !verificationToken &&
+    user?.email_verified === true;
+
+  const successful = status === "success" || alreadyVerified;
 
   return (
-    <div style={{ minHeight: "calc(100vh - 72px)", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)", padding: "40px 24px" }}>
-      <div style={{ maxWidth: "480px", margin: "0 auto", background: "#fff", padding: "32px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
-        {status === "loading" && <p role="status">{text.loading}</p>}
+    <div
+      style={{
+        minHeight: "calc(100vh - 72px)",
+        background:
+          "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
+        padding: "40px 24px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "480px",
+          margin: "0 auto",
+          background: "#fff",
+          padding: "32px",
+          borderRadius: "12px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        }}
+      >
+        {status === "loading" && !successful && (
+          <p role="status">
+            {ru ? "Подтверждаем почту..." : "Verifying your email..."}
+          </p>
+        )}
 
-        {status === "success" && (
+        {successful && (
           <>
-            <p role="status" style={{ color: "#146c2e", fontWeight: 600 }}>{text.success}</p>
-            <div style={{ display: "flex", gap: "16px" }}>
-              <Link to="/" style={{ color: "#0d6efd" }}>{text.home}</Link>
-              <Link to="/profile" style={{ color: "#0d6efd" }}>{text.profile}</Link>
+            <p
+              role="status"
+              style={{ color: "#146c2e", fontWeight: 600 }}
+            >
+              {ru
+                ? "Почта подтверждена. Спасибо!"
+                : "Your email has been verified. Thank you!"}
+            </p>
+
+            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+              <Link to="/">
+                {ru ? "На главную" : "Go to home page"}
+              </Link>
+              <Link to="/profile">
+                {ru ? "Открыть профиль" : "Open profile"}
+              </Link>
             </div>
           </>
         )}
 
-        {status === "error" && (
+        {status === "error" && !successful && (
           <>
-            <p role="alert" style={{ color: "#b42318" }}>{message}</p>
-            <div style={{ display: "flex", gap: "16px" }}>
-              <Link to="/" style={{ color: "#0d6efd" }}>{text.home}</Link>
-              <Link to="/register" style={{ color: "#0d6efd" }}>{text.register}</Link>
+            <p role="alert" style={{ color: "#b42318" }}>
+              {message}
+            </p>
+
+            <Link
+              to="/register"
+              style={{
+                display: "inline-block",
+                padding: "12px 16px",
+                background: "#0d6efd",
+                color: "#fff",
+                borderRadius: "6px",
+                textDecoration: "none",
+                marginBottom: "16px",
+              }}
+            >
+              {ru
+                ? "Вернуться к подтверждению почты"
+                : "Return to email verification"}
+            </Link>
+
+            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+              <Link to="/">
+                {ru ? "На главную" : "Go to home page"}
+              </Link>
+              <Link to="/login">
+                {ru ? "Войти в существующий аккаунт" : "Log in"}
+              </Link>
             </div>
           </>
         )}

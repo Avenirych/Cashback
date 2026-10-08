@@ -1,115 +1,228 @@
 import React, { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth, RegisterResult } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
 import ForumLogo from "../components/ForumLogo";
 import MoneyTree from "../components/MoneyTree";
 import { translations } from "../i18n";
 import { validateEmail } from "../utils/emailValidator";
 
+const PENDING_VERIFICATION_KEY = "cashback_pending_verification";
+
+interface PendingVerification extends RegisterResult {
+  email: string;
+}
+
+function readPendingVerification(): PendingVerification | null {
+  try {
+    const raw = sessionStorage.getItem(PENDING_VERIFICATION_KEY);
+    if (!raw) return null;
+
+    const data = JSON.parse(raw);
+
+    if (
+      typeof data.email !== "string" ||
+      !validateEmail(data.email).valid
+    ) {
+      return null;
+    }
+
+    return {
+      email: data.email,
+      verification_email_sent:
+        typeof data.verification_email_sent === "boolean"
+          ? data.verification_email_sent
+          : undefined,
+      preview_url:
+        typeof data.preview_url === "string"
+          ? data.preview_url
+          : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function savePendingVerification(data: PendingVerification) {
+  try {
+    sessionStorage.setItem(
+      PENDING_VERIFICATION_KEY,
+      JSON.stringify(data)
+    );
+  } catch {
+    // Экран продолжает работать в памяти.
+  }
+}
+
 const verifyText = {
   en: {
     title: "Check your email",
     sent: "We sent a verification link to",
-    notSent: "The account was created, but the verification email could not be sent. Press the button below to try again.",
-    demo: "Demo mode: this is a test mailbox (Ethereal). In production the email is delivered to the address you entered.",
+    pending: "Email verification is pending for",
+    notSent:
+      "Your account was created, but the email could not be sent. Try requesting another email.",
+    demo:
+      "Test mode: open the preview below. In production, the email is delivered to your address.",
     preview: "Open the test email",
     resend: "Send the email again",
-    resent: "A new verification email has been requested.",
+    resent:
+      "Request processed. If this account still needs verification and delivery succeeds, a new email will arrive.",
     later: "Continue to the site",
-    note: "Access to all functions is blocked until email confirmation: bonuses, cashback, forum, store.",
-    restrictedAccess: "Until you verify your email, you cannot access bonuses, forum, shop, or full profile. Verify above.",
+    note:
+      "Bonuses, cashback, forum, shop and full profile remain unavailable until email verification.",
+    waiting: "Please wait...",
   },
   ru: {
     title: "Проверьте почту",
     sent: "Мы отправили ссылку для подтверждения на адрес",
-    notSent: "Аккаунт создан, но письмо не удалось отправить. Нажмите кнопку ниже, чтобы повторить.",
-    demo: "Демо-режим: это тестовый почтовый ящик (Ethereal). В рабочем режиме письмо приходит на указанный вами адрес.",
+    pending: "Ожидается подтверждение почты",
+    notSent:
+      "Аккаунт создан, но письмо не удалось отправить. Попробуйте запросить письмо ещё раз.",
+    demo:
+      "Тестовый режим: откройте письмо по ссылке ниже. В рабочем режиме письмо приходит на ваш адрес.",
     preview: "Открыть тестовое письмо",
     resend: "Отправить письмо ещё раз",
-    resent: "Новое письмо с подтверждением запрошено.",
+    resent:
+      "Запрос обработан. Если аккаунту ещё требуется подтверждение и отправка будет успешной, придёт новое письмо.",
     later: "Перейти на сайт",
-    note: "Доступ ко всем функциям заблокирован до подтверждения почты: бонусы, кэшбэк, форум, магазин.",
-    restrictedAccess: "Пока ваша почта не подтверждена, вы не сможете открыть бонусы, форум, магазин или полный профиль. Подтвердите почту выше.",
+    note:
+      "Бонусы, кэшбэк, форум, магазин и полный профиль недоступны до подтверждения почты.",
+    waiting: "Подождите...",
   },
 };
 
-export default function Register({ lang, onLangChange }: { lang: string; onLangChange: (lang: string) => void }) {
-  const { register, resendVerification } = useAuth();
-  const navigate = useNavigate();
+export default function Register({
+  lang,
+}: {
+  lang: string;
+  onLangChange: (lang: string) => void;
+}) {
+  const {
+    register,
+    resendVerification,
+    user,
+    loading: authLoading,
+  } = useAuth();
 
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const navigate = useNavigate();
+  const [pending, setPending] =
+    useState<PendingVerification | null>(readPendingVerification);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<RegisterResult | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
 
-  const t = translations[lang as keyof typeof translations] ?? translations.EN;
-  const v = lang.toLowerCase() === "ru" ? verifyText.ru : verifyText.en;
+  const language = lang.toUpperCase();
+  const t =
+    translations[language as keyof typeof translations] ??
+    translations.EN;
+  const v =
+    language === "RU" ? verifyText.ru : verifyText.en;
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newEmail = e.target.value;
-    setForm({ ...form, email: newEmail });
+  // Данные текущего аккаунта имеют приоритет над сохранённым адресом.
+  const verification: PendingVerification | null =
+    user && !user.email_verified
+      ? pending?.email === user.email
+        ? pending
+        : { email: user.email }
+      : pending;
 
-    if (newEmail.trim()) {
-      setEmailError(validateEmail(newEmail).error || "");
-    } else {
-      setEmailError("");
-    }
+  const handleEmailChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const email = e.target.value;
+    setForm((previous) => ({ ...previous, email }));
+    setEmailError(
+      email.trim() ? validateEmail(email).error || "" : ""
+    );
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setResendMessage("");
 
     if (!termsAccepted) {
-      setError(t.mustAcceptTerms || "You must accept the terms and conditions to register");
+      setError(t.mustAcceptTerms);
       return;
     }
 
-    const emailValidation = validateEmail(form.email);
-    if (!emailValidation.valid) {
-      setEmailError(emailValidation.error || "Invalid email");
-      setError(emailValidation.error || "Email validation failed");
+    const validation = validateEmail(form.email);
+
+    if (!validation.valid) {
+      setEmailError(validation.error || "Invalid email");
       return;
     }
 
-    setError("");
-    setEmailError("");
-    setLoading(true);
+    setBusy(true);
 
     try {
-      const registerResult = await register(form);
-      setResult(registerResult);
-      setPreviewUrl(registerResult.preview_url ?? null);
+      const result = await register({
+        name: form.name.trim(),
+        email: form.email.trim().toLowerCase(),
+        password: form.password,
+      });
+
+      const next: PendingVerification = {
+        email: form.email.trim().toLowerCase(),
+        ...result,
+      };
+
+      savePendingVerification(next);
+      setPending(next);
+
+      // Пароль не сохраняем ни в sessionStorage, ни в localStorage.
+      setForm((previous) => ({ ...previous, password: "" }));
     } catch (err) {
-      setError(err instanceof Error ? err.message : t.loginRegister);
+      setError(
+        err instanceof Error ? err.message : t.loginRegister
+      );
     } finally {
-      setLoading(false);
+      setBusy(false);
     }
   };
 
   const handleResend = async () => {
+    if (!verification?.email || busy) return;
+
+    setError("");
     setResendMessage("");
-    setLoading(true);
+    setBusy(true);
+
     try {
-      const resendResult = await resendVerification(form.email);
-      setPreviewUrl(resendResult.preview_url ?? null);
+      const result = await resendVerification(verification.email);
+      const next: PendingVerification = {
+        email: verification.email,
+        // API повторной отправки не гарантирует доставку письма.
+        verification_email_sent: undefined,
+        preview_url: result.preview_url ?? null,
+      };
+
+      savePendingVerification(next);
+      setPending(next);
       setResendMessage(v.resent);
     } catch (err) {
-      setResendMessage(err instanceof Error ? err.message : "Error");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Could not resend verification email"
+      );
     } finally {
-      setLoading(false);
+      setBusy(false);
     }
   };
 
-  const isFormValid =
-    form.name.trim() &&
-    form.email.trim() &&
-    form.password.trim() &&
-    termsAccepted &&
-    validateEmail(form.email).valid;
+  const isFormValid = Boolean(
+    form.name.trim().length >= 2 &&
+      form.password.length >= 3 &&
+      termsAccepted &&
+      validateEmail(form.email).valid
+  );
 
   const inputStyle: React.CSSProperties = {
     padding: "12px",
@@ -120,88 +233,176 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
     boxSizing: "border-box",
   };
 
+  const buttonStyle: React.CSSProperties = {
+    padding: "12px",
+    borderRadius: "6px",
+    border: "none",
+    background: "#0d6efd",
+    color: "#fff",
+    cursor: busy ? "not-allowed" : "pointer",
+    fontSize: "15px",
+  };
+
+  if (authLoading) {
+    return <p role="status">{v.waiting}</p>;
+  }
+
+  if (user?.email_verified) {
+    return <Navigate to="/profile" replace />;
+  }
+
   return (
-    <div style={{ minHeight: "calc(100vh - 72px)", background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 24px", display: "flex", justifyContent: "center", gap: "80px", alignItems: "flex-start" }}>
-        <div style={{ flex: 1, maxWidth: "480px", minWidth: "300px" }}>
-          <Link to="/" style={{ color: "#0d6efd", textDecoration: "none", marginBottom: "24px", display: "inline-block", fontSize: "14px" }}>
-            ← {t.backToHome}
+    <div
+      style={{
+        minHeight: "calc(100vh - 72px)",
+        background:
+          "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "40px 24px",
+          display: "flex",
+          justifyContent: "center",
+          gap: "80px",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ flex: 1, maxWidth: "480px", minWidth: "280px" }}>
+          <Link
+            to="/"
+            style={{
+              color: "#0d6efd",
+              textDecoration: "none",
+              marginBottom: "24px",
+              display: "inline-block",
+            }}
+          >
+            {t.backToHome}
           </Link>
 
-          <div style={{ backgroundColor: "white", padding: "32px", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
-            <Link to="/" style={{ display: "inline-block", marginBottom: "24px", textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
-                <ForumLogo size={32} />
-                <h1 style={{ margin: 0, fontSize: "24px", color: "#000" }}>
-                  {result ? v.title : t.register}
-                </h1>
-              </div>
-            </Link>
+          <div
+            style={{
+              background: "#fff",
+              padding: "32px",
+              borderRadius: "12px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                marginBottom: "24px",
+              }}
+            >
+              <ForumLogo size={32} />
+              <h1 style={{ margin: 0, fontSize: "24px" }}>
+                {verification ? v.title : t.register}
+              </h1>
+            </div>
 
-            {result ? (
-              <div role="status" style={{ display: "grid", gap: "14px", color: "#333", fontSize: "14px", lineHeight: 1.5 }}>
-                {result.verification_email_sent ? (
-                  <p style={{ margin: 0 }}>
-                    {v.sent} <strong>{form.email}</strong>.
-                  </p>
+            {error && (
+              <p role="alert" style={{ color: "#b42318" }}>
+                {error}
+              </p>
+            )}
+
+            {verification ? (
+              <div
+                style={{
+                  display: "grid",
+                  gap: "14px",
+                  color: "#333",
+                  lineHeight: 1.5,
+                }}
+              >
+                {verification.verification_email_sent === false ? (
+                  <>
+                    <p style={{ margin: 0 }}>{v.notSent}</p>
+                    <strong>{verification.email}</strong>
+                  </>
                 ) : (
-                  <p style={{ margin: 0, color: "#b42318" }}>{v.notSent}</p>
+                  <p style={{ margin: 0 }}>
+                    {verification.verification_email_sent === true
+                      ? v.sent
+                      : v.pending}{" "}
+                    <strong>{verification.email}</strong>
+                  </p>
                 )}
 
-                {previewUrl && (
+                {verification.preview_url && (
                   <>
-                    <p style={{ margin: 0, color: "#666" }}>{v.demo}</p>
+                    <p style={{ margin: 0 }}>{v.demo}</p>
                     <a
-                      href={previewUrl}
+                      href={verification.preview_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: "#0d6efd", fontWeight: 600 }}
+                      style={{ color: "#0d6efd" }}
                     >
-                      {v.preview} ↗
+                      {v.preview}
                     </a>
                   </>
                 )}
 
-                <p style={{ margin: 0, color: "#666" }}>{v.note}</p>
+                <p style={{ margin: 0 }}>{v.note}</p>
 
-                {resendMessage && <p style={{ margin: 0 }}>{resendMessage}</p>}
+                {resendMessage && (
+                  <p role="status" style={{ margin: 0 }}>
+                    {resendMessage}
+                  </p>
+                )}
 
                 <button
                   type="button"
                   onClick={handleResend}
-                  disabled={loading}
-                  style={{ padding: "12px", borderRadius: "6px", border: "1px solid #0d6efd", background: "#fff", color: "#0d6efd", cursor: loading ? "not-allowed" : "pointer", fontSize: "15px" }}
+                  disabled={busy}
+                  style={buttonStyle}
                 >
-                  {v.resend}
+                  {busy ? v.waiting : v.resend}
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => navigate("/", { replace: true })}
-                  style={{ padding: "12px", borderRadius: "6px", border: "none", background: "#0d6efd", color: "#fff", cursor: "pointer", fontSize: "15px" }}
+                  onClick={() => navigate("/")}
+                  style={{
+                    ...buttonStyle,
+                    background: "#fff",
+                    color: "#0d6efd",
+                    border: "1px solid #0d6efd",
+                  }}
                 >
                   {v.later}
                 </button>
+
+                <Link to="/login" style={{ color: "#0d6efd" }}>
+                  {t.haveAccount} {t.login}
+                </Link>
               </div>
             ) : (
               <>
-                {error && (
-                  <div style={{ backgroundColor: "#fee", color: "#c33", padding: "12px", borderRadius: "8px", marginBottom: "16px", border: "1px solid #fcc" }}>
-                    {error}
-                  </div>
-                )}
-
-                <form onSubmit={submit} style={{ display: "grid", gap: "12px" }}>
+                <form
+                  onSubmit={submit}
+                  style={{ display: "grid", gap: "12px" }}
+                >
                   <input
                     id="name"
                     name="name"
                     type="text"
+                    aria-label={t.name}
                     placeholder={t.name}
                     value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, name: e.target.value })
+                    }
                     required
+                    minLength={2}
                     autoComplete="name"
-                    disabled={loading}
+                    disabled={busy}
                     style={inputStyle}
                   />
 
@@ -210,22 +411,25 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
                       id="email"
                       name="email"
                       type="email"
+                      aria-label={t.email}
                       placeholder={t.email}
                       value={form.email}
                       onChange={handleEmailChange}
                       required
                       autoComplete="email"
-                      disabled={loading}
-                      aria-invalid={emailError ? "true" : "false"}
-                      aria-describedby={emailError ? "email-error" : undefined}
-                      style={{
-                        ...inputStyle,
-                        border: emailError ? "1px solid #dc3545" : "1px solid #ddd",
-                        backgroundColor: emailError ? "#ffe6e6" : "#fff",
-                      }}
+                      disabled={busy}
+                      aria-invalid={Boolean(emailError)}
+                      aria-describedby={
+                        emailError ? "email-error" : undefined
+                      }
+                      style={inputStyle}
                     />
                     {emailError && (
-                      <p id="email-error" role="alert" style={{ color: "#dc3545", fontSize: "12px", margin: "6px 0 0" }}>
+                      <p
+                        id="email-error"
+                        role="alert"
+                        style={{ color: "#b42318", fontSize: "12px" }}
+                      >
                         {emailError}
                       </p>
                     )}
@@ -235,67 +439,77 @@ export default function Register({ lang, onLangChange }: { lang: string; onLangC
                     id="password"
                     name="password"
                     type="password"
+                    aria-label={t.password}
                     placeholder={t.minPassword}
                     value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, password: e.target.value })
+                    }
                     required
+                    minLength={3}
                     autoComplete="new-password"
-                    disabled={loading}
+                    disabled={busy}
                     style={inputStyle}
                   />
 
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginTop: "8px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "10px",
+                    }}
+                  >
                     <input
                       id="terms"
                       type="checkbox"
                       checked={termsAccepted}
-                      onChange={(e) => setTermsAccepted(e.target.checked)}
-                      disabled={loading}
-                      style={{ marginTop: "4px", cursor: "pointer", width: "18px", height: "18px" }}
+                      onChange={(e) =>
+                        setTermsAccepted(e.target.checked)
+                      }
+                      disabled={busy}
                     />
-                    <label htmlFor="terms" style={{ fontSize: "13px", color: "#333", cursor: "pointer", lineHeight: "1.4" }}>
-                      {t.agreeTerms || "I agree to the"}{" "}
-                      <Link to="/terms" target="_blank" style={{ color: "#0d6efd", textDecoration: "none" }}>
-                        {t.termsAndConditions || "Terms and Conditions"}
+                    <label htmlFor="terms" style={{ fontSize: "13px" }}>
+                      {t.agreeTerms}{" "}
+                      <Link
+                        to="/terms"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t.termsAndConditions}
                       </Link>{" "}
-                      {t.and || "and"}{" "}
-                      <Link to="/contacts" target="_blank" style={{ color: "#0d6efd", textDecoration: "none" }}>
-                        {t.privacyPolicy || "Privacy Policy"}
+                      {t.and}{" "}
+                      <Link
+                        to="/contacts"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t.privacyPolicy}
                       </Link>
                     </label>
                   </div>
 
                   <button
                     type="submit"
-                    disabled={loading || !isFormValid}
+                    disabled={busy || !isFormValid}
                     style={{
-                      padding: "12px",
-                      backgroundColor: isFormValid ? "#0d6efd" : "#ccc",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: isFormValid && !loading ? "pointer" : "not-allowed",
-                      fontSize: "16px",
-                      fontWeight: 500,
-                      marginTop: "8px",
+                      ...buttonStyle,
+                      opacity: busy || !isFormValid ? 0.6 : 1,
                     }}
                   >
-                    {loading ? t.creating : t.register}
+                    {busy ? t.creating : t.register}
                   </button>
                 </form>
 
-                <p style={{ marginTop: "24px", textAlign: "center", color: "#666" }}>
+                <p style={{ marginTop: "24px", textAlign: "center" }}>
                   {t.haveAccount}{" "}
-                  <Link to="/login" style={{ color: "#0d6efd", textDecoration: "none", fontWeight: 600 }}>
-                    {t.login}
-                  </Link>
+                  <Link to="/login">{t.login}</Link>
                 </p>
               </>
             )}
           </div>
         </div>
 
-        <div style={{ flex: 1, maxWidth: "420px", minWidth: "300px" }}>
+        <div style={{ flex: 1, maxWidth: "420px", minWidth: "280px" }}>
           <MoneyTree />
         </div>
       </div>
