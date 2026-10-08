@@ -27,6 +27,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import Shop from "./pages/Shop";
+import PartnerNotConnected from "./pages/PartnerNotConnected";
 
 // Временная заглушка. Замени на свой реальный компонент Dashboard, когда добавишь его файл.
 function DashboardPlaceholder() {
@@ -86,6 +87,9 @@ export function AppRoutes() {
           <Route path="ads" element={<BonusAds />} />
           <Route path="research" element={<BonusResearch />} />
         </Route>
+
+        {/* Страница неподключенного партнера */}
+        <Route path="/partner-not-connected" element={<PartnerNotConnected />} />
 
         {/* Fallback */}
         <Route path="*" element={<Welcome lang={L} />} />
