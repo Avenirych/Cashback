@@ -22,6 +22,9 @@ dist/
 out/
 build/
 
+# Uploaded forum avatars
+/public/avatars/
+
 # TypeScript
 *.tsbuildinfo
 
