@@ -3,31 +3,78 @@ import { Link, useNavigate } from "react-router-dom";
 import Coint1 from "../assets/Coint1.png";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
+import { forumAvatarUrl } from "../forum";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const labels: Record<string, Record<string, string>> = {
-  en: { about: "About us", how: "How it works", forum: "Forum", login: "Login / Register", profile: "Profile", logout: "Logout" },
-  ru: { about: "О нас", how: "Как это работает", forum: "Форум", login: "Вход / Регистрация", profile: "Профиль", logout: "Выйти" },
-  de: { about: "Über uns", how: "So funktioniert's", forum: "Forum", login: "Anmelden / Registrieren", profile: "Profil", logout: "Abmelden" },
-  fr: { about: "À propos", how: "Comment ça marche", forum: "Forum", login: "Connexion / Inscription", profile: "Profil", logout: "Déconnexion" },
+  en: {
+    about: "About us",
+    how: "How it works",
+    forum: "Forum",
+    login: "Login / Register",
+    profile: "Profile",
+    logout: "Logout",
+  },
+  ru: {
+    about: "О нас",
+    how: "Как это работает",
+    forum: "Форум",
+    login: "Вход / Регистрация",
+    profile: "Профиль",
+    logout: "Выйти",
+  },
+  de: {
+    about: "Über uns",
+    how: "So funktioniert's",
+    forum: "Forum",
+    login: "Anmelden / Registrieren",
+    profile: "Profil",
+    logout: "Abmelden",
+  },
+  fr: {
+    about: "À propos",
+    how: "Comment ça marche",
+    forum: "Forum",
+    login: "Connexion / Inscription",
+    profile: "Profil",
+    logout: "Déconnexion",
+  },
 };
 
 export default function Header() {
-  const { user, logout } = useAuth();
+  const { user, forumUser, logout } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
+
   const [menuOpen, setMenuOpen] = useState(false);
-  const t = labels[lang] ?? labels.en;
+  const [failedAvatar, setFailedAvatar] = useState<string | null>(null);
+
+  const t = labels[lang.toLowerCase()] ?? labels.en;
+
+  // Аватар форума имеет приоритет над аватаром основного профиля.
+  // Относительный путь /avatars/... преобразуется в адрес backend.
+  const avatar = forumAvatarUrl(
+    forumUser?.avatar_url || user?.avatar_url
+  );
+
+  const showAvatar = Boolean(avatar && avatar !== failedAvatar);
+
+  const initials =
+    (user?.name || "U")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => Array.from(part)[0] || "")
+      .join("")
+      .toUpperCase() || "U";
 
   const handleLogout = () => {
     logout();
     setMenuOpen(false);
+    setFailedAvatar(null);
     navigate("/");
   };
-
-  const avatar =
-    user?.avatar_url ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "U")}&background=0d6efd&color=fff`;
 
   return (
     <header
@@ -43,29 +90,68 @@ export default function Header() {
       }}
     >
       {/* LOGO */}
-      <Link to="/" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}>
+      <Link
+        to="/"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          textDecoration: "none",
+        }}
+      >
         <img
           src={Coint1}
           alt="Cashback+ Logo"
           className="coin-spin"
-          style={{ height: "48px", width: "48px", objectFit: "contain" }}
+          style={{
+            height: "48px",
+            width: "48px",
+            objectFit: "contain",
+          }}
         />
-        <span style={{ fontSize: "22px", fontWeight: 700, color: "var(--text, #000)" }}>Cashback+</span>
+        <span
+          style={{
+            fontSize: "22px",
+            fontWeight: 700,
+            color: "var(--text, #000)",
+          }}
+        >
+          Cashback+
+        </span>
       </Link>
 
       {/* NAVIGATION */}
-      <nav style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-        <Link to="/about" style={navLinkStyle}>{t.about}</Link>
-        <Link to="/services" style={navLinkStyle}>{t.how}</Link>
-        <Link to="/forum" style={navLinkStyle}>{t.forum}</Link>
+      <nav
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "24px",
+        }}
+      >
+        <Link to="/about" style={navLinkStyle}>
+          {t.about}
+        </Link>
+        <Link to="/services" style={navLinkStyle}>
+          {t.how}
+        </Link>
+        <Link to="/forum" style={navLinkStyle}>
+          {t.forum}
+        </Link>
       </nav>
 
       {/* RIGHT PANEL */}
-      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+        }}
+      >
         <LanguageSwitcher />
 
         {!user && (
           <button
+            type="button"
             onClick={() => navigate("/login")}
             style={{
               padding: "10px 18px",
@@ -84,25 +170,65 @@ export default function Header() {
 
         {user && (
           <div style={{ position: "relative" }}>
-            <img
-              src={avatar}
-              alt="avatar"
+            <button
+              type="button"
               title={user.name}
-              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={`${t.profile}: ${user.name}`}
+              aria-expanded={menuOpen}
+              aria-controls={menuOpen ? "header-profile-menu" : undefined}
+              onClick={() => setMenuOpen((previous) => !previous)}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setMenuOpen(false);
+                }
+              }}
               style={{
-                width: "42px",
-                height: "42px",
+                width: "46px",
+                height: "46px",
+                boxSizing: "border-box",
+                padding: 0,
                 borderRadius: "50%",
-                objectFit: "cover",
+                overflow: "hidden",
                 cursor: "pointer",
                 border: "2px solid rgba(255,255,255,0.7)",
+                background: "#0d6efd",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "16px",
+                fontWeight: 700,
+                flexShrink: 0,
               }}
-            />
+            >
+              {showAvatar ? (
+                <img
+                  src={avatar}
+                  alt=""
+                  onError={() => setFailedAvatar(avatar ?? null)}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                <span aria-hidden="true">{initials}</span>
+              )}
+            </button>
+
             {menuOpen && (
               <div
+                id="header-profile-menu"
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    setMenuOpen(false);
+                  }
+                }}
                 style={{
                   position: "absolute",
-                  top: "50px",
+                  top: "54px",
                   right: 0,
                   background: "white",
                   color: "black",
@@ -116,10 +242,39 @@ export default function Header() {
                   zIndex: 100,
                 }}
               >
-                <div style={{ fontWeight: 700 }}>{user.name}</div>
-                <div style={{ fontSize: "12px", color: "#666" }}>{user.email}</div>
-                <Link to="/profile" onClick={() => setMenuOpen(false)} style={menuLinkStyle}>{t.profile}</Link>
-                <button onClick={handleLogout} style={{ ...menuLinkStyle, background: "none", border: "none", textAlign: "left", cursor: "pointer" }}>
+                <div style={{ fontWeight: 700 }}>
+                  {user.name}
+                </div>
+
+                <div
+                  style={{
+                    fontSize: "12px",
+                    color: "#666",
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {user.email}
+                </div>
+
+                <Link
+                  to="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  style={menuLinkStyle}
+                >
+                  {t.profile}
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  style={{
+                    ...menuLinkStyle,
+                    background: "none",
+                    border: "none",
+                    textAlign: "left",
+                    cursor: "pointer",
+                  }}
+                >
                   {t.logout}
                 </button>
               </div>

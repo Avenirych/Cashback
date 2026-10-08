@@ -65,7 +65,16 @@ export default function Welcome({ lang }: WelcomeProps) {
           <div style={{ display: "flex", gap: "20px" }}>
             <button
               onClick={goToShopping}
-              style={{ padding: "14px 24px", background: "#0078ff", color: "white", borderRadius: "12px", border: "none", cursor: "pointer", fontSize: "16px", fontWeight: 600 }}
+              style={{
+                padding: "14px 24px",
+                background: "#0078ff",
+                color: "white",
+                borderRadius: "12px",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "16px",
+                fontWeight: 600,
+              }}
             >
               {t.goShopping ?? "Go shopping"}
             </button>
@@ -74,14 +83,27 @@ export default function Welcome({ lang }: WelcomeProps) {
               onClick={goToBonuses}
               disabled={loading || (isAuth && !eligible)}
               aria-describedby={isAuth && !eligible ? "bonus-onboarding-help" : undefined}
-              style={{ padding: "14px 24px", background: "#ff3b3b", color: "white", borderRadius: "12px", border: "none", cursor: isAuth && !eligible ? "not-allowed" : "pointer", opacity: isAuth && !eligible ? 0.6 : 1, fontSize: "16px", fontWeight: 600 }}
+              style={{
+                padding: "14px 24px",
+                background: "#ff3b3b",
+                color: "white",
+                borderRadius: "12px",
+                border: "none",
+                cursor: isAuth && !eligible ? "not-allowed" : "pointer",
+                opacity: isAuth && !eligible ? 0.6 : 1,
+                fontSize: "16px",
+                fontWeight: 600,
+              }}
             >
               {t.getBonuses ?? "Get bonuses"}
             </button>
           </div>
+
           {isAuth && !eligible && (
             <>
-              <p id="bonus-onboarding-help" role="status">{onboarding.explanation}</p>
+              <p id="bonus-onboarding-help" role="status">
+                {onboarding.explanation}
+              </p>
               <Link to="/profile">{onboarding.profile}</Link>
             </>
           )}
@@ -97,7 +119,12 @@ export default function Welcome({ lang }: WelcomeProps) {
           <img
             src="/assets/Oduvanchiki.jpeg"
             alt="Oduvanchiki"
-            style={{ width: "100%", borderRadius: "20px", boxShadow: "0 12px 32px rgba(0,0,0,0.15)", objectFit: "cover" }}
+            style={{
+              width: "100%",
+              borderRadius: "20px",
+              boxShadow: "0 12px 32px rgba(0,0,0,0.15)",
+              objectFit: "cover",
+            }}
           />
 
           <div
