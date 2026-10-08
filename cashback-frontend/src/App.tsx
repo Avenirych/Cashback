@@ -28,6 +28,16 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import Shop from "./pages/Shop";
 
+// Временная заглушка. Замени на свой реальный компонент Dashboard, когда добавишь его файл.
+function DashboardPlaceholder() {
+  return (
+    <main style={{ padding: "24px", maxWidth: "960px", margin: "0 auto" }}>
+      <h1>Dashboard</h1>
+      <p>Личный кабинет доступен только после входа и подтверждения email.</p>
+    </main>
+  );
+}
+
 export function AppRoutes() {
   const { lang, setLang } = useLang();
   const L = lang.toUpperCase();
@@ -36,6 +46,7 @@ export function AppRoutes() {
     <>
       <Header />
       <CookieConsent />
+
       <Routes>
         <Route path="/" element={<Welcome lang={L} />} />
         <Route path="/welcome" element={<Welcome lang={L} />} />
@@ -50,12 +61,15 @@ export function AppRoutes() {
         <Route path="/register" element={<Register lang={L} onLangChange={setLang} />} />
         <Route path="/verify-email" element={<VerifyEmail lang={L} />} />
 
-        {/* Защищённые страницы: требуют подтверждения почты */}
+        {/* Защищённые страницы: требуют авторизации и подтверждения почты */}
         <Route element={<ProtectedGuard />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/shop" element={<Shop lang={L} />} />
           <Route path="/forum/register" element={<ForumRegister />} />
+          <Route path="/dashboard" element={<DashboardPlaceholder />} />
         </Route>
+
+        {/* Форум (read-only для верифицированных, write-доступ по правилам ForumGuard) */}
         <Route element={<ForumGuard readOnly />}>
           <Route path="/forum">
             <Route index element={<TopicsPage lang={L} onLangChange={setLang} />} />
@@ -73,27 +87,21 @@ export function AppRoutes() {
           <Route path="research" element={<BonusResearch />} />
         </Route>
 
+        {/* Fallback */}
         <Route path="*" element={<Welcome lang={L} />} />
       </Routes>
     </>
   );
 }
 
-function App() {
+export default function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
+    <BrowserRouter>
+      <LanguageProvider>
+        <AuthProvider>
           <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
-    </LanguageProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </BrowserRouter>
   );
 }
-
-export default App;

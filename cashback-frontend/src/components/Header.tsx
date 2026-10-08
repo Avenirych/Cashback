@@ -13,6 +13,7 @@ const labels: Record<string, Record<string, string>> = {
     forum: "Forum",
     login: "Login / Register",
     profile: "Profile",
+    dashboard: "Dashboard",
     logout: "Logout",
   },
   ru: {
@@ -21,6 +22,7 @@ const labels: Record<string, Record<string, string>> = {
     forum: "Форум",
     login: "Вход / Регистрация",
     profile: "Профиль",
+    dashboard: "Личный кабинет",
     logout: "Выйти",
   },
   de: {
@@ -29,6 +31,7 @@ const labels: Record<string, Record<string, string>> = {
     forum: "Forum",
     login: "Anmelden / Registrieren",
     profile: "Profil",
+    dashboard: "Dashboard",
     logout: "Abmelden",
   },
   fr: {
@@ -37,6 +40,7 @@ const labels: Record<string, Record<string, string>> = {
     forum: "Forum",
     login: "Connexion / Inscription",
     profile: "Profil",
+    dashboard: "Tableau de bord",
     logout: "Déconnexion",
   },
 };
@@ -272,6 +276,14 @@ export default function Header() {
                 >
                   {user.email}
                 </div>
+
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMenuOpen(false)}
+                  style={menuLinkStyle}
+                >
+                  {t.dashboard}
+                </Link>
 
                 <Link
                   to="/profile"
