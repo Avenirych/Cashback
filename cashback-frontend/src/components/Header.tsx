@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Coint1 from "../assets/Coint1.png";
 import { useAuth } from "../context/AuthContext";
@@ -47,12 +47,39 @@ export default function Header() {
   const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
   const [failedAvatar, setFailedAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleOutsidePress = (event: PointerEvent) => {
+      const target = event.target;
+      if (
+        target instanceof Node &&
+        !profileMenuRef.current?.contains(target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsidePress);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsidePress);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [menuOpen]);
 
   const t = labels[lang.toLowerCase()] ?? labels.en;
 
-  // Аватар форума имеет приоритет над аватаром основного профиля.
-  // Относительный путь /avatars/... преобразуется в адрес backend.
   const avatar = forumAvatarUrl(
     forumUser?.avatar_url || user?.avatar_url
   );
@@ -169,7 +196,7 @@ export default function Header() {
         )}
 
         {user && (
-          <div style={{ position: "relative" }}>
+          <div ref={profileMenuRef} style={{ position: "relative" }}>
             <button
               type="button"
               title={user.name}
@@ -177,11 +204,6 @@ export default function Header() {
               aria-expanded={menuOpen}
               aria-controls={menuOpen ? "header-profile-menu" : undefined}
               onClick={() => setMenuOpen((previous) => !previous)}
-              onKeyDown={(event) => {
-                if (event.key === "Escape") {
-                  setMenuOpen(false);
-                }
-              }}
               style={{
                 width: "46px",
                 height: "46px",
@@ -221,11 +243,6 @@ export default function Header() {
             {menuOpen && (
               <div
                 id="header-profile-menu"
-                onKeyDown={(event) => {
-                  if (event.key === "Escape") {
-                    setMenuOpen(false);
-                  }
-                }}
                 style={{
                   position: "absolute",
                   top: "54px",
