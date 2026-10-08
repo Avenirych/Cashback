@@ -20,6 +20,7 @@ import TermsAndConditions from "./pages/TermsAndConditions";
 import Bonuses from "./pages/Bonuses";
 import BonusAds from "./pages/BonusAds";
 import BonusResearch from "./pages/BonusResearch";
+import ResearchDirection from "./pages/ResearchDirection";
 import Profile from "./pages/Profile";
 import TopicsPage from "./pages/TopicsPage";
 import Topic from "./pages/Topic";
@@ -86,6 +87,7 @@ export function AppRoutes() {
           <Route index element={<Bonuses />} />
           <Route path="ads" element={<BonusAds />} />
           <Route path="research" element={<BonusResearch />} />
+          <Route path="research/:directionId" element={<ResearchDirection />} />
         </Route>
 
         {/* Страница неподключенного партнера */}
