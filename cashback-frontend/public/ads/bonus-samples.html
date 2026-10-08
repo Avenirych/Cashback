@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cashback+ bonus ad samples</title>
+  <style>
+    :root {
+      --text: #173a33;
+      --accent: #0d6efd;
+      --gold: #ffd36a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+      background: #f3f5f4;
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.08);
+      padding: 12px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 0 10px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: #173a33;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn:hover { opacity: .92; }
+
+    .banner {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #dce9dc;
+      isolation: isolate;
+    }
+
+    .bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .coin-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: min(2.5vw, 26px);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .coin-wrap {
+      width: min(23vw, 210px);
+      aspect-ratio: 1;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      opacity: 0;
+      transform: translateZ(0) scale(.12);
+    }
+
+    .coin {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      position: relative;
+      will-change: transform;
+    }
+
+    .coin-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      backface-visibility: hidden;
+      border: 1px solid rgba(255,215,140,.45);
+    }
+
+    .coin-face img {
+      width: 115%;
+      height: 115%;
+      margin-left: -7.5%;
+      margin-top: -7.5%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .front { transform: translateZ(4px); }
+    .back { transform: rotateY(180deg) translateZ(4px); }
+
+    .edge {
+      position: absolute;
+      inset: 2%;
+      border-radius: 50%;
+      background: linear-gradient(90deg,#8a5a22,#e9bf72,#8a5a22);
+      transform: translateZ(0);
+      filter: blur(.15px);
+      opacity: .55;
+    }
+
+    .shine {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(120deg,
+        transparent 25%,
+        rgba(255,255,255,.5) 47%,
+        transparent 70%);
+      opacity: 0;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .glow {
+      position: absolute;
+      inset: -12%;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(255,212,112,.52) 0%,
+        rgba(255,212,112,.15) 45%,
+        transparent 70%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .caption {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 6%;
+      text-align: center;
+      z-index: 3;
+      color: #173a33;
+      text-shadow: 0 1px 0 rgba(255,255,255,.35);
+    }
+
+    .brand {
+      margin: 0;
+      font-size: clamp(22px, 3.4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+
+    .sub {
+      margin: 6px 0 0;
+      font-size: clamp(12px, 1.5vw, 20px);
+      font-weight: 600;
+    }
+
+    .bonus {
+      margin-top: 6px;
+      font-size: clamp(12px, 1.4vw, 18px);
+      color: #6d4b10;
+      font-weight: 700;
+    }
+
+    .playing .coin-wrap {
+      animation: appear 5s linear forwards;
+    }
+
+    .playing .coin {
+      animation: spin 5s linear forwards;
+    }
+
+    .playing .shine {
+      animation: shine 5s linear forwards;
+    }
+
+    .playing .glow {
+      animation: glow 5s linear forwards;
+    }
+
+    @keyframes appear {
+      0% { opacity: 0; transform: scale(.12); }
+      20% { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* 1-4 сек крутимся, 4-5 сек останавливаемся лицом */
+    @keyframes spin {
+      0%,20%   { transform: rotateY(0deg); }
+      80%,100% { transform: rotateY(var(--turn, 900deg)); }
+    }
+
+    @keyframes shine {
+      0%,20% { opacity: 0; }
+      35%    { opacity: .55; }
+      50%    { opacity: .12; }
+      65%    { opacity: .55; }
+      80%,100% { opacity: .1; }
+    }
+
+    @keyframes glow {
+      0%,80% { opacity: 0; }
+      92%,100% { opacity: .8; }
+    }
+
+    @media (max-width: 700px) {
+      .coin-wrap { width: min(28vw, 150px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- 1 BONUS -->
+    <section class="card">
+      <div class="row">
+        <div class="title">Образец 1 — 1 монета = 1 бонус</div>
+        <button class="btn" data-replay="sample1">Повторить</button>
+      </div>
+      <div class="banner playing" id="sample1">
+        <img class="bg" src="./background.png" alt="" />
+        <div class="coin-layer">
+          <div class="coin-wrap" style="--turn: 900deg;">
+            <div class="glow"></div>
+            <div class="coin">
+              <div class="edge"></div>
+              <div class="coin-face front">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+              <div class="coin-face back">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <p class="brand">Cashback+</p>
+          <p class="sub">More video, more rewards</p>
+          <div class="bonus">+1 bonus</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 BONUS -->
+    <section class="card">
+      <div class="row">
+        <div class="title">Образец 2 — 2 монеты = 2 бонуса</div>
+        <button class="btn" data-replay="sample2">Повторить</button>
+      </div>
+      <div class="banner playing" id="sample2">
+        <img class="bg" src="./background.png" alt="" />
+        <div class="coin-layer">
+          <div class="coin-wrap" style="--turn: 840deg;">
+            <div class="glow"></div>
+            <div class="coin">
+              <div class="edge"></div>
+              <div class="coin-face front">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+              <div class="coin-face back">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="coin-wrap" style="--turn: 960deg;">
+            <div class="glow"></div>
+            <div class="coin">
+              <div class="edge"></div>
+              <div class="coin-face front">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+              <div class="coin-face back">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <p class="brand">Cashback+</p>
+          <p class="sub">More video, more rewards</p>
+          <div class="bonus">+2 bonuses</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 BONUS -->
+    <section class="card">
+      <div class="row">
+        <div class="title">Образец 3 — 3 монеты = 3 бонуса</div>
+        <button class="btn" data-replay="sample3">Повторить</button>
+      </div>
+      <div class="banner playing" id="sample3">
+        <img class="bg" src="./background.png" alt="" />
+        <div class="coin-layer">
+          <div class="coin-wrap" style="--turn: 780deg;">
+            <div class="glow"></div>
+            <div class="coin">
+              <div class="edge"></div>
+              <div class="coin-face front">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+              <div class="coin-face back">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="coin-wrap" style="--turn: 900deg;">
+            <div class="glow"></div>
+            <div class="coin">
+              <div class="edge"></div>
+              <div class="coin-face front">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+              <div class="coin-face back">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="coin-wrap" style="--turn: 1020deg;">
+            <div class="glow"></div>
+            <div class="coin">
+              <div class="edge"></div>
+              <div class="coin-face front">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+              <div class="coin-face back">
+                <img src="./coin.png" alt="" />
+                <div class="shine"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <p class="brand">Cashback+</p>
+          <p class="sub">More video, more rewards</p>
+          <div class="bonus">+3 bonuses</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function replay(el) {
+      el.classList.remove("playing");
+      void el.offsetWidth;
+      el.classList.add("playing");
+    }
+
+    // Автозапуск при загрузке
+    document.querySelectorAll(".banner").forEach((el) => replay(el));
+
+    // Ручной повтор
+    document.querySelectorAll("[data-replay]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-replay");
+        const target = document.getElementById(id);
+        if (target) replay(target);
+      });
+    });
+  </script>
+</body>
+</html>
