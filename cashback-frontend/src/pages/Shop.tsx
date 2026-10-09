@@ -4,12 +4,13 @@ import "./Shop.css";
 
 type SortMode = "bestPrice" | "bestDiscount" | "bestCashback" | "bestDeal";
 type Seller = "A" | "B" | "C" | "D" | "E";
+type BonusSource = "ads" | "research";
 
 interface ProductItem {
   id: number;
   title: string;
   category: string;
-  seller: Seller; // БЕРЕМ ИЗ ГОТОВЫХ ДАННЫХ
+  seller: Seller;
   basePrice: number;
   discountPercent: number;
   cashbackPercent: number;
@@ -25,6 +26,14 @@ interface ComputedProduct extends ProductItem {
   appliedBonus: number;
   effectivePrice: number;
   dealScore: number;
+}
+
+interface BonusPosition {
+  id: string;
+  source: BonusSource;
+  confirmedAmount: number;
+  expiresAt: string; // DD.MM.YYYY
+  used: boolean; // уже использован в прошлых покупках -> исключаем из таблицы
 }
 
 interface ShopProps {
@@ -72,10 +81,19 @@ function percentileRank(sortedAsc: number[], value: number): number {
   return Math.max(0, Math.min(100, (rank / (sortedAsc.length - 1)) * 100));
 }
 
-/**
- * Демоданные: продавцы A/B/C/D/E уже заданы и используются в карточках.
- * ВАЖНО: seller здесь НЕ генерируется случайно.
- */
+function parseDate(s: string): Date {
+  const [dd, mm, yyyy] = s.split(".").map(Number);
+  return new Date(yyyy, mm - 1, dd);
+}
+
+function isExpired(s: string): boolean {
+  const d = parseDate(s);
+  const today = new Date();
+  const t = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  return x < t;
+}
+
 function buildSeedProducts(count = 100): ProductItem[] {
   const rand = createRandom(20261009);
   const sellers: Seller[] = ["A", "B", "C", "D", "E"];
@@ -83,15 +101,13 @@ function buildSeedProducts(count = 100): ProductItem[] {
   return Array.from({ length: count }, (_, i) => {
     const id = i + 1;
     const category = CATEGORY_OPTIONS[intInRange(rand, 0, CATEGORY_OPTIONS.length - 1)];
-
-    // Равномерно распределяем уже существующих продавцов A/B/C/D/E
     const seller = sellers[i % sellers.length];
 
     return {
       id,
       title: `Sample Product #${id}`,
       category,
-      seller, // <-- здесь фиксированно из готового набора продавцов
+      seller,
       basePrice: intInRange(rand, 100, 200),
       discountPercent: intInRange(rand, 3, 20),
       cashbackPercent: intInRange(rand, 5, 15),
@@ -103,15 +119,34 @@ function buildSeedProducts(count = 100): ProductItem[] {
   });
 }
 
+function buildBonusPool(): BonusPosition[] {
+  // фиктивные подтвержденные бонусы за рекламу/исследования.
+  // часть used=true (уже потрачены) -> исключаются.
+  return [
+    { id: "AD-1001", source: "ads", confirmedAmount: 18, expiresAt: "29.10.2026", used: false },
+    { id: "AD-1002", source: "ads", confirmedAmount: 25, expiresAt: "22.10.2026", used: false },
+    { id: "AD-1003", source: "ads", confirmedAmount: 12, expiresAt: "10.10.2026", used: false },
+    { id: "AD-1004", source: "ads", confirmedAmount: 20, expiresAt: "05.10.2026", used: true }, // used
+    { id: "RS-2001", source: "research", confirmedAmount: 30, expiresAt: "31.10.2026", used: false },
+    { id: "RS-2002", source: "research", confirmedAmount: 16, expiresAt: "19.10.2026", used: false },
+    { id: "RS-2003", source: "research", confirmedAmount: 14, expiresAt: "02.10.2026", used: true }, // used
+    { id: "RS-2004", source: "research", confirmedAmount: 28, expiresAt: "26.10.2026", used: false },
+  ];
+}
+
 export default function Shop({ lang }: ShopProps) {
-  // Здесь уже готовые товары с назначенными продавцами A/B/C/D/E
   const [products] = useState<ProductItem[]>(() => buildSeedProducts(100));
+  const [bonusPool] = useState<BonusPosition[]>(() => buildBonusPool());
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All categories");
   const [query, setQuery] = useState("");
   const [sortMode, setSortMode] = useState<SortMode>("bestDeal");
   const [infoOpen, setInfoOpen] = useState(false);
-  const [bonusInput, setBonusInput] = useState<number>(0);
+
+  // основной источник applied bonus для всей страницы
+  const [selectedBonusIds, setSelectedBonusIds] = useState<string[]>([]);
+  const [bonusModalOpen, setBonusModalOpen] = useState(false);
+
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const t = useMemo(() => {
@@ -135,7 +170,7 @@ export default function Shop({ lang }: ShopProps) {
       basePrice: isRu ? "Базовая цена" : "Base price",
       discount: isRu ? "Скидка" : "Discount",
       cashback: isRu ? "Кэшбэк" : "Cashback",
-      applyBonus: isRu ? "Бонусы" : "Bonuses",
+      applyBonus: isRu ? "Бонусы к применению" : "Bonuses to apply",
       actualCashback: isRu ? "Кэшбэк факт" : "Cashback fact",
       finalAfterReturn: isRu ? "После возврата" : "After return",
       buy: isRu ? "Купить" : "Buy",
@@ -143,11 +178,42 @@ export default function Shop({ lang }: ShopProps) {
       better: isRu ? "лучше среднего" : "above average",
       worse: isRu ? "хуже среднего" : "below average",
       level: isRu ? "уровень" : "level",
-      bonusInputLabel: isRu ? "Бонусов к применению" : "Bonuses to apply",
       detailsOpen: isRu ? "Показать детали" : "Show details",
       detailsClose: isRu ? "Скрыть детали" : "Hide details",
+
+      modalTitle: isRu
+        ? "Доступные подтвержденные бонусы (реклама + исследования)"
+        : "Available confirmed bonuses (ads + research)",
+      source: isRu ? "Источник" : "Source",
+      amount: isRu ? "Количество" : "Amount",
+      expiry: isRu ? "Действует до" : "Expires at",
+      actions: isRu ? "Действия" : "Actions",
+      apply: isRu ? "Применить" : "Apply",
+      cancel: isRu ? "Отменить" : "Cancel",
+      ads: isRu ? "Реклама" : "Ads",
+      research: isRu ? "Исследования" : "Research",
+      emptyBonus: isRu ? "Нет доступных подтвержденных бонусов" : "No available confirmed bonuses",
+      selectedSum: isRu ? "Выбрано бонусов" : "Selected bonus sum",
+      close: isRu ? "Закрыть" : "Close",
     };
   }, [lang]);
+
+  // исключаем used и просроченные
+  const availableBonusRows = useMemo(() => {
+    return bonusPool
+      .filter((b) => !b.used)
+      .filter((b) => !isExpired(b.expiresAt))
+      .sort((a, b) => parseDate(a.expiresAt).getTime() - parseDate(b.expiresAt).getTime());
+  }, [bonusPool]);
+
+  const selectedBonusSumRaw = useMemo(() => {
+    const set = new Set(selectedBonusIds);
+    return round2(
+      availableBonusRows
+        .filter((b) => set.has(b.id))
+        .reduce((acc, b) => acc + b.confirmedAmount, 0)
+    );
+  }, [availableBonusRows, selectedBonusIds]);
 
   const filteredBase = useMemo(() => {
     const categoryValue = selectedCategory === "All categories" ? null : selectedCategory;
@@ -169,10 +235,12 @@ export default function Shop({ lang }: ShopProps) {
     return filteredBase.map((p) => {
       const discounted = round2(p.basePrice * (1 - p.discountPercent / 100));
       const cashbackAmount = round2(discounted * (p.cashbackPercent / 100));
-      const maxBonusAllowedByRule = Math.max(0, Math.floor(discounted - cashbackAmount));
-      const appliedBonus = Math.min(bonusInput, USER_BONUS_BALANCE, maxBonusAllowedByRule);
-      const effectivePrice = round2(discounted - cashbackAmount - appliedBonus);
 
+      // ключевое ограничение: bonus + cashback <= discounted price
+      const maxBonusAllowedByRule = Math.max(0, Math.floor(discounted - cashbackAmount));
+      const appliedBonus = Math.min(selectedBonusSumRaw, USER_BONUS_BALANCE, maxBonusAllowedByRule);
+
+      const effectivePrice = round2(discounted - cashbackAmount - appliedBonus);
       const dealScore = effectivePrice - p.discountPercent * 0.6 - p.cashbackPercent * 0.8;
 
       return {
@@ -184,7 +252,7 @@ export default function Shop({ lang }: ShopProps) {
         dealScore,
       };
     });
-  }, [filteredBase, bonusInput]);
+  }, [filteredBase, selectedBonusSumRaw]);
 
   const averages = useMemo(() => {
     if (computed.length === 0) return { price: 0, discount: 0, cashback: 0, deal: 0 };
@@ -260,6 +328,15 @@ export default function Shop({ lang }: ShopProps) {
       ? t.sortBestCashback
       : t.sortBestDeal;
 
+  const toggleBonus = (id: string, on: boolean) => {
+    setSelectedBonusIds((prev) => {
+      const set = new Set(prev);
+      if (on) set.add(id);
+      else set.delete(id);
+      return Array.from(set);
+    });
+  };
+
   return (
     <main className="shop-page">
       <section className="shop-container">
@@ -299,14 +376,15 @@ export default function Shop({ lang }: ShopProps) {
           </div>
 
           <div className="shop-control">
-            <label>{t.bonusInputLabel}</label>
-            <input
-              type="number"
-              min={0}
-              max={USER_BONUS_BALANCE}
-              value={bonusInput}
-              onChange={(e) => setBonusInput(Number(e.target.value || 0))}
-            />
+            <label>{t.applyBonus}</label>
+            <button
+              type="button"
+              className="bonus-input-like"
+              onClick={() => setBonusModalOpen(true)}
+              title={t.modalTitle}
+            >
+              {selectedBonusSumRaw} GBP
+            </button>
           </div>
 
           <div className="shop-control shop-search">
@@ -329,6 +407,72 @@ export default function Shop({ lang }: ShopProps) {
             </select>
           </div>
         </section>
+
+        {bonusModalOpen && (
+          <div className="shop-modal-overlay" onClick={() => setBonusModalOpen(false)}>
+            <div className="shop-modal bonus-modal-wide" onClick={(e) => e.stopPropagation()}>
+              <h2>{t.modalTitle}</h2>
+
+              {availableBonusRows.length === 0 ? (
+                <p>{t.emptyBonus}</p>
+              ) : (
+                <div className="bonus-table-wrap">
+                  <table className="bonus-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>{t.source}</th>
+                        <th>{t.amount}</th>
+                        <th>{t.expiry}</th>
+                        <th>{t.actions}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {availableBonusRows.map((row) => {
+                        const selected = selectedBonusIds.includes(row.id);
+                        return (
+                          <tr key={row.id}>
+                            <td>{row.id}</td>
+                            <td>{row.source === "ads" ? t.ads : t.research}</td>
+                            <td>{row.confirmedAmount} GBP</td>
+                            <td>{row.expiresAt}</td>
+                            <td className="bonus-actions-cell">
+                              <button
+                                type="button"
+                                className="mini-btn apply"
+                                onClick={() => toggleBonus(row.id, true)}
+                                disabled={selected}
+                              >
+                                {t.apply}
+                              </button>
+                              <button
+                                type="button"
+                                className="mini-btn cancel"
+                                onClick={() => toggleBonus(row.id, false)}
+                                disabled={!selected}
+                              >
+                                {t.cancel}
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              <div className="bonus-modal-footer">
+                <div>
+                  {t.selectedSum}: <strong>{selectedBonusSumRaw} GBP</strong>
+                </div>
+                <button type="button" className="shop-bonus-btn" onClick={() => setBonusModalOpen(false)}>
+                  {t.close}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {sorted.length === 0 ? (
           <p className="shop-empty">{t.noResults}</p>
