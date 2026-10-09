@@ -1,0 +1,87 @@
+.forum-bonus-page {
+  min-height: calc(100vh - 72px);
+  background: linear-gradient(to bottom, #f5e8d3, #e3d2b8);
+  padding: 16px 10px 24px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+.forum-bonus-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.panel {
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.panel h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+.muted {
+  margin: 0 0 8px;
+  color: #556;
+  font-size: 13px;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+.bonus-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+.bonus-table th,
+.bonus-table td {
+  border-bottom: 1px solid #e8eef3;
+  text-align: left;
+  padding: 8px;
+  font-size: 13px;
+}
+.bonus-table th {
+  background: #eef6ff;
+}
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+.btn-mini {
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-mini.apply {
+  background: #dff7ea;
+  color: #0f6e45;
+}
+.btn-mini.cancel {
+  background: #ffe8e8;
+  color: #9f2222;
+}
+.selected-row {
+  margin-top: 8px;
+}
+.share-row {
+  display: flex;
+  gap: 8px;
+}
+.share-row input {
+  flex: 1;
+  height: 36px;
+  border: 1px solid #d1d9de;
+  border-radius: 8px;
+  padding: 0 10px;
+}
+.btn-share {
+  border: 0;
+  background: #173a33;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0 14px;
+  font-weight: 700;
+  cursor: pointer;
+  height: 36px;
+}
