@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import ProductOffers from "./pages/ProductOffers";
 import { AuthProvider } from "./context/AuthContext";
 import { LanguageProvider, useLang } from "./context/LanguageContext";
 
@@ -51,6 +51,7 @@ export function AppRoutes() {
 
       <Routes>
         <Route path="/" element={<Welcome lang={L} />} />
+        <Route path="/product-offers" element={<ProductOffers />} />
         <Route path="/welcome" element={<Welcome lang={L} />} />
 
         <Route path="/about" element={<AboutUs lang={lang} />} />
