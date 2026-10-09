@@ -29,16 +29,7 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import Shop from "./pages/Shop";
 import PartnerNotConnected from "./pages/PartnerNotConnected";
-
-// Временная заглушка. Замени на свой реальный компонент Dashboard, когда добавишь его файл.
-function DashboardPlaceholder() {
-  return (
-    <main style={{ padding: "24px", maxWidth: "960px", margin: "0 auto" }}>
-      <h1>Dashboard</h1>
-      <p>Личный кабинет доступен только после входа и подтверждения email.</p>
-    </main>
-  );
-}
+import Dashboard from "./pages/Dashboard";
 
 export function AppRoutes() {
   const { lang, setLang } = useLang();
@@ -69,10 +60,10 @@ export function AppRoutes() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/shop" element={<Shop lang={L} />} />
           <Route path="/forum/register" element={<ForumRegister />} />
-          <Route path="/dashboard" element={<DashboardPlaceholder />} />
+          <Route path="/dashboard" element={<Dashboard lang={L} />} />
         </Route>
 
-        {/* Форум (read-only для верифицированных, write-доступ по правилам ForumGuard) */}
+        {/* Форум */}
         <Route element={<ForumGuard readOnly />}>
           <Route path="/forum">
             <Route index element={<TopicsPage lang={L} onLangChange={setLang} />} />
@@ -83,7 +74,7 @@ export function AppRoutes() {
           <Route path="/topic/:id" element={<Topic lang={L} onLangChange={setLang} />} />
         </Route>
 
-        {/* Бонусы: дополнительная проверка onboarding */}
+        {/* Бонусы */}
         <Route path="/bonuses" element={<BonusGuard />}>
           <Route index element={<Bonuses />} />
           <Route path="ads" element={<BonusAds />} />
@@ -91,10 +82,7 @@ export function AppRoutes() {
           <Route path="research/:directionId" element={<ResearchDirection />} />
         </Route>
 
-        {/* Страница неподключенного партнера */}
         <Route path="/partner-not-connected" element={<PartnerNotConnected />} />
-
-        {/* Fallback */}
         <Route path="*" element={<Welcome lang={L} />} />
       </Routes>
     </>
