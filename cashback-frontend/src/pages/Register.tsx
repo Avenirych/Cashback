@@ -1,15 +1,65 @@
-import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useAuth, RegisterResult } from "../context/AuthContext";
+import React, { useEffect, useState } from "react";
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import type { RegisterResult } from "../context/AuthContext";
 import ForumLogo from "../components/ForumLogo";
 import MoneyTree from "../components/MoneyTree";
 import { translations } from "../i18n";
 import { validateEmail } from "../utils/emailValidator";
 
 const PENDING_VERIFICATION_KEY = "cashback_pending_verification";
+const RETURN_PATH_KEY = "cashback_post_auth_next";
 
 interface PendingVerification extends RegisterResult {
   email: string;
+}
+
+/**
+ * Разрешаем возвращаться только в разделы магазина и бонусов.
+ * Внешние адреса и произвольные маршруты не принимаем.
+ */
+function safeReturnPath(value: string | null): string | null {
+  if (
+    !value ||
+    !value.startsWith("/") ||
+    value.startsWith("//") ||
+    value.includes("\\") ||
+    /[\u0000-\u001f\u007f]/.test(value)
+  ) {
+    return null;
+  }
+
+  try {
+    const url = new URL(value, window.location.origin);
+
+    if (url.origin !== window.location.origin) {
+      return null;
+    }
+
+    const allowed =
+      url.pathname === "/shop" ||
+      url.pathname === "/bonuses" ||
+      url.pathname.startsWith("/bonuses/");
+
+    if (!allowed) return null;
+
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return null;
+  }
+}
+
+function readSavedReturnPath(): string | null {
+  try {
+    return safeReturnPath(sessionStorage.getItem(RETURN_PATH_KEY));
+  } catch {
+    return null;
+  }
 }
 
 function readPendingVerification(): PendingVerification | null {
@@ -20,6 +70,7 @@ function readPendingVerification(): PendingVerification | null {
     const data = JSON.parse(raw);
 
     if (
+      !data ||
       typeof data.email !== "string" ||
       !validateEmail(data.email).valid
     ) {
@@ -66,9 +117,9 @@ const verifyText = {
     resend: "Send the email again",
     resent:
       "Request processed. If this account still needs verification and delivery succeeds, a new email will arrive.",
-    later: "Continue to the site",
+    later: "Continue browsing",
     note:
-      "Bonuses, cashback, forum, shop and full profile remain unavailable until email verification.",
+      "You can browse public pages. Purchases, bonus actions and other protected features require email verification.",
     waiting: "Please wait...",
   },
   ru: {
@@ -83,9 +134,9 @@ const verifyText = {
     resend: "Отправить письмо ещё раз",
     resent:
       "Запрос обработан. Если аккаунту ещё требуется подтверждение и отправка будет успешной, придёт новое письмо.",
-    later: "Перейти на сайт",
+    later: "Продолжить просмотр",
     note:
-      "Бонусы, кэшбэк, форум, магазин и полный профиль недоступны до подтверждения почты.",
+      "Можно просматривать открытые страницы. Покупки, действия с бонусами и другие защищённые функции требуют подтверждения почты.",
     waiting: "Подождите...",
   },
 };
@@ -104,13 +155,32 @@ export default function Register({
   } = useAuth();
 
   const navigate = useNavigate();
-  const [pending, setPending] =
-    useState<PendingVerification | null>(readPendingVerification);
+  const location = useLocation();
+
+  const requestedReturnPath = safeReturnPath(
+    new URLSearchParams(location.search).get("next")
+  );
+
+  const [savedReturnPath] = useState(readSavedReturnPath);
+
+  const returnPath =
+    requestedReturnPath ?? savedReturnPath ?? "/profile";
+
+  const loginPath =
+    returnPath === "/profile"
+      ? "/login"
+      : `/login?next=${encodeURIComponent(returnPath)}`;
+
+  const [pending, setPending] = useState<PendingVerification | null>(
+    readPendingVerification
+  );
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
   });
+
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -121,10 +191,35 @@ export default function Register({
   const t =
     translations[language as keyof typeof translations] ??
     translations.EN;
-  const v =
-    language === "RU" ? verifyText.ru : verifyText.en;
 
-  // Данные текущего аккаунта имеют приоритет над сохранённым адресом.
+  const v = language === "RU" ? verifyText.ru : verifyText.en;
+
+  useEffect(() => {
+    if (!requestedReturnPath) return;
+
+    try {
+      sessionStorage.setItem(
+        RETURN_PATH_KEY,
+        requestedReturnPath
+      );
+    } catch {
+      // Возврат по query-параметру продолжает работать.
+    }
+  }, [requestedReturnPath]);
+
+  useEffect(() => {
+    if (!user?.email_verified) return;
+
+    try {
+      sessionStorage.removeItem(PENDING_VERIFICATION_KEY);
+      sessionStorage.removeItem(RETURN_PATH_KEY);
+    } catch {
+      // Ошибка хранилища не блокирует переход.
+    }
+  }, [user?.email_verified]);
+
+  // Данные текущего аккаунта имеют приоритет
+  // над сохранённым адресом.
   const verification: PendingVerification | null =
     user && !user.email_verified
       ? pending?.email === user.email
@@ -136,14 +231,19 @@ export default function Register({
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const email = e.target.value;
+
     setForm((previous) => ({ ...previous, email }));
+
     setEmailError(
       email.trim() ? validateEmail(email).error || "" : ""
     );
   };
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (busy) return;
+
     setError("");
     setResendMessage("");
 
@@ -168,16 +268,19 @@ export default function Register({
         password: form.password,
       });
 
-      const next: PendingVerification = {
-        email: form.email.trim().toLowerCase(),
+      const pendingVerification: PendingVerification = {
         ...result,
+        email: form.email.trim().toLowerCase(),
       };
 
-      savePendingVerification(next);
-      setPending(next);
+      savePendingVerification(pendingVerification);
+      setPending(pendingVerification);
 
-      // Пароль не сохраняем ни в sessionStorage, ни в localStorage.
+      // Пароль нигде не сохраняем.
       setForm((previous) => ({ ...previous, password: "" }));
+
+      // Не пропускаем подтверждение почты.
+      // Переход для подтверждённого аккаунта выполняется ниже.
     } catch (err) {
       setError(
         err instanceof Error ? err.message : t.loginRegister
@@ -196,15 +299,15 @@ export default function Register({
 
     try {
       const result = await resendVerification(verification.email);
-      const next: PendingVerification = {
+
+      const pendingVerification: PendingVerification = {
         email: verification.email,
-        // API повторной отправки не гарантирует доставку письма.
         verification_email_sent: undefined,
         preview_url: result.preview_url ?? null,
       };
 
-      savePendingVerification(next);
-      setPending(next);
+      savePendingVerification(pendingVerification);
+      setPending(pendingVerification);
       setResendMessage(v.resent);
     } catch (err) {
       setError(
@@ -248,15 +351,14 @@ export default function Register({
   }
 
   if (user?.email_verified) {
-    return <Navigate to="/profile" replace />;
+    return <Navigate to={returnPath} replace />;
   }
 
   return (
     <div
       style={{
         minHeight: "calc(100vh - 72px)",
-        background:
-          "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
+        background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
       }}
     >
       <div
@@ -271,7 +373,13 @@ export default function Register({
           flexWrap: "wrap",
         }}
       >
-        <div style={{ flex: 1, maxWidth: "480px", minWidth: "280px" }}>
+        <div
+          style={{
+            flex: 1,
+            maxWidth: "480px",
+            minWidth: "280px",
+          }}
+        >
           <Link
             to="/"
             style={{
@@ -368,7 +476,9 @@ export default function Register({
 
                 <button
                   type="button"
-                  onClick={() => navigate("/")}
+                  onClick={() =>
+                    navigate(returnPath === "/profile" ? "/" : returnPath)
+                  }
                   style={{
                     ...buttonStyle,
                     background: "#fff",
@@ -379,7 +489,7 @@ export default function Register({
                   {v.later}
                 </button>
 
-                <Link to="/login" style={{ color: "#0d6efd" }}>
+                <Link to={loginPath} style={{ color: "#0d6efd" }}>
                   {t.haveAccount} {t.login}
                 </Link>
               </div>
@@ -424,11 +534,15 @@ export default function Register({
                       }
                       style={inputStyle}
                     />
+
                     {emailError && (
                       <p
                         id="email-error"
                         role="alert"
-                        style={{ color: "#b42318", fontSize: "12px" }}
+                        style={{
+                          color: "#b42318",
+                          fontSize: "12px",
+                        }}
                       >
                         {emailError}
                       </p>
@@ -468,7 +582,11 @@ export default function Register({
                       }
                       disabled={busy}
                     />
-                    <label htmlFor="terms" style={{ fontSize: "13px" }}>
+
+                    <label
+                      htmlFor="terms"
+                      style={{ fontSize: "13px" }}
+                    >
                       {t.agreeTerms}{" "}
                       <Link
                         to="/terms"
@@ -500,16 +618,27 @@ export default function Register({
                   </button>
                 </form>
 
-                <p style={{ marginTop: "24px", textAlign: "center" }}>
+                <p
+                  style={{
+                    marginTop: "24px",
+                    textAlign: "center",
+                  }}
+                >
                   {t.haveAccount}{" "}
-                  <Link to="/login">{t.login}</Link>
+                  <Link to={loginPath}>{t.login}</Link>
                 </p>
               </>
             )}
           </div>
         </div>
 
-        <div style={{ flex: 1, maxWidth: "420px", minWidth: "280px" }}>
+        <div
+          style={{
+            flex: 1,
+            maxWidth: "420px",
+            minWidth: "280px",
+          }}
+        >
           <MoneyTree />
         </div>
       </div>

@@ -1,34 +1,28 @@
 import React from "react";
 import Footer from "../components/Footer";
-import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { translations } from "../i18n";
-import { getOnboardingMessages, readOnboarding, useOnboarding } from "../onboarding";
 
 interface WelcomeProps {
   lang: string;
 }
 
 export default function Welcome({ lang }: WelcomeProps) {
-  const { user, loading } = useAuth();
-  const { eligible } = useOnboarding();
-  const onboarding = getOnboardingMessages(lang);
-  const isAuth = Boolean(user);
   const navigate = useNavigate();
 
-  const t = (translations as any)[lang?.toUpperCase()] ?? translations.EN;
+  const t =
+    translations[lang.toUpperCase() as keyof typeof translations] ??
+    translations.EN;
 
+  // Просмотр магазина не требует регистрации.
   const goToShopping = () => {
-    if (!isAuth) return navigate("/register");
     navigate("/shop");
   };
 
+  // Просмотр раздела бонусов не требует регистрации.
+  // Проверки авторизации и анкеты должны оставаться
+  // непосредственно при запуске рекламы/исследования.
   const goToBonuses = () => {
-    if (loading) return;
-    if (!isAuth) return navigate("/register");
-    if (!readOnboarding(user?.id).eligible) {
-      return navigate("/profile", { state: { bonusOnboardingRequired: true } });
-    }
     navigate("/bonuses");
   };
 
@@ -54,16 +48,29 @@ export default function Welcome({ lang }: WelcomeProps) {
         }}
       >
         <div style={{ maxWidth: "520px" }}>
-          <h1 style={{ fontSize: "40px", fontWeight: 700, marginBottom: "20px" }}>
+          <h1
+            style={{
+              fontSize: "40px",
+              fontWeight: 700,
+              marginBottom: "20px",
+            }}
+          >
             {t.title ?? "Welcome"}
           </h1>
 
-          <p style={{ fontSize: "18px", lineHeight: 1.6, marginBottom: "30px" }}>
+          <p
+            style={{
+              fontSize: "18px",
+              lineHeight: 1.6,
+              marginBottom: "30px",
+            }}
+          >
             {t.description ?? "Enjoy your visit!"}
           </p>
 
           <div style={{ display: "flex", gap: "20px" }}>
             <button
+              type="button"
               onClick={goToShopping}
               style={{
                 padding: "14px 24px",
@@ -80,17 +87,15 @@ export default function Welcome({ lang }: WelcomeProps) {
             </button>
 
             <button
+              type="button"
               onClick={goToBonuses}
-              disabled={loading || (isAuth && !eligible)}
-              aria-describedby={isAuth && !eligible ? "bonus-onboarding-help" : undefined}
               style={{
                 padding: "14px 24px",
                 background: "#ff3b3b",
                 color: "white",
                 borderRadius: "12px",
                 border: "none",
-                cursor: isAuth && !eligible ? "not-allowed" : "pointer",
-                opacity: isAuth && !eligible ? 0.6 : 1,
+                cursor: "pointer",
                 fontSize: "16px",
                 fontWeight: 600,
               }}
@@ -98,21 +103,6 @@ export default function Welcome({ lang }: WelcomeProps) {
               {t.getBonuses ?? "Get bonuses"}
             </button>
           </div>
-
-          {isAuth && !eligible && (
-            <>
-              <p id="bonus-onboarding-help" role="status">
-                {onboarding.explanation}
-              </p>
-              <Link to="/profile">{onboarding.profile}</Link>
-            </>
-          )}
-
-          {!isAuth && (
-            <p style={{ marginTop: "16px", fontSize: "14px", color: "var(--text-secondary)" }}>
-              {t.needRegister ?? "Please register to continue"}
-            </p>
-          )}
         </div>
 
         <div style={{ maxWidth: "420px", position: "relative" }}>

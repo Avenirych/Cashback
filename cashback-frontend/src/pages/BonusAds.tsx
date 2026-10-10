@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import { useOnboarding } from "../onboarding";
 import "./BonusAds.css";
 
-// Если изображения называются иначе, измени только эти две строки.
 const BACKGROUND_URL = "/ads/background.png";
 const COIN_URL = "/ads/coin.png";
-
 const DURATION_MS = 5000;
 
 type Reward = 1 | 2 | 3;
@@ -15,6 +14,12 @@ type Reward = 1 | 2 | 3;
 interface DailyTotal {
   date: string;
   total: number;
+}
+
+interface AdsViewerProps {
+  userId: number | null;
+  authLoading: boolean;
+  requireAccess: () => boolean;
 }
 
 const messages = {
@@ -29,11 +34,12 @@ const messages = {
     watching: "Просмотр рекламы",
     seconds: "сек.",
     loading: "Загрузка изображений…",
-    imageError: "Не удалось загрузить фон или монету. Проверь пути к изображениям.",
+    waiting: "Подождите…",
+    imageError:
+      "Не удалось загрузить фон или монету. Проверь пути к изображениям.",
     storageError:
       "Дневной результат не удалось сохранить. Он доступен только до ухода со страницы.",
     demo: "Тестовые бонусы. Реальный баланс не изменяется.",
-    access: "Для просмотра войдите, подтвердите email и завершите подключение к программе.",
     brandLine: "More video, more rewards",
   },
   EN: {
@@ -47,11 +53,12 @@ const messages = {
     watching: "Watching advertising",
     seconds: "sec.",
     loading: "Loading images…",
-    imageError: "Could not load the background or coin. Check the image paths.",
+    waiting: "Please wait…",
+    imageError:
+      "Could not load the background or coin. Check the image paths.",
     storageError:
       "Could not save today's total. It is available only until you leave this page.",
     demo: "Test bonuses. Your real balance is not changed.",
-    access: "Sign in, verify your email and complete program enrollment to watch ads.",
     brandLine: "More video, more rewards",
   },
   DE: {
@@ -64,11 +71,12 @@ const messages = {
     watching: "Werbung wird angezeigt",
     seconds: "Sek.",
     loading: "Bilder werden geladen…",
-    imageError: "Hintergrund oder Münze konnte nicht geladen werden. Prüfen Sie die Bildpfade.",
+    waiting: "Bitte warten…",
+    imageError:
+      "Hintergrund oder Münze konnte nicht geladen werden. Prüfen Sie die Bildpfade.",
     storageError:
       "Der Tageswert konnte nicht gespeichert werden. Er bleibt nur bis zum Verlassen der Seite verfügbar.",
     demo: "Testboni. Ihr echtes Guthaben bleibt unverändert.",
-    access: "Melden Sie sich an, bestätigen Sie Ihre E-Mail und schließen Sie die Programmteilnahme ab.",
     brandLine: "More video, more rewards",
   },
   FR: {
@@ -81,19 +89,18 @@ const messages = {
     watching: "Publicité en cours",
     seconds: "s",
     loading: "Chargement des images…",
-    imageError: "Impossible de charger le fond ou la pièce. Vérifiez les chemins des images.",
+    waiting: "Veuillez patienter…",
+    imageError:
+      "Impossible de charger le fond ou la pièce. Vérifiez les chemins des images.",
     storageError:
       "Impossible d’enregistrer le total du jour. Il reste disponible uniquement jusqu’à votre départ de cette page.",
     demo: "Bonus de test. Votre solde réel reste inchangé.",
-    access: "Connectez-vous, confirmez votre e-mail et terminez votre inscription au programme.",
     brandLine: "More video, more rewards",
   },
 };
 
 function getMessages(lang: string) {
-  const key = lang.toUpperCase();
-
-  switch (key) {
+  switch (lang.toUpperCase()) {
     case "RU":
       return messages.RU;
     case "DE":
@@ -105,7 +112,6 @@ function getMessages(lang: string) {
   }
 }
 
-// День определяется по местному времени браузера.
 function localDay(): string {
   const now = new Date();
   const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -118,8 +124,10 @@ function dailyKey(userId: number): string {
   return `cashback_demo_ads_daily:${userId}`;
 }
 
-// null означает недоступное или повреждённое хранилище.
-function readDaily(userId: number, date: string): DailyTotal | null {
+function readDaily(
+  userId: number,
+  date: string
+): DailyTotal | null {
   try {
     const raw = localStorage.getItem(dailyKey(userId));
 
@@ -146,7 +154,10 @@ function readDaily(userId: number, date: string): DailyTotal | null {
   }
 }
 
-function writeDaily(userId: number, value: DailyTotal): boolean {
+function writeDaily(
+  userId: number,
+  value: DailyTotal
+): boolean {
   try {
     const serialized = JSON.stringify(value);
     localStorage.setItem(dailyKey(userId), serialized);
@@ -159,48 +170,100 @@ function writeDaily(userId: number, value: DailyTotal): boolean {
 
 function pickReward(previous?: Reward): Reward {
   const options: Reward[] = [1, 2, 3];
-  const available = options.filter((value) => value !== previous);
+  const available = options.filter(
+    (value) => value !== previous
+  );
 
-  return available[Math.floor(Math.random() * available.length)];
+  return available[
+    Math.floor(Math.random() * available.length)
+  ];
 }
 
 export default function BonusAds() {
+  const navigate = useNavigate();
   const { user, token, loading } = useAuth();
   const { eligible } = useOnboarding();
-  const { lang } = useLang();
-  const t = getMessages(lang);
 
-  if (loading) {
-    return <main className="ads-page">{t.loading}</main>;
-  }
+  const hasAccess = Boolean(
+    user &&
+      token &&
+      user.email_verified &&
+      eligible
+  );
 
-  if (!user || !token || !user.email_verified || !eligible) {
-    return <main className="ads-page">{t.access}</main>;
-  }
+  const requireAccess = (): boolean => {
+    if (loading) return false;
 
-  // При смене пользователя старый плеер и его сессия уничтожаются.
-  return <AdsViewer key={user.id} userId={user.id} />;
+    const next = "/bonuses/ads";
+
+    if (!user || !token || !user.email_verified) {
+      navigate(
+        `/register?next=${encodeURIComponent(next)}`
+      );
+      return false;
+    }
+
+    if (!eligible) {
+      navigate("/profile", {
+        state: {
+          bonusOnboardingRequired: true,
+          next,
+        },
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  // Перемонтируем плеер при смене аккаунта или прав.
+  // Старая сессия не продолжится после выхода.
+  const viewerKey = loading
+    ? "loading"
+    : `${user?.id ?? "guest"}:${hasAccess ? "allowed" : "blocked"}`;
+
+  return (
+    <AdsViewer
+      key={viewerKey}
+      userId={hasAccess && user ? user.id : null}
+      authLoading={loading}
+      requireAccess={requireAccess}
+    />
+  );
 }
 
-function AdsViewer({ userId }: { userId: number }) {
+function AdsViewer({
+  userId,
+  authLoading,
+  requireAccess,
+}: AdsViewerProps) {
   const { lang } = useLang();
   const t = getMessages(lang);
 
-  const [reward, setReward] = useState<Reward>(() => pickReward());
+  const [reward, setReward] = useState<Reward>(
+    () => pickReward()
+  );
   const [playing, setPlaying] = useState(false);
   const [remaining, setRemaining] = useState(5);
   const [sessionTotal, setSessionTotal] = useState(0);
+
   const [visible, setVisible] = useState(
     () => document.visibilityState === "visible"
   );
 
-  const [assets, setAssets] = useState<"loading" | "ready" | "error">(
-    "loading"
-  );
+  const [assets, setAssets] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
+
   const [storageError, setStorageError] = useState(false);
 
   const [daily, setDaily] = useState<DailyTotal>(() => {
     const date = localDay();
+
+    if (userId === null) {
+      return { date, total: 0 };
+    }
+
     return readDaily(userId, date) ?? { date, total: 0 };
   });
 
@@ -208,13 +271,15 @@ function AdsViewer({ userId }: { userId: number }) {
   const elapsedRef = useRef(0);
   const creditedRef = useRef(false);
 
-  // Загружаем изображения до разрешения просмотра.
   useEffect(() => {
     let disposed = false;
     let failed = false;
     let loaded = 0;
 
-    const images = [BACKGROUND_URL, COIN_URL].map(() => new Image());
+    const images = [
+      BACKGROUND_URL,
+      COIN_URL,
+    ].map(() => new Image());
 
     const timeout = window.setTimeout(() => {
       if (!disposed) {
@@ -261,18 +326,28 @@ function AdsViewer({ userId }: { userId: number }) {
 
   useEffect(() => {
     const handleVisibility = () => {
-      setVisible(document.visibilityState === "visible");
+      setVisible(
+        document.visibilityState === "visible"
+      );
     };
 
-    document.addEventListener("visibilitychange", handleVisibility);
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibility
+    );
 
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibility
+      );
     };
   }, []);
 
-  // Обновляем дневной счётчик при переходе через полночь.
   useEffect(() => {
+    // Гости не читают и не записывают дневной результат.
+    if (userId === null) return;
+
     if (readDaily(userId, localDay()) === null) {
       setStorageError(true);
     }
@@ -282,7 +357,8 @@ function AdsViewer({ userId }: { userId: number }) {
 
       if (dailyRef.current.date === date) return;
 
-      const next = readDaily(userId, date) ?? { date, total: 0 };
+      const next =
+        readDaily(userId, date) ?? { date, total: 0 };
 
       dailyRef.current = next;
       setDaily(next);
@@ -293,9 +369,8 @@ function AdsViewer({ userId }: { userId: number }) {
     return () => window.clearInterval(timer);
   }, [userId]);
 
-  // Считаем только время просмотра в видимой вкладке.
   useEffect(() => {
-    if (!playing || !visible) return;
+    if (!playing || !visible || userId === null) return;
 
     let frameId = 0;
     let previousTime = performance.now();
@@ -307,7 +382,12 @@ function AdsViewer({ userId }: { userId: number }) {
       previousTime = now;
 
       setRemaining(
-        Math.max(0, Math.ceil((DURATION_MS - elapsedRef.current) / 1000))
+        Math.max(
+          0,
+          Math.ceil(
+            (DURATION_MS - elapsedRef.current) / 1000
+          )
+        )
       );
 
       if (elapsedRef.current >= DURATION_MS) {
@@ -323,13 +403,14 @@ function AdsViewer({ userId }: { userId: number }) {
             memory.date === date ? memory.total : 0
           );
 
-          const next = { date, total: base + reward };
+          const next = {
+            date,
+            total: base + reward,
+          };
 
           dailyRef.current = next;
           setDaily(next);
           setStorageError(!writeDaily(userId, next));
-
-          // Побочных действий внутри updater нет.
           setSessionTotal((total) => total + reward);
         }
 
@@ -344,11 +425,18 @@ function AdsViewer({ userId }: { userId: number }) {
 
     frameId = window.requestAnimationFrame(tick);
 
-    return () => window.cancelAnimationFrame(frameId);
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
   }, [playing, visible, reward, userId]);
 
   const startViewing = () => {
-    if (playing || assets !== "ready") return;
+    if (playing || authLoading) return;
+
+    // Регистрация запускается именно по кнопке согласия.
+    if (!requireAccess()) return;
+
+    if (userId === null || assets !== "ready") return;
 
     elapsedRef.current = 0;
     creditedRef.current = false;
@@ -370,9 +458,9 @@ function AdsViewer({ userId }: { userId: number }) {
     <main className="ads-page">
       <div className="ads-content">
         <section
-          className={`ads-screen ${playing ? "is-playing" : ""} ${
-            !visible ? "is-paused" : ""
-          }`}
+          className={`ads-screen ${
+            playing ? "is-playing" : ""
+          } ${!visible ? "is-paused" : ""}`}
           aria-label={t.watching}
         >
           <img
@@ -383,26 +471,35 @@ function AdsViewer({ userId }: { userId: number }) {
 
           {playing ? (
             <>
-              <div className="ads-coins" aria-hidden="true">
-                {Array.from({ length: reward }, (_, index) => (
-                  <div className="ads-coin-arrival" key={index}>
-                    <div className="ads-coin-glow" />
+              <div
+                className="ads-coins"
+                aria-hidden="true"
+              >
+                {Array.from(
+                  { length: reward },
+                  (_, index) => (
+                    <div
+                      className="ads-coin-arrival"
+                      key={index}
+                    >
+                      <div className="ads-coin-glow" />
 
-                    <div className="ads-coin-rotor">
-                      <div className="ads-coin-edge" />
+                      <div className="ads-coin-rotor">
+                        <div className="ads-coin-edge" />
 
-                      <div className="ads-coin-face ads-coin-front">
-                        <img src={COIN_URL} alt="" />
-                        <div className="ads-coin-shine" />
-                      </div>
+                        <div className="ads-coin-face ads-coin-front">
+                          <img src={COIN_URL} alt="" />
+                          <div className="ads-coin-shine" />
+                        </div>
 
-                      <div className="ads-coin-face ads-coin-back">
-                        <img src={COIN_URL} alt="" />
-                        <div className="ads-coin-shine" />
+                        <div className="ads-coin-face ads-coin-back">
+                          <img src={COIN_URL} alt="" />
+                          <div className="ads-coin-shine" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
 
               <div className="ads-caption">
@@ -421,29 +518,39 @@ function AdsViewer({ userId }: { userId: number }) {
               )}
 
               {assets === "error" && (
-                <p className="ads-error" role="alert">
+                <p
+                  className="ads-error"
+                  role="alert"
+                >
                   {t.imageError}
                 </p>
               )}
 
-              {assets === "ready" && (
-                <div className="ads-consent-box">
-                  <button
-                    className="ads-agree"
-                    type="button"
-                    onClick={startViewing}
-                  >
-                    {t.consent}
-                  </button>
+              <div className="ads-consent-box">
+                <button
+                  className="ads-agree"
+                  type="button"
+                  onClick={startViewing}
+                  disabled={
+                    authLoading ||
+                    (userId !== null && assets !== "ready")
+                  }
+                >
+                  {authLoading ? t.waiting : t.consent}
+                </button>
 
-                  <p className="ads-cost">{t.cost(reward)}</p>
-                </div>
-              )}
+                <p className="ads-cost">
+                  {t.cost(reward)}
+                </p>
+              </div>
             </div>
           )}
         </section>
 
-        <section className="ads-calculator" aria-label={t.session}>
+        <section
+          className="ads-calculator"
+          aria-label={t.session}
+        >
           <div className="ads-counter">
             <span>{t.session}</span>
             <strong>{sessionTotal}</strong>
@@ -468,7 +575,10 @@ function AdsViewer({ userId }: { userId: number }) {
         <p className="ads-demo-note">{t.demo}</p>
 
         {storageError && (
-          <p className="ads-storage-warning" role="status">
+          <p
+            className="ads-storage-warning"
+            role="status"
+          >
             {t.storageError}
           </p>
         )}

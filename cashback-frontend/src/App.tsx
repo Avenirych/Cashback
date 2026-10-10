@@ -2,7 +2,10 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProductOffers from "./pages/ProductOffers";
 import { AuthProvider } from "./context/AuthContext";
-import { LanguageProvider, useLang } from "./context/LanguageContext";
+import {
+  LanguageProvider,
+  useLang,
+} from "./context/LanguageContext";
 
 import Header from "./components/Header";
 import CookieConsent from "./components/CookieConsent";
@@ -42,8 +45,8 @@ export function AppRoutes() {
 
       <Routes>
         <Route path="/" element={<Welcome lang={L} />} />
-        <Route path="/product-offers" element={<ProductOffers />} />
         <Route path="/welcome" element={<Welcome lang={L} />} />
+        <Route path="/product-offers" element={<ProductOffers />} />
 
         <Route path="/about" element={<AboutUs lang={lang} />} />
         <Route path="/services" element={<Services lang={lang} />} />
@@ -51,38 +54,86 @@ export function AppRoutes() {
         <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/forum/rules" element={<ForumRules />} />
 
-        <Route path="/login" element={<Login lang={L} onLangChange={setLang} />} />
-        <Route path="/register" element={<Register lang={L} onLangChange={setLang} />} />
-        <Route path="/verify-email" element={<VerifyEmail lang={L} />} />
+        <Route
+          path="/login"
+          element={<Login lang={L} onLangChange={setLang} />}
+        />
+        <Route
+          path="/register"
+          element={<Register lang={L} onLangChange={setLang} />}
+        />
+        <Route
+          path="/verify-email"
+          element={<VerifyEmail lang={L} />}
+        />
 
-        {/* Защищённые страницы: требуют авторизации и подтверждения почты */}
+        {/* Открытый просмотр.
+            Авторизация проверяется при целевом действии. */}
+        <Route path="/shop" element={<Shop lang={L} />} />
+        <Route path="/bonuses" element={<Bonuses />} />
+        <Route path="/bonuses/ads" element={<BonusAds />} />
+        <Route
+          path="/bonuses/research"
+          element={<BonusResearch />}
+        />
+
+        {/* Само участие в исследовании остаётся защищённым.
+            BonusGuard сохраняет исходную проверку доступа. */}
+        <Route
+          path="/bonuses/research/:directionId"
+          element={<BonusGuard />}
+        >
+          <Route index element={<ResearchDirection />} />
+        </Route>
+
+        {/* Авторизация и подтверждение почты */}
         <Route element={<ProtectedGuard />}>
           <Route path="/profile" element={<Profile />} />
-          <Route path="/shop" element={<Shop lang={L} />} />
-          <Route path="/forum/register" element={<ForumRegister />} />
-          <Route path="/dashboard" element={<Dashboard lang={L} />} />
+          <Route
+            path="/forum/register"
+            element={<ForumRegister />}
+          />
+          <Route
+            path="/dashboard"
+            element={<Dashboard lang={L} />}
+          />
         </Route>
 
-        {/* Форум */}
+        {/* Форум: существующая защита без изменений */}
         <Route element={<ForumGuard readOnly />}>
           <Route path="/forum">
-            <Route index element={<TopicsPage lang={L} onLangChange={setLang} />} />
-            <Route path="topics" element={<TopicsPage lang={L} onLangChange={setLang} />} />
-            <Route path="topics/:id" element={<Topic lang={L} onLangChange={setLang} />} />
-            <Route path="topic/:id" element={<Topic lang={L} onLangChange={setLang} />} />
+            <Route
+              index
+              element={
+                <TopicsPage lang={L} onLangChange={setLang} />
+              }
+            />
+            <Route
+              path="topics"
+              element={
+                <TopicsPage lang={L} onLangChange={setLang} />
+              }
+            />
+            <Route
+              path="topics/:id"
+              element={<Topic lang={L} onLangChange={setLang} />}
+            />
+            <Route
+              path="topic/:id"
+              element={<Topic lang={L} onLangChange={setLang} />}
+            />
           </Route>
-          <Route path="/topic/:id" element={<Topic lang={L} onLangChange={setLang} />} />
+
+          <Route
+            path="/topic/:id"
+            element={<Topic lang={L} onLangChange={setLang} />}
+          />
         </Route>
 
-        {/* Бонусы */}
-        <Route path="/bonuses" element={<BonusGuard />}>
-          <Route index element={<Bonuses />} />
-          <Route path="ads" element={<BonusAds />} />
-          <Route path="research" element={<BonusResearch />} />
-          <Route path="research/:directionId" element={<ResearchDirection />} />
-        </Route>
-
-        <Route path="/partner-not-connected" element={<PartnerNotConnected />} />
+        <Route
+          path="/partner-not-connected"
+          element={<PartnerNotConnected />}
+        />
         <Route path="*" element={<Welcome lang={L} />} />
       </Routes>
     </>
