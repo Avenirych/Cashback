@@ -1,264 +1,248 @@
-import React, { useMemo, useState } from "react";
-import { translations } from "../i18n";
+import React, { useMemo, useRef, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useBonuses } from "../context/BonusesContext";
 import "./ForumBonusExchangePanel.css";
 
-type BonusSource = "ads" | "research" | "transfer";
-
-interface BonusItem {
-  id: string;
-  ownerUsername: string;
-  source: BonusSource;
-  amount: number;
-  expiresAt: string; // DD.MM.YYYY
-  used: boolean;
-  createdAt: string; // DD.MM.YYYY
-  transferMeta?: {
-    fromUsername: string;
-    toUsername: string;
-  };
-}
-
-interface TransferLogRow {
-  id: string;
-  from: string;
-  to: string;
-  amount: number;
-  expiresAt: string;
-  createdAt: string;
-}
-
-interface ForumBonusExchangePanelProps {
+export default function ForumBonusExchangePanel({
+  lang,
+}: {
   lang: string;
-}
+}) {
+  const { user, forumUser } = useAuth();
+  const {
+    items,
+    transfers,
+    availableBonusIds,
+    loading,
+    error,
+    refresh,
+    transfer,
+  } = useBonuses();
 
-function formatDate(d: Date): string {
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yyyy = d.getFullYear();
-  return `${dd}.${mm}.${yyyy}`;
-}
-
-function parseDate(s: string): Date {
-  const [dd, mm, yyyy] = s.split(".").map(Number);
-  return new Date(yyyy, mm - 1, dd);
-}
-
-function isExpired(s: string): boolean {
-  const x = parseDate(s);
-  const now = new Date();
-  const a = new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
-  const b = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  return a < b;
-}
-
-function sortByExpiryAsc(a: BonusItem, b: BonusItem) {
-  return parseDate(a.expiresAt).getTime() - parseDate(b.expiresAt).getTime();
-}
-
-function uid(prefix = "ID") {
-  return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
-}
-
-const USERS = ["alice", "bob", "charlie", "diana"];
-
-function seedBonuses(): BonusItem[] {
-  return [
-    { id: "B-1", ownerUsername: "alice", source: "ads", amount: 18, expiresAt: "29.10.2026", used: false, createdAt: "01.10.2026" },
-    { id: "B-2", ownerUsername: "alice", source: "research", amount: 26, expiresAt: "24.10.2026", used: false, createdAt: "02.10.2026" },
-    { id: "B-3", ownerUsername: "alice", source: "ads", amount: 12, expiresAt: "18.10.2026", used: false, createdAt: "03.10.2026" },
-    { id: "B-4", ownerUsername: "bob", source: "research", amount: 34, expiresAt: "31.10.2026", used: false, createdAt: "04.10.2026" },
-    { id: "B-5", ownerUsername: "bob", source: "ads", amount: 9, expiresAt: "22.10.2026", used: false, createdAt: "04.10.2026" },
-    { id: "B-6", ownerUsername: "charlie", source: "ads", amount: 15, expiresAt: "27.10.2026", used: false, createdAt: "06.10.2026" },
-    { id: "B-7", ownerUsername: "diana", source: "research", amount: 21, expiresAt: "25.10.2026", used: false, createdAt: "07.10.2026" },
-  ];
-}
-
-export default function ForumBonusExchangePanel({ lang }: ForumBonusExchangePanelProps) {
-  const i18n = translations[lang.toUpperCase() as keyof typeof translations] ?? translations.EN;
   const isRu = lang.toUpperCase() === "RU";
+  const text = (ru: string, en: string) => (isRu ? ru : en);
 
-  const tx = {
-    title: isRu ? "Обмен бонусами между участниками" : "Bonus exchange between members",
-    currentUser: isRu ? "Текущий пользователь:" : "Current user:",
-    noBonuses: isRu ? "Нет доступных бонусов" : "No available bonuses",
-    source: isRu ? "Источник" : "Source",
-    amount: isRu ? "Бонусы" : "Amount",
-    expiresAt: isRu ? "Действует до" : "Expires at",
-    actions: isRu ? "Действия" : "Actions",
-    apply: isRu ? "Применить" : "Apply",
-    cancel: isRu ? "Отменить" : "Cancel",
-    selected: isRu ? "Выбрано:" : "Selected:",
-    receiverPlaceholder: isRu ? "username получателя" : "receiver username",
-    share: isRu ? "Поделиться" : "Share",
-    incoming: isRu ? "Получено" : "Received",
-    outgoing: isRu ? "Отправлено" : "Sent",
-    emptyIncoming: isRu ? "Пока нет" : "No records yet",
-    invalidReceiver: isRu ? "Такой пользователь форума не найден" : "Forum user not found",
-    emptyReceiver: isRu ? "Укажи имя получателя (username)" : "Enter receiver username",
-    selfTransfer: isRu ? "Нельзя отправлять самому себе" : "You cannot transfer to yourself",
-    nothingSelected: isRu ? "Выбери хотя бы один бонус для отправки" : "Select at least one bonus",
-    from: isRu ? "от" : "from",
-    until: isRu ? "до" : "until",
-    sentTo: isRu ? "Кому" : "To",
-    sentOn: isRu ? "Дата отправки" : "Sent at",
-    receivedOn: isRu ? "Дата поступления" : "Received at",
-    ads: isRu ? "Реклама" : "Ads",
-    research: isRu ? "Исследования" : "Research",
-    transfer: isRu ? "Перевод" : "Transfer",
-    fromWhom: isRu ? "От кого" : "From",
-  };
-
-  const [activeUser, setActiveUser] = useState<string>("alice");
-  const [allBonuses, setAllBonuses] = useState<BonusItem[]>(seedBonuses);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [receiver, setReceiver] = useState<string>("");
-  const [logs, setLogs] = useState<TransferLogRow[]>([]);
+  const [receiver, setReceiver] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const myAvailable = useMemo(
-    () =>
-      allBonuses
-        .filter((b) => b.ownerUsername === activeUser && !b.used && !isExpired(b.expiresAt))
-        .sort(sortByExpiryAsc),
-    [allBonuses, activeUser]
+  const locked = useRef(false);
+  const requestRef = useRef<{
+    fingerprint: string;
+    key: string;
+  } | null>(null);
+
+  const available = useMemo(() => {
+    const ids = new Set(availableBonusIds);
+
+    return items
+      .filter((item) => ids.has(item.id))
+      .sort((a, b) => a.expiresAt.localeCompare(b.expiresAt));
+  }, [items, availableBonusIds]);
+
+  const selected = available.filter(
+    (item) => selectedIds.includes(item.id)
   );
 
-  const mySelected = useMemo(
-    () => myAvailable.filter((b) => selectedIds.includes(b.id)),
-    [myAvailable, selectedIds]
+  const selectedAmount =
+    Math.round(
+      selected.reduce((sum, item) => sum + item.amount, 0) * 100
+    ) / 100;
+
+  const incoming = transfers.filter(
+    (entry) => entry.toUserId === user?.id
   );
 
-  const selectedSum = useMemo(
-    () => mySelected.reduce((acc, b) => acc + b.amount, 0),
-    [mySelected]
+  const outgoing = transfers.filter(
+    (entry) => entry.fromUserId === user?.id
   );
 
-  const incomingForMe = useMemo(
-    () =>
-      allBonuses
-        .filter((b) => b.ownerUsername === activeUser && b.source === "transfer" && !b.used && !isExpired(b.expiresAt))
-        .sort(sortByExpiryAsc),
-    [allBonuses, activeUser]
+  const canTransfer = Boolean(
+    user?.email_verified &&
+      forumUser &&
+      !forumUser.banned
   );
 
-  const outgoingByMe = useMemo(
-    () => logs.filter((l) => l.from === activeUser),
-    [logs, activeUser]
-  );
+  function formatDate(value: string) {
+    const date = new Date(value);
 
-  const sourceLabel = (s: BonusSource) => {
-    if (s === "ads") return tx.ads;
-    if (s === "research") return tx.research;
-    return tx.transfer;
-  };
+    return Number.isNaN(date.getTime())
+      ? "—"
+      : date.toLocaleString(isRu ? "ru-RU" : "en-GB");
+  }
 
-  const toggleSelect = (id: string, on: boolean) => {
-    setSelectedIds((prev) => {
-      const s = new Set(prev);
-      if (on) s.add(id);
-      else s.delete(id);
-      return Array.from(s);
-    });
-  };
+  function sourceLabel(source: string) {
+    switch (source) {
+      case "ads":
+        return text("Реклама", "Ads");
+      case "research":
+        return text("Исследования", "Research");
+      case "transfer":
+        return text("Перевод", "Transfer");
+      case "purchase":
+        return text("Покупка", "Purchase");
+      case "refund":
+        return text("Возврат", "Refund");
+      default:
+        return source;
+    }
+  }
 
-  const onShare = () => {
-    const to = receiver.trim().toLowerCase();
+  function toggle(id: string) {
+    if (busy) return;
 
-    if (!to) return alert(tx.emptyReceiver);
-    if (to === activeUser) return alert(tx.selfTransfer);
-    if (!USERS.includes(to)) return alert(tx.invalidReceiver);
-    if (mySelected.length === 0) return alert(tx.nothingSelected);
-
-    const selectedSet = new Set(selectedIds);
-
-    const updated = allBonuses.map((b) =>
-      selectedSet.has(b.id) && b.ownerUsername === activeUser ? { ...b, used: true } : b
+    setSelectedIds((previous) =>
+      previous.includes(id)
+        ? previous.filter((value) => value !== id)
+        : [...previous, id]
     );
 
-    const now = formatDate(new Date());
+    setMessage("");
+  }
 
-    const transferred: BonusItem[] = mySelected.map((src) => ({
-      id: uid("TR"),
-      ownerUsername: to,
-      source: "transfer",
-      amount: src.amount,
-      expiresAt: src.expiresAt,
-      used: false,
-      createdAt: now,
-      transferMeta: { fromUsername: activeUser, toUsername: to },
-    }));
+  async function share() {
+    if (locked.current || loading) return;
 
-    const newLogs: TransferLogRow[] = mySelected.map((src) => ({
-      id: uid("LOG"),
-      from: activeUser,
-      to,
-      amount: src.amount,
-      expiresAt: src.expiresAt,
-      createdAt: now,
-    }));
+    if (!canTransfer || !forumUser) {
+      setMessage(
+        text("Сначала войдите на форум", "Sign in to the forum first")
+      );
+      return;
+    }
 
-    setAllBonuses([...updated, ...transferred]);
-    setLogs((prev) => [...newLogs, ...prev]);
-    setSelectedIds([]);
-    setReceiver("");
-  };
+    const toUsername = receiver.trim();
+
+    if (!/^[A-Za-z0-9_]{3,30}$/.test(toUsername)) {
+      setMessage(
+        text(
+          "Укажите username получателя: 3–30 латинских букв, цифр или _",
+          "Enter a recipient username: 3–30 letters, digits or _"
+        )
+      );
+      return;
+    }
+
+    if (
+      toUsername.toLowerCase() ===
+      forumUser.username.toLowerCase()
+    ) {
+      setMessage(
+        text("Нельзя отправить себе", "Cannot transfer to yourself")
+      );
+      return;
+    }
+
+    if (selected.length === 0) {
+      setMessage(
+        text("Выберите доступные бонусы", "Select available bonuses")
+      );
+      return;
+    }
+
+    const bonusIds = selected.map((item) => item.id).sort();
+    const fingerprint = JSON.stringify({ toUsername, bonusIds });
+
+    if (requestRef.current?.fingerprint !== fingerprint) {
+      requestRef.current = {
+        fingerprint,
+        key: crypto.randomUUID(),
+      };
+    }
+
+    locked.current = true;
+    setBusy(true);
+    setMessage("");
+
+    try {
+      await transfer(
+        { toUsername, bonusIds },
+        requestRef.current.key
+      );
+
+      requestRef.current = null;
+      setSelectedIds([]);
+      setReceiver("");
+      setMessage(
+        text("Перевод выполнен", "Transfer completed")
+      );
+    } catch (err) {
+      // При повторе того же намерения сохраняем ключ запроса.
+      setMessage(
+        err instanceof Error
+          ? err.message
+          : text("Перевод не выполнен", "Transfer failed")
+      );
+    } finally {
+      locked.current = false;
+      setBusy(false);
+    }
+  }
 
   return (
     <section className="fx-panel">
-      <h2>{tx.title}</h2>
+      <h2>
+        {text(
+          "Обмен бонусами между участниками",
+          "Bonus exchange between members"
+        )}
+      </h2>
 
       <div className="fx-row">
-        <label>{tx.currentUser}</label>
-        <select
-          value={activeUser}
-          onChange={(e) => {
-            setActiveUser(e.target.value);
-            setSelectedIds([]);
-          }}
+        <span>{text("Текущий пользователь:", "Current user:")}</span>
+        <strong>{forumUser?.username ?? "—"}</strong>
+
+        <button
+          type="button"
+          disabled={loading || busy}
+          onClick={() => void refresh().catch(() => {})}
         >
-          {USERS.map((u) => (
-            <option key={u} value={u}>
-              {u}
-            </option>
-          ))}
-        </select>
+          {text("Обновить", "Refresh")}
+        </button>
       </div>
+
+      {loading && <p role="status">{text("Загрузка…", "Loading…")}</p>}
+      {error && <p role="alert">{error}</p>}
+      {message && <p role="status">{message}</p>}
 
       <div className="fx-table-wrap">
         <table className="fx-table">
           <thead>
             <tr>
               <th>ID</th>
-              <th>{tx.source}</th>
-              <th>{tx.amount}</th>
-              <th>{tx.expiresAt}</th>
-              <th>{tx.actions}</th>
+              <th>{text("Источник", "Source")}</th>
+              <th>{text("Бонусы", "Amount")}</th>
+              <th>{text("Действует до", "Expires at")}</th>
+              <th>{text("Выбор", "Selection")}</th>
             </tr>
           </thead>
           <tbody>
-            {myAvailable.length === 0 ? (
+            {available.length === 0 ? (
               <tr>
-                <td colSpan={5}>{tx.noBonuses}</td>
+                <td colSpan={5}>
+                  {text("Нет доступных бонусов", "No available bonuses")}
+                </td>
               </tr>
             ) : (
-              myAvailable.map((b) => {
-                const selected = selectedIds.includes(b.id);
-                return (
-                  <tr key={b.id}>
-                    <td>{b.id}</td>
-                    <td>{sourceLabel(b.source)}</td>
-                    <td>{b.amount}</td>
-                    <td>{b.expiresAt}</td>
-                    <td className="fx-actions">
-                      <button onClick={() => toggleSelect(b.id, true)} disabled={selected}>
-                        {tx.apply}
-                      </button>
-                      <button onClick={() => toggleSelect(b.id, false)} disabled={!selected}>
-                        {tx.cancel}
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
+              available.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{sourceLabel(item.source)}</td>
+                  <td>{item.amount.toFixed(2)}</td>
+                  <td>{formatDate(item.expiresAt)}</td>
+                  <td className="fx-actions">
+                    <button
+                      type="button"
+                      onClick={() => toggle(item.id)}
+                      disabled={!canTransfer || busy || loading}
+                    >
+                      {selectedIds.includes(item.id)
+                        ? text("Отменить", "Cancel")
+                        : text("Выбрать", "Select")}
+                    </button>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>
@@ -266,30 +250,54 @@ export default function ForumBonusExchangePanel({ lang }: ForumBonusExchangePane
 
       <div className="fx-share">
         <div>
-          {tx.selected} <strong>{selectedSum}</strong>
+          {text("Выбрано:", "Selected:")}{" "}
+          <strong>{selectedAmount.toFixed(2)}</strong>
         </div>
+
         <input
           type="text"
-          placeholder={tx.receiverPlaceholder}
+          aria-label={text("Username получателя", "Recipient username")}
+          placeholder={text("Username получателя", "Recipient username")}
           value={receiver}
-          onChange={(e) => setReceiver(e.target.value)}
+          onChange={(event) => {
+            setReceiver(event.target.value);
+            setMessage("");
+          }}
+          disabled={!canTransfer || busy}
+          maxLength={30}
+          autoComplete="off"
         />
-        <button onClick={onShare}>{tx.share}</button>
+
+        <button
+          type="button"
+          onClick={() => void share()}
+          disabled={
+            !canTransfer ||
+            busy ||
+            loading ||
+            Boolean(error) ||
+            selected.length === 0
+          }
+        >
+          {busy
+            ? text("Отправка…", "Sending…")
+            : text("Поделиться", "Share")}
+        </button>
       </div>
 
       <div className="fx-cols">
         <div>
-          <h3>
-            {tx.incoming} ({activeUser})
-          </h3>
+          <h3>{text("Получено", "Received")}</h3>
           <ul>
-            {incomingForMe.length === 0 ? (
-              <li>{tx.emptyIncoming}</li>
+            {incoming.length === 0 ? (
+              <li>{text("Пока нет переводов", "No transfers yet")}</li>
             ) : (
-              incomingForMe.map((x) => (
-                <li key={x.id}>
-                  {tx.from} {x.transferMeta?.fromUsername} — {x.amount} ({tx.until} {x.expiresAt}), {tx.receivedOn}:{" "}
-                  {x.createdAt}
+              incoming.map((entry) => (
+                <li key={entry.id}>
+                  {entry.fromUsername}: {entry.amount.toFixed(2)} —{" "}
+                  {formatDate(entry.createdAt)};{" "}
+                  {text("действует до", "expires at")}{" "}
+                  {formatDate(entry.expiresAt)}
                 </li>
               ))
             )}
@@ -297,16 +305,17 @@ export default function ForumBonusExchangePanel({ lang }: ForumBonusExchangePane
         </div>
 
         <div>
-          <h3>
-            {tx.outgoing} ({activeUser})
-          </h3>
+          <h3>{text("Отправлено", "Sent")}</h3>
           <ul>
-            {outgoingByMe.length === 0 ? (
-              <li>{tx.emptyIncoming}</li>
+            {outgoing.length === 0 ? (
+              <li>{text("Пока нет переводов", "No transfers yet")}</li>
             ) : (
-              outgoingByMe.map((x) => (
-                <li key={x.id}>
-                  {tx.sentTo}: {x.to}, {tx.amount}: {x.amount}, {tx.until} {x.expiresAt}, {tx.sentOn}: {x.createdAt}
+              outgoing.map((entry) => (
+                <li key={entry.id}>
+                  {entry.toUsername}: {entry.amount.toFixed(2)} —{" "}
+                  {formatDate(entry.createdAt)};{" "}
+                  {text("действует до", "expires at")}{" "}
+                  {formatDate(entry.expiresAt)}
                 </li>
               ))
             )}

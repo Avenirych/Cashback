@@ -10,6 +10,7 @@ const labels: Record<string, Record<string, string>> = {
   en: {
     about: "About us",
     how: "How it works",
+    shop: "Shop",
     forum: "Forum",
     login: "Login / Register",
     profile: "Profile",
@@ -19,6 +20,7 @@ const labels: Record<string, Record<string, string>> = {
   ru: {
     about: "О нас",
     how: "Как это работает",
+    shop: "Магазин",
     forum: "Форум",
     login: "Вход / Регистрация",
     profile: "Профиль",
@@ -28,6 +30,7 @@ const labels: Record<string, Record<string, string>> = {
   de: {
     about: "Über uns",
     how: "So funktioniert's",
+    shop: "Shop",
     forum: "Forum",
     login: "Anmelden / Registrieren",
     profile: "Profil",
@@ -37,6 +40,7 @@ const labels: Record<string, Record<string, string>> = {
   fr: {
     about: "À propos",
     how: "Comment ça marche",
+    shop: "Boutique",
     forum: "Forum",
     login: "Connexion / Inscription",
     profile: "Profil",
@@ -164,6 +168,9 @@ export default function Header() {
         </Link>
         <Link to="/services" style={navLinkStyle}>
           {t.how}
+        </Link>
+        <Link to="/shop" style={navLinkStyle}>
+          {t.shop}
         </Link>
         <Link to="/forum" style={navLinkStyle}>
           {t.forum}

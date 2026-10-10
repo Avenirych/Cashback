@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProductOffers from "./pages/ProductOffers";
 import { AuthProvider } from "./context/AuthContext";
+import { BonusesProvider } from "./context/BonusesContext";
 import {
   LanguageProvider,
   useLang,
@@ -46,13 +47,28 @@ export function AppRoutes() {
       <Routes>
         <Route path="/" element={<Welcome lang={L} />} />
         <Route path="/welcome" element={<Welcome lang={L} />} />
-        <Route path="/product-offers" element={<ProductOffers />} />
+        <Route
+          path="/product-offers"
+          element={<ProductOffers />}
+        />
 
         <Route path="/about" element={<AboutUs lang={lang} />} />
-        <Route path="/services" element={<Services lang={lang} />} />
-        <Route path="/contacts" element={<Contacts lang={lang} />} />
-        <Route path="/terms" element={<TermsAndConditions />} />
-        <Route path="/forum/rules" element={<ForumRules />} />
+        <Route
+          path="/services"
+          element={<Services lang={lang} />}
+        />
+        <Route
+          path="/contacts"
+          element={<Contacts lang={lang} />}
+        />
+        <Route
+          path="/terms"
+          element={<TermsAndConditions />}
+        />
+        <Route
+          path="/forum/rules"
+          element={<ForumRules />}
+        />
 
         <Route
           path="/login"
@@ -116,11 +132,15 @@ export function AppRoutes() {
             />
             <Route
               path="topics/:id"
-              element={<Topic lang={L} onLangChange={setLang} />}
+              element={
+                <Topic lang={L} onLangChange={setLang} />
+              }
             />
             <Route
               path="topic/:id"
-              element={<Topic lang={L} onLangChange={setLang} />}
+              element={
+                <Topic lang={L} onLangChange={setLang} />
+              }
             />
           </Route>
 
@@ -145,7 +165,9 @@ export default function App() {
     <BrowserRouter>
       <LanguageProvider>
         <AuthProvider>
-          <AppRoutes />
+          <BonusesProvider>
+            <AppRoutes />
+          </BonusesProvider>
         </AuthProvider>
       </LanguageProvider>
     </BrowserRouter>
