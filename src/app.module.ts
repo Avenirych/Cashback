@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UsersModule } from './users/users.module';
@@ -8,6 +8,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { TopicsModule } from './topics.module';
 import { ForumModule } from './forum/forum.module';
 import { AddForumUsers1791394800000 } from './migrations/1791394800000-AddForumUsers';
+import { BonusModule } from './bonus/bonus.module';
 
 @Module({
   imports: [
@@ -15,17 +16,36 @@ import { AddForumUsers1791394800000 } from './migrations/1791394800000-AddForumU
       isGlobal: true,
     }),
 
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'Lsa5295685',
-      database: 'cashback',
-      autoLoadEntities: true,
-      migrations: [AddForumUsers1791394800000],
-      migrationsRun: true,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const password = config.get<string>('DB_PASSWORD');
+
+        if (!password) {
+          throw new Error('Set DB_PASSWORD in the backend .env file');
+        }
+
+        const port = Number(config.get<string>('DB_PORT') ?? '5432');
+
+        if (!Number.isInteger(port) || port <= 0 || port > 65535) {
+          throw new Error('Invalid DB_PORT');
+        }
+
+        return {
+          type: 'postgres' as const,
+          host: config.get<string>('DB_HOST') ?? 'localhost',
+          port,
+          username: config.get<string>('DB_USER') ?? 'postgres',
+          password,
+          database: config.get<string>('DB_NAME') ?? 'cashback',
+          autoLoadEntities: true,
+          migrations: [
+            AddForumUsers1791394800000,
+          ],
+          migrationsRun: false,
+          synchronize: false,
+        };
+      },
     }),
 
     UsersModule,
@@ -33,6 +53,7 @@ import { AddForumUsers1791394800000 } from './migrations/1791394800000-AddForumU
     TopicsModule,
     ForumModule,
     AnalyticsModule,
+    BonusModule,
   ],
 })
 export class AppModule {}
