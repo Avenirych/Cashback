@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Link,
   Navigate,
@@ -19,6 +19,35 @@ interface PendingVerification extends RegisterResult {
   email: string;
 }
 
+type PasswordChecks = {
+  minLen: boolean;
+  hasUpper: boolean;
+  hasLower: boolean;
+  hasDigit: boolean;
+  hasSpecial: boolean;
+};
+
+function getPasswordChecks(password: string): PasswordChecks {
+  return {
+    minLen: password.length >= 8,
+    hasUpper: /[A-Z]/.test(password),
+    hasLower: /[a-z]/.test(password),
+    hasDigit: /\d/.test(password),
+    hasSpecial: /[^A-Za-z0-9]/.test(password),
+  };
+}
+
+function isStrongPassword(password: string): boolean {
+  const c = getPasswordChecks(password);
+  return (
+    c.minLen &&
+    c.hasUpper &&
+    c.hasLower &&
+    c.hasDigit &&
+    c.hasSpecial
+  );
+}
+
 /**
  * Разрешаем возвращаться только в разделы магазина и бонусов.
  * Внешние адреса и произвольные маршруты не принимаем.
@@ -37,9 +66,7 @@ function safeReturnPath(value: string | null): string | null {
   try {
     const url = new URL(value, window.location.origin);
 
-    if (url.origin !== window.location.origin) {
-      return null;
-    }
+    if (url.origin !== window.location.origin) return null;
 
     const allowed =
       url.pathname === "/shop" ||
@@ -176,7 +203,8 @@ export default function Register({
   );
 
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
@@ -184,6 +212,7 @@ export default function Register({
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [busy, setBusy] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
 
@@ -193,6 +222,11 @@ export default function Register({
     translations.EN;
 
   const v = language === "RU" ? verifyText.ru : verifyText.en;
+
+  const passwordChecks = useMemo(
+    () => getPasswordChecks(form.password),
+    [form.password]
+  );
 
   useEffect(() => {
     if (!requestedReturnPath) return;
@@ -218,14 +252,43 @@ export default function Register({
     }
   }, [user?.email_verified]);
 
-  // Данные текущего аккаунта имеют приоритет
-  // над сохранённым адресом.
   const verification: PendingVerification | null =
     user && !user.email_verified
       ? pending?.email === user.email
         ? pending
         : { email: user.email }
       : pending;
+
+  const handleGoogleRegister = () => {
+    if (busy) return;
+
+    // Чтобы не ломать локальный запуск без backend/oauth:
+    // перевключай через env-переменную.
+    const enabled =
+      (typeof window !== "undefined" &&
+        (window as any).process &&
+        (window as any).process.env &&
+        (window as any).process.env.REACT_APP_GOOGLE_AUTH_ENABLED === "true") ||
+      (typeof process !== "undefined" &&
+        process.env.REACT_APP_GOOGLE_AUTH_ENABLED === "true");
+
+    if (!enabled) {
+      setError(
+        language === "RU"
+          ? "Google регистрация временно недоступна."
+          : "Google registration is temporarily unavailable."
+      );
+      return;
+    }
+
+    if (!termsAccepted) {
+      setError(t.mustAcceptTerms);
+      return;
+    }
+
+    const next = encodeURIComponent(returnPath);
+    window.location.href = `/auth/google/start?next=${next}`;
+  };
 
   const handleEmailChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -257,16 +320,35 @@ export default function Register({
     if (!validation.valid) {
       setEmailError(validation.error || "Invalid email");
       return;
+    } else {
+      setEmailError("");
+    }
+
+    if (!isStrongPassword(form.password)) {
+      setPasswordError(
+        language === "RU"
+          ? "Пароль слишком простой: минимум 8 символов, A-Z, a-z, цифра и спецсимвол."
+          : "Password is too weak: min 8 chars, A-Z, a-z, digit and special symbol."
+      );
+      return;
+    } else {
+      setPasswordError("");
     }
 
     setBusy(true);
 
     try {
+      const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`.trim();
+
       const result = await register({
-        name: form.name.trim(),
+        // Старый backend всё ещё принимает name.
+        name: fullName,
+        // Новый backend сможет читать отдельные поля.
+        first_name: form.firstName.trim(),
+        last_name: form.lastName.trim(),
         email: form.email.trim().toLowerCase(),
         password: form.password,
-      });
+      } as any);
 
       const pendingVerification: PendingVerification = {
         ...result,
@@ -276,11 +358,12 @@ export default function Register({
       savePendingVerification(pendingVerification);
       setPending(pendingVerification);
 
-      // Пароль нигде не сохраняем.
-      setForm((previous) => ({ ...previous, password: "" }));
-
-      // Не пропускаем подтверждение почты.
-      // Переход для подтверждённого аккаунта выполняется ниже.
+      setForm((previous) => ({
+        ...previous,
+        firstName: "",
+        lastName: "",
+        password: "",
+      }));
     } catch (err) {
       setError(
         err instanceof Error ? err.message : t.loginRegister
@@ -320,12 +403,12 @@ export default function Register({
     }
   };
 
-  const isFormValid = Boolean(
-    form.name.trim().length >= 2 &&
-      form.password.length >= 3 &&
-      termsAccepted &&
-      validateEmail(form.email).valid
-  );
+  const isFormValid =
+    form.firstName.trim().length >= 2 &&
+    form.lastName.trim().length >= 2 &&
+    validateEmail(form.email).valid &&
+    isStrongPassword(form.password) &&
+    termsAccepted;
 
   const inputStyle: React.CSSProperties = {
     padding: "12px",
@@ -495,23 +578,80 @@ export default function Register({
               </div>
             ) : (
               <>
+                <button
+                  type="button"
+                  onClick={handleGoogleRegister}
+                  disabled={busy}
+                  style={{
+                    ...buttonStyle,
+                    width: "100%",
+                    background: "#fff",
+                    color: "#111",
+                    border: "1px solid #d9d9d9",
+                    marginBottom: 12,
+                  }}
+                >
+                  Continue with Google
+                </button>
+
+                <div
+                  style={{
+                    textAlign: "center",
+                    margin: "10px 0 14px",
+                    color: "#777",
+                  }}
+                >
+                  or
+                </div>
+
                 <form
                   onSubmit={submit}
                   style={{ display: "grid", gap: "12px" }}
                 >
                   <input
-                    id="name"
-                    name="name"
+                    id="firstName"
+                    name="firstName"
                     type="text"
-                    aria-label={t.name}
-                    placeholder={t.name}
-                    value={form.name}
+                    aria-label={
+                      language === "RU" ? "Имя" : "First name"
+                    }
+                    placeholder={
+                      language === "RU" ? "Имя" : "First name"
+                    }
+                    value={form.firstName}
                     onChange={(e) =>
-                      setForm({ ...form, name: e.target.value })
+                      setForm((p) => ({
+                        ...p,
+                        firstName: e.target.value,
+                      }))
                     }
                     required
                     minLength={2}
-                    autoComplete="name"
+                    autoComplete="given-name"
+                    disabled={busy}
+                    style={inputStyle}
+                  />
+
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    aria-label={
+                      language === "RU" ? "Фамилия" : "Last name"
+                    }
+                    placeholder={
+                      language === "RU" ? "Фамилия" : "Last name"
+                    }
+                    value={form.lastName}
+                    onChange={(e) =>
+                      setForm((p) => ({
+                        ...p,
+                        lastName: e.target.value,
+                      }))
+                    }
+                    required
+                    minLength={2}
+                    autoComplete="family-name"
                     disabled={busy}
                     style={inputStyle}
                   />
@@ -557,14 +697,86 @@ export default function Register({
                     placeholder={t.minPassword}
                     value={form.password}
                     onChange={(e) =>
-                      setForm({ ...form, password: e.target.value })
+                      setForm((p) => ({
+                        ...p,
+                        password: e.target.value,
+                      }))
                     }
                     required
-                    minLength={3}
+                    minLength={8}
                     autoComplete="new-password"
                     disabled={busy}
                     style={inputStyle}
                   />
+
+                  {passwordError && (
+                    <p
+                      role="alert"
+                      style={{
+                        color: "#b42318",
+                        fontSize: "12px",
+                        margin: 0,
+                      }}
+                    >
+                      {passwordError}
+                    </p>
+                  )}
+
+                  <ul
+                    style={{
+                      margin: 0,
+                      paddingLeft: 18,
+                      fontSize: 12,
+                      color: "#444",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    <li
+                      style={{
+                        color: passwordChecks.minLen ? "green" : "#666",
+                      }}
+                    >
+                      {language === "RU"
+                        ? "Минимум 8 символов"
+                        : "At least 8 characters"}
+                    </li>
+                    <li
+                      style={{
+                        color: passwordChecks.hasUpper ? "green" : "#666",
+                      }}
+                    >
+                      {language === "RU"
+                        ? "Хотя бы 1 заглавная буква (A-Z)"
+                        : "At least 1 uppercase letter (A-Z)"}
+                    </li>
+                    <li
+                      style={{
+                        color: passwordChecks.hasLower ? "green" : "#666",
+                      }}
+                    >
+                      {language === "RU"
+                        ? "Хотя бы 1 строчная буква (a-z)"
+                        : "At least 1 lowercase letter (a-z)"}
+                    </li>
+                    <li
+                      style={{
+                        color: passwordChecks.hasDigit ? "green" : "#666",
+                      }}
+                    >
+                      {language === "RU"
+                        ? "Хотя бы 1 цифра"
+                        : "At least 1 digit"}
+                    </li>
+                    <li
+                      style={{
+                        color: passwordChecks.hasSpecial ? "green" : "#666",
+                      }}
+                    >
+                      {language === "RU"
+                        ? "Хотя бы 1 спецсимвол"
+                        : "At least 1 special character"}
+                    </li>
+                  </ul>
 
                   <div
                     style={{
@@ -611,7 +823,8 @@ export default function Register({
                     disabled={busy || !isFormValid}
                     style={{
                       ...buttonStyle,
-                      opacity: busy || !isFormValid ? 0.6 : 1,
+                      opacity:
+                        busy || !isFormValid ? 0.6 : 1,
                     }}
                   >
                     {busy ? t.creating : t.register}
