@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProductOffers from "./pages/ProductOffers";
+
 import { AuthProvider } from "./context/AuthContext";
 import { BonusesProvider } from "./context/BonusesContext";
 import {
@@ -13,9 +13,11 @@ import CookieConsent from "./components/CookieConsent";
 import BonusGuard from "./components/BonusGuard";
 import ProtectedGuard from "./components/ProtectedGuard";
 import ForumGuard from "./components/ForumGuard";
+
+import FAQ from "./pages/FAQ";
+import ProductOffers from "./pages/ProductOffers";
 import ForumRegister from "./pages/ForumRegister";
 import ForumRules from "./pages/ForumRules";
-
 import Welcome from "./pages/Welcome";
 import AboutUs from "./pages/AboutUs";
 import Services from "./pages/Services";
@@ -37,7 +39,7 @@ import Dashboard from "./pages/Dashboard";
 
 export function AppRoutes() {
   const { lang, setLang } = useLang();
-  const L = lang.toUpperCase();
+  const L = (lang || "EN").toUpperCase();
 
   return (
     <>
@@ -47,10 +49,13 @@ export function AppRoutes() {
       <Routes>
         <Route path="/" element={<Welcome lang={L} />} />
         <Route path="/welcome" element={<Welcome lang={L} />} />
+
         <Route
           path="/product-offers"
           element={<ProductOffers />}
         />
+
+        <Route path="/faq" element={<FAQ lang={L} />} />
 
         <Route path="/about" element={<AboutUs lang={lang} />} />
         <Route
@@ -83,8 +88,7 @@ export function AppRoutes() {
           element={<VerifyEmail lang={L} />}
         />
 
-        {/* Открытый просмотр.
-            Авторизация проверяется при целевом действии. */}
+        {/* Просмотр не требует регистрации. */}
         <Route path="/shop" element={<Shop lang={L} />} />
         <Route path="/bonuses" element={<Bonuses />} />
         <Route path="/bonuses/ads" element={<BonusAds />} />
@@ -93,8 +97,7 @@ export function AppRoutes() {
           element={<BonusResearch />}
         />
 
-        {/* Само участие в исследовании остаётся защищённым.
-            BonusGuard сохраняет исходную проверку доступа. */}
+        {/* Участие в исследовании остаётся защищённым. */}
         <Route
           path="/bonuses/research/:directionId"
           element={<BonusGuard />}
@@ -102,7 +105,7 @@ export function AppRoutes() {
           <Route index element={<ResearchDirection />} />
         </Route>
 
-        {/* Авторизация и подтверждение почты */}
+        {/* Авторизация и подтверждение почты. */}
         <Route element={<ProtectedGuard />}>
           <Route path="/profile" element={<Profile />} />
           <Route
@@ -115,7 +118,7 @@ export function AppRoutes() {
           />
         </Route>
 
-        {/* Форум: существующая защита без изменений */}
+        {/* Существующая защита форума сохранена. */}
         <Route element={<ForumGuard readOnly />}>
           <Route path="/forum">
             <Route
@@ -154,6 +157,7 @@ export function AppRoutes() {
           path="/partner-not-connected"
           element={<PartnerNotConnected />}
         />
+
         <Route path="*" element={<Welcome lang={L} />} />
       </Routes>
     </>

@@ -1,6 +1,6 @@
 import React from "react";
-import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 import { translations } from "../i18n";
 
 interface WelcomeProps {
@@ -10,18 +10,14 @@ interface WelcomeProps {
 export default function Welcome({ lang }: WelcomeProps) {
   const navigate = useNavigate();
 
-  const t =
-    translations[lang.toUpperCase() as keyof typeof translations] ??
-    translations.EN;
+  const normalizedLang = (lang || "EN").toUpperCase();
+  const languageKey = normalizedLang as keyof typeof translations;
+  const t = translations[languageKey] ?? translations.EN;
 
-  // Просмотр магазина не требует регистрации.
   const goToShopping = () => {
     navigate("/shop");
   };
 
-  // Просмотр раздела бонусов не требует регистрации.
-  // Проверки авторизации и анкеты должны оставаться
-  // непосредственно при запуске рекламы/исследования.
   const goToBonuses = () => {
     navigate("/bonuses");
   };
@@ -41,21 +37,28 @@ export default function Welcome({ lang }: WelcomeProps) {
         style={{
           flex: 1,
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "center",
           alignItems: "flex-start",
-          padding: "20px 40px",
-          gap: "80px",
+          padding: "20px clamp(16px, 4vw, 40px)",
+          gap: "clamp(24px, 6vw, 80px)",
         }}
       >
-        <div style={{ maxWidth: "520px" }}>
+        <div
+          style={{
+            flex: "1 1 280px",
+            maxWidth: "520px",
+            minWidth: 0,
+          }}
+        >
           <h1
             style={{
-              fontSize: "40px",
+              fontSize: "clamp(28px, 5vw, 40px)",
               fontWeight: 700,
               marginBottom: "20px",
             }}
           >
-            {t.title ?? "Welcome"}
+            {t.title}
           </h1>
 
           <p
@@ -65,10 +68,16 @@ export default function Welcome({ lang }: WelcomeProps) {
               marginBottom: "30px",
             }}
           >
-            {t.description ?? "Enjoy your visit!"}
+            {t.description}
           </p>
 
-          <div style={{ display: "flex", gap: "20px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "20px",
+            }}
+          >
             <button
               type="button"
               onClick={goToShopping}
@@ -83,7 +92,7 @@ export default function Welcome({ lang }: WelcomeProps) {
                 fontWeight: 600,
               }}
             >
-              {t.goShopping ?? "Go shopping"}
+              {t.goShopping}
             </button>
 
             <button
@@ -100,16 +109,28 @@ export default function Welcome({ lang }: WelcomeProps) {
                 fontWeight: 600,
               }}
             >
-              {t.getBonuses ?? "Get bonuses"}
+              {t.getBonuses}
             </button>
           </div>
         </div>
 
-        <div style={{ maxWidth: "420px", position: "relative" }}>
+        <div
+          style={{
+            flex: "1 1 280px",
+            maxWidth: "420px",
+            minWidth: 0,
+            position: "relative",
+          }}
+        >
           <img
             src="/assets/Oduvanchiki.jpeg"
-            alt="Oduvanchiki"
+            alt={
+              normalizedLang === "RU"
+                ? "Одуванчики"
+                : "Dandelions"
+            }
             style={{
+              display: "block",
               width: "100%",
               borderRadius: "20px",
               boxShadow: "0 12px 32px rgba(0,0,0,0.15)",
@@ -122,18 +143,20 @@ export default function Welcome({ lang }: WelcomeProps) {
               position: "absolute",
               bottom: "12px",
               right: "16px",
+              left: "16px",
+              textAlign: "right",
               color: "white",
               fontSize: "22px",
               fontFamily: "'Brush Script MT', cursive",
               textShadow: "0 0 6px rgba(0,0,0,0.6)",
             }}
           >
-            {t.everythingFine ?? "Everything will be fine"}
+            {t.everythingFine}
           </div>
         </div>
       </main>
 
-      <Footer lang={lang} />
+      <Footer lang={normalizedLang} />
     </div>
   );
 }

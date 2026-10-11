@@ -6,8 +6,35 @@ interface FooterProps {
   lang: string;
 }
 
+const footerLabels: Record<
+  string,
+  { faq: string; contacts: string }
+> = {
+  EN: {
+    faq: "FAQ",
+    contacts: "Contacts",
+  },
+  RU: {
+    faq: "Частые вопросы",
+    contacts: "Контакты",
+  },
+  DE: {
+    faq: "Häufige Fragen",
+    contacts: "Kontakt",
+  },
+  FR: {
+    faq: "Questions fréquentes",
+    contacts: "Contact",
+  },
+};
+
 export default function Footer({ lang }: FooterProps) {
-  const t = translations[lang?.toUpperCase()] ?? translations["EN"];
+  const normalizedLang = (lang || "EN").toUpperCase();
+  const languageKey = normalizedLang as keyof typeof translations;
+
+  const t = translations[languageKey] ?? translations.EN;
+  const labels =
+    footerLabels[normalizedLang] ?? footerLabels.EN;
 
   return (
     <footer
@@ -18,12 +45,20 @@ export default function Footer({ lang }: FooterProps) {
         marginTop: "40px",
       }}
     >
-      <div style={{ marginBottom: "10px" }}>
-        <Link to="/terms" style={{ marginRight: "20px" }}>
-          {t.terms ?? "Terms"}
-        </Link>
-        <Link to="/contacts">{t.contacts ?? "Contacts"}</Link>
-      </div>
+      <nav
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "12px 20px",
+          marginBottom: "10px",
+        }}
+      >
+        <Link to="/faq">{labels.faq}</Link>
+        <Link to="/terms">{t.footerTerms}</Link>
+        <Link to="/contacts">{labels.contacts}</Link>
+      </nav>
 
       <div style={{ fontSize: "14px", color: "#555" }}>
         © 2026 Cashback+
