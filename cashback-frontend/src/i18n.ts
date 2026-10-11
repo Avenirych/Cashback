@@ -205,9 +205,413 @@ const faqTranslations = {
   },
 };
 
+const privacyTranslations = {
+  EN: {
+    privacy: "Privacy Policy",
+    privacyTitle: "Privacy & Data Protection Policy",
+    privacyLastUpdated: "Last Updated",
+    privacySection1: "1. Introduction",
+    privacyIntroText:
+      "Cashback+ is committed to protecting your privacy and ensuring transparency about how we collect, use, and protect your personal data. This Privacy & Data Protection Policy explains our data practices in accordance with the UK GDPR and the Data Protection Act 2018. We respect your data rights and provide you with control over your personal information.",
+    privacySection2: "2. Who We Are",
+    privacyWhoWeAre:
+      "Cashback+ Ltd\nRegistered in the United Kingdom\nEmail: privacy@cashbackplus.co.uk\nSupport: support@cashbackplus.co.uk",
+    privacySection3: "3. What Information We Collect",
+    privacySubsection3a: "Information You Provide",
+    privacyInfo3a:
+      "• Full name\n• Email address\n• Password (encrypted)\n• Account settings and preferences\n• Support requests and communications\n• Forum participation and posts",
+    privacySubsection3b: "Information Collected Automatically",
+    privacyInfo3b:
+      "• IP address\n• Device type (computer, mobile, tablet)\n• Browser type and version\n• Pages visited and time spent\n• Referring URL\n• Cookie identifiers\n• Approximate location (based on IP)",
+    privacySubsection3c: "Transaction Information",
+    privacyInfo3c:
+      "• Order ID\n• Retailer and product information\n• Purchase amount and currency\n• Cashback amount and status\n• Transaction timestamp\n• Affiliate network reference",
+    privacyNotBankData:
+      "Important: Cashback+ does not collect, store, or process payment card details. All payments and bank transfers are handled by our secure third-party payment processor.",
+    privacySection4: "4. How We Use Your Information",
+    privacyUsesList:
+      "• Creating and managing your account\n• Processing authentication and login\n• Calculating and paying cashback rewards\n• Communicating with you about orders and cashback status\n• Providing customer support\n• Preventing fraud and unauthorised access\n• Analysing usage patterns to improve our service\n• Complying with legal and regulatory obligations\n• Sending optional marketing communications (with your consent)",
+    privacySection5: "5. Legal Basis For Processing",
+    privacyBasis1: "Contract",
+    privacyBasisText1:
+      "Processing is necessary to fulfil our agreement with you, including account management, cashback calculations, and order tracking.",
+    privacyBasis2: "Legitimate Interests",
+    privacyBasisText2:
+      "We process data to improve service security, prevent fraud, conduct analytics, and enhance user experience.",
+    privacyBasis3: "Consent",
+    privacyBasisText3:
+      "Marketing emails and non-essential cookies require your explicit consent, which you can withdraw at any time.",
+    privacyBasis4: "Legal Obligation",
+    privacyBasisText4:
+      "We process data as required by UK tax law, anti-money laundering regulations, and data protection legislation.",
+    privacySection6: "6. Cashback Tracking and Affiliate Programs",
+    privacyTrackingText:
+      "Cashback+ uses affiliate partnerships to track purchases and confirm eligibility for rewards. When you click an affiliate link and make a purchase, partner networks and retailers may collect information about your visit and transaction. This data is shared with Cashback+ to verify the purchase and calculate cashback. We only use this information to process your reward and improve our service accuracy. We do not share this data with other third parties for marketing purposes.",
+    privacySection7: "7. Sharing Your Information",
+    privacySharing1: "Technology Partners",
+    privacySharingText1:
+      "Cloud hosting providers, database services, and website infrastructure.",
+    privacySharing2: "Affiliate Networks",
+    privacySharingText2:
+      "Partners like Awin, CJ Affiliate, Impact, and other networks for purchase tracking and verification.",
+    privacySharing3: "Analytics Providers",
+    privacySharingText3:
+      "Google Analytics, Microsoft Clarity, and similar services for usage analysis (anonymised).",
+    privacySharing4: "Legal Authorities",
+    privacySharingText4:
+      "If required by law, court order, or regulation (fraud investigation, tax compliance, etc.).",
+    privacyNotSellData:
+      "We do not sell personal information to third parties for marketing or commercial purposes.",
+    privacySection8: "8. International Data Transfers",
+    privacyTransfersText:
+      "Your data may be transferred to and processed in countries outside the United Kingdom, including the United States and European Union. Where necessary, we apply Standard Contractual Clauses and other appropriate safeguards to protect your data in accordance with UK GDPR requirements.",
+    privacySection9: "9. Data Retention",
+    privacyRetention1: "Active Accounts",
+    privacyRetentionText1: "Personal data is retained while your account is active and in use.",
+    privacyRetention2: "Closed Accounts",
+    privacyRetentionText2:
+      "Data is retained for up to 1 year after account deletion for legal compliance, tax purposes, and dispute resolution.",
+    privacyRetention3: "Marketing Preferences",
+    privacyRetentionText3: "Retained until you withdraw consent or request deletion.",
+    privacyRetention4: "Transaction Records",
+    privacyRetentionText4:
+      "Retained for 7 years to meet UK tax and anti-money laundering requirements.",
+    privacySection10: "10. Security Measures",
+    privacySecurityText:
+      "We use reasonable technical and organisational measures to protect your data, including:\n\n• HTTPS encryption for all communications\n• AES-256 encryption for stored passwords\n• Role-based access control\n• Regular security monitoring and updates\n• PCI DSS compliance for payment processing\n• Annual security audits\n\nHowever, no security system is completely immune to breaches. We encourage you to use strong passwords and report suspicious activity to support@cashbackplus.co.uk.",
+    privacySection11: "11. Your Rights",
+    privacyRights:
+      "Under UK GDPR, you have the right to:\n\n• Right of Access: Request a copy of your personal data\n• Right to Rectification: Correct inaccurate information\n• Right to Erasure: Request deletion of your data ('right to be forgotten')\n• Right to Restrict Processing: Limit how we use your data\n• Right to Object: Oppose certain processing activities\n• Right to Data Portability: Receive your data in a portable format\n• Right to Withdraw Consent: Stop optional processing at any time\n\nTo exercise these rights, contact privacy@cashbackplus.co.uk. We will respond within 30 calendar days.",
+    privacySection12: "12. Marketing Communications",
+    privacyMarketingText:
+      "We send emails about:\n\n• Account updates and cashback notifications (mandatory)\n• Promotional offers and new features (optional)\n• Partner recommendations (optional)\n\nYou can unsubscribe from marketing emails by clicking 'Unsubscribe' in any email or managing preferences in your account settings. Service notifications will continue regardless of marketing preferences.",
+    privacySection13: "13. Cookies",
+    privacyCookiesText:
+      "Cashback+ uses cookies to:\n\n• Essential Cookies: Maintain your login session and remember preferences\n• Analytics Cookies: Understand how users interact with our platform\n• Affiliate Cookies: Track purchase attribution for cashback calculation\n\nYou can control cookies through your browser settings or our Cookie Consent Banner. For detailed information, see our separate Cookie Policy.",
+    privacySection14: "14. Children's Privacy",
+    privacyChildrenText:
+      "Cashback+ is not intended for individuals under 18 years of age. We do not knowingly collect personal data from children. If we become aware of data from a minor, we will delete it immediately. Parents or guardians with concerns should contact privacy@cashbackplus.co.uk.",
+    privacySection15: "15. Complaints",
+    privacyComplaintsText:
+      "If you believe your data protection rights have been breached, you may lodge a complaint with:\n\nInformation Commissioner's Office (ICO)\nWycliffe House, Water Lane\nWilmslow, Cheshire SK9 5AF\nTelephone: 0303 123 1113\nWebsite: https://ico.org.uk",
+    privacySection16: "16. Changes to This Policy",
+    privacyChangesText:
+      "We may update this Privacy Policy to reflect changes in our practices or legal requirements. The latest version will always be available on this page. Continued use of Cashback+ after changes indicates acceptance of the updated policy.",
+    privacySection17: "17. Cashback Eligibility",
+    privacyEligibilityText:
+      "• Cashback is credited after the retailer or affiliate network confirms the purchase\n• Cancelled, returned, or refused orders do not qualify for cashback\n• Some product categories (gift cards, digital goods) may be excluded\n• Retailers and affiliate networks make final decisions on cashback confirmation\n• Disputed transactions are investigated by our support team",
+    privacySection18: "18. Price Comparison Disclaimer",
+    privacyPriceText:
+      "Prices, availability, cashback rates, and promotional offers may change at any time. Cashback+ does not guarantee that information displayed on the platform matches the retailer's current offer. The final price, terms, and conditions are determined solely by the retailer. Always verify pricing and terms before completing a purchase.",
+    privacySection19: "19. Contact Us",
+    privacyContactText:
+      "For privacy inquiries, data requests, or complaints:\n\nCashback+ Ltd\nEmail: privacy@cashbackplus.co.uk\n\nFor general support:\nEmail: support@cashbackplus.co.uk\n\nWe aim to respond to all inquiries within 5 business days.",
+  },
+
+  RU: {
+    privacy: "Политика конфиденциальности",
+    privacyTitle: "Политика конфиденциальности и защиты данных",
+    privacyLastUpdated: "Последнее обновление",
+    privacySection1: "1. Введение",
+    privacyIntroText:
+      "Cashback+ обязуется защищать вашу конфиденциальность и обеспечивать прозрачность в отношении того, как мы собираем, используем и защищаем ваши персональные данные. Данная политика соответствует требованиям UK GDPR и Закона о защите данных 2018 года. Мы уважаем ваши права на защиту данных и предоставляем вам контроль над вашей личной информацией.",
+    privacySection2: "2. Кто мы",
+    privacyWhoWeAre:
+      "Cashback+ Ltd\nЗарегистрирована в Великобритании\nEmail: privacy@cashbackplus.co.uk\nПоддержка: support@cashbackplus.co.uk",
+    privacySection3: "3. Какую информацию мы собираем",
+    privacySubsection3a: "Информация, которую вы предоставляете",
+    privacyInfo3a:
+      "• Полное имя\n• Email адрес\n• Пароль (в зашифрованном виде)\n• Настройки аккаунта\n• Обращения в поддержку\n• Сообщения на форуме",
+    privacySubsection3b: "Информация, собираемая автоматически",
+    privacyInfo3b:
+      "• IP-адрес\n• Тип устройства (компьютер, мобильный телефон, планшет)\n• Браузер и версия\n• Посещаемые страницы и время просмотра\n• Реферальный URL\n• Cookie-файлы\n• Примерное местоположение (на основе IP)",
+    privacySubsection3c: "Информация о транзакциях",
+    privacyInfo3c:
+      "• Идентификатор заказа\n• Магазин и информация о товаре\n• Сумма покупки и валюта\n• Размер кешбэка и статус\n• Время транзакции\n• Ссылка партнёрской сети",
+    privacyNotBankData:
+      "Важно: Cashback+ не собирает, не хранит и не обрабатывает данные банковских карт. Все платежи обрабатываются безопасным третьим лицом.",
+    privacySection4: "4. Как мы используем вашу информацию",
+    privacyUsesList:
+      "• Создание и управление вашим аккаунтом\n• Авторизация и вход\n• Расчёт и выплата кешбэка\n• Информирование о статусе заказов\n• Предоставление поддержки\n• Предотвращение мошенничества\n• Анализ использования для улучшения сервиса\n• Соответствие юридическим требованиям\n• Отправка маркетинговых сообщений (с вашего согласия)",
+    privacySection5: "5. Правовая основа обработки",
+    privacyBasis1: "Договор",
+    privacyBasisText1:
+      "Обработка необходима для выполнения договора с вами, включая управление аккаунтом и расчёт кешбэка.",
+    privacyBasis2: "Законные интересы",
+    privacyBasisText2:
+      "Мы обрабатываем данные для улучшения безопасности, предотвращения мошенничества и анализа использования.",
+    privacyBasis3: "Согласие",
+    privacyBasisText3:
+      "Маркетинговые письма требуют вашего явного согласия, которое вы можете отозвать в любой момент.",
+    privacyBasis4: "Юридическое обязательство",
+    privacyBasisText4:
+      "Мы обрабатываем данные в соответствии с налоговым законодательством и требованиями по борьбе с отмыванием денег.",
+    privacySection6: "6. Отслеживание кешбэка и партнёрские программы",
+    privacyTrackingText:
+      "Cashback+ использует партнёрские сети для отслеживания покупок и подтверждения кешбэка. Информация о вашем переходе и покупке может быть передана в партнёрские сети для расчёта вознаграждения. Мы используем эту информацию только для начисления кешбэка и не передаём её третьим лицам в маркетинговых целях.",
+    privacySection7: "7. Передача вашей информации",
+    privacySharing1: "Технологические партнёры",
+    privacySharingText1:
+      "Поставщики облачных сервисов, хостинга и инфраструктуры.",
+    privacySharing2: "Партнёрские сети",
+    privacySharingText2:
+      "Awin, CJ Affiliate, Impact и другие сети для отслеживания и подтверждения покупок.",
+    privacySharing3: "Провайдеры аналитики",
+    privacySharingText3:
+      "Google Analytics, Microsoft Clarity для анализа использования (анонимизировано).",
+    privacySharing4: "Государственные органы",
+    privacySharingText4:
+      "Если требуется по закону (расследование мошенничества, налоговое соответствие).",
+    privacyNotSellData:
+      "Мы не продаём персональные данные третьим лицам в маркетинговых целях.",
+    privacySection8: "8. Трансграничная передача данных",
+    privacyTransfersText:
+      "Ваши данные могут передаваться и обрабатываться за пределами Великобритании, включая США и ЕС. Мы применяем стандартные контрактные условия и другие меры защиты в соответствии с требованиями UK GDPR.",
+    privacySection9: "9. Хранение данных",
+    privacyRetention1: "Активные аккаунты",
+    privacyRetentionText1: "Данные хранятся пока ваш аккаунт активен.",
+    privacyRetention2: "Удалённые аккаунты",
+    privacyRetentionText2:
+      "Данные хранятся до 1 года после удаления аккаунта для юридического соответствия.",
+    privacyRetention3: "Маркетинговые предпочтения",
+    privacyRetentionText3: "Хранятся до отозвания согласия.",
+    privacyRetention4: "Записи о транзакциях",
+    privacyRetentionText4:
+      "Хранятся 7 лет в соответствии с налоговым законодательством.",
+    privacySection10: "10. Меры безопасности",
+    privacySecurityText:
+      "Мы используем разумные технические и организационные меры для защиты данных:\n\n• Шифрование HTTPS для всех коммуникаций\n• Шифрование пароля (AES-256)\n• Контроль доступа по ролям\n• Регулярный мониторинг безопасности\n• Соответствие PCI DSS\n• Ежегодные аудиты безопасности",
+    privacySection11: "11. Ваши права",
+    privacyRights:
+      "Согласно UK GDPR, у вас есть право на:\n\n• Доступ к данным: запрос копии ваших данных\n• Исправление: корректировка неточной информации\n• Удаление: запрос удаления данных\n• Ограничение обработки: ограничить использование ваших данных\n• Возражение: возразить против обработки\n• Перенос данных: получить данные в портативном формате\n• Отозвать согласие: прекратить обработку в любой момент\n\nДля реализации этих прав контактируйте privacy@cashbackplus.co.uk. Ответ в течение 30 дней.",
+    privacySection12: "12. Маркетинговые коммуникации",
+    privacyMarketingText:
+      "Мы отправляем письма о:\n\n• Обновлениях аккаунта и статусе кешбэка (обязательно)\n• Специальные предложения и новые функции (опционально)\n• Рекомендации партнёров (опционально)\n\nВы можете отписаться, нажав 'Отписаться' в письме или изменив предпочтения в аккаунте.",
+    privacySection13: "13. Cookie-файлы",
+    privacyCookiesText:
+      "Cashback+ использует cookies для:\n\n• Основные: сохранение сессии и предпочтений\n• Аналитика: анализ взаимодействия с платформой\n• Партнёрские: отслеживание кешбэка\n\nВы можете контролировать cookies через настройки браузера.",
+    privacySection14: "14. Конфиденциальность детей",
+    privacyChildrenText:
+      "Cashback+ не предназначена для лиц младше 18 лет. Мы не собираем данные детей. При обнаружении таких данных мы их немедленно удаляем.",
+    privacySection15: "15. Жалобы",
+    privacyComplaintsText:
+      "Если вы считаете, что ваши права нарушены, вы можете подать жалобу в Information Commissioner's Office (ICO) через https://ico.org.uk",
+    privacySection16: "16. Изменения политики",
+    privacyChangesText:
+      "Мы можем обновлять данную политику. Последняя версия всегда доступна на этой странице.",
+    privacySection17: "17. Условия начисления кешбэка",
+    privacyEligibilityText:
+      "• Кешбэк начисляется после подтверждения магазином\n• Отменённые и возвращённые заказы не оплачиваются\n• Некоторые категории товаров могут быть исключены\n• Магазин принимает финальное решение о кешбэке\n• Спорные транзакции расследуются нашей поддержкой",
+    privacySection18: "18. Об ответственности за цены",
+    privacyPriceText:
+      "Цены, доступность, размер кешбэка могут меняться в любой момент. Cashback+ не гарантирует соответствие информации на платформе текущему предложению магазина. Окончательная цена определяется магазином.",
+    privacySection19: "19. Свяжитесь с нами",
+    privacyContactText:
+      "Для вопросов о конфиденциальности:\n\nCashback+ Ltd\nEmail: privacy@cashbackplus.co.uk\n\nДля общей поддержки:\nEmail: support@cashbackplus.co.uk\n\nМы ответим в течение 5 рабочих дней.",
+  },
+
+  DE: {
+    privacy: "Datenschutz",
+    privacyTitle: "Datenschutz- und Datenschutzrichtlinie",
+    privacyLastUpdated: "Zuletzt aktualisiert",
+    privacySection1: "1. Einführung",
+    privacyIntroText:
+      "Cashback+ verpflichtet sich, Ihre Privatsphäre zu schützen. Diese Richtlinie erklärt, wie wir Ihre persönlichen Daten gemäß UK GDPR und dem Data Protection Act 2018 behandeln.",
+    privacySection2: "2. Wer wir sind",
+    privacyWhoWeAre:
+      "Cashback+ Ltd\nRegistriert im Vereinigten Königreich\nEmail: privacy@cashbackplus.co.uk\nSupport: support@cashbackplus.co.uk",
+    privacySection3: "3. Welche Informationen wir sammeln",
+    privacySubsection3a: "Von Ihnen bereitgestellte Informationen",
+    privacyInfo3a:
+      "• Vollständiger Name\n• E-Mail-Adresse\n• Passwort (verschlüsselt)\n• Kontoeinstellungen\n• Support-Anfragen",
+    privacySubsection3b: "Automatisch erfasste Informationen",
+    privacyInfo3b:
+      "• IP-Adresse\n• Gerätetyp\n• Browser-Informationen\n• Besuchte Seiten\n• Cookies",
+    privacySubsection3c: "Transaktionsinformationen",
+    privacyInfo3c:
+      "• Bestellnummer\n• Einzelhandelsinformationen\n• Kaufbetrag\n• Cashback-Betrag",
+    privacyNotBankData:
+      "Wichtig: Cashback+ sammelt keine Zahlungskartendaten.",
+    privacySection4: "4. Wie wir Ihre Informationen verwenden",
+    privacyUsesList:
+      "• Kontoerstellung und -verwaltung\n• Authentifizierung\n• Cashback-Berechnung\n• Kundensupport\n• Betrugsprävention\n• Service-Verbesserung",
+    privacySection5: "5. Rechtsgrundlage für die Verarbeitung",
+    privacyBasis1: "Vertrag",
+    privacyBasisText1: "Notwendig für die Erfüllung unserer Vereinbarung mit Ihnen.",
+    privacyBasis2: "Berechtigte Interessen",
+    privacyBasisText2: "Für Sicherheit, Analytik und Service-Verbesserung.",
+    privacyBasis3: "Zustimmung",
+    privacyBasisText3:
+      "Für Marketing-E-Mails und optionale Cookies mit Ihrer Erlaubnis.",
+    privacyBasis4: "Rechtliche Verpflichtung",
+    privacyBasisText4: "Gemäß Steuer- und Datenschutzgesetzen.",
+    privacySection6: "6. Cashback-Verfolgung und Partnerprogramme",
+    privacyTrackingText:
+      "Cashback+ verwendet Partnernetzwerke zur Verfolgung von Käufen. Diese Informationen werden nur für Cashback-Berechnungen verwendet.",
+    privacySection7: "7. Weitergabe Ihrer Informationen",
+    privacySharing1: "Technologie-Partner",
+    privacySharingText1: "Cloud-Hosting-Anbieter und Infrastruktur-Services.",
+    privacySharing2: "Partnernetzwerke",
+    privacySharingText2: "Awin, CJ, Impact für Kaufverfolgung.",
+    privacySharing3: "Analyse-Anbieter",
+    privacySharingText3: "Google Analytics, Microsoft Clarity (anonymisiert).",
+    privacySharing4: "Behörden",
+    privacySharingText4: "Bei Bedarf gemäß Gesetz.",
+    privacyNotSellData:
+      "Wir verkaufen keine persönlichen Daten an Dritte.",
+    privacySection8: "8. Internationale Datenübertragungen",
+    privacyTransfersText:
+      "Ihre Daten können in die USA und EU übertragen werden. Wir wenden Standardvertragsklauseln an.",
+    privacySection9: "9. Datenspeicherung",
+    privacyRetention1: "Aktive Konten",
+    privacyRetentionText1: "Daten werden gespeichert, solange Ihr Konto aktiv ist.",
+    privacyRetention2: "Gelöschte Konten",
+    privacyRetentionText2:
+      "Daten werden bis zu 1 Jahr nach Löschung gespeichert.",
+    privacyRetention3: "Marketing-Einstellungen",
+    privacyRetentionText3: "Bis zum Widerruf der Zustimmung.",
+    privacyRetention4: "Transaktionsdatensätze",
+    privacyRetentionText4:
+      "7 Jahre gemäß Steueranforderungen.",
+    privacySection10: "10. Sicherheitsmaßnahmen",
+    privacySecurityText:
+      "Wir verwenden angemessene technische und organisatorische Maßnahmen:\n\n• HTTPS-Verschlüsselung\n• AES-256-Passwort-Verschlüsselung\n• Rollenbasierte Zugriffskontrolle\n• Regelmäßige Sicherheitsüberwachung",
+    privacySection11: "11. Ihre Rechte",
+    privacyRights:
+      "Nach UK GDPR haben Sie das Recht auf:\n\n• Zugang zu Ihren Daten\n• Berichtigung falscher Informationen\n• Löschung Ihrer Daten\n• Einschränkung der Verarbeitung\n• Widerspruch gegen die Verarbeitung\n• Datentragbarkeit\n• Zustimmung widerrufen",
+    privacySection12: "12. Marketing-Mitteilungen",
+    privacyMarketingText:
+      "Wir senden E-Mails zu:\n\n• Kontoaktualisierungen (erforderlich)\n• Spezielle Angebote (optional)\n• Partner-Empfehlungen (optional)\n\nSie können Abmelden, indem Sie auf den Link in der E-Mail klicken.",
+    privacySection13: "13. Cookies",
+    privacyCookiesText:
+      "Cashback+ verwendet Cookies für:\n\n• Grundlegende Cookies: Session-Verwaltung\n• Analyse-Cookies: Nutzungsanalyse\n• Partner-Cookies: Kaufverfolgung",
+    privacySection14: "14. Datenschutz für Kinder",
+    privacyChildrenText:
+      "Cashback+ ist nicht für Personen unter 18 Jahren gedacht. Wir sammeln keine Daten von Kindern.",
+    privacySection15: "15. Beschwerden",
+    privacyComplaintsText:
+      "Bei Bedenken können Sie sich an die Information Commissioner's Office (ICO) wenden: https://ico.org.uk",
+    privacySection16: "16. Änderungen dieser Richtlinie",
+    privacyChangesText:
+      "Wir können diese Richtlinie aktualisieren. Die neueste Version ist immer verfügbar.",
+    privacySection17: "17. Cashback-Berechtigung",
+    privacyEligibilityText:
+      "• Cashback wird nach Bestätigung durch den Einzelhandelshändler gutgeschrieben\n• Stornierte und zurückgegebene Bestellungen werden nicht bezahlt\n• Einige Produktkategorien können ausgeschlossen sein\n• Der Einzelhandelshändler trifft die endgültige Entscheidung",
+    privacySection18: "18. Preisvergleich-Haftungsausschluss",
+    privacyPriceText:
+      "Preise, Verfügbarkeit und Cashback-Sätze können sich jederzeit ändern. Cashback+ garantiert nicht, dass die auf der Plattform angezeigten Informationen dem aktuellen Angebot des Einzelhandelshändlers entsprechen.",
+    privacySection19: "19. Kontaktieren Sie uns",
+    privacyContactText:
+      "Für Datenschutzfragen:\n\nCashback+ Ltd\nEmail: privacy@cashbackplus.co.uk\n\nFür allgemeinen Support:\nEmail: support@cashbackplus.co.uk",
+  },
+
+  FR: {
+    privacy: "Politique de Confidentialité",
+    privacyTitle: "Politique de Confidentialité et de Protection des Données",
+    privacyLastUpdated: "Dernière mise à jour",
+    privacySection1: "1. Introduction",
+    privacyIntroText:
+      "Cashback+ s'engage à protéger votre vie privée. Cette politique explique comment nous traitons vos données personnelles conformément au UK GDPR et à la loi sur la protection des données 2018.",
+    privacySection2: "2. Qui sommes-nous",
+    privacyWhoWeAre:
+      "Cashback+ Ltd\nEnregistré au Royaume-Uni\nEmail: privacy@cashbackplus.co.uk\nSupport: support@cashbackplus.co.uk",
+    privacySection3: "3. Quelles informations nous collectons",
+    privacySubsection3a: "Informations que vous fournissez",
+    privacyInfo3a:
+      "• Nom complet\n• Adresse e-mail\n• Mot de passe (chiffré)\n• Paramètres du compte\n• Demandes de support",
+    privacySubsection3b: "Informations collectées automatiquement",
+    privacyInfo3b:
+      "• Adresse IP\n• Type d'appareil\n• Navigateur\n• Pages visitées\n• Cookies",
+    privacySubsection3c: "Informations sur les transactions",
+    privacyInfo3c:
+      "• Numéro de commande\n• Informations sur le détaillant\n• Montant de l'achat\n• Montant du cashback",
+    privacyNotBankData:
+      "Important: Cashback+ ne collecte pas les données de carte de paiement.",
+    privacySection4: "4. Comment nous utilisons vos informations",
+    privacyUsesList:
+      "• Création et gestion de compte\n• Authentification\n• Calcul du cashback\n• Support client\n• Prévention de la fraude\n• Amélioration du service",
+    privacySection5: "5. Base légale du traitement",
+    privacyBasis1: "Contrat",
+    privacyBasisText1:
+      "Nécessaire pour remplir notre accord avec vous.",
+    privacyBasis2: "Intérêts Légitimes",
+    privacyBasisText2:
+      "Pour la sécurité, l'analyse et l'amélioration du service.",
+    privacyBasis3: "Consentement",
+    privacyBasisText3:
+      "Pour les e-mails marketing et les cookies optionnels.",
+    privacyBasis4: "Obligation Légale",
+    privacyBasisText4:
+      "Conformément aux lois fiscales et de protection des données.",
+    privacySection6: "6. Suivi du cashback et programmes d'affiliation",
+    privacyTrackingText:
+      "Cashback+ utilise des réseaux d'affiliation pour suivre les achats. Ces informations sont utilisées uniquement pour les calculs de cashback.",
+    privacySection7: "7. Partage de vos informations",
+    privacySharing1: "Partenaires Technologiques",
+    privacySharingText1:
+      "Fournisseurs d'hébergement cloud et services d'infrastructure.",
+    privacySharing2: "Réseaux d'Affiliation",
+    privacySharingText2:
+      "Awin, CJ, Impact pour le suivi des achats.",
+    privacySharing3: "Fournisseurs d'Analyses",
+    privacySharingText3:
+      "Google Analytics, Microsoft Clarity (anonymisé).",
+    privacySharing4: "Autorités",
+    privacySharingText4: "Si la loi l'exige.",
+    privacyNotSellData:
+      "Nous ne vendons pas vos données personnelles à des tiers.",
+    privacySection8: "8. Transferts internationaux de données",
+    privacyTransfersText:
+      "Vos données peuvent être transférées aux États-Unis et à l'UE. Nous appliquons des clauses contractuelles standards.",
+    privacySection9: "9. Rétention des données",
+    privacyRetention1: "Comptes Actifs",
+    privacyRetentionText1:
+      "Les données sont conservées tant que votre compte est actif.",
+    privacyRetention2: "Comptes Supprimés",
+    privacyRetentionText2:
+      "Les données sont conservées jusqu'à 1 an après suppression.",
+    privacyRetention3: "Préférences Marketing",
+    privacyRetentionText3: "Jusqu'au retrait du consentement.",
+    privacyRetention4: "Dossiers de Transactions",
+    privacyRetentionText4:
+      "7 ans conformément aux exigences fiscales.",
+    privacySection10: "10. Mesures de Sécurité",
+    privacySecurityText:
+      "Nous utilisons des mesures techniques et organisationnelles raisonnables:\n\n• Chiffrement HTTPS\n• Chiffrement des mots de passe AES-256\n• Contrôle d'accès basé sur les rôles\n• Surveillance régulière de la sécurité",
+    privacySection11: "11. Vos Droits",
+    privacyRights:
+      "Selon le UK GDPR, vous avez le droit à:\n\n• Accès à vos données\n• Rectification des informations inexactes\n• Suppression de vos données\n• Limitation du traitement\n• Opposition au traitement\n• Portabilité des données\n• Retrait du consentement",
+    privacySection12: "12. Communications Commerciales",
+    privacyMarketingText:
+      "Nous envoyons des e-mails concernant:\n\n• Mises à jour de compte (requis)\n• Offres spéciales (optionnel)\n• Recommandations de partenaires (optionnel)\n\nVous pouvez vous désabonner en cliquant sur le lien dans l'e-mail.",
+    privacySection13: "13. Cookies",
+    privacyCookiesText:
+      "Cashback+ utilise des cookies pour:\n\n• Cookies Essentiels: Gestion de session\n• Cookies d'Analyse: Analyse de l'utilisation\n• Cookies Partenaires: Suivi des achats",
+    privacySection14: "14. Confidentialité des Enfants",
+    privacyChildrenText:
+      "Cashback+ n'est pas destinée aux personnes de moins de 18 ans. Nous ne collectons pas de données d'enfants.",
+    privacySection15: "15. Plaintes",
+    privacyComplaintsText:
+      "Pour les préoccupations, vous pouvez contacter la Commission Nationale de l'Informatique et des Libertés (CNIL) ou ICO: https://ico.org.uk",
+    privacySection16: "16. Modifications de cette Politique",
+    privacyChangesText:
+      "Nous pouvons mettre à jour cette politique. La version la plus récente est toujours disponible.",
+    privacySection17: "17. Éligibilité du Cashback",
+    privacyEligibilityText:
+      "• Le cashback est crédité après confirmation par le détaillant\n• Les commandes annulées et retournées ne sont pas rémunérées\n• Certaines catégories de produits peuvent être exclues\n• Le détaillant prend la décision finale",
+    privacySection18: "18. Avertissement de Comparaison de Prix",
+    privacyPriceText:
+      "Les prix, la disponibilité et les taux de cashback peuvent changer à tout moment. Cashback+ ne garantit pas que les informations affichées correspondent à l'offre actuelle du détaillant.",
+    privacySection19: "19. Nous Contacter",
+    privacyContactText:
+      "Pour les questions de confidentialité:\n\nCashback+ Ltd\nEmail: privacy@cashbackplus.co.uk\n\nPour le support général:\nEmail: support@cashbackplus.co.uk",
+  },
+};
+
 export const translations = {
   EN: {
     ...faqTranslations.EN,
+    ...privacyTranslations.EN,
 
     title: "Smart shopping with Cashback+",
     description:
@@ -262,6 +666,7 @@ export const translations = {
 
   RU: {
     ...faqTranslations.RU,
+    ...privacyTranslations.RU,
 
     title: "Умные покупки с Cashback+",
     description:
@@ -316,6 +721,7 @@ export const translations = {
 
   DE: {
     ...faqTranslations.DE,
+    ...privacyTranslations.DE,
 
     title: "Smartes Einkaufen mit Cashback+",
     description:
@@ -370,6 +776,7 @@ export const translations = {
 
   FR: {
     ...faqTranslations.FR,
+    ...privacyTranslations.FR,
 
     title: "Achats intelligents avec Cashback+",
     description:

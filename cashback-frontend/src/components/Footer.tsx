@@ -8,22 +8,26 @@ interface FooterProps {
 
 const footerLabels: Record<
   string,
-  { faq: string; contacts: string }
+  { faq: string; privacy: string; contacts: string }
 > = {
   EN: {
     faq: "FAQ",
+    privacy: "Privacy Policy",
     contacts: "Contacts",
   },
   RU: {
     faq: "Частые вопросы",
+    privacy: "Политика конфиденциальности",
     contacts: "Контакты",
   },
   DE: {
     faq: "Häufige Fragen",
+    privacy: "Datenschutz",
     contacts: "Kontakt",
   },
   FR: {
     faq: "Questions fréquentes",
+    privacy: "Politique de Confidentialité",
     contacts: "Contact",
   },
 };
@@ -56,6 +60,7 @@ export default function Footer({ lang }: FooterProps) {
         }}
       >
         <Link to="/faq">{labels.faq}</Link>
+        <Link to="/privacy">{labels.privacy}</Link>
         <Link to="/terms">{t.footerTerms}</Link>
         <Link to="/contacts">{labels.contacts}</Link>
       </nav>

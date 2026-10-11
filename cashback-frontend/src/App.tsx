@@ -15,6 +15,7 @@ import ProtectedGuard from "./components/ProtectedGuard";
 import ForumGuard from "./components/ForumGuard";
 
 import FAQ from "./pages/FAQ";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ProductOffers from "./pages/ProductOffers";
 import ForumRegister from "./pages/ForumRegister";
 import ForumRules from "./pages/ForumRules";
@@ -56,6 +57,7 @@ export function AppRoutes() {
         />
 
         <Route path="/faq" element={<FAQ lang={L} />} />
+        <Route path="/privacy" element={<PrivacyPolicy lang={L} />} />
 
         <Route path="/about" element={<AboutUs lang={lang} />} />
         <Route
@@ -88,7 +90,6 @@ export function AppRoutes() {
           element={<VerifyEmail lang={L} />}
         />
 
-        {/* Просмотр не требует регистрации. */}
         <Route path="/shop" element={<Shop lang={L} />} />
         <Route path="/bonuses" element={<Bonuses />} />
         <Route path="/bonuses/ads" element={<BonusAds />} />
@@ -97,7 +98,6 @@ export function AppRoutes() {
           element={<BonusResearch />}
         />
 
-        {/* Участие в исследовании остаётся защищённым. */}
         <Route
           path="/bonuses/research/:directionId"
           element={<BonusGuard />}
@@ -105,7 +105,6 @@ export function AppRoutes() {
           <Route index element={<ResearchDirection />} />
         </Route>
 
-        {/* Авторизация и подтверждение почты. */}
         <Route element={<ProtectedGuard />}>
           <Route path="/profile" element={<Profile />} />
           <Route
@@ -118,7 +117,6 @@ export function AppRoutes() {
           />
         </Route>
 
-        {/* Существующая защита форума сохранена. */}
         <Route element={<ForumGuard readOnly />}>
           <Route path="/forum">
             <Route
