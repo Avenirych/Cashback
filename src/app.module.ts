@@ -9,6 +9,7 @@ import { TopicsModule } from './topics.module';
 import { ForumModule } from './forum/forum.module';
 import { AddForumUsers1791394800000 } from './migrations/1791394800000-AddForumUsers';
 import { BonusModule } from './bonus/bonus.module';
+import { MarketingPreferencesModule } from './marketing-preferences/marketing-preferences.module';
 
 @Module({
   imports: [
@@ -39,9 +40,7 @@ import { BonusModule } from './bonus/bonus.module';
           password,
           database: config.get<string>('DB_NAME') ?? 'cashback',
           autoLoadEntities: true,
-          migrations: [
-            AddForumUsers1791394800000,
-          ],
+          migrations: [AddForumUsers1791394800000],
           migrationsRun: false,
           synchronize: false,
         };
@@ -54,6 +53,7 @@ import { BonusModule } from './bonus/bonus.module';
     ForumModule,
     AnalyticsModule,
     BonusModule,
+    MarketingPreferencesModule,
   ],
 })
 export class AppModule {}
