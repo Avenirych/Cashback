@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
-import { useOnboarding } from "../onboarding";
+import {
+  readOnboarding,
+  useOnboarding,
+  validUserId,
+} from "../onboarding";
 import "./BonusAds.css";
 
 const BACKGROUND_URL = "/ads/background.png";
@@ -185,7 +189,9 @@ export default function BonusAds() {
   const { eligible } = useOnboarding();
 
   const hasAccess = Boolean(
-    user &&
+    !loading &&
+      user &&
+      validUserId(user.id) &&
       token &&
       user.email_verified &&
       eligible
@@ -197,13 +203,14 @@ export default function BonusAds() {
     const next = "/bonuses/ads";
 
     if (!user || !token || !user.email_verified) {
-      navigate(
-        `/register?next=${encodeURIComponent(next)}`
-      );
+      navigate(`/register?next=${encodeURIComponent(next)}`);
       return false;
     }
 
-    if (!eligible) {
+    if (
+      !validUserId(user.id) ||
+      !readOnboarding(user.id).eligible
+    ) {
       navigate("/profile", {
         state: {
           bonusOnboardingRequired: true,
@@ -216,8 +223,6 @@ export default function BonusAds() {
     return true;
   };
 
-  // Перемонтируем плеер при смене аккаунта или прав.
-  // Старая сессия не продолжится после выхода.
   const viewerKey = loading
     ? "loading"
     : `${user?.id ?? "guest"}:${hasAccess ? "allowed" : "blocked"}`;
@@ -345,7 +350,6 @@ function AdsViewer({
   }, []);
 
   useEffect(() => {
-    // Гости не читают и не записывают дневной результат.
     if (userId === null) return;
 
     if (readDaily(userId, localDay()) === null) {
@@ -433,7 +437,6 @@ function AdsViewer({
   const startViewing = () => {
     if (playing || authLoading) return;
 
-    // Регистрация запускается именно по кнопке согласия.
     if (!requireAccess()) return;
 
     if (userId === null || assets !== "ready") return;
@@ -445,7 +448,6 @@ function AdsViewer({
   };
 
   const endSession = () => {
-    // Прерванный ролик не учитывается.
     setPlaying(false);
     elapsedRef.current = 0;
     creditedRef.current = false;

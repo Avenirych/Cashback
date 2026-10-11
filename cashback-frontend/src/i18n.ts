@@ -144,7 +144,7 @@ const faqTranslations = {
       {
         question: "С кем работает Cashback+?",
         answer:
-          "Cashback+ работает с хорошо зарекомендовавшими себя на рынке компаниями и представляет на ваш выбор только те товары, за которые возможно получение кешбэка или комиссии за участие в их рекламных и исследовательских программах. Cashback+ полагается на добросовестность партнеров, но, к сожалению, не может гарантировать достоверность предоставленной информации и то, что партнер выполнит заявленные обязательства перед Cashback+.",
+          "Cashback+ работает с хорошо зарекомендовавшимися на рынке компаниями и представляет на ваш выбор только те товары, за которые возможно получение кешбэка или комиссии за участие в их рекламных и исследовательских программах. Cashback+ полагается на добросовестность партнеров, но, к сожалению, не может гарантировать достоверность предоставленной информации и то, что партнер выполнит заявленные обязательства перед Cashback+.",
       },
       {
         question: "Какие условия участия в исследовательских программах?",
@@ -608,10 +608,121 @@ const privacyTranslations = {
   },
 };
 
+const marketingPreferencesTranslations = {
+  EN: {
+    marketingPreferences: "Marketing Preferences",
+    marketingPreferencesTitle: "Email & Marketing Preferences",
+    marketingPreferencesDescription:
+      "Manage how you receive communications from Cashback+. Service notifications about your account and cashback are mandatory and cannot be disabled. Optional marketing emails require your consent.",
+    emailNotifications: "Email Notifications",
+    accountUpdates: "Account Updates & Cashback Status",
+    accountUpdatesDesc:
+      "Essential notifications about your account, cashback status, and order updates. Cannot be disabled.",
+    specialOffers: "Special Offers & New Features",
+    specialOffersDesc:
+      "Promotional offers, feature announcements, and platform updates (optional).",
+    partnerRecommendations: "Partner Recommendations",
+    partnerRecommendationsDesc:
+      "Recommendations for products and partners based on your interests (optional).",
+    status: "Status",
+    mandatory: "Mandatory",
+    optional: "Optional",
+    enabled: "Enabled",
+    disabled: "Disabled",
+    savePreferences: "Save Preferences",
+    preferencesSaved: "Your preferences have been saved successfully.",
+    preferencesError: "Error saving preferences. Please try again.",
+    unsubscribeInfo:
+      "You can unsubscribe from marketing emails using the link at the bottom of each email, or by adjusting these settings.",
+  },
+
+  RU: {
+    marketingPreferences: "Маркетинговые предпочтения",
+    marketingPreferencesTitle: "Предпочтения Email и маркетинга",
+    marketingPreferencesDescription:
+      "Управляйте способом получения информации от Cashback+. Уведомления об обновлениях аккаунта и статусе кешбэка являются обязательными и не могут быть отключены. Опциональные письма требуют вашего согласия.",
+    emailNotifications: "Email уведомления",
+    accountUpdates: "Обновления аккаунта и статус кешбэка",
+    accountUpdatesDesc:
+      "Важные уведомления об аккаунте, статусе кешбэка и заказах. Не может быть отключено.",
+    specialOffers: "Специальные предложения и новые функции",
+    specialOffersDesc:
+      "Маркетинговые предложения, анонсы функций и обновления платформы (опционально).",
+    partnerRecommendations: "Рекомендации партнёров",
+    partnerRecommendationsDesc:
+      "Рекомендации товаров и партнёров на основе ваших интересов (опционально).",
+    status: "Статус",
+    mandatory: "Обязательно",
+    optional: "Опционально",
+    enabled: "Включено",
+    disabled: "Отключено",
+    savePreferences: "Сохранить предпочтения",
+    preferencesSaved: "Ваши предпочтения успешно сохранены.",
+    preferencesError: "Ошибка сохранения предпочтений. Попробуйте снова.",
+    unsubscribeInfo:
+      "Вы можете отписаться от маркетинговых писем, используя ссылку в конце каждого письма или изменив эти настройки.",
+  },
+
+  DE: {
+    marketingPreferences: "Marketing-Einstellungen",
+    marketingPreferencesTitle: "E-Mail- und Marketing-Einstellungen",
+    marketingPreferencesDescription:
+      "Verwalten Sie, wie Sie Mitteilungen von Cashback+ erhalten. Benachrichtigungen über Ihr Konto und Ihren Cashback-Status sind obligatorisch und können nicht deaktiviert werden. Optionale Marketing-E-Mails erfordern Ihre Zustimmung.",
+    emailNotifications: "E-Mail-Benachrichtigungen",
+    accountUpdates: "Konto-Updates und Cashback-Status",
+    accountUpdatesDesc:
+      "Wichtige Benachrichtigungen über Ihr Konto, Cashback-Status und Bestellaktualisierungen. Kann nicht deaktiviert werden.",
+    specialOffers: "Spezielle Angebote und neue Funktionen",
+    specialOffersDesc:
+      "Werbeaktionen, Funktionsankündigungen und Plattform-Updates (optional).",
+    partnerRecommendations: "Partner-Empfehlungen",
+    partnerRecommendationsDesc:
+      "Empfehlungen für Produkte und Partner basierend auf Ihren Interessen (optional).",
+    status: "Status",
+    mandatory: "Obligatorisch",
+    optional: "Optional",
+    enabled: "Aktiviert",
+    disabled: "Deaktiviert",
+    savePreferences: "Einstellungen speichern",
+    preferencesSaved: "Ihre Einstellungen wurden erfolgreich gespeichert.",
+    preferencesError: "Fehler beim Speichern der Einstellungen. Bitte versuchen Sie es erneut.",
+    unsubscribeInfo:
+      "Sie können sich von Marketing-E-Mails abmelden, indem Sie den Link am Ende jeder E-Mail verwenden oder diese Einstellungen anpassen.",
+  },
+
+  FR: {
+    marketingPreferences: "Préférences de Marketing",
+    marketingPreferencesTitle: "Préférences Email et Marketing",
+    marketingPreferencesDescription:
+      "Gérez la façon dont vous recevez les communications de Cashback+. Les notifications concernant votre compte et votre statut de cashback sont obligatoires et ne peuvent pas être désactivées. Les e-mails marketing optionnels nécessitent votre consentement.",
+    emailNotifications: "Notifications par Email",
+    accountUpdates: "Mises à jour du compte et statut du cashback",
+    accountUpdatesDesc:
+      "Notifications essentielles concernant votre compte, votre statut de cashback et les mises à jour des commandes. Impossible à désactiver.",
+    specialOffers: "Offres spéciales et nouvelles fonctionnalités",
+    specialOffersDesc:
+      "Promotions, annonces de fonctionnalités et mises à jour de la plateforme (optionnel).",
+    partnerRecommendations: "Recommandations de Partenaires",
+    partnerRecommendationsDesc:
+      "Recommandations de produits et de partenaires en fonction de vos intérêts (optionnel).",
+    status: "Statut",
+    mandatory: "Obligatoire",
+    optional: "Optionnel",
+    enabled: "Activé",
+    disabled: "Désactivé",
+    savePreferences: "Enregistrer les préférences",
+    preferencesSaved: "Vos préférences ont été enregistrées avec succès.",
+    preferencesError: "Erreur lors de l'enregistrement des préférences. Veuillez réessayer.",
+    unsubscribeInfo:
+      "Vous pouvez vous désabonner des e-mails marketing en utilisant le lien en bas de chaque e-mail ou en ajustant ces paramètres.",
+  },
+};
+
 export const translations = {
   EN: {
     ...faqTranslations.EN,
     ...privacyTranslations.EN,
+    ...marketingPreferencesTranslations.EN,
 
     title: "Smart shopping with Cashback+",
     description:
@@ -667,6 +778,7 @@ export const translations = {
   RU: {
     ...faqTranslations.RU,
     ...privacyTranslations.RU,
+    ...marketingPreferencesTranslations.RU,
 
     title: "Умные покупки с Cashback+",
     description:
@@ -722,6 +834,7 @@ export const translations = {
   DE: {
     ...faqTranslations.DE,
     ...privacyTranslations.DE,
+    ...marketingPreferencesTranslations.DE,
 
     title: "Smartes Einkaufen mit Cashback+",
     description:
@@ -777,6 +890,7 @@ export const translations = {
   FR: {
     ...faqTranslations.FR,
     ...privacyTranslations.FR,
+    ...marketingPreferencesTranslations.FR,
 
     title: "Achats intelligents avec Cashback+",
     description:

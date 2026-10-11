@@ -39,7 +39,7 @@ export default function MarketingPreferencesPanel({
         setError(null);
 
         const response = await fetch(
-          `${API_URL}/api/user/marketing-preferences`,
+          `${API_URL}/user/marketing-preferences`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ export default function MarketingPreferencesPanel({
 
     try {
       const response = await fetch(
-        `${API_URL}/api/user/marketing-preferences`,
+        `${API_URL}/user/marketing-preferences`,
         {
           method: "POST",
           headers: {
