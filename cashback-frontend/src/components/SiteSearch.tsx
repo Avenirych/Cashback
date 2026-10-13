@@ -3,43 +3,114 @@ import { useNavigate } from "react-router-dom";
 import { useLang } from "../context/LanguageContext";
 import "./SiteSearch.css";
 
-type Page = { path: string; names: Record<string, string>; keywords: string };
-const pages: Page[] = [
-  { path: "/", names: { ru: "Главная", en: "Home", de: "Startseite", fr: "Accueil" }, keywords: "cashback главная welcome home" },
-  { path: "/about", names: { ru: "О нас", en: "About us", de: "Über uns", fr: "À propos" }, keywords: "компания проект about company" },
-  { path: "/services", names: { ru: "Как это работает", en: "How it works", de: "So funktioniert's", fr: "Comment ça marche" }, keywords: "инструкция помощь cashback how works" },
-  { path: "/shop", names: { ru: "Магазин", en: "Shop", de: "Shop", fr: "Boutique" }, keywords: "товары покупки цены скидки shop products discount" },
-  { path: "/forum", names: { ru: "Форум", en: "Forum", de: "Forum", fr: "Forum" }, keywords: "обсуждение темы вопросы forum topics" },
-  { path: "/bonuses", names: { ru: "Бонусы", en: "Bonuses", de: "Boni", fr: "Bonus" }, keywords: "баллы cashback бонусы rewards" },
-  { path: "/bonuses/ads", names: { ru: "Бонусы за рекламу", en: "Ad bonuses", de: "Werbeboni", fr: "Bonus publicitaires" }, keywords: "реклама объявления ads advertising" },
-  { path: "/bonuses/research", names: { ru: "Исследования", en: "Research", de: "Forschung", fr: "Recherche" }, keywords: "опросы исследования survey research" },
-  { path: "/faq", names: { ru: "Частые вопросы", en: "FAQ", de: "FAQ", fr: "FAQ" }, keywords: "faq помощь вопросы ответы help" },
-  { path: "/contacts", names: { ru: "Контакты", en: "Contacts", de: "Kontakt", fr: "Contacts" }, keywords: "почта связь email support contact" },
-  { path: "/terms", names: { ru: "Условия использования", en: "Terms and conditions", de: "Nutzungsbedingungen", fr: "Conditions d'utilisation" }, keywords: "правила соглашение terms" },
-  { path: "/privacy", names: { ru: "Политика конфиденциальности", en: "Privacy policy", de: "Datenschutz", fr: "Confidentialité" }, keywords: "данные приватность privacy" },
+type SearchPage = { path: string; title: string; titleEn: string; text: string };
+
+const fallbackPages: SearchPage[] = [
+  { path: "/", title: "Главная", titleEn: "Home", text: "cashback welcome главная старт" },
+  { path: "/about", title: "О нас", titleEn: "About us", text: "компания проект about" },
+  { path: "/services", title: "Как это работает", titleEn: "How it works", text: "помощь инструкция cashback services" },
+  { path: "/shop", title: "Магазин", titleEn: "Shop", text: "товары покупки скидки products shopping" },
+  { path: "/forum", title: "Форум", titleEn: "Forum", text: "темы обсуждения topics" },
+  { path: "/bonuses", title: "Бонусы", titleEn: "Bonuses", text: "награды rewards" },
+  { path: "/bonuses/ads", title: "Бонусы за рекламу", titleEn: "Advertising bonuses", text: "реклама ads" },
+  { path: "/bonuses/research", title: "Исследования", titleEn: "Research", text: "опросы survey" },
+  { path: "/faq", title: "Частые вопросы", titleEn: "FAQ", text: "вопросы ответы помощь help" },
+  { path: "/contacts", title: "Контакты", titleEn: "Contacts", text: "связь поддержка email support" },
+  { path: "/terms", title: "Условия использования", titleEn: "Terms and conditions", text: "правила соглашение terms" },
+  { path: "/privacy", title: "Конфиденциальность", titleEn: "Privacy policy", text: "личные данные privacy" },
+  { path: "/product-offers", title: "Предложения", titleEn: "Product offers", text: "товары предложения offers" },
+  { path: "/forum/rules", title: "Правила форума", titleEn: "Forum rules", text: "форум правила" },
 ];
-const ui: Record<string, { placeholder: string; noResults: string; search: string }> = {
-  ru: { placeholder: "Поиск по сайту...", noResults: "Разделы не найдены", search: "Поиск" },
-  en: { placeholder: "Search the site...", noResults: "No pages found", search: "Search" },
-  de: { placeholder: "Website durchsuchen...", noResults: "Keine Seiten gefunden", search: "Suche" },
-  fr: { placeholder: "Rechercher sur le site...", noResults: "Aucune page trouvée", search: "Rechercher" },
+
+// Keep the existing DE/FR labels and keywords independently of generated titles.
+const localizedPages: Record<string, { de: string; fr: string; keywords: string }> = {
+  "/": { de: "Startseite", fr: "Accueil", keywords: "cashback главная welcome home" },
+  "/about": { de: "Über uns", fr: "À propos", keywords: "компания проект about company" },
+  "/services": { de: "So funktioniert's", fr: "Comment ça marche", keywords: "инструкция помощь cashback how works" },
+  "/shop": { de: "Shop", fr: "Boutique", keywords: "товары покупки цены скидки shop products discount" },
+  "/forum": { de: "Forum", fr: "Forum", keywords: "обсуждение темы вопросы forum topics" },
+  "/bonuses": { de: "Boni", fr: "Bonus", keywords: "баллы cashback бонусы rewards" },
+  "/bonuses/ads": { de: "Werbeboni", fr: "Bonus publicitaires", keywords: "реклама объявления ads advertising" },
+  "/bonuses/research": { de: "Forschung", fr: "Recherche", keywords: "опросы исследования survey research" },
+  "/faq": { de: "FAQ", fr: "FAQ", keywords: "faq помощь вопросы ответы help" },
+  "/contacts": { de: "Kontakt", fr: "Contacts", keywords: "почта связь email support contact" },
+  "/terms": { de: "Nutzungsbedingungen", fr: "Conditions d'utilisation", keywords: "правила соглашение terms" },
+  "/privacy": { de: "Datenschutz", fr: "Confidentialité", keywords: "данные приватность privacy" },
 };
+
+// Only these known static React routes may come from the JSON index.
+const allowedPaths = new Set(fallbackPages.map((page) => page.path));
+function isAllowedPath(path: unknown): path is string {
+  return typeof path === "string" && allowedPaths.has(path);
+}
+function getPageTitle(page: SearchPage, language: string): string {
+  if (language === "ru") return page.title;
+  const localized = localizedPages[page.path];
+  if (language === "de") return localized?.de || page.titleEn;
+  if (language === "fr") return localized?.fr || page.titleEn;
+  return page.titleEn;
+}
+
+const ui: Record<string, { placeholder: string; empty: string; search: string }> = {
+  ru: { placeholder: "Поиск по сайту...", empty: "Ничего не найдено", search: "Поиск" },
+  en: { placeholder: "Search the site...", empty: "No results found", search: "Search" },
+  de: { placeholder: "Website durchsuchen...", empty: "Keine Ergebnisse", search: "Suche" },
+  fr: { placeholder: "Rechercher sur le site...", empty: "Aucun résultat", search: "Rechercher" },
+};
+
 export default function SiteSearch() {
   const { lang } = useLang();
   const language = (lang || "en").toLowerCase();
   const t = ui[language] || ui.en;
   const navigate = useNavigate();
+  const root = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
+  const [pages, setPages] = useState<SearchPage[]>(fallbackPages);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const base = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
+    fetch(`${base}/search-index.json`, { signal: controller.signal, cache: "no-cache" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data: unknown) => {
+        if (!Array.isArray(data)) throw new Error("Invalid search index format");
+        const indexed = data.filter((item): item is SearchPage =>
+          item !== null && typeof item === "object" &&
+          isAllowedPath(item.path) && typeof item.title === "string" &&
+          typeof item.titleEn === "string" && typeof item.text === "string"
+        );
+        if (controller.signal.aborted || indexed.length === 0) return;
+        const merged = new Map<string, SearchPage>(fallbackPages.map((page) => [page.path, page]));
+        for (const page of indexed) {
+          const previous = merged.get(page.path);
+          merged.set(page.path, { ...page, text: `${previous?.text || ""} ${page.text}` });
+        }
+        setPages(Array.from(merged.values()));
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) console.warn("Search index unavailable; using section search.", error);
+      });
+    return () => controller.abort();
+  }, []);
+
   const results = useMemo(() => {
-    const q = query.trim().toLocaleLowerCase();
-    if (!q) return [];
-    return pages.filter(page =>
-      Object.values(page.names).some(name => name.toLocaleLowerCase().includes(q)) ||
-      page.keywords.toLocaleLowerCase().includes(q)
-    ).slice(0, 8);
-  }, [query]);
+    const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) return [];
+    return pages.map((page) => {
+      const localized = localizedPages[page.path];
+      const titles = `${page.title} ${page.titleEn} ${localized?.de || ""} ${localized?.fr || ""}`.toLocaleLowerCase();
+      const content = `${titles} ${page.path} ${page.text} ${localized?.keywords || ""}`.toLocaleLowerCase();
+      if (!terms.every((term) => content.includes(term))) return { page, score: -1 };
+      return { page, score: terms.reduce((sum, term) => sum + (titles.includes(term) ? 10 : 1), 0) };
+    }).filter((item) => item.score >= 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8).map((item) => item.page);
+  }, [pages, query]);
+
   useEffect(() => {
     const outside = (event: PointerEvent) => {
       if (event.target instanceof Node && !root.current?.contains(event.target)) setOpen(false);
@@ -47,25 +118,40 @@ export default function SiteSearch() {
     const escape = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
     document.addEventListener("pointerdown", outside);
     document.addEventListener("keydown", escape);
-    return () => { document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", escape); };
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("keydown", escape);
+    };
   }, []);
-  const go = (path: string) => { navigate(path); setOpen(false); setQuery(""); };
+
+  const go = (path: string) => {
+    if (!isAllowedPath(path)) return;
+    navigate(path); setQuery(""); setOpen(false);
+  };
   return (
     <div className="site-search" ref={root} role="search">
-      <form className="site-search-form" onSubmit={event => { event.preventDefault(); if (results.length) go(results[0].path); else setOpen(true); }}>
-        <input aria-label={t.search} type="search" autoComplete="off" value={query} placeholder={t.placeholder}
-          onFocus={() => setOpen(true)} onChange={event => { setQuery(event.target.value); setOpen(true); }} />
+      <form className="site-search-form" onSubmit={(event) => {
+        event.preventDefault();
+        if (results.length) go(results[0].path);
+        else setOpen(true);
+      }}>
+        <input aria-label={t.search} type="search" autoComplete="off" value={query}
+          placeholder={t.placeholder} onFocus={() => setOpen(true)}
+          onChange={(event) => { setQuery(event.target.value); setOpen(true); }} />
         <button type="submit" aria-label={t.search} title={t.search}>
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" />
+          </svg>
         </button>
       </form>
       {open && query.trim() && (
-        <div className="site-search-results" role="listbox" aria-label={t.search}>
-          {results.length ? results.map(page => (
-            <button key={page.path} type="button" role="option" aria-selected="false" onClick={() => go(page.path)}>
-              <span>{page.names[language] || page.names.en}</span><small>{page.path}</small>
+        <div className="site-search-results" aria-label={t.search}>
+          {results.length ? results.map((page) => (
+            <button key={page.path} type="button" onClick={() => go(page.path)}>
+              <span>{getPageTitle(page, language)}</span>
+              <small>{page.path}</small>
             </button>
-          )) : <div className="site-search-empty">{t.noResults}</div>}
+          )) : <div className="site-search-empty">{t.empty}</div>}
         </div>
       )}
     </div>

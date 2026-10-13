@@ -19,12 +19,15 @@
     "react-dom": "^19.3.0",
     "react-router-dom": "^6.30.6",
     "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
+    "typescript": "4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "prestart": "node scripts/build-search-index.mjs",
     "start": "react-scripts start",
+    "prebuild": "node scripts/build-search-index.mjs",
     "build": "react-scripts build",
+    "typecheck": "tsc --noEmit --incremental false",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
