@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 
 import { AddForumUsers1791394800000 } from './migrations/1791394800000-AddForumUsers';
+import { AddUsersEmailUnique1791888000000 } from './migrations/1791888000000-AddUsersEmailUnique';
 import { CreateBonusTables1791630000000 } from './migrations/CreateBonusTables';
 
 const password = process.env.DB_PASSWORD;
@@ -30,6 +31,7 @@ export const AppDataSource = new DataSource({
   migrations: [
     AddForumUsers1791394800000,
     CreateBonusTables1791630000000,
+    AddUsersEmailUnique1791888000000,
   ],
 
   synchronize: false,
