@@ -99,3 +99,10 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Dedicated Docker test credentials and local configuration backups
+/docker/compose.test.env
+/config-backups/
+
+# Isolated migration preparation dependencies and verification output
+/work/

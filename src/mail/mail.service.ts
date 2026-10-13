@@ -52,19 +52,19 @@ export class MailService {
         });
         this.mode = 'ethereal';
         this.logger.log(
-          `Mail service initialized (Ethereal). Test account: ${testAccount.user}`,
+          'Mail service initialized (Ethereal)',
         );
         return;
       }
 
-      // Development default: no network, link is returned in the API response.
+      // Development default: no network; preview remains internal to the transport.
       this.mode = 'preview';
       this.logger.log(
         'Mail service initialized (local preview: no email is sent over the network)',
       );
-    } catch (error) {
+    } catch {
       this.transporter = null;
-      this.logger.error(`Failed to initialize mail transporter: ${error}`);
+      this.logger.error('Failed to initialize mail transporter');
     }
   }
 
@@ -82,7 +82,7 @@ export class MailService {
    * link itself in local preview mode). Returns null for real SMTP.
    * Throws if sending fails.
    */
-  async sendVerificationEmail(
+  private async deliverVerificationEmail(
     email: string,
     token: string,
     userName: string,
@@ -99,9 +99,6 @@ export class MailService {
       if (this.isProduction) {
         throw new Error('Mail transporter is not configured');
       }
-      this.logger.log(
-        `[local preview] Verification link for ${email}: ${link}`,
-      );
       return link;
     }
 
@@ -138,19 +135,40 @@ export class MailService {
 
     if (this.mode === 'ethereal') {
       const previewUrl = nodemailer.getTestMessageUrl(info) || null;
-      this.logger.log(`Verification email preview: ${previewUrl}`);
+
       return previewUrl;
     }
 
-    this.logger.log(`Verification email sent to ${email}`);
+
     return null;
   }
 
+  async sendVerificationEmail(
+    email: string, token: string, userName: string,
+  ): Promise<string | null> {
+    return this.sendSafely('verification', email, token, userName);
+  }
+
+  private async sendSafely(
+    operation: 'verification' | 'resend-verification',
+    email: string, token: string, userName: string,
+  ): Promise<string | null> {
+    this.logger.log(`Mail delivery attempt (${operation})`);
+    try {
+      const result = await this.deliverVerificationEmail(email, token, userName);
+      this.logger.log(`Mail delivery completed (${operation}, ${this.mode})`);
+      return result;
+    } catch {
+      this.logger.error(`Mail delivery failed (${operation})`);
+      // Never propagate transport diagnostics containing addresses or secrets.
+      throw new Error('Mail delivery failed');
+    }
+  }
   async sendResendVerificationEmail(
     email: string,
     token: string,
     userName: string,
   ): Promise<string | null> {
-    return this.sendVerificationEmail(email, token, userName);
+    return this.sendSafely('resend-verification', email, token, userName);
   }
 }

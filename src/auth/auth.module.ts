@@ -8,14 +8,13 @@ import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { MailModule } from '../mail/mail.module';
 import { User } from '../users/user.entity';
+import { JwtConfigurationModule, jwtRegistrationOptions } from './jwt-configuration';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || 'SUPER_SECRET_KEY',
-      signOptions: { expiresIn: '24h' },
-    }),
+    JwtConfigurationModule,
+    JwtModule.registerAsync(jwtRegistrationOptions),
     PassportModule,
     UsersModule,
     MailModule,

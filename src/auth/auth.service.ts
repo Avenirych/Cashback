@@ -37,9 +37,6 @@ export class AuthService {
     private readonly mailService: MailService,
   ) {}
 
-  private get isProduction(): boolean {
-    return process.env.NODE_ENV === 'production';
-  }
 
   private normalizeEmail(email: string): string {
     return email.toLowerCase().trim();
@@ -119,26 +116,23 @@ export class AuthService {
     });
 
     let verificationEmailSent = false;
-    let previewUrl: string | null = null;
+
 
     try {
-      previewUrl = await this.mailService.sendVerificationEmail(
+      await this.mailService.sendVerificationEmail(
         user.email,
         emailToken,
         user.name,
       );
       verificationEmailSent = true;
-    } catch (error) {
-      this.logger.error(
-        `Verification email could not be sent for user ID ${user.id}: ${error}`,
-      );
+    } catch {
+      this.logger.error('Verification email delivery failed');
     }
 
     return {
       access_token: this.createAccessToken(user),
       user: this.safeUser(user),
       verification_email_sent: verificationEmailSent,
-      preview_url: this.isProduction ? undefined : previewUrl,
       message: verificationEmailSent
         ? 'Registration successful. Please check your email to verify your account.'
         : 'Account created, but the verification email could not be sent. Please request another email.',
@@ -184,38 +178,32 @@ export class AuthService {
       throw new BadRequestException('Email is required');
     }
 
-    const normalizedEmail = this.normalizeEmail(email);
-    const user = await this.usersService.getByEmail(normalizedEmail);
-
-    const response: { message: string; preview_url?: string | null } = {
+    const response = {
       message:
         'If this account exists and requires verification, a verification email has been sent.',
     };
 
-    if (!user || user.email_verified) {
-      return response;
-    }
-
-    const emailToken = this.generateEmailToken();
-
-    await this.usersService.update(user.id, {
-      email_token: emailToken,
-      email_token_expires_at: this.getEmailTokenExpiration(),
-    });
-
+    // A public resend response must never contain a verification capability,
+    // including in local preview mode or transport/repository failure paths.
     try {
-      const previewUrl = await this.mailService.sendResendVerificationEmail(
+      const normalizedEmail = this.normalizeEmail(email);
+      const user = await this.usersService.getByEmail(normalizedEmail);
+      if (!user || user.email_verified) return response;
+
+      const emailToken = this.generateEmailToken();
+      await this.usersService.update(user.id, {
+        email_token: emailToken,
+        email_token_expires_at: this.getEmailTokenExpiration(),
+      });
+      // Deliberately discard the mail transport's optional preview URL.
+      await this.mailService.sendResendVerificationEmail(
         user.email,
         emailToken,
         user.name,
       );
-      if (!this.isProduction) {
-        response.preview_url = previewUrl;
-      }
-    } catch (error) {
-      this.logger.error(
-        `Verification email resend failed for user ID ${user.id}: ${error}`,
-      );
+    } catch {
+      // Transport errors can contain recipient addresses or verification URLs.
+      this.logger.error('Verification email resend failed');
     }
 
     return response;
@@ -260,3 +248,4 @@ export class AuthService {
     return this.safeUser(dbUser);
   }
 }
+

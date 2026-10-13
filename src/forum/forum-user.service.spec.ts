@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import {
@@ -366,7 +367,7 @@ describe('ForumUserService with ForumService access enforcement', () => {
       },
     );
     expect(unlink).toHaveBeenCalledWith(
-      expect.stringContaining('/public/avatars/7-123.png'),
+      expect.stringContaining(path.join('public', 'avatars', '7-123.png')),
     );
   });
 
@@ -451,7 +452,7 @@ describe('ForumUserService with ForumService access enforcement', () => {
         new RegExp(`^/avatars/7-\\d+\\.${extension}$`),
       );
       expect(writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('/public/avatars/7-'),
+        expect.stringContaining(path.join('public', 'avatars', '7-')),
         buffer,
         { flag: 'wx' },
       );
@@ -469,7 +470,7 @@ describe('ForumUserService with ForumService access enforcement', () => {
     const second = await service.uploadAvatar(7, png());
     expect(first.avatar_url).not.toBe(second.avatar_url);
     expect(unlink).toHaveBeenCalledWith(
-      expect.stringContaining('/public/avatars/7-123.png'),
+      expect.stringContaining(path.join('public', 'avatars', '7-123.png')),
     );
     members.findOne.mockResolvedValue({
       ...member(),

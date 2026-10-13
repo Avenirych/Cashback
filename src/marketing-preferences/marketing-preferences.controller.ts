@@ -1,37 +1,21 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  UseGuards,
-  Request,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MarketingPreferencesService } from './marketing-preferences.service';
+import { parseMarketingPreferences } from './marketing-preferences.dto';
+interface PreferencesRequest { user: { id: number } }
 
 @Controller('user/marketing-preferences')
 @UseGuards(JwtAuthGuard)
 export class MarketingPreferencesController {
-  constructor(
-    private readonly service: MarketingPreferencesService,
-  ) {}
+  constructor(private readonly service: MarketingPreferencesService) {}
 
   @Get()
-  async getPreferences(@Request() req: any) {
-    const userId = req.user.id;
-    return this.service.getPreferences(userId);
+  getPreferences(@Req() req: PreferencesRequest) {
+    return this.service.getPreferences(req.user.id);
   }
 
   @Post()
-  async updatePreferences(
-    @Request() req: any,
-    @Body()
-    dto: {
-      specialOffers?: boolean;
-      partnerRecommendations?: boolean;
-    },
-  ) {
-    const userId = req.user.id;
-    return this.service.updatePreferences(userId, dto);
+  updatePreferences(@Req() req: PreferencesRequest, @Body() body: unknown) {
+    return this.service.updatePreferences(req.user.id, parseMarketingPreferences(body));
   }
 }
