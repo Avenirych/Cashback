@@ -2,6 +2,7 @@ import React from "react";
 import { fireEvent, render, screen, waitFor, act } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import * as Auth from "../context/AuthContext";
+import * as Bonuses from "../context/BonusesContext";
 import ForumGuard from "../components/ForumGuard";
 import ForumAuthor from "../components/ForumAuthor";
 import ForumRegister from "./ForumRegister";
@@ -20,6 +21,11 @@ const profile = {
 let auth: ReturnType<typeof Auth.useAuth>;
 beforeEach(() => {
   localStorage.clear();
+  jest.spyOn(Bonuses, "useBonuses").mockReturnValue({
+    summary: null, items: [], transfers: [], availableBonusIds: [], availableAmount: 0,
+    loading: false, error: null, refresh: jest.fn().mockResolvedValue(undefined),
+    transfer: jest.fn().mockResolvedValue([]),
+  });
   auth = {
     user: mainUser, token: "main-token", loading: false, isEmailVerificationPending: false,
     forumUser: null, forumSessionActive: false, forumLoading: false, forumRegistered: false, forumBanned: false,
@@ -302,11 +308,20 @@ test("banned active membership never exposes topic creation or message inputs", 
 test("active forum header exit invokes only forum logout", async () => {
   auth.forumUser = profile; auth.forumSessionActive = true;
   (fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => [] });
-  render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+  const view = render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+  await screen.findByText("Start a discussion by creating the first topic!");
+  const mainToken = auth.token;
   fireEvent.click(screen.getByRole("button", { name: "Exit Forum" }));
-  expect(auth.logoutFromForum).toHaveBeenCalled();
+  expect(auth.logoutFromForum).toHaveBeenCalledTimes(1);
   expect(auth.logout).not.toHaveBeenCalled();
-  await screen.findByText(/first/i);
+  expect(auth.user).toBe(mainUser);
+  expect(auth.token).toBe(mainToken);
+  // Simulate the context update emitted by forum logout, retaining the main session.
+  auth.forumUser = null;
+  auth.forumSessionActive = false;
+  view.rerender(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+  expect(screen.queryByRole("button", { name: "Exit Forum" })).not.toBeInTheDocument();
+  expect(screen.getByText("Read only")).toBeInTheDocument();
 });
 
 test("avatar validation enforces exact byte limit and safe backend origin", () => {

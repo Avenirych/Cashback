@@ -14,6 +14,7 @@ import {
   readOnboarding,
   saveCredentials,
   wiseKey,
+  useOnboarding,
 } from "./onboarding";
 
 jest.mock("./context/AuthContext", () => ({ useAuth: jest.fn() }));
@@ -50,11 +51,21 @@ function routeTree(path: string) {
   );
 }
 
+function OnboardingState() {
+  const state = useOnboarding();
+  return <output data-testid="onboarding-state">{JSON.stringify(state)}</output>;
+}
+function onboardingState(): ReturnType<typeof readOnboarding> {
+  return JSON.parse(screen.getByTestId("onboarding-state").textContent || "{}");
+}
+
 function renderWelcome(lang = "en", withProfile = false) {
+  localStorage.setItem("lang", lang);
   return render(
     <LanguageProvider>
       <MemoryRouter>
         <Welcome lang={lang} />
+        <OnboardingState />
         {withProfile && <Profile />}
         <Location />
       </MemoryRouter>
@@ -116,12 +127,11 @@ test.each([
     seed(data);
     renderWelcome();
     const button = screen.getByRole("button", { name: "Get bonuses" });
-    expect(button).toBeDisabled();
-    expect(button).toHaveAccessibleDescription(
-      getOnboardingMessages("en").explanation
-    );
+    expect(onboardingState()).toMatchObject({ credentialsSaved: false, eligible: false });
+    expect(() => enrollInProgram(user.id)).toThrow();
+    expect(button).toBeEnabled();
     fireEvent.click(button);
-    expect(screen.getByTestId("location")).toHaveTextContent(/^\/$/);
+    expect(screen.getByTestId("location")).toHaveTextContent("/bonuses");
     expect(readOnboarding(user.id).eligible).toBe(false);
   }
 );
@@ -135,16 +145,16 @@ test.each([undefined, null, 0, -1, NaN, Infinity, 1.5, "101"])(
     );
     auth({ ...user, id });
     renderWelcome();
-    expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+    expect(onboardingState().eligible).toBe(false);
     expect(() => saveCredentials(id, form)).toThrow();
     expect(() => enrollInProgram(id)).toThrow();
   }
 );
 
-test("unsaved typing, save and explicit enrollment update Welcome immediately", () => {
+test("unsaved typing, save and explicit enrollment update the domain hook immediately", () => {
   renderWelcome("en", true);
   fillForm();
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
   expect(
     screen.getByRole("button", { name: messages.en.enroll })
   ).toBeDisabled();
@@ -153,24 +163,22 @@ test("unsaved typing, save and explicit enrollment update Welcome immediately", 
   );
   expect(readOnboarding(user.id).credentialsSaved).toBe(true);
   expect(localStorage.getItem(enrollmentKey)).toBeNull();
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
   fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
+  expect(onboardingState().eligible).toBe(true);
   fireEvent.click(screen.getByRole("button", { name: "Get bonuses" }));
   expect(screen.getByTestId("location")).toHaveTextContent("/bonuses");
   expect(global.fetch).not.toHaveBeenCalled();
 });
 
 test.each(["en", "ru", "de", "fr"])(
-  "localized %s explanation has a working profile link",
+  "localized %s Profile explanation preserves explicit enrollment requirements",
   (lang) => {
-    renderWelcome(lang);
+    renderWelcome(lang, true);
     const t = getOnboardingMessages(lang);
     expect(screen.getByText(t.explanation)).toBeInTheDocument();
-    const link = screen.getByRole("link", { name: t.profile });
-    expect(link).toHaveAttribute("href", "/profile");
-    fireEvent.click(link);
-    expect(screen.getByTestId("location")).toHaveTextContent("/profile");
+    expect(onboardingState()).toMatchObject({ credentialsSaved: false, eligible: false });
+    expect(screen.getByRole("button", { name: messages[lang as keyof typeof messages].enroll })).toBeDisabled();
   }
 );
 
@@ -179,9 +187,11 @@ test.each(["/bonuses", "/bonuses/ads", "/bonuses/research"])(
   (path) => {
     render(routeTree(path));
     expect(screen.getByTestId("location")).toHaveTextContent(path);
-    expect(
-      screen.getByRole("heading", { name: "Get bonuses" })
-    ).toBeInTheDocument();
+    if (path === "/bonuses/ads") {
+      expect(screen.getByRole("region", { name: "Watching advertising" })).toBeInTheDocument();
+    } else {
+      expect(screen.getByRole("heading", { name: path === "/bonuses" ? "Get bonuses" : "Research Bonuses" })).toBeInTheDocument();
+    }
   }
 );
 
@@ -194,12 +204,13 @@ test("page load and link navigation both work for bonus pages", () => {
   ).toBeInTheDocument();
 });
 
-test("button handler rechecks storage even before a storage event updates the UI", () => {
+test("public Welcome navigation remains available while domain eligibility is revoked", () => {
   seed(saved);
   renderWelcome();
   localStorage.removeItem(wiseKey);
   fireEvent.click(screen.getByRole("button", { name: "Get bonuses" }));
-  expect(screen.getByTestId("location")).toHaveTextContent(/^\/$/);
+  expect(screen.getByTestId("location")).toHaveTextContent("/bonuses");
+  expect(readOnboarding(user.id).eligible).toBe(false);
 });
 
 test("invalid old enrollment leaves form editable and requires fresh enrollment after repair", () => {
@@ -208,7 +219,7 @@ test("invalid old enrollment leaves form editable and requires fresh enrollment 
   const enrolled = readOnboarding(user.id);
   expect(enrolled.eligible).toBe(true);
 
-  localStorage.setItem(wiseKey, JSON.stringify({ ...saved, email: "bad" }));
+  localStorage.setItem(`${wiseKey}:${user.id}`, JSON.stringify({ ...saved, email: "bad" }));
   const corrupted = readOnboarding(user.id);
   expect(corrupted.eligible).toBe(false);
 
@@ -220,12 +231,12 @@ test("invalid old enrollment leaves form editable and requires fresh enrollment 
   fireEvent.click(
     screen.getByRole("button", { name: messages.en.saveCredentials })
   );
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
   expect(
     screen.getByRole("button", { name: messages.en.enroll })
   ).toBeEnabled();
   fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
+  expect(onboardingState().eligible).toBe(true);
 });
 
 test("corrupt enrollment can be repaired by saving credentials and explicitly enrolling", () => {
@@ -235,12 +246,12 @@ test("corrupt enrollment can be repaired by saving credentials and explicitly en
   fireEvent.click(
     screen.getByRole("button", { name: messages.en.saveCredentials })
   );
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
   expect(
     screen.getByRole("button", { name: messages.en.enroll })
   ).toBeEnabled();
   fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
+  expect(onboardingState().eligible).toBe(true);
 });
 
 test("account switch, logout and return never inherit eligibility", () => {
@@ -290,28 +301,29 @@ test("repairing one user's scoped data never removes another user's enrollment",
   expect(readOnboarding(user.id).eligible).toBe(false);
 });
 
-test("relevant storage changes update the form and button state", () => {
+test("relevant storage changes update Profile and the domain hook", () => {
   seed(saved);
-  renderWelcome();
+  renderWelcome("en", true);
+  expect(screen.getByLabelText(messages.en.fullName)).toHaveValue(form.fullName);
   act(() => {
     localStorage.removeItem(wiseKey);
     window.dispatchEvent(new StorageEvent("storage", { key: wiseKey }));
   });
   expect(screen.getByLabelText(messages.en.fullName)).toHaveValue("");
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
 });
 
-test("storage clearing and enrollment changes update already mounted Welcome", () => {
+test("storage clearing and enrollment changes update the mounted domain hook", () => {
   renderWelcome();
   act(() => saveCredentials(user.id, form));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
   act(() => enrollInProgram(user.id));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
+  expect(onboardingState().eligible).toBe(true);
   act(() => {
     localStorage.clear();
     window.dispatchEvent(new StorageEvent("storage", { key: null }));
   });
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
 });
 
 test("read failures and save/enrollment write failures fail closed and are recoverable", () => {
@@ -338,7 +350,7 @@ test("read failures and save/enrollment write failures fail closed and are recov
   expect(screen.getByRole("alert")).toHaveTextContent(
     messages.en.storageError
   );
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
   setItem.mockRestore();
   fireEvent.click(
     screen.getByRole("button", { name: messages.en.saveCredentials })
@@ -352,10 +364,10 @@ test("read failures and save/enrollment write failures fail closed and are recov
   expect(screen.getByRole("alert")).toHaveTextContent(
     messages.en.storageError
   );
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
   failEnrollment.mockRestore();
   fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
+  expect(onboardingState().eligible).toBe(true);
 });
 
 test("partial enrollment write rolls back and does not survive refresh", () => {
@@ -375,7 +387,7 @@ test("partial enrollment write rolls back and does not survive refresh", () => {
   expect(localStorage.getItem(`${enrollmentKey}:${user.id}`)).toBeNull();
   expect(readOnboarding(user.id).eligible).toBe(false);
   renderWelcome();
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+  expect(onboardingState().eligible).toBe(false);
 });
 
 test("invalid form cannot be saved or enrolled through helper calls", () => {
