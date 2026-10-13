@@ -5,6 +5,7 @@ import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 const PORT = Number(process.env.PORT ?? 3002);
+const HOST = process.env.HOST ?? "127.0.0.1";
 const AUTH_BASE = (
   process.env.AUTH_API_BASE ?? "http://localhost:3001"
 ).replace(/\/$/, "");
@@ -663,8 +664,8 @@ if (process.argv[2] === "--test-credit") {
   });
 
   // Локальный адаптер, не публичный финансовый API.
-  const server = app.listen(PORT, "127.0.0.1", () => {
-    console.log(`Bonus API: http://localhost:${PORT}`);
+  const server = app.listen(PORT, HOST, () => {
+    console.log(`Bonus API: http://${HOST}:${PORT}`);
     console.log(`SQLite: ${DATABASE_PATH}`);
     console.log(`Authentication backend: ${AUTH_BASE}`);
   });

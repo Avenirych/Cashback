@@ -1,0 +1,43 @@
+# Host dependencies and generated output
+**/node_modules
+**/dist
+**/build
+**/coverage
+**/.cache
+**/*.tsbuildinfo
+
+# Secrets and local environment files
+.env
+.env.*
+**/.env
+**/.env.*
+**/*.env
+**/*.env.*
+!docker/compose.env.example
+**/.npmrc
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+
+# Existing databases, user data and backups
+**/data
+**/*.sqlite
+**/*.sqlite-*
+**/*.db
+**/*.db-*
+**/*.dump
+**/*.sql
+public/avatars
+**/config-backups
+**/work
+**/outputs
+
+# Source control, editor state and logs
+.git
+.gitignore
+**/.vscode
+**/.idea
+**/*.log
+**/*logs.txt
+**/test-results.txt

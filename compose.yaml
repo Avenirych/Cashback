@@ -1,0 +1,115 @@
+name: cashback-docker-test
+
+services:
+  postgres-test:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: cashback_docker_test
+      POSTGRES_USER: cashback_test
+      POSTGRES_PASSWORD: ${CB_DOCKER_DB_PASSWORD:?Set CB_DOCKER_DB_PASSWORD in the dedicated Docker env file}
+    volumes:
+      - postgres-test-data:/var/lib/postgresql/data
+    networks:
+      - database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cashback_test -d cashback_docker_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  backend:
+    profiles: ["application"]
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres-test
+      DB_PORT: "5432"
+      DB_USER: cashback_test
+      DB_PASSWORD: ${CB_DOCKER_DB_PASSWORD:?Set CB_DOCKER_DB_PASSWORD in the dedicated Docker env file}
+      DB_NAME: cashback_docker_test
+      DATABASE_URL: postgresql://cashback_test:${CB_DOCKER_DB_PASSWORD:?Set CB_DOCKER_DB_PASSWORD}@postgres-test:5432/cashback_docker_test
+      DB_MIGRATIONS_RUN: "false"
+      JWT_SECRET: ${CB_DOCKER_JWT_SECRET:?Set a new CB_DOCKER_JWT_SECRET in the dedicated Docker env file}
+      FRONTEND_URL: http://localhost:3000
+      SMTP_HOST: ""
+      USE_ETHEREAL: "false"
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - backend-avatars:/app/public/avatars
+    networks:
+      - application
+      - database
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/auth/profile').then(r=>process.exit(r.status===401?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  frontend:
+    profiles: ["application"]
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: "3000"
+      BROWSER: none
+      REACT_APP_API_BASE: http://localhost:3001
+      REACT_APP_BONUS_API_BASE: http://localhost:3002
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - application
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+  bonus-api:
+    profiles: ["application"]
+    build:
+      context: .
+      dockerfile: docker/bonus-api/Dockerfile
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: "3002"
+      AUTH_API_BASE: http://backend:3001
+      FRONTEND_ORIGIN: http://localhost:3000
+      BONUS_DATABASE: /data/bonuses.sqlite
+    ports:
+      - "127.0.0.1:3002:3002"
+    volumes:
+      - bonus-test-data:/data
+    networks:
+      - application
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3002/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+networks:
+  application:
+  database:
+    internal: true
+
+volumes:
+  postgres-test-data:
+  bonus-test-data:
+  backend-avatars:
