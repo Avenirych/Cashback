@@ -1,6 +1,7 @@
 import {
   Injectable,
   BadRequestException,
+  ConflictException,
   UnauthorizedException,
   Logger,
 } from '@nestjs/common';
@@ -10,6 +11,17 @@ import * as crypto from 'crypto';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
 import { MailService } from '../mail/mail.service';
+import { normalizeEmail } from '../users/email-normalization';
+
+const EMAIL_CONFLICT_MESSAGE = 'Registration with this email is unavailable';
+
+function isEmailUniqueViolation(error: unknown): boolean {
+  if (!error || typeof error !== 'object' || !('driverError' in error)) return false;
+  const driver = error.driverError;
+  return !!driver && typeof driver === 'object' &&
+    'code' in driver && driver.code === '23505' &&
+    'constraint' in driver && driver.constraint === 'UQ_users_email';
+}
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._+\-]{1,64}@[a-zA-Z0-9.\-]{1,255}\.[a-zA-Z]{2,}$/;
 
@@ -39,7 +51,7 @@ export class AuthService {
 
 
   private normalizeEmail(email: string): string {
-    return email.toLowerCase().trim();
+    return normalizeEmail(email);
   }
 
   private generateEmailToken(): string {
@@ -82,8 +94,16 @@ export class AuthService {
       throw new BadRequestException('Email, password, and name are required');
     }
 
-    if (password.length < 3) {
-      throw new BadRequestException('Password must be at least 3 characters');
+    if (
+      password.length < 8 ||
+      !/[A-Z]/.test(password) ||
+      !/[a-z]/.test(password) ||
+      !/\d/.test(password) ||
+      !/[^A-Za-z0-9]/.test(password)
+    ) {
+      throw new BadRequestException(
+        'Password must contain at least 8 characters, an uppercase letter, a lowercase letter, a digit, and a special character',
+      );
     }
 
     if (name.trim().length < 2) {
@@ -98,22 +118,30 @@ export class AuthService {
 
     const existing = await this.usersService.getByEmail(normalizedEmail);
     if (existing) {
-      throw new BadRequestException('User with this email already exists');
+      throw new ConflictException(EMAIL_CONFLICT_MESSAGE);
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
     const emailToken = this.generateEmailToken();
 
-    const user = await this.usersService.create({
-      email: normalizedEmail,
-      name: name.trim(),
-      password: passwordHash,
-      avatar_url: null,
-      balance: 0,
-      email_verified: false,
-      email_token: emailToken,
-      email_token_expires_at: this.getEmailTokenExpiration(),
-    });
+    let user: User;
+    try {
+      user = await this.usersService.create({
+        email: normalizedEmail,
+        name: name.trim(),
+        password: passwordHash,
+        avatar_url: null,
+        balance: 0,
+        email_verified: false,
+        email_token: emailToken,
+        email_token_expires_at: this.getEmailTokenExpiration(),
+      });
+    } catch (error) {
+      if (isEmailUniqueViolation(error)) {
+        throw new ConflictException(EMAIL_CONFLICT_MESSAGE);
+      }
+      throw error;
+    }
 
     let verificationEmailSent = false;
 

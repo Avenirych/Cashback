@@ -38,7 +38,7 @@ describe('Registration capability isolation', () => {
         return delivery === 'smtp' ? null : `https://synthetic.invalid/verify-email?token=${token}`;
       });
       const response = await request(app.getHttpServer()).post('/auth/register')
-        .send({ email: fixture.email, password: 'synthetic-password', name: fixture.name }).expect(201);
+        .send({ email: fixture.email, password: 'Synthetic1!', name: fixture.name }).expect(201);
       const data = users.create.mock.calls[0][0];
       expect(data.email_token).toMatch(/^[a-f0-9]{64}$/);
       expect(data.email_token_expires_at).toBeInstanceOf(Date);
@@ -58,4 +58,43 @@ describe('Registration capability isolation', () => {
       }
     });
   }
+
+  it.each([
+    ['too short', 'Aa1!aaa'],
+    ['no uppercase letter', 'aaaaaaa1!'],
+    ['no lowercase letter', 'AAAAAAA1!'],
+    ['no digit', 'Aaaaaaaa!'],
+    ['no special character', 'Aaaaaaa1'],
+    ['previously accepted weak password', 'abc'],
+    ['non-ASCII uppercase is not A-Z', 'Äaaaaaa1!'],
+    ['non-ASCII lowercase is not a-z', 'Aääääää1!'],
+    ['non-ASCII digit is not ASCII digit', 'Aaaaaaa١!'],
+    ['empty', ''],
+    ['missing', undefined],
+    ['null', null],
+    ['non-string', 12345678],
+  ])('rejects %s before account lookup, hashing, email or JWT', async (_case, password) => {
+    await request(app.getHttpServer()).post('/auth/register')
+      .send({ email: fixture.email, password, name: fixture.name }).expect(400);
+    expect(users.getByEmail).not.toHaveBeenCalled();
+    expect(users.create).not.toHaveBeenCalled();
+    expect(bcrypt.hash).not.toHaveBeenCalled();
+    expect(mail.sendVerificationEmail).not.toHaveBeenCalled();
+    expect(jwt.sign).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    'Aa1!aaaa', // Exact eight-character boundary.
+    'Aa1 aaaa', // Frontend counts whitespace as a special character.
+    'Aa1éaaaa', // Frontend counts non-ASCII characters as special characters.
+    ' Aa1!aaa ', // Neither frontend nor backend trims passwords.
+  ])('preserves frontend password semantics for valid synthetic case %#', async password => {
+    mail.sendVerificationEmail.mockResolvedValue(null);
+    await request(app.getHttpServer()).post('/auth/register')
+      .send({ email: fixture.email, password, name: fixture.name }).expect(201);
+    expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
+    expect(users.create).toHaveBeenCalledTimes(1);
+    expect(mail.sendVerificationEmail).toHaveBeenCalledTimes(1);
+    expect(jwt.sign).toHaveBeenCalledTimes(1);
+  });
 });

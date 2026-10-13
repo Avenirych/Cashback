@@ -14,8 +14,8 @@ describe('AuthService / UsersService internal contract', () => {
   beforeEach(()=>{jest.clearAllMocks();auth=new AuthService(users as unknown as UsersService,jwt as unknown as JwtService,mail as unknown as MailService);});
   it('registration still hashes and creates through internal UsersService',async()=>{
     users.getByEmail.mockResolvedValue(null);users.create.mockResolvedValue(fixture);
-    const res=await auth.register('fixture@example.invalid','synthetic-password','Fixture');
-    expect(bcrypt.hash).toHaveBeenCalledWith('synthetic-password',10);
+    const res=await auth.register('fixture@example.invalid','Synthetic1!','Fixture');
+    expect(bcrypt.hash).toHaveBeenCalledWith('Synthetic1!',10);
     expect(users.create).toHaveBeenCalledWith(expect.objectContaining({password:'synthetic-hash',balance:0,email_verified:false}));
     expect(res.user).not.toHaveProperty('password');expect(res.user).not.toHaveProperty('email_token');
   });

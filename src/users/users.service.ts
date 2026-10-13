@@ -5,6 +5,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { normalizeEmail } from './email-normalization';
 
 @Injectable()
 export class UsersService {
@@ -25,12 +26,15 @@ export class UsersService {
 
   async getByEmail(email: string): Promise<User | null> {
     return this.userRepo.findOne({
-      where: { email },
+      where: { email: normalizeEmail(email) },
     });
   }
 
   async create(data: Partial<User>): Promise<User> {
-    const user = this.userRepo.create(data);
+    const user = this.userRepo.create({
+      ...data,
+      ...(typeof data.email === 'string' ? { email: normalizeEmail(data.email) } : {}),
+    });
     return this.userRepo.save(user);
   }
 
@@ -38,7 +42,10 @@ export class UsersService {
     id: number,
     data: Partial<User>,
   ): Promise<User> {
-    await this.userRepo.update(id, data);
+    await this.userRepo.update(id, {
+      ...data,
+      ...(typeof data.email === 'string' ? { email: normalizeEmail(data.email) } : {}),
+    });
 
     const user = await this.getById(id);
 
