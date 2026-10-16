@@ -12,6 +12,7 @@ import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
 import { MailService } from '../mail/mail.service';
 import { normalizeEmail } from '../users/email-normalization';
+import { assertLocalDemoRecipient } from '../mail/local-demo-mailpit';
 
 const EMAIL_CONFLICT_MESSAGE = 'Registration with this email is unavailable';
 
@@ -116,6 +117,8 @@ export class AuthService {
       throw new BadRequestException('Invalid email format');
     }
 
+    assertLocalDemoRecipient(normalizedEmail);
+
     const existing = await this.usersService.getByEmail(normalizedEmail);
     if (existing) {
       throw new ConflictException(EMAIL_CONFLICT_MESSAGE);
@@ -215,6 +218,9 @@ export class AuthService {
     // including in local preview mode or transport/repository failure paths.
     try {
       const normalizedEmail = this.normalizeEmail(email);
+      // Keep the same public response for rejected recipients and unknown users.
+      // Reject before any user lookup, token rotation or mail transport action.
+      assertLocalDemoRecipient(normalizedEmail);
       const user = await this.usersService.getByEmail(normalizedEmail);
       if (!user || user.email_verified) return response;
 

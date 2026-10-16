@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { assertLocalDemoRecipient, validateLocalDemoMailpit } from './local-demo-mailpit';
 
 type MailMode = 'smtp' | 'ethereal' | 'preview';
 
@@ -8,9 +9,13 @@ export class MailService {
   private transporter: nodemailer.Transporter | null = null;
   private readonly logger = new Logger(MailService.name);
   private readonly initPromise: Promise<void>;
+  private readonly localDemo: boolean;
   private mode: MailMode = 'preview';
 
   constructor() {
+    // Outside initializeTransporter's catch: invalid demo configuration must
+    // reject application initialization, never fall back to preview.
+    this.localDemo = validateLocalDemoMailpit(process.env);
     this.initPromise = this.initializeTransporter();
   }
 
@@ -26,10 +31,12 @@ export class MailService {
           host: process.env.SMTP_HOST,
           port: parseInt(process.env.SMTP_PORT || '587', 10),
           secure: process.env.SMTP_SECURE === 'true',
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASSWORD,
-          },
+          ...(process.env.SMTP_USER || process.env.SMTP_PASSWORD ? {
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASSWORD,
+            },
+          } : {}),
         });
         this.mode = 'smtp';
         this.logger.log('Mail service initialized (SMTP)');
@@ -78,9 +85,9 @@ export class MailService {
   }
 
   /**
-   * Returns a preview URL in development (Ethereal URL or the verification
-   * link itself in local preview mode). Returns null for real SMTP.
-   * Throws if sending fails.
+   * Returns an internal Ethereal preview URL, or null for SMTP.
+   * Throws when no delivery transport exists or sending fails.
+   * Callers must not expose a preview URL through the public API.
    */
   private async deliverVerificationEmail(
     email: string,
@@ -89,18 +96,22 @@ export class MailService {
   ): Promise<string | null> {
     await this.initPromise;
 
+    if (validateLocalDemoMailpit(process.env) !== this.localDemo) {
+      throw new Error('Mail configuration changed after initialization');
+    }
+    assertLocalDemoRecipient(email);
+
+    // No message is delivered in preview mode. Do not report delivery success
+    // or expose a verification link as a substitute for email ownership.
+    if (this.mode === 'preview') {
+      throw new Error('Mail transporter is not configured');
+    }
+
     const frontendUrl =
       process.env.FRONTEND_URL || 'http://localhost:3000';
     const link = `${frontendUrl}/verify-email?token=${encodeURIComponent(
       token,
     )}`;
-
-    if (this.mode === 'preview') {
-      if (this.isProduction) {
-        throw new Error('Mail transporter is not configured');
-      }
-      return link;
-    }
 
     if (!this.transporter) {
       throw new Error('Mail transporter is not initialized');
@@ -108,6 +119,8 @@ export class MailService {
 
     const safeName = this.escapeHtml(userName);
 
+    // Recheck directly before the transport call, including configuration.
+    assertLocalDemoRecipient(email);
     const info = await this.transporter.sendMail({
       from:
         process.env.SMTP_FROM ||

@@ -47,6 +47,20 @@ Only its UI proxy connects to `mail-ui`; the proxy publishes loopback port 8025,
 runs as user 101 with a read-only root filesystem, and mounts
 `docker/mailpit-ui.nginx.conf` read-only with `create_host_path: false`.
 
+## Local demo production boundary
+
+`docker/compose.mailpit.override.yaml` is for local demonstration only and MUST
+NOT be included in production deployment. It explicitly enables LOCAL_DEMO_MAILPIT
+and the local scenario marker. Neither NODE_ENV=development nor that marker proves
+that the host or PostgreSQL database is a test environment. Before any launch,
+independently confirm the environment and PostgreSQL destination/identity using
+the existing approval safeguards below. Do not use production databases.
+
+Mailpit captures synthetic example.test messages locally. Completing this demo
+does not establish ownership of a real email address. Do not expose verification
+tokens or links through the public API or diagnostics. This warning grants no
+execution, database-write or deployment permission.
+
 ## Images, storage and connections
 
 Dependencies are installed by locked `npm ci` inside images. Normal application
@@ -76,7 +90,8 @@ Do not assume every declared volume exists or contains data without inspection.
 
 Application ports bind only to loopback. PostgreSQL has no published host port;
 its database network is internal. Backend also joins the application network.
-Both DB_* and DATABASE_URL in base Compose select `cashback_docker_test`.
+Both DB_* and DATABASE_URL in base Compose select `cashback_docker_test`;
+the local Mailpit override clears DATABASE_URL and validates the explicit DB_* destination.
 AppModule and DataSource explicitly set `synchronize=false` and `migrationsRun=false`;
 Compose retains `DB_MIGRATIONS_RUN=false`. Starting the app must not apply migrations.
 Backend health checks an unauthenticated 401, not database schema integrity.

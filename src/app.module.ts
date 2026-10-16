@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { validateLocalDemoMailpit } from './mail/local-demo-mailpit';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UsersModule } from './users/users.module';
@@ -18,6 +19,10 @@ import { AddMarketingPreferences1733928000000 } from './migrations/1733928000000
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validate: (config: Record<string, unknown>) => {
+        validateLocalDemoMailpit(config);
+        return config;
+      },
     }),
 
     TypeOrmModule.forRootAsync({
