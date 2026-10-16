@@ -1,3 +1,4 @@
+import { BACKEND_URL, backendFetch } from "../backend";
 import React, {
   createContext,
   useContext,
@@ -11,7 +12,7 @@ import { useLang } from "./LanguageContext";
 
 export type { ForumUserData } from "../forum";
 
-const API_URL = "http://localhost:3001";
+const API_URL = BACKEND_URL;
 const TOKEN_KEY = "cashback_token";
 const PENDING_AUTH_KEY = "cashback_pending_auth";
 const PENDING_VERIFICATION_KEY = "cashback_pending_verification";
@@ -213,7 +214,7 @@ export const AuthProvider = ({
       setForumLoading(true);
 
       try {
-        const response = await fetch(`${API_URL}/forum/status`, {
+        const response = await backendFetch(`${API_URL}/forum/status`, {
           headers: {
             Authorization: `Bearer ${current.token}`,
           },
@@ -370,7 +371,7 @@ export const AuthProvider = ({
         let profile = forumProfile.current;
 
         if (!profile) {
-          const response = await fetch(
+          const response = await backendFetch(
             `${API_URL}/forum/register`,
             {
               method: "POST",
@@ -417,7 +418,7 @@ export const AuthProvider = ({
           const body = new FormData();
           body.append("file", avatarFile);
 
-          const response = await fetch(`${API_URL}/forum/avatar`, {
+          const response = await backendFetch(`${API_URL}/forum/avatar`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${current.token}`,
@@ -491,7 +492,7 @@ export const AuthProvider = ({
       }
 
       try {
-        const response = await fetch(`${API_URL}/auth/profile`, {
+        const response = await backendFetch(`${API_URL}/auth/profile`, {
           headers: {
             Authorization: `Bearer ${savedToken}`,
           },
@@ -614,7 +615,7 @@ export const AuthProvider = ({
     email: string;
     password: string;
   }) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await backendFetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -636,7 +637,7 @@ export const AuthProvider = ({
     password: string;
     phone_e164: string;
   }): Promise<RegisterResult> => {
-    const response = await fetch(`${API_URL}/auth/register`, {
+    const response = await backendFetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -671,7 +672,7 @@ export const AuthProvider = ({
   };
 
   const verifyEmail = async (verificationToken: string) => {
-    const response = await fetch(
+    const response = await backendFetch(
       `${API_URL}/auth/verify-email?token=${encodeURIComponent(
         verificationToken
       )}`
@@ -692,7 +693,7 @@ export const AuthProvider = ({
   const resendVerification = async (
     email: string
   ): Promise<ResendResult> => {
-    const response = await fetch(
+    const response = await backendFetch(
       `${API_URL}/auth/resend-verification`,
       {
         method: "POST",

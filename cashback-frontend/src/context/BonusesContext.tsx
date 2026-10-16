@@ -10,6 +10,7 @@ import React, {
 
 import { useAuth } from "./AuthContext";
 import { bonusApi } from "../bonusApi";
+import { registrationIsolated, assertBonusNetworkAllowed } from '../registrationIsolation';
 
 import type {
   BonusItem,
@@ -45,7 +46,7 @@ export function BonusesProvider({
   const { user, token, loading } = useAuth();
 
   const activeToken =
-    !loading && user?.email_verified === true
+    !registrationIsolated() && !loading && user?.email_verified === true
       ? token
       : null;
 
@@ -79,6 +80,7 @@ function BonusStore({
   const controller = useRef<AbortController | null>(null);
 
   const refresh = useCallback(async () => {
+    if (registrationIsolated()) return;
     if (!token || !active.current) return;
 
     const currentRevision = ++revision.current;
@@ -133,7 +135,7 @@ function BonusStore({
   useEffect(() => {
     active.current = true;
 
-    if (!token) {
+    if (!token || registrationIsolated()) {
       return () => {
         active.current = false;
       };
@@ -166,6 +168,7 @@ function BonusStore({
       payload: BonusTransferRequest,
       idempotencyKey: string
     ) => {
+      assertBonusNetworkAllowed();
       if (!token || !active.current) {
         throw new Error("Sign in and verify your email");
       }

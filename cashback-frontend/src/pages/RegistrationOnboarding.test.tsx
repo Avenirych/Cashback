@@ -38,6 +38,7 @@ test("registration with accepted terms creates a pending session, not program en
   fireEvent.change(screen.getByLabelText("Last name"), { target: { value: "Registration" } });
   fireEvent.change(screen.getByLabelText("Email"), { target: { value: user.email } });
   fireEvent.change(screen.getByLabelText("Password"), { target: { value: "Synthetic1!" } });
+  expect(screen.getByLabelText("Password")).toHaveAttribute("placeholder", "Password (min 8 characters)");
   const submit = screen.getByRole("button", { name: "Register" });
   expect(submit).toBeDisabled();
   expect(global.fetch).not.toHaveBeenCalled();

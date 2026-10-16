@@ -24,8 +24,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "prestart": "node scripts/build-search-index.mjs",
-    "start": "react-scripts start",
+    "search:index": "node scripts/build-search-index.mjs",
+    "start": "node ../scripts/start-frontend.cjs",
     "prebuild": "node scripts/build-search-index.mjs",
     "build": "react-scripts build",
     "typecheck": "tsc --noEmit --incremental false",

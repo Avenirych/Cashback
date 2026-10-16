@@ -1,3 +1,4 @@
+import { BACKEND_URL, backendFetch } from "../backend";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -376,8 +377,8 @@ export default function Profile() {
 
     const fetchProfile = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:3001/auth/profile",
+        const response = await backendFetch(
+          `${BACKEND_URL}/auth/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

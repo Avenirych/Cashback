@@ -1,3 +1,4 @@
+import { BACKEND_URL, backendFetch } from "../backend";
 import React, { useEffect, useRef, useState } from "react";
 import type { CountryCode } from "libphonenumber-js";
 import PhoneInput from "./PhoneInput";
@@ -40,7 +41,7 @@ export default function OwnPhonePanel(props: Props) {
     setBusy(true);
     setMessage("");
     try {
-      const response = await fetch(`http://localhost:3001/users/${props.userId}`, {
+      const response = await backendFetch(`${BACKEND_URL}/users/${props.userId}`, {
         method: "PATCH", signal: controller.signal,
         headers: {Authorization: `Bearer ${props.token}`, "Content-Type": "application/json"},
         body: JSON.stringify({phone_e164: canonical}),

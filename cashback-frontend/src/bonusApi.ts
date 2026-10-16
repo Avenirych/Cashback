@@ -1,3 +1,4 @@
+import { assertBonusNetworkAllowed } from './registrationIsolation';
 import type {
   BonusSnapshot,
   BonusTransferLog,
@@ -48,6 +49,7 @@ async function request(
   token: string,
   options: RequestInit = {}
 ): Promise<unknown> {
+  assertBonusNetworkAllowed();
   if (!token.trim()) {
     throw new Error("Authentication token is required");
   }
@@ -154,6 +156,7 @@ export const bonusApi = {
     token: string,
     signal?: AbortSignal
   ): Promise<BonusSnapshot> {
+    assertBonusNetworkAllowed();
     const data = await request(
       "/api/bonus/snapshot",
       token,
@@ -172,6 +175,7 @@ export const bonusApi = {
     payload: BonusTransferRequest,
     idempotencyKey: string
   ): Promise<BonusTransferLog[]> {
+    assertBonusNetworkAllowed();
     const toUsername = payload.toUsername.trim();
 
     if (!/^[A-Za-z0-9_]{3,30}$/.test(toUsername)) {

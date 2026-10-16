@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
   Logger,
   ServiceUnavailableException,
+  Optional,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -16,6 +17,7 @@ import { normalizeEmail } from '../users/email-normalization';
 import { assertLocalDemoRecipient } from '../mail/local-demo-mailpit';
 import { normalizePhone } from '../users/phone-normalization';
 import { ownProfileDto } from '../users/users.dto';
+import { RegistrationReadiness } from './registration-readiness';
 
 const EMAIL_CONFLICT_MESSAGE = 'Registration with this email is unavailable';
 
@@ -51,6 +53,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
+    @Optional() private readonly registrationReadiness?: RegistrationReadiness,
   ) {}
 
 
@@ -87,6 +90,7 @@ export class AuthService {
   }
 
   async register(email: string, password: string, name: string, phone_e164: string) {
+    await (this.registrationReadiness ?? new RegistrationReadiness()).assertReady();
     const normalizedPhone = normalizePhone(phone_e164);
     if (
       typeof email !== 'string' ||

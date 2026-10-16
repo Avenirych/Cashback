@@ -1,3 +1,4 @@
+import { assertBonusNetworkAllowed } from '../registrationIsolation';
 import type {
   BonusItem,
   BonusSnapshot,
@@ -20,6 +21,7 @@ async function parseJson<T>(response: Response): Promise<T> {
 
 export const bonusApi = {
   async getSnapshot(userId: number): Promise<BonusSnapshot> {
+    assertBonusNetworkAllowed();
     const r = await fetch(`${API_BASE}/api/bonus/snapshot?userId=${userId}`, {
       headers: { "Content-Type": "application/json" },
     });
@@ -32,6 +34,7 @@ export const bonusApi = {
   },
 
   async getSummary(userId: number): Promise<BonusSummary> {
+    assertBonusNetworkAllowed();
     const r = await fetch(`${API_BASE}/api/bonus/summary?userId=${userId}`, {
       headers: { "Content-Type": "application/json" },
     });
@@ -44,6 +47,7 @@ export const bonusApi = {
   },
 
   async getItems(userId: number): Promise<BonusItem[]> {
+    assertBonusNetworkAllowed();
     const r = await fetch(`${API_BASE}/api/bonus/items?userId=${userId}`, {
       headers: { "Content-Type": "application/json" },
     });
@@ -56,6 +60,7 @@ export const bonusApi = {
   },
 
   async transferBonus(payload: BonusTransferRequest): Promise<BonusTransferLog[]> {
+    assertBonusNetworkAllowed();
     const r = await fetch(`${API_BASE}/api/bonus/transfer`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -74,6 +79,7 @@ export const bonusApi = {
     bonusIds: string[],
     orderId: string
   ): Promise<void> {
+    assertBonusNetworkAllowed();
     const r = await fetch(`${API_BASE}/api/bonus/consume`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -86,6 +92,7 @@ export const bonusApi = {
   },
 
   async refreshExpiredBonuses(userId: number): Promise<void> {
+    assertBonusNetworkAllowed();
     const r = await fetch(`${API_BASE}/api/bonus/refresh-expired`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -1,3 +1,4 @@
+import { BACKEND_URL, backendFetch } from "../backend";
 import React, { useState, useEffect, useRef } from "react";
 import MarketingPreferencesModal from "./MarketingPreferencesModal";
 import { translations } from "../i18n";
@@ -12,7 +13,7 @@ interface MarketingPreferencesPanelProps {
   hasPhone?: boolean;
 }
 
-const API_URL = "http://localhost:3001";
+const API_URL = BACKEND_URL;
 
 function parsePreferences(value: unknown, ownerId: number | undefined): MarketingPreferencesData {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error();
@@ -65,7 +66,7 @@ export default function MarketingPreferencesPanel({
         setIsLoading(true);
         setError(null);
 
-        const response = await fetch(
+        const response = await backendFetch(
           `${API_URL}/user/marketing-preferences`,
           {
             signal: controller.signal,
@@ -108,7 +109,7 @@ export default function MarketingPreferencesPanel({
     }
 
     try {
-      const response = await fetch(
+      const response = await backendFetch(
         `${API_URL}/user/marketing-preferences`,
         {
           method: "POST",

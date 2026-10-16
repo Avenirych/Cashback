@@ -29,7 +29,7 @@ build/
 *.tsbuildinfo
 
 # IDE / Editor
-.vscode/
+.vscode/*
 .idea/
 *.swp
 

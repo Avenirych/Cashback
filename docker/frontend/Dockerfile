@@ -11,4 +11,4 @@ RUN chown -R node:node /app
 USER node
 ENV HOST=0.0.0.0 PORT=3000 BROWSER=none
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["node", "node_modules/react-scripts/bin/react-scripts.js", "start"]

@@ -1,0 +1,245 @@
+{
+  "name": "cashback-registration-20261016-4f8c2a96b17d",
+  "services": {
+    "postgres-test": {
+      "image": "${REGISTRATION_POSTGRES17_IMAGE:?Reviewed PostgreSQL 17 image with digest required}",
+      "environment": {
+        "POSTGRES_DB": "cashback_docker_test",
+        "POSTGRES_USER": "registration_bootstrap",
+        "POSTGRES_PASSWORD": "${REGISTRATION_ADMIN_PASSWORD:?New synthetic cluster bootstrap password required}",
+        "POSTGRES_INITDB_ARGS": "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+      },
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "registration-pg17-data",
+          "target": "/var/lib/postgresql/data",
+          "volume": {
+            "nocopy": true
+          }
+        }
+      ],
+      "networks": [
+        "database"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "labels": {
+        "cashback.purpose": "synthetic-registration-only",
+        "cashback.stage": "A-config-only"
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "registration_bootstrap",
+          "-d",
+          "cashback_docker_test"
+        ],
+        "interval": "5s",
+        "timeout": "5s",
+        "retries": 12
+      }
+    },
+    "backend": {
+      "profiles": [
+        "registration-after-schema-approval"
+      ],
+      "build": {
+        "context": "../..",
+        "dockerfile": "docker/backend/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "DB_HOST": "postgres-test",
+        "DB_PORT": "5432",
+        "DB_USER": "cashback_test",
+        "DB_PASSWORD": "${REGISTRATION_APP_PASSWORD:?Separate new synthetic application password required}",
+        "DB_NAME": "cashback_docker_test",
+        "DATABASE_URL": "",
+        "DB_MIGRATIONS_RUN": "false",
+        "JWT_SECRET": "${REGISTRATION_JWT_SECRET:?New synthetic JWT secret required}",
+        "LOCAL_DEMO_MAILPIT": "true",
+        "LOCAL_DEMO_SCENARIO": "cashback-local-mailpit-registration",
+        "SMTP_HOST": "mailpit",
+        "SMTP_PORT": "1025",
+        "SMTP_SECURE": "false",
+        "SMTP_USER": "",
+        "SMTP_PASSWORD": "",
+        "SMTP_FROM": "Cashback Test <noreply@example.test>",
+        "USE_ETHEREAL": "false",
+        "FRONTEND_URL": "http://localhost:3000",
+        "GOOGLE_AUTH_ENABLED": "false",
+        "REGISTRATION_ISOLATED": "true"
+      },
+      "ports": [
+        "127.0.0.1:3001:3001"
+      ],
+      "networks": [
+        "application",
+        "database",
+        "mail"
+      ],
+      "depends_on": {
+        "postgres-test": {
+          "condition": "service_healthy"
+        }
+      },
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:size=32m,mode=1777,noexec,nosuid,nodev",
+        "/app/public/avatars:size=16m,uid=1000,gid=1000,mode=0700,noexec,nosuid,nodev"
+      ],
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ]
+    },
+    "frontend": {
+      "profiles": [
+        "registration-after-schema-approval"
+      ],
+      "build": {
+        "context": "../..",
+        "dockerfile": "docker/frontend/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "HOST": "0.0.0.0",
+        "PORT": "3000",
+        "BROWSER": "none",
+        "REACT_APP_API_BASE": "http://localhost:3001",
+        "REACT_APP_BONUS_API_BASE": "http://localhost:3002",
+        "REACT_APP_GOOGLE_AUTH_ENABLED": "false",
+        "REACT_APP_REGISTRATION_ISOLATED": "true"
+      },
+      "ports": [
+        "127.0.0.1:3000:3000"
+      ],
+      "networks": [
+        "application"
+      ],
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ]
+    },
+    "mailpit": {
+      "profiles": [
+        "registration-after-schema-approval"
+      ],
+      "image": "axllent/mailpit:v1.31.5@sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea",
+      "networks": [
+        "mail"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/mailpit-data:size=64m,mode=1777,noexec,nosuid,nodev",
+        "/tmp:size=16m,mode=1777,noexec,nosuid,nodev"
+      ],
+      "environment": {
+        "MP_DATABASE": "/mailpit-data/messages.db",
+        "MP_MAX_MESSAGES": "100",
+        "MP_MAX_AGE": "24h",
+        "MP_MAX_MESSAGE_SIZE": "5",
+        "MP_DISABLE_VERSION_CHECK": "true",
+        "MP_SMTP_DISABLE_RDNS": "true",
+        "MP_SMTP_ALLOWED_RECIPIENTS": "@example\\.test$",
+        "MP_QUIET": "true",
+        "MP_VERBOSE": "false",
+        "MP_BLOCK_REMOTE_CSS_AND_FONTS": "true",
+        "MP_ALLOWED_HOSTS": "localhost,127.0.0.1",
+        "MP_SMTP_RELAY_ALL": "false"
+      },
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ]
+    },
+    "mailpit-ui": {
+      "profiles": [
+        "registration-after-schema-approval"
+      ],
+      "image": "nginx:1.30.5-alpine@sha256:0985e772fb9f729e6fa0980da05fca5d9c468e870eed43071545afa9d2e27d94",
+      "entrypoint": [
+        "nginx"
+      ],
+      "command": [
+        "-g",
+        "daemon off;"
+      ],
+      "user": "101:101",
+      "read_only": true,
+      "networks": [
+        "mail",
+        "mail-ui"
+      ],
+      "ports": [
+        "127.0.0.1:8025:8025"
+      ],
+      "sysctls": {
+        "net.ipv4.ip_forward": "0",
+        "net.ipv6.conf.all.forwarding": "0"
+      },
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "../mailpit-ui.nginx.conf",
+          "target": "/etc/nginx/nginx.conf",
+          "read_only": true,
+          "bind": {
+            "create_host_path": false
+          }
+        }
+      ],
+      "tmpfs": [
+        "/tmp:size=16m,mode=1777,noexec,nosuid,nodev"
+      ],
+      "depends_on": {
+        "mailpit": {
+          "condition": "service_started"
+        }
+      },
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ]
+    }
+  },
+  "networks": {
+    "database": {
+      "name": "cashback-registration-20261016-4f8c2a96b17d-database",
+      "internal": true
+    },
+    "application": {
+      "name": "cashback-registration-20261016-4f8c2a96b17d-application",
+      "internal": true
+    },
+    "mail": {
+      "name": "cashback-registration-20261016-4f8c2a96b17d-mail",
+      "internal": true
+    },
+    "mail-ui": {
+      "name": "cashback-registration-20261016-4f8c2a96b17d-mail-ui",
+      "driver": "bridge"
+    }
+  },
+  "volumes": {
+    "registration-pg17-data": {
+      "name": "cashback-registration-20261016-4f8c2a96b17d-pg17-data",
+      "labels": {
+        "cashback.purpose": "synthetic-registration-only"
+      }
+    }
+  }
+}
