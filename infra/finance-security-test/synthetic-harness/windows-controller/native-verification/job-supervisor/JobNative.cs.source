@@ -1,0 +1,89 @@
+using System.Runtime.InteropServices;
+using Cashback.Synthetic.Controller;
+
+internal static class JobNative
+{
+    // Candidate interop, not SDK/runtime verified in this source-only task.
+    // No argv/environment/permission switch can open this gate.
+    internal static bool SupervisorNativeContractReviewed => true;
+    internal const uint KillOnClose = 0x2000, ActiveLimit = 8;
+    // SDK 10.0.26100.0 um/WinBase.h: enum 13 at line 3531, INPUT 0x20000
+    // at 3509, value macro at 3564-3568, JOB_LIST definition at 3963-3964.
+    // Numeric key verified from local header, NOT runtime/atomicity verification.
+    internal const nuint JobListAttribute = 0x0002000D;
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct BasicLimits
+    {
+        internal long ProcessTime, JobTime;
+        internal uint Flags;
+        internal nuint MinimumWorkingSet, MaximumWorkingSet;
+        internal uint ActiveProcesses;
+        internal nuint Affinity;
+        internal uint Priority, Scheduling;
+    }
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct IoCounters
+    {
+        internal ulong ReadOperations, WriteOperations, OtherOperations;
+        internal ulong ReadBytes, WriteBytes, OtherBytes;
+    }
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ExtendedLimits
+    {
+        internal BasicLimits Basic;
+        internal IoCounters Io;
+        internal nuint ProcessMemory, JobMemory, PeakProcessMemory, PeakJobMemory;
+    }
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct Accounting
+    {
+        internal long UserTime, KernelTime, PeriodUserTime, PeriodKernelTime;
+        internal uint PageFaults, TotalProcesses, ActiveProcesses, TerminatedProcesses;
+    }
+
+    [DllImport("kernel32.dll", EntryPoint = "CreateJobObjectW", ExactSpelling = true,
+        CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern IntPtr CreateJob(IntPtr security, string? name);
+    [DllImport("kernel32.dll", EntryPoint = "SetInformationJobObject", ExactSpelling = true, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool SetLimits(IntPtr job, int informationClass, ref ExtendedLimits limits, uint size);
+    [DllImport("kernel32.dll", EntryPoint = "QueryInformationJobObject", ExactSpelling = true, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool QueryLimits(IntPtr job, int informationClass, out ExtendedLimits limits,
+        uint size, out uint returned);
+    [DllImport("kernel32.dll", EntryPoint = "QueryInformationJobObject", ExactSpelling = true, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool QueryAccounting(IntPtr job, int informationClass, out Accounting accounting,
+        uint size, out uint returned);
+    [DllImport("kernel32.dll", EntryPoint = "IsProcessInJob", ExactSpelling = true, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool IsInJob(IntPtr process, IntPtr job, [MarshalAs(UnmanagedType.Bool)] out bool member);
+    [DllImport("kernel32.dll", EntryPoint = "TerminateJobObject", ExactSpelling = true, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool Terminate(IntPtr job, uint exitCode);
+
+    internal static void ValidateLayouts()
+    {
+        Native.ValidateLayouts();
+        Native.Require(Marshal.SizeOf<BasicLimits>() == 64 && Marshal.SizeOf<IoCounters>() == 48 &&
+            Marshal.SizeOf<ExtendedLimits>() == 144 && Marshal.SizeOf<Accounting>() == 48, "JOB_LAYOUT");
+        Check<BasicLimits>(nameof(BasicLimits.Flags), 16);
+        Check<BasicLimits>(nameof(BasicLimits.MinimumWorkingSet), 24);
+        Check<BasicLimits>(nameof(BasicLimits.MaximumWorkingSet), 32);
+        Check<BasicLimits>(nameof(BasicLimits.ActiveProcesses), 40);
+        Check<BasicLimits>(nameof(BasicLimits.Affinity), 48);
+        Check<BasicLimits>(nameof(BasicLimits.Priority), 56);
+        Check<BasicLimits>(nameof(BasicLimits.Scheduling), 60);
+        Check<ExtendedLimits>(nameof(ExtendedLimits.Io), 64);
+        Check<ExtendedLimits>(nameof(ExtendedLimits.ProcessMemory), 112);
+        Check<ExtendedLimits>(nameof(ExtendedLimits.JobMemory), 120);
+        Check<ExtendedLimits>(nameof(ExtendedLimits.PeakProcessMemory), 128);
+        Check<ExtendedLimits>(nameof(ExtendedLimits.PeakJobMemory), 136);
+        Check<Accounting>(nameof(Accounting.TotalProcesses), 36);
+        Check<Accounting>(nameof(Accounting.ActiveProcesses), 40);
+        Check<Accounting>(nameof(Accounting.TerminatedProcesses), 44);
+    }
+    private static void Check<T>(string field, int offset) where T : struct =>
+        Native.Require(Marshal.OffsetOf<T>(field).ToInt64() == offset, "JOB_OFFSET");
+}

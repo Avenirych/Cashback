@@ -1,0 +1,345 @@
+global using System;
+global using System.IO;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Security.Principal;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Cashback.Synthetic.Controller;
+
+internal static class Supervisor
+{
+    private const string Executable = @"C:\Users\serge\cashback+\infra\finance-security-test\synthetic-harness\windows-controller\native-verification\bin\Release\net10.0-windows\Cashback.NativeVerification.exe";
+    private static readonly string[] Modes = ["abi", "dacl", "io", "cancel", "stdout-limit", "stderr-limit", "deadline"];
+    private static int attempt;
+    private static State? retained;
+
+    private static async Task<int> Main(string[] args)
+    {
+        bool watchdogRole = args.Length > 0 && args[0] == "--watchdog";
+        try
+        {
+            VerifyOwnerIdentity();
+            Native.Require(JobNative.SupervisorNativeContractReviewed, "JOB_CONTRACT_UNREVIEWED");
+            JobNative.ValidateLayouts();
+            // Conservative minimum for JOB_LIST. Actual host/capability remains
+            // unverified; unsupported attributes fail without a legacy fallback.
+            Native.Require(OperatingSystem.IsWindowsVersionAtLeast(10, 0, 10240), "JOB_LIST_OS_UNSUPPORTED");
+            Native.Require(Environment.Version.Major == 10, "RUNTIME");
+            if (watchdogRole)
+            {
+                Native.Require(args.Length == 9, "WATCHDOG_ARGUMENTS");
+                VerifySelf(args[7], args[8]);
+                Native.Require(JobNative.IsInJob(new IntPtr(-1), IntPtr.Zero, out bool watchdogJob) && !watchdogJob,
+                    "WATCHDOG_IN_JOB");
+                return WatchdogSession.RunChild(args);
+            }
+            Native.Require(args.Length == 5 && Modes.Contains(args[0]), "ARGUMENTS");
+            // Hashes are trusted owner invocation inputs, never snapshot/secret data.
+            VerifyFile(Executable, args[1]);
+            VerifyFile(Path.ChangeExtension(Executable, ".dll"), args[2]);
+            VerifySelf(args[3], args[4]);
+            Native.Require(JobNative.IsInJob(new IntPtr(-1), IntPtr.Zero, out bool hostJob) && !hostJob,
+                "HOST_JOB_UNAPPROVED");
+            int code = await Run(args[0], args[3], args[4]);
+            GC.KeepAlive(retained);
+            return code;
+        }
+        catch { if (!watchdogRole) Report("BLOCKED"); return 125; }
+    }
+
+    private static void VerifySelf(string apphostHash, string dllHash)
+    {
+        Native.Require(string.Equals(Environment.ProcessPath, WatchdogSession.Executable,
+            StringComparison.OrdinalIgnoreCase), "SUPERVISOR_PATH");
+        VerifyFile(WatchdogSession.Executable, apphostHash);
+        VerifyFile(Path.ChangeExtension(WatchdogSession.Executable, ".dll"), dllHash);
+    }
+
+    private static void VerifyOwnerIdentity()
+    {
+        // CreateProcessW uses the process primary token, not an impersonation
+        // token. Never accept an impersonated owner SID as process identity.
+        using (var impersonated = WindowsIdentity.GetCurrent(ifImpersonating: true))
+            Native.Require(impersonated is null, "IMPERSONATION_NOT_ALLOWED");
+        using (var identity = WindowsIdentity.GetCurrent(ifImpersonating: false))
+            Native.Require(identity?.User?.Value == PipePair.OwnerSid, "IDENTITY");
+    }
+
+    private static void VerifyFile(string path, string digest)
+    {
+        Native.Require(digest.Length == 64 && digest.All(c => "0123456789ABCDEF".Contains(c)), "HASH_INPUT");
+        for (string? entry = path; entry != null; entry = Path.GetDirectoryName(entry))
+            Native.Require((File.GetAttributes(entry) & FileAttributes.ReparsePoint) == 0, "REPARSE_PATH");
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        Native.Require(stream.Length > 0 && stream.Length <= 268435456, "BINARY_SIZE");
+        Native.Require(Convert.ToHexString(SHA256.HashData(stream)) == digest, "BINARY_HASH");
+        // MODEL A assumes no malicious same-user modification after this check.
+    }
+
+    private static void Report(string status)
+    {
+        try { Console.Out.WriteLine("CBJS1|" + status); }
+        catch { Environment.Exit(125); }
+    }
+
+    private static async Task<int> Run(string mode, string selfApphostHash, string selfDllHash)
+    {
+        var s = new State();
+        s.StartTick = Stopwatch.GetTimestamp(); // Shared by watchdog; never restarted.
+        try
+        {
+            s.Job = JobNative.CreateJob(IntPtr.Zero, null); // Unnamed, non-inheritable, owned handle.
+            Native.Require(s.Job != IntPtr.Zero, "JOB_CREATE");
+            PipePair.CheckInheritance(s.Job, false);
+            var limits = new JobNative.ExtendedLimits {
+                Basic = new JobNative.BasicLimits { Flags = JobNative.KillOnClose | JobNative.ActiveLimit, ActiveProcesses = 2 } };
+            Native.Require(JobNative.SetLimits(s.Job, 9, ref limits, 144), "JOB_LIMITS");
+            Native.Require(JobNative.QueryLimits(s.Job, 9, out var actual, 144, out uint returned) && returned == 144 &&
+                actual.Basic.Flags == limits.Basic.Flags && actual.Basic.ActiveProcesses == 2, "JOB_LIMITS_QUERY");
+            ObserveJob(s);
+            Native.Require(s.Active == 0 && s.Total == 0, "JOB_NOT_EMPTY");
+            s.Watchdog = new WatchdogSession(s.StartTick);
+            await s.Watchdog.StartAsync(s.Job, selfApphostHash, selfDllHash);
+            s.Input.Open(); s.Output.Open(); s.Error.Open();
+            Native.Require(s.ElapsedMilliseconds < 40000, "SETUP_TIMEOUT");
+            CreateSuspended(s, mode);
+            // JOB_LIST requests association as part of creation, not afterwards.
+            Native.Require(JobNative.IsInJob(s.Info.Process, s.Job, out bool member) && member, "JOB_MEMBERSHIP");
+            s.MembershipConfirmed = true;
+            ObserveJob(s);
+            Native.Require(s.Active == 1 && s.Total == 1, "JOB_ROOT_COUNT");
+            s.Input.CloseChild(); s.Output.CloseChild(); s.Error.CloseChild();
+            Native.Require(s.Input.CloseResources(true), "STDIN_CLOSE"); // Empty synthetic stdin / EOF.
+            s.Output.AttachStream(); s.Error.AttachStream();
+            s.OutTask = Capture(s, s.Output.Stream!, s.Stdout);
+            s.ErrTask = Capture(s, s.Error.Stream!, s.Stderr);
+            Native.Require(s.Fault == null && !s.OutTask.IsCompleted && !s.ErrTask.IsCompleted, "READERS");
+            Native.Require(s.Watchdog.ReadyAndAlive, "WATCHDOG_EXIT");
+            Native.Require(s.ElapsedMilliseconds < 40000, "PRE_RESUME_TIMEOUT");
+            Native.Require(Native.ResumeThread(s.Info.Thread) == 1, "RESUME");
+            while (s.ElapsedMilliseconds < 40000)
+            {
+                Native.Require(s.Watchdog.ReadyAndAlive, "WATCHDOG_EXIT");
+                PollRoot(s); ObserveJob(s);
+                if (s.Fault != null || s.Exited && s.Active == 0 && s.ReadersSettled) break;
+                await Task.Delay(10);
+            }
+            if (!s.Exited || s.Active != 0 || !s.ReadersSettled) s.Stop("OPERATIONAL_TIMEOUT");
+        }
+        catch (PolicyFailure e) { s.Stop(e.Code); }
+        catch { s.Stop("SUPERVISOR_EXCEPTION"); }
+        finally { await FinalizeRun(s); }
+
+        if (!s.Exited || !s.JobEmpty || !s.ReadersSettled || !s.Clean || s.Fault != null ||
+            !s.Stdout.Eof || !s.Stderr.Eof || s.Stderr.Count != 0 || !s.WatchdogComplete || s.ElapsedMilliseconds > 45000)
+        { Report("BLOCKED"); return 125; }
+        string line = Encoding.ASCII.GetString(s.Stdout.Bytes, 0, s.Stdout.Count);
+        if (s.ExitCode == 0 && (line == "CBNV1|SCENARIO_PASS\n" || line == "CBNV1|SCENARIO_PASS\r\n"))
+        { Report("SCENARIO_PASS"); return 0; }
+        if (s.ExitCode == 1 && (line == "CBNV1|SCENARIO_FAIL\n" || line == "CBNV1|SCENARIO_FAIL\r\n"))
+        { Report("SCENARIO_FAIL"); return 1; }
+        Report("BLOCKED"); return 125;
+    }
+
+    private static void CreateSuspended(State s, string mode)
+    {
+        VerifyOwnerIdentity();
+        Native.Require(s.Watchdog is not null && s.Watchdog.ReadyAndAlive, "WATCHDOG_NOT_READY");
+        Native.Require(Interlocked.Exchange(ref attempt, 1) == 0, "ONE_SHOT");
+        Native.Require(s.Job != IntPtr.Zero && s.JobEmpty, "JOB_LIST_STATE");
+        PipePair.CheckInheritance(s.Job, false);
+        PipePair[] pipes = [s.Input, s.Output, s.Error];
+        Native.Require(pipes.Select(p => p.Child).Distinct().Count() == 3, "HANDLES");
+        foreach (var pipe in pipes) pipe.MakeChildInheritable();
+        nuint size = 0;
+        bool sizing = Native.InitializeProcThreadAttributeList(IntPtr.Zero, 2, 0, ref size);
+        int error = Marshal.GetLastPInvokeError();
+        Native.Require(!sizing && error == 122 && size > 0 && size <= 65536, "ATTRIBUTE_SIZE");
+        s.Attributes = Marshal.AllocHGlobal(checked((int)size));
+        Native.Require(Native.InitializeProcThreadAttributeList(s.Attributes, 2, 0, ref size), "ATTRIBUTE_INIT");
+        s.AttributesReady = true;
+        s.Handles = Marshal.AllocHGlobal(24);
+        for (int i = 0; i < 3; i++) Marshal.WriteIntPtr(s.Handles, i * 8, pipes[i].Child);
+        Native.Require(Native.UpdateProcThreadAttribute(s.Attributes, 0, 0x20002, s.Handles, 24,
+            IntPtr.Zero, IntPtr.Zero), "HANDLE_LIST");
+        s.JobList = Marshal.AllocHGlobal(8);
+        Marshal.WriteIntPtr(s.JobList, s.Job);
+        Native.Require(Native.UpdateProcThreadAttribute(s.Attributes, 0, JobNative.JobListAttribute,
+            s.JobList, 8, IntPtr.Zero, IntPtr.Zero), "JOB_LIST_ATTRIBUTE");
+        foreach (var pipe in pipes) { PipePair.CheckInheritance(pipe.Parent, false); PipePair.CheckInheritance(pipe.Child, true); }
+        var startup = new Native.StartupInfoEx { Attributes = s.Attributes,
+            Startup = new Native.StartupInfo { Cb = 112, Flags = Native.UseStdHandles,
+                Stdin = pipes[0].Child, Stdout = pipes[1].Child, Stderr = pipes[2].Child } };
+        s.Application = Marshal.StringToHGlobalUni(Executable);
+        s.Command = Marshal.StringToHGlobalUni("\"" + Executable + "\" " + mode);
+        s.Directory = Marshal.StringToHGlobalUni(Path.GetDirectoryName(Executable)!);
+        s.EnvironmentBlock = Marshal.StringToHGlobalUni("SystemRoot=C:\\Windows\0\0");
+        Native.Require(s.ElapsedMilliseconds < 40000, "CREATE_DEADLINE");
+        bool created = Native.CreateProcess(s.Application, s.Command, IntPtr.Zero, IntPtr.Zero, true,
+            Native.Suspended | Native.ExtendedStartup | Native.UnicodeEnvironment | Native.NoWindow,
+            s.EnvironmentBlock, s.Directory, ref startup, out s.Info);
+        s.Created = created;
+        // Under the JOB_LIST contract success includes job association, even
+        // before userspace membership confirmation. Kill-on-close covers crash.
+        s.Assigned = created;
+        s.JobEmpty = false;
+        if (!created) s.Info = default;
+        Native.Require(created && s.Info.Process != IntPtr.Zero && s.Info.Thread != IntPtr.Zero, "CREATE");
+    }
+
+    private static async Task Capture(State s, Stream stream, Channel channel)
+    {
+        byte[] chunk = new byte[4096];
+        try
+        {
+            while (true)
+            {
+                int count = await stream.ReadAsync(chunk.AsMemory(), s.Cancel.Token);
+                if (count == 0) { channel.Eof = true; return; }
+                int keep = Math.Min(count, channel.Bytes.Length - channel.Count);
+                chunk.AsSpan(0, keep).CopyTo(channel.Bytes.AsSpan(channel.Count)); channel.Count += keep;
+                if (keep != count) { s.Stop("OUTPUT_OVERFLOW"); return; }
+            }
+        }
+        catch (OperationCanceledException) { s.Stop("READER_CANCELLED"); }
+        catch { s.Stop("READER_ERROR"); }
+    }
+
+    private static void PollRoot(State s)
+    {
+        if (!s.Created || s.Exited) return;
+        Native.Require(s.Info.Process != IntPtr.Zero, "ROOT_HANDLE");
+        uint wait = Native.WaitForSingleObject(s.Info.Process, 0);
+        if (wait == 0)
+        {
+            Native.Require(Native.GetExitCodeProcess(s.Info.Process, out uint code), "EXIT_CODE");
+            s.ExitCode = code; s.Exited = true;
+        }
+        else Native.Require(wait == Native.WaitTimeout, "EXIT_WAIT");
+    }
+    private static void ObserveJob(State s)
+    {
+        // An earlier zero-active observation is not valid after a failed query.
+        s.JobEmpty = false;
+        Native.Require(JobNative.QueryAccounting(s.Job, 1, out var info, 48, out uint returned) && returned == 48,
+            "JOB_ACCOUNTING");
+        s.Active = info.ActiveProcesses; s.Total = info.TotalProcesses;
+        Native.Require(s.Total <= 2 && s.Active <= 2, "PROCESS_COUNT");
+        s.JobEmpty = s.Active == 0;
+    }
+
+    private static async Task FinalizeRun(State s)
+    {
+        try
+        {
+            if (s.Created)
+            {
+                // Query failures must not skip termination of the owned process/job.
+                try { PollRoot(s); } catch { s.Stop("ROOT_QUERY_UNCONFIRMED"); }
+                if (s.Assigned)
+                {
+                    // Termination request is not exit evidence. Always query/poll afterwards.
+                    try { ObserveJob(s); } catch { s.Stop("JOB_QUERY_UNCONFIRMED"); }
+                    if (s.Fault != null || !s.Exited || !s.JobEmpty)
+                    {
+                        s.Stop("OWNED_TREE_TERMINATED");
+                        try
+                        {
+                            if (!JobNative.Terminate(s.Job, 126)) s.Stop("JOB_TERMINATE_UNCONFIRMED");
+                        }
+                        catch { s.Stop("JOB_TERMINATE_UNCONFIRMED"); }
+                    }
+                }
+                if (!s.MembershipConfirmed && !s.Exited)
+                {
+                    // Cleanup only: a membership-query failure cannot strand an
+                    // owned suspended root. Never resume or retry assignment.
+                    try
+                    {
+                        if (!Native.TerminateProcess(s.Info.Process, 126)) s.Stop("SUSPENDED_ROOT_TERMINATE_UNCONFIRMED");
+                    }
+                    catch { s.Stop("SUSPENDED_ROOT_TERMINATE_UNCONFIRMED"); }
+                }
+                while (s.ElapsedMilliseconds < 45000)
+                {
+                    PollRoot(s);
+                    if (s.Job != IntPtr.Zero) ObserveJob(s);
+                    if (s.Exited && s.JobEmpty && s.ReadersSettled) break;
+                    await Task.Delay(10);
+                }
+            }
+            else if (s.Job != IntPtr.Zero)
+            { ObserveJob(s); }
+        }
+        catch { s.Stop("FINALIZATION_UNCONFIRMED"); }
+        finally
+        {
+            if (!s.ReadersSettled)
+            {
+                try { s.Cancel.Cancel(); } catch { s.Stop("CANCEL_FAILED"); }
+                if (!s.Output.RequestIoCancellation()) s.Stop("CANCEL_FAILED");
+                if (!s.Error.RequestIoCancellation()) s.Stop("CANCEL_FAILED");
+                while (!s.ReadersSettled && s.ElapsedMilliseconds < 45000) await Task.Delay(10);
+            }
+            s.Clean = ClosePipe(s.Input, true);
+            s.Clean &= ClosePipe(s.Output, s.OutTask?.IsCompleted ?? true);
+            s.Clean &= ClosePipe(s.Error, s.ErrTask?.IsCompleted ?? true);
+            try { if (s.AttributesReady) { Native.DeleteProcThreadAttributeList(s.Attributes); s.AttributesReady = false; } }
+            catch { s.Clean = false; }
+            if (!s.AttributesReady) { Free(s, ref s.Attributes); Free(s, ref s.Handles); Free(s, ref s.JobList); }
+            Free(s, ref s.Application); Free(s, ref s.Command); Free(s, ref s.Directory); Free(s, ref s.EnvironmentBlock);
+            if (s.Created) CloseHandle(s, ref s.Info.Thread);
+            if (s.Created && s.Exited) CloseHandle(s, ref s.Info.Process);
+            // Closing the job requests kernel kill-on-close, but is not proof of exit.
+            if (s.Job != IntPtr.Zero) CloseHandle(s, ref s.Job);
+            if (s.ReadersSettled) { try { s.Cancel.Dispose(); } catch { s.Clean = false; } }
+            if (s.Watchdog is not null)
+            {
+                try { s.WatchdogComplete = await s.Watchdog.FinishAsync(s.JobEmpty &&
+                    (!s.Created || s.Exited) && s.ReadersSettled); }
+                catch { s.WatchdogComplete = false; }
+                if (!s.WatchdogComplete) s.Stop("WATCHDOG_COMPLETION_UNCONFIRMED");
+            }
+            if (!s.ReadersSettled || !s.JobEmpty || s.Created && !s.Exited ||
+                !s.WatchdogComplete ||
+                s.Input.NeedsRetention || s.Output.NeedsRetention || s.Error.NeedsRetention ||
+                s.Info.Process != IntPtr.Zero || s.Info.Thread != IntPtr.Zero || s.Job != IntPtr.Zero || s.AttributesReady)
+            { retained = s; s.Clean = false; }
+        }
+    }
+    private static bool ClosePipe(PipePair pipe, bool settled)
+    { try { return pipe.CloseResources(settled); } catch { return false; } }
+    private static void Free(State s, ref IntPtr memory)
+    { try { if (memory != IntPtr.Zero) { Marshal.FreeHGlobal(memory); memory = IntPtr.Zero; } } catch { s.Clean = false; } }
+    private static void CloseHandle(State s, ref IntPtr handle)
+    { try { if (handle != IntPtr.Zero) { if (Native.CloseHandle(handle)) handle = IntPtr.Zero; else s.Clean = false; } } catch { s.Clean = false; } }
+
+    private sealed class Channel
+    {
+        internal readonly byte[] Bytes = new byte[65536];
+        internal int Count;
+        internal bool Eof;
+    }
+    private sealed class State
+    {
+        internal long StartTick;
+        internal double ElapsedMilliseconds => Stopwatch.GetElapsedTime(StartTick).TotalMilliseconds;
+        internal WatchdogSession? Watchdog;
+        internal readonly CancellationTokenSource Cancel = new();
+        internal readonly PipePair Input = new(true), Output = new(false), Error = new(false);
+        internal readonly Channel Stdout = new(), Stderr = new();
+        internal Native.ProcessInformation Info;
+        internal IntPtr Job, Attributes, Handles, JobList, Application, Command, Directory, EnvironmentBlock;
+        internal bool AttributesReady, Created, Assigned, MembershipConfirmed, Exited, JobEmpty, Clean, WatchdogComplete;
+        internal uint ExitCode, Total, Active;
+        internal Task? OutTask, ErrTask;
+        private string? fault;
+        internal string? Fault => Volatile.Read(ref fault);
+        internal void Stop(string value) => Interlocked.CompareExchange(ref fault, value, null);
+        internal bool ReadersSettled => (OutTask?.IsCompleted ?? true) && (ErrTask?.IsCompleted ?? true);
+    }
+}

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+    <TargetPlatformVersion>7.0</TargetPlatformVersion>
+    <TargetPlatformMoniker>Windows,Version=7.0</TargetPlatformMoniker>
+    <TargetPlatformDisplayName>Windows</TargetPlatformDisplayName>
+    <OutputType>Exe</OutputType>
+    <UseAppHost>true</UseAppHost>
+    <AssemblyName>Cashback.NativeVerification</AssemblyName>
+    <PlatformTarget>x64</PlatformTarget>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GeneratedAssemblyInfoFile>$(MSBuildProjectDirectory)\obj\$(Configuration)\$(MSBuildProjectName).AssemblyInfo.cs.source</GeneratedAssemblyInfoFile>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Native.cs" Link="Native.cs" />
+    <Compile Include="../PipePair.cs" Link="PipePair.cs" />
+    <Compile Include="Verification.cs.source" />
+  </ItemGroup>
+</Project>
