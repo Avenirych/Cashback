@@ -29,6 +29,9 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
 
+      - name: Run allowlisted backend unit tests
+        run: npm test -- --runInBand --no-cache --runTestsByPath src/app.controller.spec.ts src/migration-registration.spec.ts src/forum/forum-migration.spec.ts
+
   frontend:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -49,6 +52,9 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run build
+
+      - name: Run allowlisted frontend unit test
+        run: npm test -- --watchAll=false --runInBand --no-cache --runTestsByPath src/components/SiteSearch.test.tsx
 
   bonus-api:
     runs-on: ubuntu-24.04
