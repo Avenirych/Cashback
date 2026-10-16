@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 
 import { AddForumUsers1791394800000 } from './migrations/1791394800000-AddForumUsers';
 import { AddUsersEmailUnique1791888000000 } from './migrations/1791888000000-AddUsersEmailUnique';
+import { AddUserPhoneAndSmsConsent1792195200000 } from './migrations/1792195200000-AddUserPhoneAndSmsConsent';
 import { CreateBonusTables1791630000000 } from './migrations/CreateBonusTables';
 
 const password = process.env.DB_PASSWORD;
@@ -32,12 +33,14 @@ export const AppDataSource = new DataSource({
     AddForumUsers1791394800000,
     CreateBonusTables1791630000000,
     AddUsersEmailUnique1791888000000,
+    AddUserPhoneAndSmsConsent1792195200000,
   ],
 
   synchronize: false,
   migrationsRun: false,
   migrationsTransactionMode: 'all',
-  logging: ['error', 'migration'],
+  // Query errors may include private INSERT/UPDATE parameters.
+  logging: ['migration'],
 });
 
 // Не вызывайте initialize() здесь.

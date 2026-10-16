@@ -17,6 +17,18 @@ export class MarketingPreferences {
   @Column({ default: false })
   partnerRecommendations: boolean;
 
+  @Column({ default: false })
+  smsMarketing: boolean;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  smsMarketingGrantedAt: Date | null;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  smsMarketingRevokedAt: Date | null;
+
+  @Column({ type: 'varchar', length: 64, nullable: true })
+  smsMarketingConsentVersion: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 

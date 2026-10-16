@@ -42,13 +42,23 @@ test("registration with accepted terms creates a pending session, not program en
   expect(submit).toBeDisabled();
   expect(global.fetch).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole("checkbox"));
+  expect(submit).toBeDisabled();
+  expect(screen.getByLabelText("Phone country")).toHaveValue("GB");
+  fireEvent.blur(screen.getByLabelText("Phone number"));
+  expect(screen.getByRole("alert")).toHaveTextContent("Enter your phone number.");
+  fireEvent.submit(submit.closest("form")!);
+  expect(global.fetch).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByLabelText("Phone number"), { target: { value: "not a number" } });
+  expect(submit).toBeDisabled();
+  expect(screen.getByRole("alert")).toHaveTextContent(/valid number/);
+  fireEvent.change(screen.getByLabelText("Phone number"), { target: { value: "020 7946 0123" } });
   expect(submit).toBeEnabled();
   fireEvent.click(submit);
   expect(await screen.findByRole("heading", { name: "Check your email" })).toBeInTheDocument();
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenCalledWith("http://localhost:3001/auth/register", expect.objectContaining({
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: user.name, first_name: "Synthetic", last_name: "Registration", email: user.email, password: "Synthetic1!" }),
+    body: JSON.stringify({ name: user.name, email: user.email, password: "Synthetic1!", phone_e164: "+442079460123" }),
   }));
   expect(JSON.parse(screen.getByTestId("registration-state").textContent || "{}")).toEqual({
     pathname: "/register", userId: user.id, pending: true,
@@ -62,5 +72,10 @@ test("registration with accepted terms creates a pending session, not program en
     expect(localStorage.getItem(key)).toBeNull();
   }
   expect(readOnboarding(user.id)).toMatchObject({ credentialsSaved: false, eligible: false });
+  for (const storage of [localStorage, sessionStorage]) {
+    for (let index = 0; index < storage.length; index++) {
+      expect(storage.getItem(storage.key(index)!)).not.toContain("+442079460123");
+    }
+  }
   expect(screen.queryByRole("link", { name: "Open the test email" })).not.toBeInTheDocument();
 });

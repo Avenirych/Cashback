@@ -24,7 +24,7 @@ const fixture = { id: 42, email: 'synthetic@example.test', name: 'Synthetic', ba
 describe('JWT current user identity gate', () => {
   let app: INestApplication;
   let strategy: JwtStrategy;
-  const users = { getById: jest.fn(), update: jest.fn() };
+  const users = { getById: jest.fn(), getOwnProfile: jest.fn(), updateOwnProfile: jest.fn(), update: jest.fn() };
   const auth = { profile: jest.fn(), register: jest.fn() };
   const forumUsers = { status: jest.fn(), assertVerifiedUser: jest.fn() };
   const forum = { getTopics: jest.fn() };
@@ -46,12 +46,13 @@ describe('JWT current user identity gate', () => {
   afterAll(async () => { await app.close(); });
   beforeEach(() => {
     jest.clearAllMocks(); users.getById.mockResolvedValue({ ...fixture }); users.update.mockResolvedValue({ ...fixture, name: 'Updated' });
+    users.getOwnProfile.mockResolvedValue({ ...fixture });
     auth.profile.mockResolvedValue({ ...fixture }); auth.register.mockResolvedValue({ message: 'synthetic-public-probe' });
     forumUsers.status.mockResolvedValue({ registered: false }); forumUsers.assertVerifiedUser.mockResolvedValue(undefined);
     forum.getTopics.mockResolvedValue([]); bonus.getSnapshot.mockResolvedValue({}); marketing.getPreferences.mockResolvedValue({ userId: 42 });
   });
   function noDownstream() {
-    for (const fn of [auth.profile, users.update, forumUsers.status, forumUsers.assertVerifiedUser, forum.getTopics, bonus.getSnapshot, marketing.getPreferences]) expect(fn).not.toHaveBeenCalled();
+    for (const fn of [auth.profile, users.getOwnProfile, users.updateOwnProfile, users.update, forumUsers.status, forumUsers.assertVerifiedUser, forum.getTopics, bonus.getSnapshot, marketing.getPreferences]) expect(fn).not.toHaveBeenCalled();
   }
   it.each([false, true])('existing account authenticated when email_verified=%s', async verified => {
     users.getById.mockResolvedValue({ ...fixture, email_verified: verified });

@@ -11,6 +11,9 @@ import ForumLogo from "../components/ForumLogo";
 import MoneyTree from "../components/MoneyTree";
 import { translations } from "../i18n";
 import { validateEmail } from "../utils/emailValidator";
+import { canonicalPhone } from "../utils/phone";
+import PhoneInput from "../components/PhoneInput";
+import type { CountryCode } from "libphonenumber-js";
 
 const PENDING_VERIFICATION_KEY = "cashback_pending_verification";
 const RETURN_PATH_KEY = "cashback_post_auth_next";
@@ -212,6 +215,10 @@ export default function Register({
   });
 
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [phoneCountry, setPhoneCountry] = useState<CountryCode>("GB");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const phoneE164 = canonicalPhone(phone, phoneCountry);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -266,11 +273,11 @@ export default function Register({
 
     // Чтобы не ломать локальный запуск без backend/oauth:
     // перевключай через env-переменную.
+    const browserProcess = typeof window !== "undefined"
+      ? (window as Window & {process?: {env?: Record<string, string | undefined>}}).process : undefined;
     const enabled =
       (typeof window !== "undefined" &&
-        (window as any).process &&
-        (window as any).process.env &&
-        (window as any).process.env.REACT_APP_GOOGLE_AUTH_ENABLED === "true") ||
+        browserProcess?.env?.REACT_APP_GOOGLE_AUTH_ENABLED === "true") ||
       (typeof process !== "undefined" &&
         process.env.REACT_APP_GOOGLE_AUTH_ENABLED === "true");
 
@@ -312,6 +319,9 @@ export default function Register({
     setError("");
     setResendMessage("");
 
+    setPhoneTouched(true);
+    if (!phoneE164) return;
+
     if (!termsAccepted) {
       setError(t.mustAcceptTerms);
       return;
@@ -343,14 +353,11 @@ export default function Register({
       const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`.trim();
 
       const result = await register({
-        // Старый backend всё ещё принимает name.
         name: fullName,
-        // Новый backend сможет читать отдельные поля.
-        first_name: form.firstName.trim(),
-        last_name: form.lastName.trim(),
         email: form.email.trim().toLowerCase(),
         password: form.password,
-      } as any);
+        phone_e164: phoneE164,
+      });
 
       const pendingVerification: PendingVerification = {
         ...result,
@@ -359,6 +366,8 @@ export default function Register({
 
       savePendingVerification(pendingVerification);
       setPending(pendingVerification);
+      setPhone("");
+      setPhoneTouched(false);
 
       setForm((previous) => ({
         ...previous,
@@ -410,6 +419,7 @@ export default function Register({
     form.lastName.trim().length >= 2 &&
     validateEmail(form.email).valid &&
     isStrongPassword(form.password) &&
+    Boolean(phoneE164) &&
     termsAccepted;
 
   const inputStyle: React.CSSProperties = {
@@ -610,6 +620,11 @@ export default function Register({
                   onSubmit={submit}
                   style={{ display: "grid", gap: "12px" }}
                 >
+                  <PhoneInput id="registration-phone" country={phoneCountry} onCountry={setPhoneCountry}
+                    onBlur={() => setPhoneTouched(true)}
+                    value={phone} onChange={value => { setPhone(value); setPhoneTouched(true); }}
+                    label={t.phone} countryLabel={t.phoneCountry} locale={language} disabled={busy}
+                    error={phoneTouched && !phoneE164 ? (phone.trim() ? t.phoneInvalid : t.phoneRequired) : undefined} />
                   <input
                     id="firstName"
                     name="firstName"

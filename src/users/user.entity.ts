@@ -11,6 +11,16 @@ export class User {
   @Column({ type: 'varchar' })
   name: string;
 
+  // Private by default: only owner-profile queries explicitly select these.
+  @Column({ type: 'varchar', length: 16, nullable: true, select: false })
+  phone_e164: string | null;
+
+  @Column({ type: 'boolean', default: false, select: false })
+  phone_verified: boolean;
+
+  @Column({ type: 'timestamptz', nullable: true, select: false })
+  phone_verified_at: Date | null;
+
   @Column({ type: 'varchar', nullable: true })
   avatar_url: string | null;
 

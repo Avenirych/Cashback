@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import MarketingPreferencesModal from "./MarketingPreferencesModal";
 import { translations } from "../i18n";
 import { useAuth } from "../context/AuthContext";
@@ -9,14 +9,38 @@ import type {
 
 interface MarketingPreferencesPanelProps {
   lang: string;
+  hasPhone?: boolean;
 }
 
 const API_URL = "http://localhost:3001";
 
+function parsePreferences(value: unknown, ownerId: number | undefined): MarketingPreferencesData {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error();
+  const data = value as Record<string, unknown>;
+  const dateOrNull = (field: unknown) => field === null || typeof field === "string";
+  if (!ownerId || data.userId !== ownerId ||
+      ![data.accountUpdates,data.specialOffers,data.partnerRecommendations,data.smsMarketing].every(flag => typeof flag === "boolean") ||
+      ![data.createdAt,data.updatedAt,data.smsMarketingGrantedAt,data.smsMarketingRevokedAt,data.smsMarketingConsentVersion].every(dateOrNull)) {
+    throw new Error();
+  }
+  return {
+    userId: ownerId, accountUpdates: data.accountUpdates === true,
+    specialOffers: data.specialOffers === true, partnerRecommendations: data.partnerRecommendations === true,
+    smsMarketing: data.smsMarketing === true,
+    createdAt: typeof data.createdAt === "string" ? data.createdAt : null,
+    updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : null,
+    smsMarketingGrantedAt: typeof data.smsMarketingGrantedAt === "string" ? data.smsMarketingGrantedAt : null,
+    smsMarketingRevokedAt: typeof data.smsMarketingRevokedAt === "string" ? data.smsMarketingRevokedAt : null,
+    smsMarketingConsentVersion: typeof data.smsMarketingConsentVersion === "string" ? data.smsMarketingConsentVersion : null,
+  };
+}
+
 export default function MarketingPreferencesPanel({
   lang,
+  hasPhone = false,
 }: MarketingPreferencesPanelProps) {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+  const lifetime = useRef<AbortController | null>(null);
   const normalizedLang = (lang || "EN").toUpperCase();
   const languageKey = normalizedLang as keyof typeof translations;
   const t = translations[languageKey] ?? translations.EN;
@@ -28,6 +52,9 @@ export default function MarketingPreferencesPanel({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+    lifetime.current = controller;
+    setPreferences(null);
     const fetchPreferences = async () => {
       if (!token) {
         setIsLoading(false);
@@ -41,6 +68,7 @@ export default function MarketingPreferencesPanel({
         const response = await fetch(
           `${API_URL}/user/marketing-preferences`,
           {
+            signal: controller.signal,
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -48,6 +76,7 @@ export default function MarketingPreferencesPanel({
           }
         );
 
+        if (controller.signal.aborted) return;
         if (!response.ok) {
           if (response.status === 401) {
             setError("Unauthorized. Please log in again.");
@@ -57,24 +86,24 @@ export default function MarketingPreferencesPanel({
         }
 
         const data = await response.json();
-        setPreferences(data);
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Unknown error";
-        console.error("Marketing preferences error:", message);
-        setError(`Failed to load preferences: ${message}`);
+        if (controller.signal.aborted) return;
+        setPreferences(parsePreferences(data, user?.id));
+      } catch {
+        if (!controller.signal.aborted) setError(t.preferencesError);
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
 
     fetchPreferences();
-  }, [token]);
+    return () => controller.abort();
+  }, [token, user?.id, t.preferencesError]);
 
   const handleSavePreferences = async (
     formData: MarketingPreferencesFormData
   ) => {
-    if (!token) {
+    const controller = lifetime.current;
+    if (!token || !controller || controller.signal.aborted) {
       throw new Error("Not authenticated");
     }
 
@@ -83,6 +112,7 @@ export default function MarketingPreferencesPanel({
         `${API_URL}/user/marketing-preferences`,
         {
           method: "POST",
+          signal: controller.signal,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -92,19 +122,15 @@ export default function MarketingPreferencesPanel({
       );
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Save error response:", errorText);
-        throw new Error(`HTTP ${response.status}`);
+        throw new Error(t.preferencesError);
       }
 
       const data = await response.json();
-      setPreferences(data);
+      if (controller.signal.aborted) throw new Error(t.preferencesError);
+      setPreferences(parsePreferences(data, user?.id));
       setError(null);
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Unknown error";
-      console.error("Save error:", message);
-      throw new Error(`Failed to save: ${message}`);
+    } catch {
+      throw new Error(t.preferencesError);
     }
   };
 
@@ -154,6 +180,7 @@ export default function MarketingPreferencesPanel({
             {t.marketingPreferences}
           </h3>
           <button
+            disabled={!preferences || Boolean(error)}
             onClick={() => setIsModalOpen(true)}
             style={{
               padding: "8px 16px",
@@ -283,6 +310,7 @@ export default function MarketingPreferencesPanel({
       </div>
 
       <MarketingPreferencesModal
+        hasPhone={hasPhone}
         lang={normalizedLang}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

@@ -718,11 +718,51 @@ const marketingPreferencesTranslations = {
   },
 };
 
+const phoneTranslations = {
+  EN: {
+    phone: "Phone number", phoneCountry: "Phone country", phoneRequired: "Enter your phone number.",
+    phoneInvalid: "Enter a valid number for the selected country, or use international + format.",
+    phoneMissing: "No phone number added", phoneUnverified: "Number not verified", phoneVerified: "Number verified",
+    phoneSave: "Save phone number", phoneSaved: "Phone number saved. If the number changed, verification and SMS marketing consent were reset.",
+    phoneSaveError: "Could not save the phone number. Please try again.",
+    smsMarketing: "I agree to receive marketing SMS from Cashback+. This is optional and I can withdraw consent here at any time.",
+    smsPhoneRequired: "Add a phone number to your profile before enabling marketing SMS.",
+  },
+  RU: {
+    phone: "Номер телефона", phoneCountry: "Страна телефона", phoneRequired: "Укажите номер телефона.",
+    phoneInvalid: "Введите корректный номер выбранной страны или номер в международном формате с +.",
+    phoneMissing: "Номер телефона не указан", phoneUnverified: "Номер не подтверждён", phoneVerified: "Номер подтверждён",
+    phoneSave: "Сохранить номер телефона", phoneSaved: "Номер сохранён. При смене номера подтверждение и согласие на рекламные SMS сброшены.",
+    phoneSaveError: "Не удалось сохранить номер телефона. Попробуйте ещё раз.",
+    smsMarketing: "Я согласен получать рекламные SMS от Cashback+. Это добровольно; согласие можно отозвать здесь в любое время.",
+    smsPhoneRequired: "Добавьте номер в профиль, прежде чем включать рекламные SMS.",
+  },
+  DE: {
+    phone: "Telefonnummer", phoneCountry: "Land der Telefonnummer", phoneRequired: "Bitte geben Sie Ihre Telefonnummer ein.",
+    phoneInvalid: "Geben Sie eine gültige Nummer für das gewählte Land oder im internationalen Format mit + ein.",
+    phoneMissing: "Keine Telefonnummer angegeben", phoneUnverified: "Nummer nicht bestätigt", phoneVerified: "Nummer bestätigt",
+    phoneSave: "Telefonnummer speichern", phoneSaved: "Nummer gespeichert. Bei einer Änderung wurden Bestätigung und SMS-Werbeeinwilligung zurückgesetzt.",
+    phoneSaveError: "Die Telefonnummer konnte nicht gespeichert werden. Bitte erneut versuchen.",
+    smsMarketing: "Ich möchte Werbe-SMS von Cashback+ erhalten. Dies ist freiwillig; ich kann meine Einwilligung hier jederzeit widerrufen.",
+    smsPhoneRequired: "Fügen Sie zuerst eine Telefonnummer zum Profil hinzu, um Werbe-SMS zu aktivieren.",
+  },
+  FR: {
+    phone: "Numéro de téléphone", phoneCountry: "Pays du numéro", phoneRequired: "Indiquez votre numéro de téléphone.",
+    phoneInvalid: "Saisissez un numéro valide pour le pays choisi ou au format international avec +.",
+    phoneMissing: "Aucun numéro de téléphone", phoneUnverified: "Numéro non confirmé", phoneVerified: "Numéro confirmé",
+    phoneSave: "Enregistrer le numéro", phoneSaved: "Numéro enregistré. En cas de changement, la confirmation et le consentement aux SMS publicitaires ont été réinitialisés.",
+    phoneSaveError: "Impossible d’enregistrer le numéro. Veuillez réessayer.",
+    smsMarketing: "J’accepte de recevoir des SMS publicitaires de Cashback+. Ce choix est facultatif et je peux retirer mon consentement ici à tout moment.",
+    smsPhoneRequired: "Ajoutez un numéro au profil avant d’activer les SMS publicitaires.",
+  },
+};
+
 export const translations = {
   EN: {
     ...faqTranslations.EN,
     ...privacyTranslations.EN,
     ...marketingPreferencesTranslations.EN,
+    ...phoneTranslations.EN,
 
     title: "Smart shopping with Cashback+",
     description:
@@ -779,6 +819,7 @@ export const translations = {
     ...faqTranslations.RU,
     ...privacyTranslations.RU,
     ...marketingPreferencesTranslations.RU,
+    ...phoneTranslations.RU,
 
     title: "Умные покупки с Cashback+",
     description:
@@ -835,6 +876,7 @@ export const translations = {
     ...faqTranslations.DE,
     ...privacyTranslations.DE,
     ...marketingPreferencesTranslations.DE,
+    ...phoneTranslations.DE,
 
     title: "Smartes Einkaufen mit Cashback+",
     description:
@@ -891,6 +933,7 @@ export const translations = {
     ...faqTranslations.FR,
     ...privacyTranslations.FR,
     ...marketingPreferencesTranslations.FR,
+    ...phoneTranslations.FR,
 
     title: "Achats intelligents avec Cashback+",
     description:

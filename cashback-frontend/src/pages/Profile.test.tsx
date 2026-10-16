@@ -179,6 +179,36 @@ const wiseData = {
   userId: testUser.id,
 };
 
+describe("Private owner phone", () => {
+  test("legacy account displays no phone without requiring a backfill", async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({ok:true,json:async () => ({...testUser,phone_e164:null,phone_verified:false,phone_verified_at:null})});
+    mockAuth({user:testUser,token:"synthetic-token"});
+    renderProfile();
+    expect(screen.getByTestId("profile-phone")).toHaveTextContent("No phone number added");
+    await waitFor(() => expect(screen.getByRole("textbox", {name:"Phone number"})).toBeEnabled());
+    expect(screen.getByRole("button",{name:"Save phone number"})).toBeDisabled();
+  });
+  test("updates only phone through the owner API and shows the reset verification state", async () => {
+    const initial = {...testUser,phone_e164:"+442079460123",phone_verified:true,phone_verified_at:"2026-01-01T00:00:00Z"};
+    (global.fetch as jest.Mock).mockResolvedValueOnce({ok:true,json:async () => initial})
+      .mockResolvedValueOnce({ok:true,json:async () => ({...initial,phone_e164:"+12025550123",phone_verified:false,phone_verified_at:null})});
+    mockAuth({user:testUser,token:"synthetic-token"});
+    renderProfile();
+    await waitFor(() => expect(screen.getByTestId("profile-phone")).toHaveTextContent("+442079460123"));
+    fireEvent.change(screen.getByLabelText("Phone country"),{target:{value:"US"}});
+    fireEvent.change(screen.getByRole("textbox", {name:"Phone number"}),{target:{value:"202 555 0123"}});
+    fireEvent.click(screen.getByRole("button",{name:"Save phone number"}));
+    await waitFor(() => expect(screen.getByTestId("profile-phone")).toHaveTextContent("+12025550123"));
+    expect(global.fetch).toHaveBeenLastCalledWith("http://localhost:3001/users/1",expect.objectContaining({
+      method:"PATCH",headers:{Authorization:"Bearer synthetic-token","Content-Type":"application/json"},
+      body:JSON.stringify({phone_e164:"+12025550123"}),
+    }));
+    expect(screen.getByText("Number not verified")).toBeInTheDocument();
+    expect(localStorage.getItem("cashback_wise_data")).toBeNull();
+    expect(JSON.stringify({...localStorage,...sessionStorage})).not.toContain("+12025550123");
+  });
+});
+
 function fillWiseForm(overrides: Partial<typeof wiseData> = {}) {
   const data = { ...wiseData, ...overrides };
   const t = messages.en;

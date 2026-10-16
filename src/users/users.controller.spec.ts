@@ -11,6 +11,7 @@ import { JwtStrategy } from '../auth/jwt.strategy';
 const fixture = {
   id: 101, email: 'fixture@example.invalid', name: 'Fixture User',
   avatar_url: null, balance: 0, email_verified: true,
+  phone_e164: '+12025550123', phone_verified: false, phone_verified_at: null,
   created_at: new Date('2026-01-01T00:00:00Z'),
   password: 'synthetic-password-field', email_token: 'synthetic-email-token',
   email_token_expires_at: new Date('2026-01-02T00:00:00Z'),
@@ -23,7 +24,7 @@ describe('Users HTTP security (mock repository, real JWT guard)', () => {
   const oldSecret = process.env.JWT_SECRET;
   const jwt = new JwtService({ secret });
   const ownToken = jwt.sign({ sub: 101 });
-  const service = { getById: jest.fn(), update: jest.fn(), create: jest.fn(), updateBalance: jest.fn(), getAll: jest.fn() };
+  const service = { getById: jest.fn(), getOwnProfile: jest.fn(), updateOwnProfile: jest.fn(), update: jest.fn(), create: jest.fn(), updateBalance: jest.fn(), getAll: jest.fn() };
 
   beforeAll(async () => {
     process.env.JWT_SECRET = secret;
@@ -42,6 +43,8 @@ describe('Users HTTP security (mock repository, real JWT guard)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     service.getById.mockResolvedValue({ ...fixture });
+    service.getOwnProfile.mockResolvedValue({ ...fixture });
+    service.updateOwnProfile.mockImplementation(async (id, data) => ({ ...fixture, id, ...data }));
     service.update.mockImplementation(async (id, data) => ({ ...fixture, id, ...data }));
   });
 
@@ -49,11 +52,14 @@ describe('Users HTTP security (mock repository, real JWT guard)', () => {
     await request(app.getHttpServer())[method]('/users/101').send({ name: 'New Name' }).expect(401);
     expect(service.getById).not.toHaveBeenCalled();
     expect(service.update).not.toHaveBeenCalled();
+    expect(service.updateOwnProfile).not.toHaveBeenCalled();
   });
   it.each(['get', 'patch'] as const)('%s rejects another account', async method => {
     await request(app.getHttpServer())[method]('/users/202').set('Authorization', `Bearer ${ownToken}`).send({ name: 'New Name' }).expect(403);
     expect(service.getById).toHaveBeenCalledWith(101);
     expect(service.getById).not.toHaveBeenCalledWith(202);
+    expect(service.getOwnProfile).not.toHaveBeenCalled();
+    expect(service.updateOwnProfile).not.toHaveBeenCalled();
     expect(service.update).not.toHaveBeenCalled();
   });
   it('rejects invalid and expired JWTs', async () => {
@@ -80,23 +86,33 @@ describe('Users HTTP security (mock repository, real JWT guard)', () => {
   });
   it('returns only the safe own-account projection', async () => {
     const res = await request(app.getHttpServer()).get('/users/101').set('Authorization', `Bearer ${ownToken}`).expect(200);
-    expect(Object.keys(res.body).sort()).toEqual(['id','email','name','avatar_url','balance','email_verified','created_at'].sort());
+    expect(Object.keys(res.body).sort()).toEqual(['id','email','name','avatar_url','balance','email_verified','created_at','phone_e164','phone_verified','phone_verified_at'].sort());
     expect(service.getById).toHaveBeenCalledWith(101);
   });
   it('allows only normalized own name and serializes PATCH safely', async () => {
     const res = await request(app.getHttpServer()).patch('/users/101').set('Authorization', `Bearer ${ownToken}`).send({ name: '  Updated Name  ' }).expect(200);
-    expect(service.update).toHaveBeenCalledWith(101, { name: 'Updated Name' });
+    expect(service.updateOwnProfile).toHaveBeenCalledWith(101, { name: 'Updated Name' });
     expect(res.body.name).toBe('Updated Name');
-    expect(Object.keys(res.body).sort()).toEqual(['id','email','name','avatar_url','balance','email_verified','created_at'].sort());
+    expect(Object.keys(res.body).sort()).toEqual(['id','email','name','avatar_url','balance','email_verified','created_at','phone_e164','phone_verified','phone_verified_at'].sort());
   });
-  it.each(['password','role','balance','email_verified','email_token','email_token_expires_at','email','id','avatar_url','created_at','userId','__proto__'])('rejects mass assignment of %s', async key => {
+  it.each(['phone_verified','phone_verified_at','smsMarketing','password','role','balance','email_verified','email_token','email_token_expires_at','email','id','avatar_url','created_at','userId','__proto__'])('rejects mass assignment of %s', async key => {
     const body = JSON.parse(JSON.stringify({ name: 'Allowed Name' }).slice(0,-1) + ',"' + key + '":"forbidden"}');
     await request(app.getHttpServer()).patch('/users/101').set('Authorization', `Bearer ${ownToken}`).send(body).expect(400);
     expect(service.update).not.toHaveBeenCalled();
+    expect(service.updateOwnProfile).not.toHaveBeenCalled();
   });
   it.each([{}, [], {name:''}, {name:'x'}, {name:123}, {name:'x'.repeat(101)}])('rejects invalid profile input', async body => {
     await request(app.getHttpServer()).patch('/users/101').set('Authorization', `Bearer ${ownToken}`).send(body).expect(400);
     expect(service.update).not.toHaveBeenCalled();
+    expect(service.updateOwnProfile).not.toHaveBeenCalled();
+  });
+
+  it('normalizes an own phone patch without exposing it through public auth responses', async () => {
+    const response = await request(app.getHttpServer()).patch('/users/101')
+      .set('Authorization', `Bearer ${ownToken}`).send({ phone_e164: '+1 (202) 555-0123' }).expect(200);
+    expect(service.updateOwnProfile).toHaveBeenCalledWith(101, { phone_e164: '+12025550123' });
+    expect(response.body.phone_e164).toBe('+12025550123');
+    expect(response.body).not.toHaveProperty('password');
   });
   it.each(['get','patch'] as const)('%s returns 401 for deleted own user', async method => {
     service.getById.mockResolvedValue(null);

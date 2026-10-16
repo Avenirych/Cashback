@@ -23,6 +23,7 @@ interface RegisterBody {
   email: string;
   password: string;
   name: string;
+  phone_e164: string;
 }
 
 interface LoginBody {
@@ -52,6 +53,7 @@ export class AuthController {
       body.email,
       body.password,
       body.name,
+      body.phone_e164,
     );
   }
 

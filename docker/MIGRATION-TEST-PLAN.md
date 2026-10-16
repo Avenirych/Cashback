@@ -97,3 +97,10 @@ Do not create/drop databases, run/revert migrations, reset sequences, delete
 volumes or restore data using this document. Preserve the existing VHDX backups
 and all PostgreSQL volumes. No production migration or logical restore validation
 is claimed by the historical test results.
+
+# Separate phone migration scenario
+
+The seventh phone/SMS migration uses the separate source-only mechanism described in
+[PHONE-MIGRATION-PLAN.md](PHONE-MIGRATION-PLAN.md). Its A/B/C permissions are independent.
+The existing main-test email-unique guard and runner retain their original scope;
+do not append the phone migration to that scenario or use generic CLI execution.

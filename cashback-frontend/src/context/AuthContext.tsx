@@ -23,6 +23,10 @@ interface User {
   avatar_url?: string | null;
   balance?: number;
   email_verified?: boolean;
+  // Owner-profile data is memory-only, never serialized to browser storage.
+  phone_e164?: string | null;
+  phone_verified?: boolean;
+  phone_verified_at?: string | null;
 }
 
 export interface RegisterResult {
@@ -49,6 +53,7 @@ interface AuthContextType {
     name: string;
     email: string;
     password: string;
+    phone_e164: string;
   }) => Promise<RegisterResult>;
   verifyEmail: (token: string) => Promise<void>;
   resendVerification: (email: string) => Promise<ResendResult>;
@@ -629,6 +634,7 @@ export const AuthProvider = ({
     name: string;
     email: string;
     password: string;
+    phone_e164: string;
   }): Promise<RegisterResult> => {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",

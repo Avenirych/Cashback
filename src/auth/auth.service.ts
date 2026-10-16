@@ -4,6 +4,7 @@ import {
   ConflictException,
   UnauthorizedException,
   Logger,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -13,6 +14,8 @@ import { User } from '../users/user.entity';
 import { MailService } from '../mail/mail.service';
 import { normalizeEmail } from '../users/email-normalization';
 import { assertLocalDemoRecipient } from '../mail/local-demo-mailpit';
+import { normalizePhone } from '../users/phone-normalization';
+import { ownProfileDto } from '../users/users.dto';
 
 const EMAIL_CONFLICT_MESSAGE = 'Registration with this email is unavailable';
 
@@ -83,7 +86,8 @@ export class AuthService {
     };
   }
 
-  async register(email: string, password: string, name: string) {
+  async register(email: string, password: string, name: string, phone_e164: string) {
+    const normalizedPhone = normalizePhone(phone_e164);
     if (
       typeof email !== 'string' ||
       typeof password !== 'string' ||
@@ -132,6 +136,9 @@ export class AuthService {
       user = await this.usersService.create({
         email: normalizedEmail,
         name: name.trim(),
+        phone_e164: normalizedPhone,
+        phone_verified: false,
+        phone_verified_at: null,
         password: passwordHash,
         avatar_url: null,
         balance: 0,
@@ -143,7 +150,8 @@ export class AuthService {
       if (isEmailUniqueViolation(error)) {
         throw new ConflictException(EMAIL_CONFLICT_MESSAGE);
       }
-      throw error;
+      // Repository errors may contain INSERT parameters, including the phone.
+      throw new ServiceUnavailableException('Registration service unavailable');
     }
 
     let verificationEmailSent = false;
@@ -273,13 +281,13 @@ export class AuthService {
   }
 
   async profile(user: { id: number; email: string; name?: string }) {
-    const dbUser = await this.usersService.getById(user.id);
+    const dbUser = await this.usersService.getOwnProfile(user.id);
 
     if (!dbUser) {
       throw new UnauthorizedException('User not found');
     }
 
-    return this.safeUser(dbUser);
+    return ownProfileDto(dbUser);
   }
 }
 

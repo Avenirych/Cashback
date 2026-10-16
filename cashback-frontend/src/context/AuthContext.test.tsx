@@ -112,7 +112,7 @@ test("temporary unverified registration remains in memory and does not restore f
   localStorage.clear();
   (fetch as jest.Mock).mockResolvedValue(response({ access_token: "temporary", user: { ...mainUser, email_verified: false } }));
   mount();
-  await act(async () => { await auth.register({ email: mainUser.email, name: mainUser.name, password: "example-password" }); });
+  await act(async () => { await auth.register({ email: mainUser.email, name: mainUser.name, password: "example-password", phone_e164: "+447700900123" }); });
   expect(auth.user?.id).toBe(42);
   expect(auth.token).toBe("temporary");
   expect(auth.isEmailVerificationPending).toBe(true);
@@ -128,6 +128,18 @@ test("unverified login uses a temporary session without checking forum", async (
   expect(auth.token).toBe("temporary");
   expect(localStorage.getItem("cashback_token")).toBeNull();
   expect(fetch).toHaveBeenCalledTimes(1);
+});
+
+test("owner phone profile remains memory-only during session restoration", async () => {
+  const phone = "+447700900123";
+  (fetch as jest.Mock).mockImplementation(async url => String(url).endsWith("/auth/profile")
+    ? response({...mainUser,phone_e164:phone,phone_verified:false,phone_verified_at:null})
+    : response({registered:false,forumUser:null}));
+  mount();
+  await waitFor(() => expect(auth.user?.phone_e164).toBe(phone));
+  for (const storage of [localStorage,sessionStorage]) {
+    for (let index=0;index<storage.length;index++) expect(storage.getItem(storage.key(index)!)).not.toContain(phone);
+  }
 });
 
 test("failed avatar upload keeps registration and retry never registers twice", async () => {

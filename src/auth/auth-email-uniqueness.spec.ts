@@ -18,7 +18,7 @@ describe('Registration email conflict and normalization', () => {
   const mail = { sendVerificationEmail: jest.fn(), sendResendVerificationEmail: jest.fn() };
   const jwt = { sign: jest.fn() };
   const email = 'first.last+alias@example.test';
-  const input = { name: 'Synthetic', email, password: 'Synthetic1!' };
+  const input = { name: 'Synthetic', email, password: 'Synthetic1!', phone_e164: '+12025550123' };
   const fixture = { id: 42, email, name: input.name, email_verified: false, password: 'synthetic-hash' };
   beforeAll(async () => {
     auth = new AuthService(users as unknown as UsersService, jwt as unknown as JwtService, mail as unknown as MailService);
@@ -84,19 +84,19 @@ describe('Registration email conflict and normalization', () => {
     { driverError: null },
   ])('does not misclassify another creation failure: case %#', async failure => {
     users.create.mockRejectedValue(failure);
-    await expect(auth.register(email, input.password, input.name)).rejects.toBe(failure);
+    await expect(auth.register(email, input.password, input.name, input.phone_e164)).rejects.toMatchObject({ status: 503, message: 'Registration service unavailable' });
     noDeliveryOrSession();
   });
   it.each([dbError('23505', 'UQ_other'), dbError('08006', 'UQ_users_email')])('does not expose other database failure details in HTTP: case %#', async failure => {
     users.create.mockRejectedValue(failure);
-    const response = await request(app.getHttpServer()).post('/auth/register').send(input).expect(500);
-    expect(response.body).toEqual({ statusCode: 500, message: 'Internal server error' });
+    const response = await request(app.getHttpServer()).post('/auth/register').send(input).expect(503);
+    expect(response.body).toEqual({ statusCode: 503, error: 'Service Unavailable', message: 'Registration service unavailable' });
     noDeliveryOrSession();
   });
   it('does not convert lookup failures into email conflicts', async () => {
     const failure = dbError('23505', 'UQ_users_email');
     users.getByEmail.mockRejectedValue(failure);
-    await expect(auth.register(email, input.password, input.name)).rejects.toBe(failure);
+    await expect(auth.register(email, input.password, input.name, input.phone_e164)).rejects.toBe(failure);
     expect(users.create).not.toHaveBeenCalled();
     noDeliveryOrSession();
   });

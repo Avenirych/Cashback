@@ -132,3 +132,9 @@ restore testing require separate review. Build warnings remain in Register.tsx,
 emailValidator.ts and a Node fs.F_OK deprecation; this documentation does not fix
 or suppress them. Mutable base image tags and PostgreSQL/SQLite separation remain
 review items. The successful checks above do not certify production readiness.
+
+# Isolated phone migration
+
+See [PHONE-MIGRATION-PLAN.md](PHONE-MIGRATION-PLAN.md) for the separate seventh-migration
+source-only harness. No database target or B/C execution permission is granted by
+that implementation. Historical email-unique/main-test runners remain unchanged.

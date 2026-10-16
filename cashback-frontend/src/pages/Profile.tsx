@@ -6,6 +6,7 @@ import { useLang } from "../context/LanguageContext";
 
 import Footer from "../components/Footer";
 import MarketingPreferencesPanel from "../components/MarketingPreferencesPanel";
+import OwnPhonePanel from "../components/OwnPhonePanel";
 
 import {
   emptyWiseForm,
@@ -258,6 +259,9 @@ interface DisplayProfile {
   name?: string | null;
   email?: string | null;
   balance?: unknown;
+  phone_e164?: string | null;
+  phone_verified?: boolean;
+  phone_verified_at?: string | null;
 }
 
 function parseProfile(
@@ -279,6 +283,9 @@ function parseProfile(
     name: typeof data.name === "string" ? data.name : undefined,
     email: typeof data.email === "string" ? data.email : undefined,
     balance: data.balance,
+    phone_e164: typeof data.phone_e164 === "string" ? data.phone_e164 : null,
+    phone_verified: data.phone_verified === true,
+    phone_verified_at: typeof data.phone_verified_at === "string" ? data.phone_verified_at : null,
   };
 }
 
@@ -342,6 +349,7 @@ export default function Profile() {
   const [showValidation, setShowValidation] = useState(false);
   const [storageError, setStorageError] = useState(false);
   const [marketingOpen, setMarketingOpen] = useState(false);
+  const [phoneRevision, setPhoneRevision] = useState(0);
 
   // Стабильная строка позволяет реагировать на изменения данных,
   // не сбрасывая набранную форму при каждом рендере.
@@ -660,6 +668,16 @@ export default function Profile() {
           </dl>
         </section>
 
+        {token && validIdentity && userId && <div style={cardStyle}>
+          <OwnPhonePanel key={`${userId}:${token}`} userId={userId} token={token} lang={language}
+            ready={freshProfile?.id === userId}
+            phone={displayedProfile.phone_e164 ?? null} verified={displayedProfile.phone_verified === true}
+            onSaved={phone => {
+              setFreshProfile(previous => previous?.id === userId ? {...previous,...phone} : previous);
+              setPhoneRevision(revision => revision + 1);
+            }} />
+        </div>}
+
         <p
           role="note"
           style={{
@@ -832,8 +850,9 @@ export default function Profile() {
             {marketingOpen && (
               <div style={{ marginTop: "20px" }}>
                 <MarketingPreferencesPanel
-                  key={userId}
+                  key={`${userId}:${phoneRevision}`}
                   lang={language.toUpperCase()}
+                  hasPhone={Boolean(freshProfile?.phone_e164)}
                 />
               </div>
             )}

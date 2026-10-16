@@ -12,6 +12,7 @@ import { BonusModule } from './bonus/bonus.module';
 import { MarketingPreferencesModule } from './marketing-preferences/marketing-preferences.module';
 
 import { AddUsersEmailUnique1791888000000 } from './migrations/1791888000000-AddUsersEmailUnique';
+import { AddUserPhoneAndSmsConsent1792195200000 } from './migrations/1792195200000-AddUserPhoneAndSmsConsent';
 import { AddForumUsers1791394800000 } from './migrations/1791394800000-AddForumUsers';
 import { AddMarketingPreferences1733928000000 } from './migrations/1733928000000-AddMarketingPreferences';
 
@@ -63,10 +64,12 @@ import { AddMarketingPreferences1733928000000 } from './migrations/1733928000000
             AddMarketingPreferences1733928000000,
             AddForumUsers1791394800000,
             AddUsersEmailUnique1791888000000,
+            AddUserPhoneAndSmsConsent1792195200000,
           ],
 
           migrationsRun: false,
           synchronize: false,
+          logging: false,
         };
       },
     }),

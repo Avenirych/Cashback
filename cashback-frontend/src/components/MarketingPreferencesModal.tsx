@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { translations } from "../i18n";
 import type {
   MarketingPreferencesData,
@@ -11,6 +11,7 @@ interface MarketingPreferencesModalProps {
   onClose: () => void;
   onSave: (preferences: MarketingPreferencesFormData) => Promise<void>;
   initialData?: MarketingPreferencesData;
+  hasPhone?: boolean;
 }
 
 export default function MarketingPreferencesModal({
@@ -19,6 +20,7 @@ export default function MarketingPreferencesModal({
   onClose,
   onSave,
   initialData,
+  hasPhone = false,
 }: MarketingPreferencesModalProps) {
   const normalizedLang = (lang || "EN").toUpperCase();
   const languageKey = normalizedLang as keyof typeof translations;
@@ -26,6 +28,13 @@ export default function MarketingPreferencesModal({
 
   const [specialOffers, setSpecialOffers] = useState(false);
   const [partnerRecommendations, setPartnerRecommendations] = useState(false);
+  const [smsMarketing, setSmsMarketing] = useState(false);
+  const alive = useRef(true);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    alive.current = true;
+    return () => { alive.current = false; if (closeTimer.current !== null) clearTimeout(closeTimer.current); };
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
@@ -36,6 +45,11 @@ export default function MarketingPreferencesModal({
     if (initialData) {
       setSpecialOffers(initialData.specialOffers);
       setPartnerRecommendations(initialData.partnerRecommendations);
+      setSmsMarketing(initialData.smsMarketing === true);
+    } else {
+      setSpecialOffers(false);
+      setPartnerRecommendations(false);
+      setSmsMarketing(false);
     }
   }, [initialData, isOpen]);
 
@@ -48,22 +62,26 @@ export default function MarketingPreferencesModal({
       await onSave({
         specialOffers,
         partnerRecommendations,
+        // Do not replay a cached consent when saving unrelated preferences.
+        ...(smsMarketing !== (initialData?.smsMarketing === true) ? {smsMarketing} : {}),
       });
+      if (!alive.current) return;
       setMessage({
         type: "success",
         text: t.preferencesSaved as string,
       });
-      setTimeout(() => {
+      closeTimer.current = setTimeout(() => {
         onClose();
         setMessage(null);
       }, 2000);
     } catch (error) {
+      if (!alive.current) return;
       setMessage({
         type: "error",
         text: t.preferencesError as string,
       });
     } finally {
-      setIsLoading(false);
+      if (alive.current) setIsLoading(false);
     }
   };
 
@@ -337,6 +355,16 @@ export default function MarketingPreferencesModal({
                   {partnerRecommendations ? t.enabled : t.disabled}
                 </span>
               </label>
+            </div>
+
+            <div>
+              <label>
+                <input type="checkbox" checked={smsMarketing}
+                  disabled={isLoading || (!hasPhone && !smsMarketing)}
+                  onChange={event => setSmsMarketing(event.target.checked)} />
+                {t.smsMarketing}
+              </label>
+              {!hasPhone && <p>{t.smsPhoneRequired}</p>}
             </div>
 
             {/* Info Box */}

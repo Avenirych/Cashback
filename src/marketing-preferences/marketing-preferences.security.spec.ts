@@ -17,8 +17,9 @@ import { parseMarketingPreferences } from './marketing-preferences.dto';
 const secret = 'synthetic-marketing-regression-key';
 const jwt = new JwtService({ secret, signOptions: { expiresIn: '24h' } });
 const token = jwt.sign({ sub: 42, email: 'synthetic@example.test' });
-const existing = () => ({ id: 7, userId: 42, accountUpdates: true, specialOffers: true, partnerRecommendations: false, createdAt: new Date('2026-01-01'), updatedAt: new Date('2026-01-02') });
-const defaults = { id: null, userId: 42, accountUpdates: true, specialOffers: false, partnerRecommendations: false, createdAt: null, updatedAt: null };
+const smsDefaults = { smsMarketing: false, smsMarketingGrantedAt: null, smsMarketingRevokedAt: null, smsMarketingConsentVersion: null };
+const existing = () => ({ id: 7, userId: 42, accountUpdates: true, specialOffers: true, partnerRecommendations: false, ...smsDefaults, createdAt: new Date('2026-01-01'), updatedAt: new Date('2026-01-02') });
+const defaults = { id: null, userId: 42, accountUpdates: true, specialOffers: false, partnerRecommendations: false, ...smsDefaults, createdAt: null, updatedAt: null };
 
 describe('Marketing HTTP contract with real JWT and mocked transaction manager', () => {
   let app: INestApplication;
@@ -67,7 +68,7 @@ describe('Marketing HTTP contract with real JWT and mocked transaction manager',
     const r = await request(app.getHttpServer()).post('/user/marketing-preferences').set('Authorization', `Bearer ${token}`).send({}).expect(201);
     expect(r.body).toMatchObject({ id: 7, userId: 42, accountUpdates: true, specialOffers: false, partnerRecommendations: false });
     expect(Object.keys(r.body).sort()).toEqual(Object.keys(defaults).sort());
-    expect(lockedUsers.findOne).toHaveBeenCalledWith({ where: { id: 42 }, lock: { mode: 'pessimistic_write' } });
+    expect(lockedUsers.findOne).toHaveBeenCalledWith({ where: { id: 42 }, lock: { mode: 'pessimistic_write' }, select: { id: true, phone_e164: true } });
     expect(source.transaction).toHaveBeenCalledWith('READ COMMITTED', expect.any(Function));
     expect(read.find).not.toHaveBeenCalled();
   });
@@ -77,13 +78,13 @@ describe('Marketing HTTP contract with real JWT and mocked transaction manager',
     expect(r.body).toMatchObject({ ...existing(), ...body, accountUpdates: false, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: expect.any(String) });
     expect(write.create).not.toHaveBeenCalled();
   });
-  for (const field of ['specialOffers', 'partnerRecommendations']) {
+  for (const field of ['specialOffers', 'partnerRecommendations', 'smsMarketing']) {
     it.each(['true', 'false', 0, 1, null, [], {}])(`${field} rejects nonboolean %p`, async value => {
       await request(app.getHttpServer()).post('/user/marketing-preferences').set('Authorization', `Bearer ${token}`).send({ [field]: value }).expect(400);
       expect(source.transaction).not.toHaveBeenCalled();
     });
   }
-  it.each(['userId', 'id', 'accountUpdates', 'createdAt', 'updatedAt', 'unknown', '__proto__'])('rejects forbidden field %s', async key => {
+  it.each(['smsMarketingGrantedAt','smsMarketingRevokedAt','smsMarketingConsentVersion','userId', 'id', 'accountUpdates', 'createdAt', 'updatedAt', 'unknown', '__proto__'])('rejects forbidden field %s', async key => {
     const body = JSON.parse(`{"${key}":true}`);
     await request(app.getHttpServer()).post('/user/marketing-preferences').set('Authorization', `Bearer ${token}`).send(body).expect(400); expect(source.transaction).not.toHaveBeenCalled();
   });
@@ -107,6 +108,33 @@ describe('Marketing HTTP contract with real JWT and mocked transaction manager',
     lockedUsers.findOne.mockResolvedValue(null);
     await request(app.getHttpServer()).post('/user/marketing-preferences').set('Authorization', `Bearer ${token}`).send({}).expect(401);
     expect(write.find).not.toHaveBeenCalled(); expect(write.save).not.toHaveBeenCalled();
+  });
+  it('SMS consent is separate, voluntary and stamped by the server', async () => {
+    lockedUsers.findOne.mockResolvedValue({ id: 42, phone_e164: '+12025550123' });
+    const response = await request(app.getHttpServer()).post('/user/marketing-preferences')
+      .set('Authorization', `Bearer ${token}`).send({ smsMarketing: true }).expect(201);
+    expect(response.body).toMatchObject({ smsMarketing: true, specialOffers: false,
+      partnerRecommendations: false, smsMarketingConsentVersion: 'sms-marketing-v1', smsMarketingRevokedAt: null });
+    expect(Number.isFinite(Date.parse(response.body.smsMarketingGrantedAt))).toBe(true);
+    expect(response.body).not.toHaveProperty('phone_e164');
+  });
+  it('does not grant SMS consent without a phone', async () => {
+    await request(app.getHttpServer()).post('/user/marketing-preferences')
+      .set('Authorization', `Bearer ${token}`).send({ smsMarketing: true }).expect(400);
+    expect(write.save).not.toHaveBeenCalled();
+  });
+  it('repeated grant preserves consent date; withdrawal records a server date', async () => {
+    lockedUsers.findOne.mockResolvedValue({ id: 42, phone_e164: '+12025550123' });
+    const granted = new Date('2026-01-01T00:00:00Z');
+    write.find.mockResolvedValue([{ ...existing(), smsMarketing: true,
+      smsMarketingGrantedAt: granted, smsMarketingConsentVersion: 'sms-marketing-v1' }]);
+    await request(app.getHttpServer()).post('/user/marketing-preferences')
+      .set('Authorization', `Bearer ${token}`).send({ smsMarketing: true }).expect(201);
+    expect(write.save).toHaveBeenLastCalledWith(expect.objectContaining({smsMarketingGrantedAt:granted}));
+    await request(app.getHttpServer()).post('/user/marketing-preferences')
+      .set('Authorization', `Bearer ${token}`).send({ smsMarketing: false }).expect(201);
+    expect(write.save).toHaveBeenLastCalledWith(expect.objectContaining({smsMarketing:false,
+      smsMarketingGrantedAt:granted,smsMarketingRevokedAt:expect.any(Date)}));
   });
   it.each(['get', 'post'] as const)('%s duplicates yield409 with no arbitrary modification', async method => {
     read.find.mockResolvedValue([existing(), { ...existing(), id: 8 }]); write.find.mockResolvedValue([existing(), { ...existing(), id: 8 }]);

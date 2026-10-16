@@ -30,6 +30,17 @@ describe('Registration capability isolation', () => {
     (bcrypt.hash as jest.Mock).mockResolvedValue('synthetic-hash');
   });
   afterEach(() => errorLog.mockRestore());
+  it.each([undefined, null, '', '2025550123', '+000123', '+12025550123 ext 4', 123])(
+    'rejects invalid or absent phone before any account action: %#', async phone_e164 => {
+      await request(app.getHttpServer()).post('/auth/register')
+        .send({ email: fixture.email, password: 'Synthetic1!', name: fixture.name, phone_e164 }).expect(400);
+      expect(users.getByEmail).not.toHaveBeenCalled();
+      expect(users.create).not.toHaveBeenCalled();
+      expect(bcrypt.hash).not.toHaveBeenCalled();
+      expect(mail.sendVerificationEmail).not.toHaveBeenCalled();
+      expect(jwt.sign).not.toHaveBeenCalled();
+    },
+  );
   for (const environment of ['development', 'production', 'test', undefined]) {
     it.each(['local', 'ethereal', 'smtp', 'failure'])(`${environment}: %s returns no verification capability`, async delivery => {
       if (environment === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = environment;
@@ -38,13 +49,16 @@ describe('Registration capability isolation', () => {
         return delivery === 'smtp' ? null : `https://synthetic.invalid/verify-email?token=${token}`;
       });
       const response = await request(app.getHttpServer()).post('/auth/register')
-        .send({ email: fixture.email, password: 'Synthetic1!', name: fixture.name }).expect(201);
+        .send({ email: fixture.email, password: 'Synthetic1!', name: fixture.name, phone_e164: '+12025550123' }).expect(201);
       const data = users.create.mock.calls[0][0];
       expect(data.email_token).toMatch(/^[a-f0-9]{64}$/);
       expect(data.email_token_expires_at).toBeInstanceOf(Date);
       expect(data.password).toBe('synthetic-hash');
       expect(mail.sendVerificationEmail).toHaveBeenCalledWith(fixture.email, data.email_token, fixture.name);
       expect(response.body).not.toHaveProperty('preview_url');
+      expect(response.body.user).not.toHaveProperty('phone_e164');
+      expect(response.body.user).not.toHaveProperty('phone_verified');
+      expect(response.body.user).not.toHaveProperty('phone_verified_at');
       expect(Object.keys(response.body).sort()).toEqual(['access_token', 'message', 'user', 'verification_email_sent']);
       const serialized = JSON.stringify(response.body) + JSON.stringify(response.headers) + JSON.stringify(errorLog.mock.calls);
       for (const forbidden of [data.email_token, 'verify-email?', 'synthetic-sensitive-error', 'synthetic-hash']) expect(serialized).not.toContain(forbidden);
@@ -75,7 +89,7 @@ describe('Registration capability isolation', () => {
     ['non-string', 12345678],
   ])('rejects %s before account lookup, hashing, email or JWT', async (_case, password) => {
     await request(app.getHttpServer()).post('/auth/register')
-      .send({ email: fixture.email, password, name: fixture.name }).expect(400);
+      .send({ email: fixture.email, password, name: fixture.name, phone_e164: '+12025550123' }).expect(400);
     expect(users.getByEmail).not.toHaveBeenCalled();
     expect(users.create).not.toHaveBeenCalled();
     expect(bcrypt.hash).not.toHaveBeenCalled();
@@ -91,7 +105,7 @@ describe('Registration capability isolation', () => {
   ])('preserves frontend password semantics for valid synthetic case %#', async password => {
     mail.sendVerificationEmail.mockResolvedValue(null);
     await request(app.getHttpServer()).post('/auth/register')
-      .send({ email: fixture.email, password, name: fixture.name }).expect(201);
+      .send({ email: fixture.email, password, name: fixture.name, phone_e164: '+12025550123' }).expect(201);
     expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
     expect(users.create).toHaveBeenCalledTimes(1);
     expect(mail.sendVerificationEmail).toHaveBeenCalledTimes(1);

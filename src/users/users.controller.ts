@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UsersService } from './users.service';
-import { parseOwnUserPatch, safeUserDto } from './users.dto';
+import { parseOwnUserPatch, ownProfileDto } from './users.dto';
 
 interface UserRequest { user?: { id?: number } }
 
@@ -28,9 +28,9 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async getById(@Param('id', ParseIntPipe) id: number, @Req() req: UserRequest) {
     const owner = this.ownerId(req, id);
-    const user = await this.usersService.getById(owner);
+    const user = await this.usersService.getOwnProfile(owner);
     if (!user) throw new NotFoundException('User not found');
-    return safeUserDto(user);
+    return ownProfileDto(user);
   }
 
   @Patch(':id')
@@ -42,9 +42,6 @@ export class UsersController {
   ) {
     const owner = this.ownerId(req, id);
     const update = parseOwnUserPatch(body);
-    if (!(await this.usersService.getById(owner))) {
-      throw new NotFoundException('User not found');
-    }
-    return safeUserDto(await this.usersService.update(owner, update));
+    return ownProfileDto(await this.usersService.updateOwnProfile(owner, update));
   }
 }
