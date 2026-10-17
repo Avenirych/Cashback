@@ -44,7 +44,7 @@ test("registration with accepted terms creates a pending session, not program en
   expect(global.fetch).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole("checkbox"));
   expect(submit).toBeDisabled();
-  expect(screen.getByLabelText("Phone country")).toHaveValue("GB");
+  expect(screen.getByRole("combobox", {name:"Phone country"})).toHaveTextContent("+44");
   fireEvent.blur(screen.getByLabelText("Phone number"));
   expect(screen.getByRole("alert")).toHaveTextContent("Enter your phone number.");
   fireEvent.submit(submit.closest("form")!);

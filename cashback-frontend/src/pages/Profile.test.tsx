@@ -195,7 +195,8 @@ describe("Private owner phone", () => {
     mockAuth({user:testUser,token:"synthetic-token"});
     renderProfile();
     await waitFor(() => expect(screen.getByTestId("profile-phone")).toHaveTextContent("+442079460123"));
-    fireEvent.change(screen.getByLabelText("Phone country"),{target:{value:"US"}});
+    fireEvent.mouseDown(screen.getByRole("combobox",{name:"Phone country"}));
+    fireEvent.click(screen.getByText("United States (+1)"));
     fireEvent.change(screen.getByRole("textbox", {name:"Phone number"}),{target:{value:"202 555 0123"}});
     fireEvent.click(screen.getByRole("button",{name:"Save phone number"}));
     await waitFor(() => expect(screen.getByTestId("profile-phone")).toHaveTextContent("+12025550123"));

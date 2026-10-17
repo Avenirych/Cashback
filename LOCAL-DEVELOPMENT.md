@@ -2,7 +2,7 @@
 
 Open this repository in VS Code. Run `npm start` in its terminal, or run task
 `Cashback: frontend (localhost:3000)`. The same `npm start` works inside
-`cashback-frontend`. Both use the existing frontend, fixed to http://localhost:3000.
+`cashback-frontend`. Both use the existing frontend, defaulting to http://localhost:3000.
 Open http://localhost:3000/register. The normal launcher bypasses search-index
 generation; refresh public search content explicitly with
 `npm --prefix cashback-frontend run search:index` when needed.
@@ -13,6 +13,27 @@ compilation can write caches under node_modules. Do not use a second frontend on
 3002: that port belongs to bonus-api. localhost and 127.0.0.1 have different browser
 storage; use localhost consistently, including links from Mailpit. Use a private
 window for synthetic testing without clearing existing sessions.
+
+To use the explicitly supported alternative port without touching an existing server:
+
+```powershell
+Set-Location -LiteralPath 'C:\Users\serge\cashback+\cashback-frontend'
+$env:PORT = '3003'
+$env:REACT_APP_REGISTRATION_ISOLATED = 'true'
+npm start
+```
+
+Open http://localhost:3003/register. Only 3000 and 3003 are accepted; 3002 is reserved
+for bonus-api. The launcher checks the selected port on IPv4/IPv6 and refuses a
+collision without fallback or process termination. It always passes
+REACT_APP_REGISTRATION_ISOLATED=true to CRA, so bonus API traffic stays disabled.
+Unset PORT with `Remove-Item Env:PORT` to return to the default on a later launch.
+This alternative frontend port does not change backend/CORS, Docker containers or
+Mailpit guards. Mailpit's existing FRONTEND_URL still points to localhost:3000;
+using 3003 does not establish full email-registration integration readiness.
+
+Safe launcher tests (no sockets or applications):
+`node --test scripts/start-frontend.test.cjs` from the repository root.
 
 ## Backend and URLs
 

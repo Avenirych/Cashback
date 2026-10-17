@@ -214,6 +214,15 @@ export default function Register({
     password: "",
   });
 
+  const demoEmail = process.env.REACT_APP_REGISTRATION_ISOLATED === "true";
+  const registrationEmail = demoEmail ? `${form.email}@example.test` : form.email;
+  const validateRegistrationEmail = (value: string) => {
+    if (demoEmail && !/^[a-zA-Z0-9._+-]{1,64}$/.test(value)) {
+      return {valid: false, error: "Invalid email format"};
+    }
+    return validateEmail(demoEmail ? `${value}@example.test` : value);
+  };
+
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [phone, setPhone] = useState("");
   const [phoneCountry, setPhoneCountry] = useState<CountryCode>("GB");
@@ -307,7 +316,7 @@ export default function Register({
     setForm((previous) => ({ ...previous, email }));
 
     setEmailError(
-      email.trim() ? validateEmail(email).error || "" : ""
+      email.trim() ? validateRegistrationEmail(email).error || "" : ""
     );
   };
 
@@ -327,7 +336,7 @@ export default function Register({
       return;
     }
 
-    const validation = validateEmail(form.email);
+    const validation = validateRegistrationEmail(form.email);
 
     if (!validation.valid) {
       setEmailError(validation.error || "Invalid email");
@@ -354,14 +363,14 @@ export default function Register({
 
       const result = await register({
         name: fullName,
-        email: form.email.trim().toLowerCase(),
+        email: registrationEmail.trim().toLowerCase(),
         password: form.password,
         phone_e164: phoneE164,
       });
 
       const pendingVerification: PendingVerification = {
         ...result,
-        email: form.email.trim().toLowerCase(),
+        email: registrationEmail.trim().toLowerCase(),
       };
 
       savePendingVerification(pendingVerification);
@@ -417,7 +426,7 @@ export default function Register({
   const isFormValid =
     form.firstName.trim().length >= 2 &&
     form.lastName.trim().length >= 2 &&
-    validateEmail(form.email).valid &&
+    validateRegistrationEmail(form.email).valid &&
     isStrongPassword(form.password) &&
     Boolean(phoneE164) &&
     termsAccepted;
@@ -620,11 +629,6 @@ export default function Register({
                   onSubmit={submit}
                   style={{ display: "grid", gap: "12px" }}
                 >
-                  <PhoneInput id="registration-phone" country={phoneCountry} onCountry={setPhoneCountry}
-                    onBlur={() => setPhoneTouched(true)}
-                    value={phone} onChange={value => { setPhone(value); setPhoneTouched(true); }}
-                    label={t.phone} countryLabel={t.phoneCountry} locale={language} disabled={busy}
-                    error={phoneTouched && !phoneE164 ? (phone.trim() ? t.phoneInvalid : t.phoneRequired) : undefined} />
                   <input
                     id="firstName"
                     name="firstName"
@@ -674,10 +678,11 @@ export default function Register({
                   />
 
                   <div>
+                    <div style={demoEmail ? {display:"flex", alignItems:"center", border:"1px solid #ddd", borderRadius:6} : undefined}>
                     <input
                       id="email"
                       name="email"
-                      type="email"
+                      type={demoEmail ? "text" : "email"}
                       aria-label={t.email}
                       placeholder={t.email}
                       value={form.email}
@@ -687,10 +692,13 @@ export default function Register({
                       disabled={busy}
                       aria-invalid={Boolean(emailError)}
                       aria-describedby={
-                        emailError ? "email-error" : undefined
+                        [demoEmail ? "demo-email" : "", emailError ? "email-error" : ""].filter(Boolean).join(" ") || undefined
                       }
-                      style={inputStyle}
+                      style={demoEmail ? {...inputStyle, border:0, minWidth:0} : inputStyle}
                     />
+                    {demoEmail && <span aria-hidden="true" style={{paddingRight:12}}>@example.test</span>}
+                    </div>
+                    {demoEmail && <output id="demo-email">{registrationEmail}</output>}
 
                     {emailError && (
                       <p
@@ -705,6 +713,12 @@ export default function Register({
                       </p>
                     )}
                   </div>
+
+                  <PhoneInput id="registration-phone" country={phoneCountry} onCountry={setPhoneCountry}
+                    onBlur={() => setPhoneTouched(true)}
+                    value={phone} onChange={value => { setPhone(value); setPhoneTouched(true); }}
+                    label={t.phone} countryLabel={t.phoneCountry} locale={language} disabled={busy}
+                    error={phoneTouched && !phoneE164 ? (phone.trim() ? t.phoneInvalid : t.phoneRequired) : undefined} />
 
                   <input
                     id="password"
@@ -805,6 +819,7 @@ export default function Register({
                     <input
                       id="terms"
                       type="checkbox"
+                      required
                       checked={termsAccepted}
                       onChange={(e) =>
                         setTermsAccepted(e.target.checked)
@@ -826,7 +841,7 @@ export default function Register({
                       </Link>{" "}
                       {t.and}{" "}
                       <Link
-                        to="/contacts"
+                        to="/privacy"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
