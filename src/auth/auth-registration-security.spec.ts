@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { INestApplication, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -20,7 +21,7 @@ describe('Registration capability isolation', () => {
   beforeAll(async () => {
     const auth = new AuthService(users as unknown as UsersService, jwt as unknown as JwtService, mail as unknown as MailService);
     const module = await Test.createTestingModule({ controllers: [AuthController], providers: [{ provide: AuthService, useValue: auth }] }).compile();
-    app = module.createNestApplication(); await app.init();
+    app = module.createNestApplication(); await startGuardedHttpTestApp(app);
   });
   afterAll(async () => { await app.close(); if (mode === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = mode; });
   beforeEach(() => {

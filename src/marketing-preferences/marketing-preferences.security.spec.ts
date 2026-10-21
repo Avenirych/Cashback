@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -33,7 +34,7 @@ describe('Marketing HTTP contract with real JWT and mocked transaction manager',
     const module = await Test.createTestingModule({ imports: [PassportModule], controllers: [MarketingPreferencesController], providers: [MarketingPreferencesService, JwtStrategy,
       { provide: UsersService, useValue: users },
       { provide: getRepositoryToken(MarketingPreferences), useValue: read }, { provide: DataSource, useValue: source }],
-    }).compile(); app = module.createNestApplication(); await app.init();
+    }).compile(); app = module.createNestApplication(); await startGuardedHttpTestApp(app);
   });
   afterAll(async () => { await app.close(); });
   beforeEach(() => {

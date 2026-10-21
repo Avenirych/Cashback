@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { PATH_METADATA, METHOD_METADATA } from '@nestjs/common/constants';
@@ -54,7 +55,7 @@ describe('Unregistered legacy Topics/Posts/Analytics HTTP handlers', () => {
         { provide: ForumService, useValue: {} }, { provide: ForumUserService, useValue: forumUsers },
         { provide: BonusService, useValue: {} }, { provide: MarketingPreferencesService, useValue: {} }],
     }).compile();
-    app = module.createNestApplication(); await app.init();
+    app = module.createNestApplication(); await startGuardedHttpTestApp(app);
   });
   afterAll(async () => { await app.close(); });
   beforeEach(() => {

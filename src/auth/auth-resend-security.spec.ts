@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { Logger, INestApplication } from '@nestjs/common';
 import request from 'supertest';
@@ -20,7 +21,7 @@ describe('Public resend capability isolation',()=>{
  beforeEach(async()=>{
   auth=new AuthService(users as unknown as UsersService,jwt as unknown as JwtService,mail as unknown as MailService);
   const module=await Test.createTestingModule({controllers:[AuthController],providers:[{provide:AuthService,useValue:auth}]}).compile();
-  app=module.createNestApplication();await app.init();
+  app=module.createNestApplication();await startGuardedHttpTestApp(app);
  });
  afterEach(async()=>{await app.close();if(oldMode===undefined)delete process.env.NODE_ENV;else process.env.NODE_ENV=oldMode;});
  beforeEach(()=>{jest.clearAllMocks();logger=jest.spyOn(Logger.prototype,'error').mockImplementation(()=>{});users.getByEmail.mockResolvedValue({...fixture});users.update.mockResolvedValue({...fixture});mail.sendResendVerificationEmail.mockImplementation(async (_email,token)=>'https://fixture.invalid/verify-email?token='+token);});

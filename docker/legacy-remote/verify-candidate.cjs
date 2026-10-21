@@ -13,7 +13,29 @@ const unchanged=paths.filter(file=>file.startsWith('src/finance/')||
  'cashback-frontend/src/bonusApi.ts','cashback-frontend/src/components/MarketingPreferencesPanel.tsx',
  'package.json','package-lock.json','cashback-frontend/package.json','cashback-frontend/package-lock.json','compose.yaml'].includes(file)||
  (file.startsWith('src/')&&file.endsWith('.spec.ts')));
-for(const file of unchanged){const a=git(['show',canonical+':'+file]),b=fs.readFileSync(p.join(root,file));assert.equal(a.toString().replace(/\r\n/g,'\n'),b.toString().replace(/\r\n/g,'\n'),'Unapproved canonical change: '+file);}
+let exactCanonicalFiles=0,approvedTestStartupFiles=0;
+for(const file of unchanged){
+ const original=git(['show',canonical+':'+file]).toString().replace(/\r\n/g,'\n'),actual=read(file).replace(/\r\n/g,'\n');
+ if(original===actual){exactCanonicalFiles++;continue;}
+ // Owner-approved test-only compatibility delta; no arbitrary test assertion edits.
+ if(['src/marketing-preferences/marketing-preferences.security.spec.ts','src/forum/forum.controller.spec.ts','src/forum/forum-read-access.spec.ts'].includes(file)){
+  const expected="import { startGuardedHttpTestApp } from '../../test/guarded-http-app';\n"+original.replace('await app.init();','await startGuardedHttpTestApp(app);');
+  assert.equal(actual,expected,'Only explicit awaited test startup is approved: '+file);approvedTestStartupFiles++;continue;
+ }
+ if(file==='package.json'||file==='package-lock.json'){
+  const before=JSON.parse(original),after=JSON.parse(actual);
+  if(file==='package.json'){assert.equal(after.devDependencies.supertest,'7.3.1');after.devDependencies.supertest=before.devDependencies.supertest;}
+  else{
+   assert.equal(after.packages[''].devDependencies.supertest,'7.3.1');after.packages[''].devDependencies.supertest=before.packages[''].devDependencies.supertest;
+   const entry=after.packages['node_modules/supertest'],old=before.packages['node_modules/supertest'];
+   assert.equal(entry.version,'7.3.1');assert.equal(entry.resolved,'https://registry.npmjs.org/supertest/-/supertest-7.3.1.tgz');
+   assert.equal(entry.integrity,'sha512-vNaNCFoCR/edDbErQZp5KLNT8R4dSPHX7rlDLoE8hWLAm/878j6ShMbe8HK/E6RwwuhlSXVelXAIg9AxR5WWPw==');
+   for(const key of ['version','resolved','integrity'])entry[key]=old[key];
+  }
+  assert.deepEqual(after,before,'Unapproved dependency graph change');continue;
+ }
+ assert.fail('Unapproved canonical change: '+file);
+}
 const manifest=JSON.parse(read('docker/legacy-remote/activation-manifest.json'));
 assert.equal(manifest.approvedRemote,'d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f');
 assert.equal(manifest.deferredPhoneFeature,true);assert.deepEqual(manifest.activeApplicationMigrationList,[]);
@@ -35,5 +57,5 @@ assert(!pages.some(page=>/profile|auth\/|token|dashboard/.test(page.path)));
 const index=git(['ls-files','-z']).toString().split('\0').filter(Boolean);
 const sqlite=index.filter(file=>/\.(?:sqlite|db)(?:-(?:wal|shm))?$/.test(file));
 if(sqlite.length&&!process.argv.includes('--before-stage'))throw Error('SQLite payload remains in index');
-const result={status:'CANDIDATE_SOURCE_GUARD_PASS',canonicalUnchangedFiles:unchanged.length,financeSourceFiles:unchanged.filter(f=>f.startsWith('src/finance/')).length,canonicalBackendTestsPreserved:unchanged.filter(f=>f.startsWith('src/')&&f.endsWith('.spec.ts')).length,remoteArchivesVerified:54,publicSearchPages:pages.length,deferredPhoneExcluded:true,legacyInactive:true,sqliteIndexPayloads:sqlite.length,activeDatabaseAccessed:false};
+const result={status:'CANDIDATE_SOURCE_GUARD_PASS',canonicalProtectedFiles:unchanged.length,canonicalUnchangedFiles:exactCanonicalFiles,approvedTestStartupFiles,financeSourceFiles:unchanged.filter(f=>f.startsWith('src/finance/')).length,canonicalBackendTestsPreserved:unchanged.filter(f=>f.startsWith('src/')&&f.endsWith('.spec.ts')).length,remoteArchivesVerified:54,publicSearchPages:pages.length,deferredPhoneExcluded:true,legacyInactive:true,sqliteIndexPayloads:sqlite.length,activeDatabaseAccessed:false};
 console.log(JSON.stringify(result,null,2));

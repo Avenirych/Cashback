@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import {
   ExecutionContext,
@@ -51,7 +52,7 @@ describe('ForumController HTTP contract', () => {
       })
       .compile();
     app = module.createNestApplication();
-    await app.init();
+    await startGuardedHttpTestApp(app);
   });
 
   beforeEach(() => {

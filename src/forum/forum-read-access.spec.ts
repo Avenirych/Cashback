@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import {
   ExecutionContext,
   INestApplication,
@@ -50,7 +51,7 @@ describe('Forum discussion read access', () => {
       })
       .compile();
     app = module.createNestApplication();
-    await app.init();
+    await startGuardedHttpTestApp(app);
   });
 
   beforeEach(() => {

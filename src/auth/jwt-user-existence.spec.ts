@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { INestApplication, ForbiddenException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -42,7 +43,7 @@ describe('JWT current user identity gate', () => {
         { provide: ForumUserService, useValue: forumUsers }, { provide: ForumService, useValue: forum },
         { provide: BonusService, useValue: bonus }, { provide: MarketingPreferencesService, useValue: marketing }],
     }).compile();
-    strategy = module.get(JwtStrategy); app = module.createNestApplication(); await app.init();
+    strategy = module.get(JwtStrategy); app = module.createNestApplication(); await startGuardedHttpTestApp(app);
   });
   afterAll(async () => { await app.close(); });
   beforeEach(() => {

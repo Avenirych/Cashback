@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { requiredJwtSecret } from '../local-configuration';
 import { UsersService } from '../users/users.service';
 import { Controller, Get, Req, UseGuards, INestApplication } from '@nestjs/common';
@@ -69,7 +70,7 @@ describe('Shared JWT configuration', () => {
       const module = await testModule(syntheticSecret);
       jwt = module.get(JwtService);
       app = module.createNestApplication();
-      await app.init();
+      await startGuardedHttpTestApp(app);
     });
     afterAll(async () => { await app.close(); });
 
