@@ -58,7 +58,7 @@ interface AuthContextType {
     password: string;
   }) => Promise<RegisterResult>;
   verifyEmail: (token: string) => Promise<void>;
-  checkVerification: () => Promise<boolean>;
+  checkVerification: (expectedUserId?: number) => Promise<boolean>;
   resendVerification: (email: string) => Promise<ResendResult>;
   logout: () => void;
   forumUser: ForumUserData | null;
@@ -200,6 +200,8 @@ export const AuthProvider = ({
   }>({ token: null, user: null });
   const forumProfile = useRef<ForumUserData | null>(null);
   const authRevision = useRef(0);
+  // In-memory, pending request only: never persist or log verification tokens.
+  const verificationRequest = useRef<{ value: string; promise: Promise<void> } | null>(null);
   const forumRevision = useRef(0);
 
   const resetForum = () => {
@@ -683,23 +685,32 @@ export const AuthProvider = ({
     };
   };
 
-  const verifyEmail = async (verificationToken: string) => {
-    const response = await authFetch(
-      `${API_URL}/auth/verify-email?token=${encodeURIComponent(
-        verificationToken
-      )}`
-    );
-
-    const text = await response.text();
-
-    if (!response.ok) {
-      throw new Error(
-        parseError(text, "Email verification failed")
-      );
+  const verifyEmail = (verificationToken: string): Promise<void> => {
+    if (verificationRequest.current?.value === verificationToken) {
+      return verificationRequest.current.promise;
     }
+    const revision = authRevision.current;
+    const promise = (async () => {
+      const response = await authFetch(
+        `${API_URL}/auth/verify-email?token=${encodeURIComponent(verificationToken)}`
+      );
+      const text = await response.text();
+      if (!response.ok) throw new Error("Email verification could not be confirmed");
 
-    const result = JSON.parse(text);
-    applySessionPersistent(result.access_token, result.user);
+      const result = JSON.parse(text);
+      if (typeof result.access_token !== "string" || !result.access_token ||
+          !Number.isSafeInteger(result.user?.id) || result.user.id <= 0 ||
+          typeof result.user.email !== "string" || result.user.email_verified !== true) {
+        throw new Error("Invalid verification response");
+      }
+      if (revision !== authRevision.current) throw new Error("Session changed");
+      applySessionPersistent(result.access_token, result.user);
+    })();
+    const pending = { value: verificationToken, promise };
+    verificationRequest.current = pending;
+    const clear = () => { if (verificationRequest.current === pending) verificationRequest.current = null; };
+    void promise.then(clear, clear);
+    return promise;
   };
 
   const resendVerification = async (
@@ -725,9 +736,10 @@ export const AuthProvider = ({
     return JSON.parse(text);
   };
 
-  const checkVerification = async (): Promise<boolean> => {
+  const checkVerification = async (expectedUserId?: number): Promise<boolean> => {
     const current = session.current;
-    const currentToken = current.token || storageGet("local", TOKEN_KEY);
+    if (expectedUserId !== undefined && current.user?.id !== expectedUserId) throw new Error("Session changed");
+    const currentToken = current.token || storageGet("local", TOKEN_KEY) || storageGet("session", PENDING_AUTH_KEY);
     if (!currentToken) throw new Error("Войдите в аккаунт, чтобы проверить подтверждение почты.");
     const response = await authFetch(API_URL + "/auth/profile", {
       headers: { Authorization: "Bearer " + currentToken },
@@ -735,6 +747,8 @@ export const AuthProvider = ({
     if (!response.ok) throw new Error("Не удалось проверить почту. Войдите в аккаунт или повторите проверку позже.");
     const actual = await response.json();
     if (session.current !== current) throw new Error("Сессия изменилась. Повторите проверку.");
+    if (!Number.isSafeInteger(actual?.id) || actual.id <= 0 ||
+        (current.user && actual.id !== current.user.id)) throw new Error("Invalid account status response");
     if (actual.email_verified === true) {
       applySessionPersistent(currentToken, actual);
       return true;
