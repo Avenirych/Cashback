@@ -18,7 +18,7 @@ const manifest=JSON.parse(read('docker/legacy-remote/activation-manifest.json'))
 assert.equal(manifest.approvedRemote,'d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f');
 assert.equal(manifest.deferredPhoneFeature,true);assert.deepEqual(manifest.activeApplicationMigrationList,[]);
 assert.equal(manifest.synchronize,false);assert.equal(manifest.automaticMigrations,false);assert.equal(manifest.activeFinanceModule,false);
-for(const entry of manifest.archives){const bytes=fs.readFileSync(p.join(root,entry.archive));assert.equal(sha(bytes),entry.sha256);assert.equal(sha(git(['show',manifest.approvedRemote+':'+entry.originalPath])),entry.sha256);assert.equal(entry.activationAllowed,false);assert(entry.archive.endsWith('.source.txt'));if(!entry.activeSourceRetained)assert(!fs.existsSync(p.join(root,entry.originalPath)),entry.originalPath+' must remain deferred');}
+for(const entry of manifest.archives){const bytes=fs.readFileSync(p.join(root,entry.archive));assert.equal(sha(bytes),entry.sha256);assert.equal(sha(git(['show',':'+entry.archive])),entry.sha256);assert.equal(sha(git(['show',manifest.approvedRemote+':'+entry.originalPath])),entry.sha256);assert.equal(entry.activationAllowed,false);assert(entry.archive.endsWith('.source.txt'));if(!entry.activeSourceRetained)assert(!fs.existsSync(p.join(root,entry.originalPath)),entry.originalPath+' must remain deferred');}
 assert.equal(manifest.archives.length,54);
 const allSrc=[];function walk(dir){for(const entry of fs.readdirSync(p.join(root,dir),{withFileTypes:true})){const file=dir+'/'+entry.name;if(entry.isDirectory())walk(file);else if(entry.isFile())allSrc.push(file);}}walk('src');
 assert(!allSrc.some(f=>/1792195200000|cli-data-source|cli\.datasource/.test(f)));

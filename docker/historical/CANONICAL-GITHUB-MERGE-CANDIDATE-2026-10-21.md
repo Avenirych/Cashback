@@ -1,6 +1,8 @@
 # Canonical GitHub merge candidate — 21 October 2026
 
-Status: VALIDATED_PENDING_LOCAL_MERGE_COMMIT. Exact merge SHA and parent confirmation will be added after local commit. NOT PUBLISHED. NOT DEPLOYED.
+Status: **MERGE_CANDIDATE_VERIFIED**. NOT PUBLISHED. NOT DEPLOYED.
+
+Exact local merge candidate: `c2542bcb3a4b6edbdd8f76bbcee18afa911eeb8a`. Both parents independently verified: `fb2cfee91e1d7cb113d301c69e48c9613e100e6c` and `d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f`. A report/verification-only child commit records this identity and checks staged archive bytes without changing tested application source.
 
 ## Owner approvals and identities
 
@@ -218,4 +220,6 @@ The linked JSON records authoritative stage blob hashes, raw before/after SHA-25
 
 ## Publication boundary
 
-No push, PR, deployment, active database access, financial endpoint wiring, live migration, balance changes, protected container rebuild/restart or destructive cleanup. The 259 pending cleanup candidates are untouched. Local merge commit requires final index/parent checks; future publication requires a separate owner instruction specifying the reviewed candidate SHA and PR target. No GitHub hosted Actions claim is made; equivalent local suites and clean legacy CI were executed.
+No push, PR, deployment, active database access, financial endpoint wiring, live migration, balance changes, protected container rebuild/restart or destructive cleanup. The 259 pending cleanup candidates are untouched. Local merge commit and final index/parent checks are complete; future publication requires a separate owner instruction specifying the reviewed candidate SHA and PR target. No GitHub hosted Actions claim is made; equivalent local suites and clean legacy CI were executed.
+
+Remaining blockers: none for the approved local candidate. Hosted GitHub Actions, PR/publication, live deployment, active database compatibility/backup and finance activation were not authorized or performed. Any future publication must refer to the exact reviewed candidate SHA above.

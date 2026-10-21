@@ -1,5 +1,5 @@
 {
-  "status": "SOURCE_RESOLUTIONS_AND_VALIDATION_COMPLETE_PENDING_LOCAL_MERGE_COMMIT",
+  "status": "MERGE_CANDIDATE_VERIFIED",
   "canonical": "fb2cfee91e1d7cb113d301c69e48c9613e100e6c",
   "remote": "d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f",
   "expectedParents": [
@@ -5579,5 +5579,11 @@
     "checkedAt": "2026-10-21T13:36:06.686Z"
   },
   "publication": "NOT_PUBLISHED",
-  "deployment": "NOT_DEPLOYED"
+  "deployment": "NOT_DEPLOYED",
+  "candidateCommit": "c2542bcb3a4b6edbdd8f76bbcee18afa911eeb8a",
+  "verifiedParents": [
+    "fb2cfee91e1d7cb113d301c69e48c9613e100e6c",
+    "d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f"
+  ],
+  "reportFinalization": "Report and read-only verification child; tested application source unchanged"
 }
