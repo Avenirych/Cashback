@@ -17,16 +17,13 @@ export class UsersService {
     return this.userRepo.find();
   }
 
-  async getById(id: number): Promise<User | null> {
-    return this.userRepo.findOne({
-      where: { id },
-    });
+  async getById(id: number, includePrivate = false): Promise<User | null> {
+    if (includePrivate) return this.userRepo.createQueryBuilder('u').addSelect(['u.firstName','u.lastName','u.phone_e164']).where('u.id = :id', {id}).getOne();
+    return this.userRepo.findOne({ where: { id } });
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    return this.userRepo.findOne({
-      where: { email },
-    });
+    return this.userRepo.createQueryBuilder('u').addSelect(['u.firstName','u.lastName','u.phone_e164']).where('u.email = :email', {email}).getOne();
   }
 
   async create(data: Partial<User>): Promise<User> {
@@ -62,6 +59,17 @@ export class UsersService {
     user.balance = Number(newBalance);
 
     return this.userRepo.save(user);
+  }
+
+  /** One conditional UPDATE consumes a token even under concurrent requests. */
+  async consumeEmailToken(token: string): Promise<User | null> {
+    const result = await this.userRepo.createQueryBuilder()
+      .update(User)
+      .set({ email_verified: true, email_token: null, email_token_expires_at: null })
+      .where('email_token = :token AND email_verified = false AND email_token_expires_at > CURRENT_TIMESTAMP', { token })
+      .returning('id').execute();
+    const id = result.raw[0]?.id;
+    return id ? this.getById(id, true) : null;
   }
 
   async findByEmailToken(

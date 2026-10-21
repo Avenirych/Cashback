@@ -1,0 +1,23 @@
+{
+  "start_runner": {
+    "scope": "start_runner",
+    "manifest_sha256": null,
+    "runner_id": null,
+    "case": null,
+    "approved": false
+  },
+  "run_scenario": {
+    "scope": "run_scenario",
+    "manifest_sha256": null,
+    "runner_id": null,
+    "case": null,
+    "approved": false
+  },
+  "collect_diagnostics": {
+    "scope": "collect_diagnostics",
+    "manifest_sha256": null,
+    "runner_id": null,
+    "case": null,
+    "approved": false
+  }
+}

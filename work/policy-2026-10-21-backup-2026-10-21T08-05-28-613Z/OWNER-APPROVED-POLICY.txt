@@ -1,0 +1,589 @@
+# CASHBACK+ — COMPLETE FINANCIAL POLICY AND ATOMIC INTEGRATION
+
+PROJECT:
+C:\Users\serge\cashback+
+
+NEW OWNER APPROVAL:
+21 October 2026
+
+POLICY ID:
+FINANCIAL_POLICY_2026_10_21
+
+CURRENT STATUS:
+FINANCIAL_POLICY_PARTIAL
+
+GOAL:
+Complete the remaining isolated financial business logic using three newly approved owner decisions and finish two previously blocked atomic integrations.
+
+DO NOT DEPLOY OR ACTIVATE FINANCE.
+
+---
+
+## 1. MANDATORY PREPARATION
+
+Read the following files before editing:
+
+- docker/historical/FINANCIAL-POLICY-2026-10-20-IMPLEMENTATION.md
+- docker/historical/FINANCIAL-BUSINESS-LOGIC-COMPLETION.md
+- docker/historical/FINANCE-COMPLETION-AND-SECURITY-RELEASE.md
+- docker/historical/BACKEND-REGRESSION-AND-SECURITY-RESULT.md
+- work/BUSINESS_SPEC_6B_FINAL.md
+- Existing owner-approved amendments and current financial source files.
+
+Inspect the complete current `src/finance` implementation, especially:
+
+- owner-policy.ts
+- policy-context.ts
+- policy-purchase.ts
+- policy-debt-refund.ts
+- policy-payout.ts
+- payout-policy.ts
+- receipt-settlement.ts
+- purchase-lifecycle.ts
+- purchase-linkage.ts
+- lot-operations.ts
+- ledger, coverage, lineage and reconciliation services.
+
+Review the existing isolated PostgreSQL test runner and all 65 passing groups.
+
+Preserve the current architecture. Do not recreate the finance subsystem or replace working services with historical drafts.
+
+Create a source manifest and targeted backups before editing.
+
+## 2. AUTHORITY AND SCOPE
+
+Three decisions below were explicitly approved by the owner on 21 October 2026.
+
+They supplement the 16 rules approved on 20 October 2026 and all earlier applicable owner-approved rules.
+
+Priority:
+
+1. Explicit later owner approval within its scope.
+2. Earlier explicit owner approval where not superseded.
+3. Other approved historical rules.
+4. Existing implementation consistent with those rules.
+5. Drafts and proposals are not approvals.
+
+Do not infer unrelated financial permissions.
+
+All financial arithmetic must use integer GBP pence, existing approved rounding and exact, auditable transaction records.
+
+## 3. NEW APPROVED RULE — PARTIAL LOT SELECTION
+
+POLICY:
+PARTIAL_LOT_SELECTION_FIFO_V1
+
+OWNER DECISION:
+
+Use the earliest confirmed available monetary lots first.
+
+If confirmation timestamps are equal and the allocation remains ambiguous, return pending_review.
+
+IMPLEMENTATION:
+
+Apply this ordering consistently wherever the current approved operation requires choosing a partial amount from several eligible monetary lots, including:
+
+- Customer debt recovery.
+- Purchase bonus reservation/application.
+- Partial release of reserved bonus.
+- Full and partial refund corrections.
+- Restoring previously recovered funds where source selection is required.
+- Eligible payout holds.
+
+Use the original verified confirmation timestamp associated with the monetary lot.
+
+Internal transfers must not reset the original age.
+
+Exclude funds that are:
+
+- Unconfirmed.
+- Restricted.
+- Already consumed.
+- Reserved for unrelated obligations.
+- Owned by another person.
+- Otherwise ineligible for the specific operation.
+
+Do not treat FIFO as permission to cross ownership, origin, merchant, debt or reservation restrictions.
+
+When timestamps differ, allocate oldest eligible lots first.
+
+Allow partial consumption of a lot only through an atomic, ledger-backed split or equivalent existing mechanism that preserves provenance, remaining amount and original confirmation timestamp.
+
+When equal timestamps create a materially ambiguous source choice, block that allocation with pending_review.
+
+Do not invent a secondary ordering by row ID, UUID, insertion order or callback arrival time.
+
+Prevent negative balances, duplicate splits, repeated consumption and overcollection.
+
+## 4. NEW APPROVED RULE — MIXED-AGE PAYOUT BELOW £10
+
+POLICY:
+SIX_MONTH_MATURE_LOTS_ONLY_V1
+
+OWNER DECISION:
+
+For balances below £10, pay only free eligible monetary lots that have individually reached six calendar months.
+
+Do not include younger lots.
+
+All other payout gates remain mandatory.
+
+IMPLEMENTATION:
+
+For each eligible monetary lot:
+
+- Use its original verified confirmation timestamp.
+- Calculate six UTC calendar months.
+- Clamp month-end to the last valid day where necessary.
+- Preserve the time of day and available timestamp precision.
+- Do not substitute 180 days.
+- Preserve age across transfers.
+
+Calculate:
+
+- Total free eligible monetary balance.
+- Mature free eligible balance.
+- Younger free eligible balance.
+- Next relevant maturity date.
+- Amount eligible for the six-month trigger.
+
+For the six-month trigger, reserve and pay only the mature eligible portion.
+
+Example:
+
+Customer has:
+- £4 confirmed seven months ago.
+- £3 confirmed one month ago.
+
+The six-month trigger applies only to £4.
+
+The younger £3 remains the customer's liability and must not be consumed by that payout.
+
+IMPORTANT:
+
+The previously approved £10 trigger remains separate.
+
+Do not change the established £10-trigger eligibility rules merely because the six-month trigger is lot-specific.
+
+Both payout triggers retain:
+
+- No disqualifying debt.
+- Confirmed ownership and coverage.
+- No restrictions.
+- Verified recipient/provider.
+- Full separately funded platform fee.
+- Principal strictly greater than the complete verified fee.
+- Atomic principal and fee holds.
+- Idempotency.
+- Unknown-outcome reconciliation before retry.
+
+A mature £4 amount is not automatically payable if its verified fee or another mandatory gate blocks payment.
+
+Preserve all remaining customer liabilities if payout cannot proceed.
+
+## 5. NEW APPROVED RULE — DOWNWARD RECOVERY CORRECTION
+
+POLICY:
+RECOVERY_TARGET_DECREASE_V1
+
+OWNER DECISION:
+
+When the merchant confirms a revised commission that reduces the amount previously recoverable from the buyer:
+
+1. Reduce the still-outstanding debt first.
+2. Then restore any funds actually recovered in excess of the revised target.
+3. Restore funds to the original owners/lots with provenance preserved.
+
+IMPLEMENTATION:
+
+Reconcile the original purchase, verified commission revisions, refund events, cashback journals, recovery journals, debt obligations and source-lot allocations.
+
+Compute the new cumulative recovery target using the existing approved customer entitlement and rounding rules.
+
+Compare:
+
+- Original recovery target.
+- Revised recovery target.
+- Amount already collected.
+- Amount still outstanding.
+- Amount previously restored.
+
+Never treat an outstanding unpaid debt as if it were money already collected.
+
+Cancel or reduce unpaid debt first.
+
+Only restore money actually recovered beyond the revised cumulative target.
+
+Use immutable linked correcting entries.
+
+Preserve:
+
+- Original owner.
+- Original source-lot identity or auditable split lineage.
+- Original confirmation age.
+- Monetary ownership.
+- Original restrictions where applicable.
+
+Do not manufacture new confirmed funds or erase prior journal entries.
+
+Do not automatically release funds into an unrestricted available balance if their original restrictions or related obligations remain active.
+
+If exact original source ownership cannot be reconciled, return pending_review.
+
+Handle multiple sequential commission revisions, including:
+
+- Partial refund followed by increased commission.
+- Several downward recovery-target changes.
+- Later full refund.
+- Replayed callbacks.
+- Already repaid debt.
+- Partially collected debt.
+- Previously restored amounts.
+
+Maintain a capped, idempotent cumulative correction model.
+
+## 6. ATOMIC GIFTED-BONUS CANCELLATION
+
+IMPLEMENTATION BLOCKER — NO NEW OWNER APPROVAL REQUIRED.
+
+Complete the approved Q3 cancellation behavior for gifted-origin monetary bonus lots.
+
+Approved rule:
+
+When the selected winning purchase is cancelled, return the applicable bonus to the buyer.
+
+Do not automatically reassign it to another order.
+
+However, a gifted lot may carry original-sender responsibility and verified linked recovery obligations.
+
+IMPLEMENTATION REQUIREMENTS:
+
+Perform cancellation, entitlement restoration, lineage validation and eligible linked-debt recovery inside one caller-owned PostgreSQL transaction.
+
+Acquire appropriate deterministic locks over:
+
+- Relevant customer accounts.
+- Original sender and recipient relationships.
+- Source monetary lots.
+- Purchase reservation.
+- Linked debt obligations.
+- Relevant coverage/ledger resources.
+
+Prevent deadlocks through a consistent lock order.
+
+Do not expose returned gifted funds as freely spendable between release and authorized debt recovery.
+
+Protect:
+
+- Unrelated recipient funds.
+- Third-party-owned money.
+- Restricted or consumed lots.
+- Unverified distant transfer chains.
+
+Apply only existing approved Q14 linked-recovery authority.
+
+Do not automatically seize unrelated recipient balances.
+
+If the exact authorized recovery cannot be proven, preserve the value in a safe restricted/pending state rather than making it freely available.
+
+Ensure the transaction rolls back completely if any step fails.
+
+Do not split cancellation and linked recovery into independently committed operations.
+
+Maintain immutable journal entries and complete source lineage.
+
+## 7. ATOMIC COVERAGE AND DEBT-REPAYMENT COORDINATION
+
+IMPLEMENTATION BLOCKER — NO NEW OWNER APPROVAL REQUIRED.
+
+Current isolated external repayment can conflict with a separate coverage-allocation writer.
+
+Implement a shared transaction, locking and immutable allocation protocol.
+
+REQUIREMENTS:
+
+- One caller-owned PostgreSQL transaction for relevant monetary state changes.
+- Deterministic locking of coverage, source lots, obligations and ledger ownership.
+- Serializable behavior or equivalent proven concurrency protection.
+- Atomic coverage reservation and release.
+- No double use of the same confirmed receipt.
+- No repayment from funds already reserved for another obligation.
+- No race between debt repayment and coverage allocation.
+- Idempotent external bank receipt processing.
+- No customer-declared payment treated as bank confirmation.
+- Correct rollback on partial failure.
+- Correct behavior when an allocation row does not yet exist.
+
+Do not rely solely on checking that no competing row exists.
+
+Use an appropriate unique constraint, stable lock anchor, transactional allocation protocol or equivalent race-safe mechanism.
+
+Reconcile the ledger, debt state, source ownership and coverage records after every successful operation.
+
+Never represent a clearing entry as completed merchant remittance or platform income without separate verified evidence.
+
+## 8. PURCHASE AND REFUND INTEGRATION
+
+Verify that the new FIFO rule works with all previously approved purchase and refund rules.
+
+Preserve:
+
+- Eligible product value after discounts.
+- Excluded delivery and ineligible items.
+- Highest eligible order selection.
+- Earlier original order placement time for equal values.
+- Verified first seller-message receipt fallback.
+- Verified complete order group before final selection.
+- Late higher-order review after final application.
+- Cancelled winner bonus return without automatic reassignment.
+- Mandatory merchant bonus caps.
+- Excess reservation release only after verified conditions.
+- Cashback on every independently eligible order.
+- Merchant money actually received before cashback availability.
+- Merchant-specific finality.
+- Full-refund cashback recovery.
+- Partial-refund recalculation using verified revised commission.
+- Earliest confirmed debt first.
+- Eligible free own monetary sources.
+- Transfer lineage protections.
+- Separate platform expenses and customer liabilities.
+
+Do not change these rules merely to simplify implementation.
+
+## 9. MIGRATIONS AND DATA SAFETY
+
+Create new isolated, forward-only migrations only where required.
+
+Use the existing finance migration conventions.
+
+Preserve historical journal and lot records.
+
+Do not destructively rewrite existing immutable history.
+
+Any additional lot-split, restoration, coverage or payout allocation tables must have appropriate:
+
+- Foreign keys.
+- Uniqueness constraints.
+- Idempotency keys.
+- Ownership evidence.
+- Amount invariants.
+- Immutable-record protections.
+- Transactional consistency.
+
+Migrations must be tested exclusively against a fresh disposable PostgreSQL database.
+
+Never apply them to the active historical PostgreSQL cluster.
+
+## 10. REQUIRED POSTGRESQL TESTS
+
+Retain all 65 previously passing service-level scenario groups.
+
+Add real PostgreSQL integration tests for the following.
+
+FIFO:
+
+- Oldest eligible lot selected first.
+- Partial use of one lot.
+- Several lots with different confirmation dates.
+- Equal timestamp ambiguity.
+- Excluded reserved/restricted funds.
+- Gifted-origin source lineage.
+- Replay of partial allocation.
+- Concurrent allocation of the same lot.
+- No negative balances.
+
+SIX-MONTH PAYOUT:
+
+- £4 mature + £3 young: only £4 considered.
+- All lots young.
+- All lots mature.
+- Several maturity dates.
+- End-of-month UTC calculations.
+- Leap-year transitions.
+- Transfer preserving original confirmation age.
+- £10 trigger remains independently correct.
+- Fee exceeds mature principal.
+- Unknown provider outcome.
+- Concurrent payout holds.
+- Payout failure preserving liability.
+
+RECOVERY TARGET DECREASE:
+
+- Unpaid debt reduction.
+- Partially paid debt reduction.
+- Fully paid recovery requiring restoration.
+- Multiple source lots.
+- Original ownership restoration.
+- Restrictions retained.
+- Multiple sequential commission revisions.
+- Later full refund.
+- Replay and event conflict.
+- Concurrent recovery and correction.
+- Ledger conservation.
+
+GIFT CANCELLATION:
+
+- Gifted bonus cancellation before consumption.
+- Cancellation after reconciled consumption.
+- Original sender has a linked debt.
+- Original sender has no debt.
+- Unrelated recipient funds protected.
+- Unverified distant chain blocked.
+- Cancellation and recovery in one transaction.
+- Rollback after injected failure.
+- Concurrent cancellation and debt collection.
+- No temporary free-funds exposure.
+
+COVERAGE COORDINATION:
+
+- Verified external bank receipt repayment.
+- Existing coverage allocation.
+- Competing coverage writer.
+- Simultaneous first allocation with no existing row.
+- Two concurrent attempts using one receipt.
+- Replayed receipt.
+- Partial debt repayment.
+- Coverage release failure rollback.
+- No double booking.
+- No negative coverage.
+- Final ledger/coverage reconciliation.
+
+Use actual PostgreSQL transactions, locks, constraints and ledger writes.
+
+Pure unit tests alone are insufficient.
+
+Test monetary conservation across each scenario.
+
+## 11. FULL REGRESSION BASELINE
+
+Current verified baseline:
+
+Backend:
+511/511 PASS.
+
+Frontend:
+208/208 PASS.
+
+Isolated PostgreSQL:
+65/65 scenario groups PASS.
+
+Run complete source regression after implementation.
+
+Also run:
+
+- Backend TypeScript checks.
+- Backend production build.
+- Frontend TypeScript checks.
+- Frontend production build.
+- Node syntax checks.
+- git diff --check.
+
+Do not skip, weaken or remove existing tests.
+
+Keep the pre-existing frontend SiteSearch TCPWRAP issue separately documented.
+
+Do not claim a test passed if it was not actually executed.
+
+## 12. STRICT PROTECTION OF THE LIVE WEBSITE
+
+The following resources are protected:
+
+Historical PostgreSQL cluster:
+7698666936429441062
+
+Historical database:
+cashback_historical_03573b7
+
+Active security backend container:
+ced2bf78f14226db06e758edb4cd7d1d9d99289e0ad4d89e4b6bc55cc6826c8a
+
+Active backend:
+http://127.0.0.1:3006/
+
+Active frontend:
+http://localhost:3004/
+
+Preserve all current Docker resources, including PostgreSQL, frontend, backend, bonus-api, Mailpit, persistent volumes, images and stopped security rollback containers.
+
+DO NOT:
+
+- Connect FinanceModule to AppModule.
+- Enable financial HTTP endpoints.
+- Apply migrations to the live database.
+- Modify real customer balances.
+- Restart or rebuild live containers.
+- Change the active security release.
+- Call real Wise, banking or merchant payment APIs.
+- Send real monetary transfers.
+- Run Docker prune.
+- Run docker compose down -v.
+- Remove persistent volumes.
+- Enable synchronize=true.
+- Enable migrationsRun=true.
+- Run destructive database resets or seeds.
+
+Use only disposable isolated PostgreSQL test resources with verified identity and safe cleanup.
+
+The active database must not be used even for exploratory financial tests.
+
+## 13. FINAL REPORT
+
+Create:
+
+docker/historical/FINANCIAL-POLICY-2026-10-21-COMPLETION.md
+
+Include:
+
+1. Exact three new owner-approved rules.
+2. Mapping to previous 16 approved rules.
+3. Changed source files and migrations.
+4. FIFO partial lot allocation behavior.
+5. Mixed-age payout calculation.
+6. Downward recovery-target correction behavior.
+7. Atomic gifted-bonus cancellation.
+8. Atomic coverage/debt-repayment coordination.
+9. Detailed PostgreSQL concurrency and rollback tests.
+10. Backend/frontend regression results.
+11. TypeScript and build results.
+12. Any remaining implementation blockers.
+13. Any genuinely missing owner decisions, with exact questions.
+14. Proof that live services, database, balances and security release were not changed.
+15. Whether isolated finance is technically complete, and what remains before production integration.
+
+FINAL STATUS:
+
+FINANCIAL_POLICY_COMPLETE_IN_ISOLATION
+
+Only if all approved operations and their relevant combinations are implemented and tested successfully.
+
+Otherwise:
+
+FINANCIAL_POLICY_PARTIAL
+
+Do not label the subsystem production-ready based only on disposable PostgreSQL tests.
+
+## 14. EXECUTION ORDER
+
+1. Inspect current files and record baseline.
+2. Back up only the files that will change.
+3. Implement FIFO allocation and tests.
+4. Implement mature-lot-only payout and tests.
+5. Implement downward recovery correction and tests.
+6. Implement atomic gifted-bonus cancellation.
+7. Implement shared coverage/debt coordination.
+8. Run all isolated PostgreSQL tests.
+9. Run full backend/frontend regression and builds.
+10. Verify protected live resource identities.
+11. Write the final report.
+
+PRIMARY OBJECTIVE:
+
+Finish the isolated financial business logic without compromising existing customer money, historical records, security or live services.
+
+Do not deploy.
+
+Do not activate financial endpoints.
+
+Do not request production database access.
+
+Stop and report any remaining ambiguity that could cause an incorrect financial transfer instead of guessing.

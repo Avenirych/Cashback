@@ -1,0 +1,46 @@
+{
+  "name": "cashback-registration-20261016-4f8c2a96b17d",
+  "services": {
+    "migration-executor": {
+      "image": "${REGISTRATION_EXECUTOR_IMAGE:?Independently reviewed pinned executor image required}",
+      "container_name": "cashback-registration-20261016-4f8c2a96b17d-migration-executor-1",
+      "platform": "linux/amd64",
+      "user": "999:999",
+      "read_only": true,
+      "cap_drop": ["ALL"],
+      "security_opt": ["no-new-privileges:true"],
+      "entrypoint": ["/usr/local/bin/node"],
+      "command": ["/opt/cashback/helpers/helper-entrypoint.cjs", "migration-executor"],
+      "restart": "no",
+      "pids_limit": 64,
+      "networks": ["database", "authority"],
+      "volumes": [
+        {"type":"bind","source":"C:/approved-registration-infrastructure/public","target":"/run/registration/public","read_only":true,"bind":{"create_host_path":false}},
+        {"type":"bind","source":"C:/approved-registration-infrastructure/executor","target":"/run/registration/private","read_only":true,"bind":{"create_host_path":false}},
+        {"type":"bind","source":"C:/approved-registration-infrastructure/review-payloads","target":"/run/registration/review-payloads","read_only":true,"bind":{"create_host_path":false}}
+      ]
+    },
+    "observer": {
+      "image": "${REGISTRATION_OBSERVER_IMAGE:?Independently reviewed pinned observer image required}",
+      "container_name": "cashback-registration-20261016-4f8c2a96b17d-observer-1",
+      "platform": "linux/amd64",
+      "user": "999:999",
+      "read_only": true,
+      "cap_drop": ["ALL"],
+      "security_opt": ["no-new-privileges:true"],
+      "entrypoint": ["/usr/local/bin/node"],
+      "command": ["/opt/cashback/helpers/helper-entrypoint.cjs", "observer"],
+      "restart": "no",
+      "pids_limit": 64,
+      "networks": ["database", "authority"],
+      "volumes": [
+        {"type":"bind","source":"C:/approved-registration-infrastructure/public","target":"/run/registration/public","read_only":true,"bind":{"create_host_path":false}},
+        {"type":"bind","source":"C:/approved-registration-infrastructure/observer","target":"/run/registration/private","read_only":true,"bind":{"create_host_path":false}}
+      ]
+    }
+  },
+  "networks": {
+    "database": {"name":"cashback-registration-20261016-4f8c2a96b17d-database","external":true},
+    "authority": {"name":"cashback-registration-20261016-4f8c2a96b17d-authority","internal":true}
+  }
+}

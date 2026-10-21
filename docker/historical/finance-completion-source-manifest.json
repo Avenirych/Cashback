@@ -1,0 +1,38 @@
+{
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "status": "ISOLATED_ONLY_NOT_DEPLOYMENT_AUTHORITY",
+  "files": [
+    {
+      "path": "src/finance/lot-operations.ts",
+      "sha256": "c57316ee415eaaae799db7c7eedc34842312a0c8ca45df00e620584ba0312e48"
+    },
+    {
+      "path": "src/finance/receipt-settlement.ts",
+      "sha256": "d826d7a92b92feeb47cb64799cbbe36d0a405b6ee7e5efa0e090a6dc5781b912"
+    },
+    {
+      "path": "src/finance/migrations/1792510000000-AddIsolatedLotOperations.ts",
+      "sha256": "9cb167d80494191940276a74a2f8f8c2453ebe90b8d1ec1c5b9469999c598a92"
+    },
+    {
+      "path": "src/finance/migrations/1792511000000-AddIsolatedReceiptSettlement.ts",
+      "sha256": "1cb37d4d32af652c158fbfa1886d0ed01fbbc7fcdf05d8b693efa99d058cd02a"
+    },
+    {
+      "path": "docker/historical/finance-service-postgres.cjs",
+      "sha256": "f49eb37362c2a4c801d6df2321c82de051cdcaf65bcc0e41eb150b28d30b6435"
+    },
+    {
+      "path": "docker/historical/finance-service-scenarios.cjs",
+      "sha256": "be37ff9026dec52168bde0116fbae8599e7eb2b23c9fda0e6c2140520e71a89d"
+    },
+    {
+      "path": "docker/historical/finance-full-suite-guard.cjs",
+      "sha256": "9eb4c2563caf4a9bac81a767bf568e143ff4d7066b2d9bd7d4a2c17e1b757754"
+    },
+    {
+      "path": "docker/historical/jest.finance-full.json",
+      "sha256": "521fd2ab4e18c9a256fab2674cce33acabb0b5b88504e03c8eb63a6c28075c52"
+    }
+  ]
+}

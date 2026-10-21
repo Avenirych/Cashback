@@ -1,0 +1,408 @@
+diff --git a/src/users/users.controller.ts b/src/users/users.controller.ts
+--- a/src/users/users.controller.ts
++++ b/src/users/users.controller.ts
+@@ -1,32 +1,50 @@
+-import { Controller, Get, Post, Param, Body, Patch } from '@nestjs/common';
+-import { UsersService } from './users.service';
+-
+-@Controller('users')
+-export class UsersController {
+-  constructor(private readonly usersService: UsersService) {}
+-
+-  @Get()
+-  getAll() {
+-    return this.usersService.getAll();
+-  }
+-
+-  @Get(':id')
+-  getById(@Param('id') id: number) {
+-    return this.usersService.getById(id);
+-  }
+-
+-  @Post()
+-  create(@Body() body: any) {
+-    return this.usersService.create(body);
+-  }
+-
+-  @Patch(':id')
+-  update(@Param('id') id: number, @Body() body: any) {
+-    return this.usersService.update(id, body);
+-  }
+-
+-  @Post(':id/balance')
+-  updateBalance(@Param('id') id: number, @Body('amount') amount: number) {
+-    return this.usersService.updateBalance(id, amount);
+-  }
+-}
++import {
++  Controller, Get, Patch, Param, Body, Req, UseGuards,
++  ParseIntPipe, ForbiddenException, NotFoundException, UnauthorizedException,
++} from '@nestjs/common';
++import { JwtAuthGuard } from '../auth/jwt-auth.guard';
++import { UsersService } from './users.service';
++import { parseOwnUserPatch, safeUserDto } from './users.dto';
++
++interface UserRequest { user?: { id?: number } }
++
++@Controller('users')
++export class UsersController {
++  constructor(private readonly usersService: UsersService) {}
++
++  // No public list/create/balance endpoints: there is no admin authorization.
++  private ownerId(req: UserRequest, requestedId: number): number {
++    const authenticatedId = req.user?.id;
++    if (!Number.isSafeInteger(authenticatedId) || (authenticatedId ?? 0) <= 0) {
++      throw new UnauthorizedException('Invalid authenticated identity');
++    }
++    if (requestedId !== authenticatedId) {
++      throw new ForbiddenException('Only your own account is accessible');
++    }
++    return authenticatedId!;
++  }
++
++  @Get(':id')
++  @UseGuards(JwtAuthGuard)
++  async getById(@Param('id', ParseIntPipe) id: number, @Req() req: UserRequest) {
++    const owner = this.ownerId(req, id);
++    const user = await this.usersService.getById(owner);
++    if (!user) throw new NotFoundException('User not found');
++    return safeUserDto(user);
++  }
++
++  @Patch(':id')
++  @UseGuards(JwtAuthGuard)
++  async update(
++    @Param('id', ParseIntPipe) id: number,
++    @Req() req: UserRequest,
++    @Body() body: unknown,
++  ) {
++    const owner = this.ownerId(req, id);
++    const update = parseOwnUserPatch(body);
++    if (!(await this.usersService.getById(owner))) {
++      throw new NotFoundException('User not found');
++    }
++    return safeUserDto(await this.usersService.update(owner, update));
++  }
++}
+diff --git a/src/users/users.dto.ts b/src/users/users.dto.ts
+new file mode 100644
+--- /dev/null
++++ b/src/users/users.dto.ts
+@@ -0,0 +1,39 @@
++import { BadRequestException } from '@nestjs/common';
++import type { User } from './user.entity';
++
++export interface SafeUserDto {
++  id: number;
++  email: string;
++  name: string;
++  avatar_url: string | null;
++  balance: number;
++  email_verified: boolean;
++  created_at: Date;
++}
++
++/** Own-account fields only. Never spread an entity into a response. */
++export function safeUserDto(user: User): SafeUserDto {
++  return {
++    id: user.id, email: user.email, name: user.name,
++    avatar_url: user.avatar_url, balance: user.balance,
++    email_verified: user.email_verified, created_at: user.created_at,
++  };
++}
++
++export interface UpdateOwnUserDto { name: string }
++
++/** Explicit runtime allowlist; TypeScript types alone do not validate JSON. */
++export function parseOwnUserPatch(body: unknown): UpdateOwnUserDto {
++  if (!body || typeof body !== 'object' || Array.isArray(body)) {
++    throw new BadRequestException('Expected a profile object');
++  }
++  const fields = Object.keys(body);
++  if (fields.length !== 1 || fields[0] !== 'name') {
++    throw new BadRequestException('Only name may be updated');
++  }
++  const name = (body as Record<string, unknown>).name;
++  if (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100) {
++    throw new BadRequestException('Name must contain 2 to 100 characters');
++  }
++  return { name: name.trim() };
++}
+diff --git a/src/topics.controller.ts b/src/topics.controller.ts
+--- a/src/topics.controller.ts
++++ b/src/topics.controller.ts
+@@ -1,81 +1,70 @@
+-import {
+-  Body,
+-  Controller,
+-  Delete,
+-  Get,
+-  Param,
+-  Patch,
+-  Post,
+-} from '@nestjs/common';
+-
+-import { InjectRepository } from '@nestjs/typeorm';
+-import { Repository } from 'typeorm';
+-
+-import { Topic } from './topics.entity';
+-
+-@Controller('topics')
+-export class TopicsController {
+-  constructor(
+-    @InjectRepository(Topic)
+-    private topicRepository: Repository<Topic>,
+-  ) {}
+-
+-  @Get()
+-  getTopics() {
+-    return this.topicRepository.find({
+-      relations: {
+-        posts: true,
+-      },
+-      order: {
+-        id: 'DESC',
+-      },
+-    });
+-  }
+-
+-  @Post()
+-  async createTopic(
+-    @Body() body: any,
+-  ) {
+-    const topic =
+-      this.topicRepository.create({
+-        title: body.title,
+-      });
+-
+-    return this.topicRepository.save(
+-      topic,
+-    );
+-  }
+-
+-  @Patch(':id')
+-  async updateTopic(
+-    @Param('id') id: string,
+-    @Body()
+-    body: {
+-      title: string;
+-    },
+-  ) {
+-    await this.topicRepository.update(
+-      Number(id),
+-      {
+-        title: body.title,
+-      },
+-    );
+-
+-    return this.topicRepository.findOneBy({
+-      id: Number(id),
+-    });
+-  }
+-
+-  @Delete(':id')
+-  async deleteTopic(
+-    @Param('id') id: string,
+-  ) {
+-    await this.topicRepository.delete(
+-      Number(id),
+-    );
+-
+-    return {
+-      success: true,
+-    };
+-  }
+-}
+\ No newline at end of file
++import {
++  Body,
++  Controller,
++  Param,
++} from '@nestjs/common';
++
++import { InjectRepository } from '@nestjs/typeorm';
++import { Repository } from 'typeorm';
++
++import { Topic } from './topics.entity';
++
++// Legacy HTTP handlers are unregistered pending an approved authorization model.
++@Controller('topics')
++export class TopicsController {
++  constructor(
++    @InjectRepository(Topic)
++    private topicRepository: Repository<Topic>,
++  ) {}
++  getTopics() {
++    return this.topicRepository.find({
++      relations: {
++        posts: true,
++      },
++      order: {
++        id: 'DESC',
++      },
++    });
++  }
++  async createTopic(
++    @Body() body: any,
++  ) {
++    const topic =
++      this.topicRepository.create({
++        title: body.title,
++      });
++
++    return this.topicRepository.save(
++      topic,
++    );
++  }
++  async updateTopic(
++    @Param('id') id: string,
++    @Body()
++    body: {
++      title: string;
++    },
++  ) {
++    await this.topicRepository.update(
++      Number(id),
++      {
++        title: body.title,
++      },
++    );
++
++    return this.topicRepository.findOneBy({
++      id: Number(id),
++    });
++  }
++  async deleteTopic(
++    @Param('id') id: string,
++  ) {
++    await this.topicRepository.delete(
++      Number(id),
++    );
++
++    return {
++      success: true,
++    };
++  }
++}
+diff --git a/src/posts.controller.ts b/src/posts.controller.ts
+--- a/src/posts.controller.ts
++++ b/src/posts.controller.ts
+@@ -1,64 +1,53 @@
+-import {
+-Body,
+-Controller,
+-Delete,
+-Get,
+-Param,
+-Patch,
+-Post,
+-} from '@nestjs/common';
+- 
+-import { PostsService } from './posts.service';
+- 
+-@Controller('posts')
+-export class PostsController {
+-constructor(
+-private readonly postsService: PostsService,
+-) {}
+- 
+-@Get('topic/:id')
+-findByTopic(
+-@Param('id') id: string,
+-) {
+-return this.postsService.findByTopic(
+-Number(id),
+-);
+-}
+- 
+-@Post()
+-create(
+-@Body()
+-body: {
+-topicId: number;
+-content: string;
+-},
+-) {
+-return this.postsService.create(
+-body.topicId,
+-body.content,
+-);
+-}
+- 
+-@Patch(':id')
+-update(
+-@Param('id') id: string,
+-@Body()
+-body: {
+-content: string;
+-},
+-) {
+-return this.postsService.update(
+-Number(id),
+-body.content,
+-);
+-}
+- 
+-@Delete(':id')
+-remove(
+-@Param('id') id: string,
+-) {
+-return this.postsService.remove(
+-Number(id),
+-);
+-}
+-}
+\ No newline at end of file
++import {
++Body,
++Controller,
++Param,
++} from '@nestjs/common';
++ 
++import { PostsService } from './posts.service';
++ 
++// Legacy HTTP handlers are unregistered pending an approved authorization model.
++@Controller('posts')
++export class PostsController {
++constructor(
++private readonly postsService: PostsService,
++) {}
++findByTopic(
++@Param('id') id: string,
++) {
++return this.postsService.findByTopic(
++Number(id),
++);
++}
++create(
++@Body()
++body: {
++topicId: number;
++content: string;
++},
++) {
++return this.postsService.create(
++body.topicId,
++body.content,
++);
++}
++update(
++@Param('id') id: string,
++@Body()
++body: {
++content: string;
++},
++) {
++return this.postsService.update(
++Number(id),
++body.content,
++);
++}
++remove(
++@Param('id') id: string,
++) {
++return this.postsService.remove(
++Number(id),
++);
++}
++}

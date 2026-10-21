@@ -1,0 +1,171 @@
+{
+  "policy": "FINANCIAL_POLICY_2026_10_21",
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "scope": "ISOLATED_ONLY_NO_DEPLOYMENT_AUTHORITY",
+  "backup": "work/policy-2026-10-21-backup-2026-10-21T08-05-28-613Z",
+  "verifiedBackupFiles": 10,
+  "originalFinanceFileCount": 65,
+  "changedOrAddedFinance": [
+    {
+      "path": "src\\finance\\bank-receipts.service.ts",
+      "sha256": "aed81aae664e3e21c81f3bb9e330be8de12f893c26b99aace7b0437982340243"
+    },
+    {
+      "path": "src\\finance\\coverage.service.ts",
+      "sha256": "d49d8b7857fe698573884e7592b37869c2486c0ecd34dd8550db97ae4e6b0013"
+    },
+    {
+      "path": "src\\finance\\migrations\\1792540000000-AddPolicy21Allocations.ts",
+      "sha256": "5452c061dc55d7732201144a64d07e0cfdb21e5334cfe20d4c5f475461232350"
+    },
+    {
+      "path": "src\\finance\\migrations\\1792541000000-CoordinateCoverageRepayment.ts",
+      "sha256": "53fd73cb0cd3a91f5dc7f13189f7770a4c8fa472bcddbee75f2704adc1c4b99e"
+    },
+    {
+      "path": "src\\finance\\policy-2026-10-21.spec.ts",
+      "sha256": "2db19ac748471e962221c67a2aa1217b754dcd1bb79bd9a0e132a0887c1916aa"
+    },
+    {
+      "path": "src\\finance\\policy-2026-10-21.ts",
+      "sha256": "320d2f4ff4d47d78a84a0a028e2f06478db6eba7c05587bbeba1c88e9cf3a2c0"
+    },
+    {
+      "path": "src\\finance\\policy-context.ts",
+      "sha256": "b37c354e931d71dea6cdb91bef294682f4ee7bc07fd3b65504a50d7885f94986"
+    },
+    {
+      "path": "src\\finance\\policy-coverage.ts",
+      "sha256": "d1ae6b3b3fc42e348b4f7eef151b92a018592c039ffa1e4939b3cf0478983ddd"
+    },
+    {
+      "path": "src\\finance\\policy-debt-refund.ts",
+      "sha256": "a7dccadfbc9d565f5f44e3b1fdcbdc5159d3979cac54b6b92d7c958ee281970d"
+    },
+    {
+      "path": "src\\finance\\policy-gift.ts",
+      "sha256": "98037d976c99de984d1e5b14e5702f04d3b16cedcc055537f2a5960410e4df46"
+    },
+    {
+      "path": "src\\finance\\policy-payout.ts",
+      "sha256": "c72adeabe89635321ee24cddcbaa5531415c95f020ed2318673c3653e4578088"
+    },
+    {
+      "path": "src\\finance\\policy-purchase.ts",
+      "sha256": "818dfb7981b53159f6737152ec8232c312e3ca9b69a7bdfdabe3bafa1049c401"
+    },
+    {
+      "path": "src\\finance\\receipt-settlement.ts",
+      "sha256": "db03ea4d4fce21a76f8ad243d7005d9243621a67bc9c7eeb8a0fd49c6393c644"
+    }
+  ],
+  "files": [
+    {
+      "path": "src\\finance\\bank-receipts.service.ts",
+      "sha256": "aed81aae664e3e21c81f3bb9e330be8de12f893c26b99aace7b0437982340243"
+    },
+    {
+      "path": "src\\finance\\coverage.service.ts",
+      "sha256": "d49d8b7857fe698573884e7592b37869c2486c0ecd34dd8550db97ae4e6b0013"
+    },
+    {
+      "path": "src\\finance\\migrations\\1792540000000-AddPolicy21Allocations.ts",
+      "sha256": "5452c061dc55d7732201144a64d07e0cfdb21e5334cfe20d4c5f475461232350"
+    },
+    {
+      "path": "src\\finance\\migrations\\1792541000000-CoordinateCoverageRepayment.ts",
+      "sha256": "53fd73cb0cd3a91f5dc7f13189f7770a4c8fa472bcddbee75f2704adc1c4b99e"
+    },
+    {
+      "path": "src\\finance\\policy-2026-10-21.spec.ts",
+      "sha256": "2db19ac748471e962221c67a2aa1217b754dcd1bb79bd9a0e132a0887c1916aa"
+    },
+    {
+      "path": "src\\finance\\policy-2026-10-21.ts",
+      "sha256": "320d2f4ff4d47d78a84a0a028e2f06478db6eba7c05587bbeba1c88e9cf3a2c0"
+    },
+    {
+      "path": "src\\finance\\policy-context.ts",
+      "sha256": "b37c354e931d71dea6cdb91bef294682f4ee7bc07fd3b65504a50d7885f94986"
+    },
+    {
+      "path": "src\\finance\\policy-coverage.ts",
+      "sha256": "d1ae6b3b3fc42e348b4f7eef151b92a018592c039ffa1e4939b3cf0478983ddd"
+    },
+    {
+      "path": "src\\finance\\policy-debt-refund.ts",
+      "sha256": "a7dccadfbc9d565f5f44e3b1fdcbdc5159d3979cac54b6b92d7c958ee281970d"
+    },
+    {
+      "path": "src\\finance\\policy-gift.ts",
+      "sha256": "98037d976c99de984d1e5b14e5702f04d3b16cedcc055537f2a5960410e4df46"
+    },
+    {
+      "path": "src\\finance\\policy-payout.ts",
+      "sha256": "c72adeabe89635321ee24cddcbaa5531415c95f020ed2318673c3653e4578088"
+    },
+    {
+      "path": "src\\finance\\policy-purchase.ts",
+      "sha256": "818dfb7981b53159f6737152ec8232c312e3ca9b69a7bdfdabe3bafa1049c401"
+    },
+    {
+      "path": "src\\finance\\receipt-settlement.ts",
+      "sha256": "db03ea4d4fce21a76f8ad243d7005d9243621a67bc9c7eeb8a0fd49c6393c644"
+    },
+    {
+      "path": "docker/historical/finance-service-scenarios.cjs",
+      "sha256": "070efc5a992f13f8acc568bfbe2961dbee8d60343470607a3901b6168be7c8a0"
+    },
+    {
+      "path": "docker/historical/finance-service-postgres.cjs",
+      "sha256": "a77c8f4d628f5cfe7886cffd9d61607ed7ab3a58efb9bd913f0fe83aa5f54412"
+    },
+    {
+      "path": "docker/historical/policy21-scenarios.cjs",
+      "sha256": "927d3f668561d55e34a0619465306376873fb0fb047c12f3fc6f1f30d38b6ae8"
+    }
+  ],
+  "protectedSource": {
+    "appModule": "8ba2476125d7dae1f01d0d057e6c5fe121f226d431c35fed8657ceb78531a05c",
+    "historicalCompose": "3ce848effb6be3981072612973ad6560202d79b11726b591f38966c9e36ae53a",
+    "jwtStrategy": "3cfd1060ff5f54fb4e20fb94ade60fcb31780d849f07c9e3c6606016d3f78807"
+  },
+  "validation": {
+    "backend": {
+      "passed": 519,
+      "total": 519,
+      "suites": 61
+    },
+    "frontend": {
+      "passed": 208,
+      "total": 208,
+      "suites": 15,
+      "knownOpenHandle": "SiteSearch TCPWRAP"
+    },
+    "isolatedPostgres": {
+      "groups": 97,
+      "priorGroups": 65,
+      "archive": "C:\\Users\\serge\\cashback+\\work\\finance-completion-aa845611-d5b9-4b03-bd9e-4d9ca6818717"
+    },
+    "typescript": "PASS",
+    "backendBuild": "PASS",
+    "frontendLocalBuild": "PASS_WITH_PREEXISTING_ESLINT_WARNINGS",
+    "frontendStrictCiAttempt": "FAIL_PREEXISTING_ESLINT_WARNINGS",
+    "nodeSyntax": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "artifacts": [
+    {
+      "path": "docker/historical/FINANCIAL-POLICY-2026-10-21-COMPLETION.md",
+      "sha256": "2be7bd898d2d075e81c5197139a3e8444e3540f490fc531f931f80683aba537a"
+    },
+    {
+      "path": "docker/historical/FINANCE-SERVICE-TEST-RESULT.json",
+      "sha256": "9fefffc7c42d37ea04bf1968866c81f00d21a77596d396a12d06451017c0e5cd"
+    },
+    {
+      "path": "docker/historical/POLICY21-PROTECTED-RESOURCES.json",
+      "sha256": "5259027acdc8f0ce64ec5e7ffdfe07365bf3aee27399c3c9a5cf8a120c01a9f6"
+    }
+  ]
+}

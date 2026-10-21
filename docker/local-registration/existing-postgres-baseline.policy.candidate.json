@@ -1,0 +1,16 @@
+{
+  "status": "CANDIDATE_NOT_APPROVED",
+  "context": "desktop-linux",
+  "daemonId": "ec3d6303-4d66-4410-8317-b739cebc046c",
+  "postgresImage": "postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+  "platform": "linux/amd64",
+  "existingPostgresBaseline": {
+    "containerId": "e0818fd64b0149f50ed975d8a519ffc4b615dcff9544a403f224fd82a2291d88",
+    "networkId": "6217313e0c31c0681c1fe16d891fbbca9c12334e59d944612c0a530dcfd5548f",
+    "templateSha256": "8b758bc66bf69c82da23c9d230a7c537fb1c4e319be51051b1661c10241a5443",
+    "effectiveComposeSha256": "8b758bc66bf69c82da23c9d230a7c537fb1c4e319be51051b1661c10241a5443",
+    "postgresSha256": "737d58ec71eff3233e75a1877313577e677142d17f72b2cd2c4d83811a881ad0",
+    "networkSha256": "6d3e2217c3d2606de126847501fa15845b8ddc4ed1130b0c9e7e5167da3d9c06",
+    "volumeSha256": "f3923dbc5fb64f8d305c8e5f6309054a0c85306a5554e48b586908166e71961b"
+  }
+}

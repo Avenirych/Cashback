@@ -1,0 +1,59 @@
+{
+  "status": "SECURITY_ACTIVE",
+  "oldBackend": "b5910499569e8becd7a03408d77a2f2af265f650afc673d8f29eb33cd1db2419",
+  "oldImage": "sha256:671f4b577d213ed06f2abd052fec289078f980226515fc743b1f49d74c6b8538",
+  "newBackend": "feb2181f7ababf41d35968ede8a4d325cf6d1257752ab4b15f9397c755fdc0f6",
+  "newImage": "sha256:9975cdeabba8f95f774fb23cf5133bf89bd26967ff47b4814d34718c5a0db153",
+  "archive": "C:\\Users\\serge\\cashback+\\work\\security-activation-5ee2c121-4ead-435c-8a0d-d299d9c6278c",
+  "rollbackContainer": "cashback-historical-03573b7-local-backend-1-rollback-5ee2c121-4ead-435c-8a0d-d299d9c6278c",
+  "sourceHashes": [
+    {
+      "path": "src/users/users.controller.ts",
+      "sha256": "47ca9a6b8416ea0af26cce568f172fdc2dd21c46cede5b479ce766cf45c8a412"
+    },
+    {
+      "path": "src/users/users.dto.ts",
+      "sha256": "03ba1221c21a4b9e6e5061f40a1eec4c46b5520ac1ac1d26c06ebe093019a86b"
+    },
+    {
+      "path": "src/topics.controller.ts",
+      "sha256": "15bd1b382aeaf6c7d963711c665048cad2c0f3ae722e9ce0214081e658abf20c"
+    },
+    {
+      "path": "src/posts.controller.ts",
+      "sha256": "d932b672ab6d346d7718f2b60e4db94c2f41e13067b3026f4255b1b5c0b6c189"
+    }
+  ],
+  "financeIncluded": false,
+  "liveChecks": {
+    "checks": [
+      "GET /users/1 401",
+      "GET /users/1 401",
+      "GET /users/1 403",
+      "GET /users/1 200",
+      "PATCH /users/1 400",
+      "PATCH /users/1 403",
+      "GET /users 404",
+      "POST /users 404",
+      "POST /users/1/balance 404",
+      "GET /topics 404",
+      "POST /topics 404",
+      "POST /posts 404",
+      "GET /auth/profile 401",
+      "GET /auth/profile 200",
+      "POST /auth/register 400",
+      "POST /auth/login 400",
+      "GET /auth/verify-email?token=invalid 400",
+      "GET /forum/topics 401",
+      "GET /forum/rules 200",
+      "GET /forum/topics 200",
+      "POST /forum/topic 400"
+    ],
+    "safeDto": true,
+    "shortLivedDiagnosticJWT": true,
+    "noAccountsCreated": true,
+    "positivePasswordLoginOrValidEmailConfirmation": false
+  },
+  "databaseUnchanged": true,
+  "rollbackRetained": true
+}

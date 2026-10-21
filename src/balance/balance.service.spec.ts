@@ -1,3 +1,4 @@
+import { scaffoldDependencyMock } from '../../test/scaffold-mocks';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BalanceService } from './balance.service';
 
@@ -7,7 +8,7 @@ describe('BalanceService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [BalanceService],
-    }).compile();
+    }).useMocker(scaffoldDependencyMock).compile();
 
     service = module.get<BalanceService>(BalanceService);
   });

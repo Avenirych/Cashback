@@ -1,3 +1,4 @@
+jest.mock("../context/BonusesContext", () => ({ useBonuses: () => ({ items: [], transfers: [], availableBonusIds: [], loading: false, error: null, refresh: jest.fn(), transfer: jest.fn() }) }));
 import React from "react";
 import { fireEvent, render, screen, waitFor, act } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -23,7 +24,7 @@ beforeEach(() => {
   auth = {
     user: mainUser, token: "main-token", loading: false, isEmailVerificationPending: false,
     forumUser: null, forumSessionActive: false, forumLoading: false, forumRegistered: false, forumBanned: false,
-    login: jest.fn(), register: jest.fn(), verifyEmail: jest.fn(), resendVerification: jest.fn(),
+    login: jest.fn(), register: jest.fn(), checkVerification: jest.fn().mockResolvedValue(false), verifyEmail: jest.fn(), resendVerification: jest.fn(),
     logout: jest.fn(), registerForum: jest.fn().mockResolvedValue(undefined),
     logoutFromForum: jest.fn(), checkForumStatus: jest.fn().mockResolvedValue(undefined),
   };
@@ -151,30 +152,13 @@ test("avatar failure after registration shows recovery rather than success or du
   expect(auth.registerForum).toHaveBeenCalledTimes(1);
 });
 
-test("success redirects after two seconds and unmount cancels timer", async () => {
-  jest.useFakeTimers();
-  try {
-    auth.forumUser = profile;
-    const registrationComplete = Promise.resolve();
-    (auth.registerForum as jest.Mock).mockReturnValue(registrationComplete);
-    const view = registration();
-    fireEvent.click(screen.getByRole("checkbox"));
-    fireEvent.click(screen.getByRole("button", { name: "Retry upload and enter" }));
-    await act(async () => { await registrationComplete; });
-    expect(screen.getByRole("status")).toHaveTextContent("2 seconds");
-    act(() => { jest.advanceTimersByTime(1999); });
-    expect(screen.queryByText("Redirected forum")).not.toBeInTheDocument();
-    act(() => { jest.advanceTimersByTime(1); });
-    expect(screen.getByText("Redirected forum")).toBeInTheDocument();
-    view.unmount();
-    const utils = registration();
-    fireEvent.click(screen.getByRole("checkbox"));
-    fireEvent.click(screen.getByRole("button", { name: "Retry upload and enter" }));
-    await act(async () => { await registrationComplete; });
-    const timers = jest.getTimerCount();
-    utils.unmount();
-    expect(jest.getTimerCount()).toBeLessThan(timers);
-  } finally { jest.useRealTimers(); }
+test("success waits for explicit continue-to-forum instead of a timer", async () => {
+ auth.forumUser=profile;registration();fireEvent.click(screen.getByRole("checkbox"));
+ fireEvent.click(screen.getByRole("button",{name:"Retry upload and enter"}));
+ await screen.findByText(/Success!/);
+ expect(screen.queryByText("Redirected forum")).not.toBeInTheDocument();
+ fireEvent.click(screen.getByRole("link",{name:"Continue to forum"}));
+ expect(screen.getByText("Redirected forum")).toBeInTheDocument();
 });
 
 test("public rules include both languages and no legal compliance promise", () => {
@@ -203,8 +187,8 @@ test("lower-case language context renders Russian registration and deletion/ban 
   localStorage.setItem("lang", "RU");
   render(<LanguageProvider><MemoryRouter><ForumRegister /></MemoryRouter></LanguageProvider>);
   expect(screen.getByText("Регистрация на форуме")).toBeInTheDocument();
-  expect(screen.getByRole("checkbox")).toHaveAccessibleName(/удалены/);
-  expect(screen.getByRole("checkbox")).toHaveAccessibleName(/Нарушения могут привести к удалению вашего аккаунта форума или блокировке/);
+  expect(screen.getByRole("checkbox")).toHaveAccessibleName("Я ознакомился(-ась) с правилами форума и согласен(-на) их соблюдать");
+  expect(screen.getByRole("checkbox")).toBeRequired();
 });
 test("authors display only forum username, avatar and joining date", () => {
   render(<ForumAuthor lang="en" author={{ ...profile, name: mainUser.name, email: mainUser.email } as any} />);
@@ -316,4 +300,25 @@ test("avatar validation enforces exact byte limit and safe backend origin", () =
   expect(forumAvatarUrl("/uploads/forum/a.png")).toBe("http://localhost:3001/uploads/forum/a.png");
   for (const scheme of ["javascript", "data"]) expect(forumAvatarUrl(`${scheme}:invalid`)).toBeUndefined();
   expect(forumAvatarUrl("//evil.example/a.png")).toBeUndefined();
+});
+
+test("separate form requires login or verified email without creating membership",()=>{
+ auth.user=null;const view=registration();expect(screen.getByRole('link',{name:'Log in'})).toHaveAttribute('href','/login?next=%2Fforum%2Fregister');view.unmount();
+ auth.user={...mainUser,email_verified:false};registration();expect(screen.getByRole('link',{name:'Verify email'})).toHaveAttribute('href','/verify-email');expect(auth.registerForum).not.toHaveBeenCalled();
+});
+test("optional avatar has an accessible preview and existing buyer fields remain readonly",async()=>{
+ registration();expect(screen.getByLabelText('Name')).toHaveValue(mainUser.name);expect(screen.getByLabelText('Email')).toHaveValue(mainUser.email);
+ fireEvent.change(screen.getByLabelText('Avatar (optional)'),{target:{files:[new File(['avatar'],'avatar.png',{type:'image/png'})]}});
+ expect(await screen.findByAltText('Avatar preview')).toHaveAttribute('src',expect.stringContaining('data:image/png'));
+ expect(auth.registerForum).not.toHaveBeenCalled();
+});
+
+test('forum registration prefill uses authenticated first/last identity and never renders phone',()=>{
+ auth.user={...mainUser,firstName:'First',lastName:'Last',phone_e164:'+442079460123'};
+ render(<MemoryRouter><ForumRegister/></MemoryRouter>);
+ expect(screen.getByLabelText('Name')).toHaveValue('First');
+ expect(screen.getByLabelText('Last name')).toHaveValue('Last');
+ expect(screen.getByLabelText('Last name')).toHaveAttribute('readonly');
+ expect(screen.getByLabelText('Email')).toHaveValue(mainUser.email);
+ expect(screen.queryByDisplayValue('+442079460123')).not.toBeInTheDocument();
 });

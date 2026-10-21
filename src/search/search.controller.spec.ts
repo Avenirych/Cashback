@@ -1,3 +1,4 @@
+import { scaffoldDependencyMock } from '../../test/scaffold-mocks';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SearchController } from './search.controller';
 
@@ -7,7 +8,7 @@ describe('SearchController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SearchController],
-    }).compile();
+    }).useMocker(scaffoldDependencyMock).compile();
 
     controller = module.get<SearchController>(SearchController);
   });

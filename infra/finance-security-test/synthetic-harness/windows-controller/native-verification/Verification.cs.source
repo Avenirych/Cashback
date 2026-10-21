@@ -1,0 +1,304 @@
+global using System;
+global using System.IO;
+
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Threading;
+using System.Threading.Tasks;
+using Cashback.Synthetic.Controller;
+
+// Explicit Compile item: intentionally not *.cs, to avoid the parent project's glob.
+internal static class Verification
+{
+    private static readonly string[] Modes = ["abi", "dacl", "io", "cancel", "stdout-limit", "stderr-limit", "deadline"];
+    private static int attempted;
+    private static State? retained;
+
+    private static async Task<int> Main(string[] args)
+    {
+        try
+        {
+            Native.ValidateLayouts();
+            Native.Require(Environment.Version.Major == 10, "RUNTIME");
+            using (var identity = WindowsIdentity.GetCurrent())
+                Native.Require(identity.User?.Value == PipePair.OwnerSid, "IDENTITY");
+            if (args.Length == 2 && args[0] == "--synthetic-child" && Modes.Contains(args[1]))
+                return Child(args[1]);
+            Native.Require(args.Length == 1 && Modes.Contains(args[0]), "MODE");
+            int code = await Run(args[0]);
+            GC.KeepAlive(retained);
+            return code;
+        }
+        catch { Emit("BLOCKED"); return 125; }
+    }
+
+    // Only fixed output; no exception text, paths, arguments or raw diagnostics.
+    private static void Emit(string status)
+    {
+        try { Console.Out.WriteLine("CBNV1|" + status); }
+        catch { Environment.Exit(125); }
+    }
+
+    private static int Child(string mode)
+    {
+        if (mode is "cancel" or "deadline")
+        { Thread.Sleep(Timeout.Infinite); return 125; }
+        using Stream input = Console.OpenStandardInput();
+        using Stream output = Console.OpenStandardOutput();
+        using Stream error = Console.OpenStandardError();
+        if (mode is "stdout-limit" or "stderr-limit")
+        {
+            Stream target = mode == "stdout-limit" ? output : error;
+            byte[] block = new byte[257]; Array.Fill(block, (byte)0x56);
+            int left = 65537;
+            while (left > 0) { int n = Math.Min(left, block.Length); target.Write(block, 0, n); left -= n; }
+            target.Flush(); return 0;
+        }
+        Native.Require(mode == "io", "CHILD_MODE");
+        byte[] data = new byte[16384]; int used = 0;
+        while (used < data.Length)
+        {
+            int n = input.Read(data, used, Math.Min(113, data.Length - used));
+            Native.Require(n > 0, "CHILD_INPUT_SHORT"); used += n;
+        }
+        Native.Require(input.ReadByte() == -1, "CHILD_INPUT_EOF");
+        for (int i = 0; i < data.Length; i++) Native.Require(data[i] == (byte)(i % 251), "CHILD_CONTENT");
+        for (int i = 0; i < data.Length; i += 37) output.Write(data, i, Math.Min(37, data.Length - i));
+        output.Flush(); return 0;
+    }
+
+    private static async Task<int> Run(string mode)
+    {
+        var s = new State(mode);
+        bool scenario = false;
+        try
+        {
+            if (mode == "abi") scenario = true;
+            else
+            {
+                // These are the original PipePair methods, including exact DACL checks.
+                s.Input.Open(); s.Output.Open(); s.Error.Open();
+                if (mode == "dacl") scenario = true;
+                else
+                {
+                    Start(s);
+                    s.Output.AttachStream(); s.Error.AttachStream(); s.Input.AttachStream();
+                    s.OutTask = Read(s, s.Output.Stream!, s.Stdout);
+                    s.ErrTask = Read(s, s.Error.Stream!, s.Stderr);
+                    Native.Require(!s.OutTask.IsCompleted && !s.ErrTask.IsCompleted && s.Fault == null, "READERS");
+                    Native.Require(s.Clock.ElapsedMilliseconds < 40000, "PRE_RESUME_TIMEOUT");
+                    Native.Require(Native.ResumeThread(s.Info.Thread) == 1, "RESUME");
+                    if (mode is "io" or "cancel") s.WriteTask = Write(s);
+                    else s.Input.CompleteInput();
+                    if (mode == "cancel")
+                    {
+                        await Task.Delay(100);
+                        // Do not report cancellation verified unless both operations were pending.
+                        s.PendingObserved = !s.OutTask.IsCompleted && s.WriteTask is { IsCompleted: false };
+                        s.CancellationIssued = true;
+                        s.Cancel.Cancel();
+                        Native.Require(s.Input.RequestIoCancellation() && s.Output.RequestIoCancellation() &&
+                            s.Error.RequestIoCancellation(), "CANCEL_REQUEST");
+                    }
+                    while (s.Clock.ElapsedMilliseconds < 40000)
+                    {
+                        Poll(s);
+                        if (s.Fault != null || s.Overflow || mode == "cancel" && s.Settled || s.Exited && s.Settled) break;
+                        await Task.Delay(10);
+                    }
+                    s.OperationalExpired = s.Clock.ElapsedMilliseconds >= 40000;
+                    scenario = mode switch
+                    {
+                        "io" => s.Exited && s.ExitCode == 0 && s.Sent && s.Stdout.Eof && s.Stderr.Eof &&
+                            s.Stdout.Count == 16384 && s.Stderr.Count == 0 && s.Stdout.ContentValid,
+                        "cancel" => s.PendingObserved && s.Settled && s.Stdout.Cancelled && s.WriteCancelled,
+                        "stdout-limit" => s.Stdout.Overflow,
+                        "stderr-limit" => s.Stderr.Overflow,
+                        "deadline" => s.OperationalExpired && !s.Exited,
+                        _ => false
+                    };
+                }
+            }
+        }
+        catch { s.Fail(); }
+        finally { await FinalizeRun(s); }
+        bool confirmed = s.Settled && (!s.Created || s.Exited) && s.Clean && s.Fault == null &&
+            (!s.Created || s.Clock.ElapsedMilliseconds <= 45000 &&
+                (s.ExitCode == 0 || s.Terminated && s.ExitCode == 126));
+        if (!confirmed) { retained = s; Emit("BLOCKED"); return 125; }
+        Emit(scenario ? "SCENARIO_PASS" : "SCENARIO_FAIL");
+        return scenario ? 0 : 1;
+    }
+
+    private static void Start(State s)
+    {
+        Native.Require(Interlocked.Exchange(ref attempted, 1) == 0, "ONE_SHOT");
+        string exe = Environment.ProcessPath ?? throw new InvalidOperationException();
+        Native.Require(Path.IsPathFullyQualified(exe) && !exe.Contains('"') &&
+            Path.GetFileName(exe) == "Cashback.NativeVerification.exe", "APPHOST_REQUIRED");
+        PipePair[] pipes = [s.Input, s.Output, s.Error];
+        Native.Require(pipes.Select(p => p.Child).Distinct().Count() == 3, "HANDLES");
+        foreach (PipePair p in pipes) p.MakeChildInheritable();
+        nuint length = 0;
+        bool sizing = Native.InitializeProcThreadAttributeList(IntPtr.Zero, 1, 0, ref length);
+        int sizingError = Marshal.GetLastPInvokeError();
+        Native.Require(!sizing && sizingError == 122 && length > 0 && length <= 65536, "ATTRIBUTE_SIZE");
+        s.Attributes = Marshal.AllocHGlobal(checked((int)length));
+        Native.Require(Native.InitializeProcThreadAttributeList(s.Attributes, 1, 0, ref length), "ATTRIBUTES");
+        s.AttributesReady = true;
+        s.Handles = Marshal.AllocHGlobal(24);
+        for (int i = 0; i < 3; i++) Marshal.WriteIntPtr(s.Handles, i * 8, pipes[i].Child);
+        Native.Require(Native.UpdateProcThreadAttribute(s.Attributes, 0, 0x20002, s.Handles, 24,
+            IntPtr.Zero, IntPtr.Zero), "HANDLE_LIST");
+        foreach (PipePair p in pipes) { PipePair.CheckInheritance(p.Parent, false); PipePair.CheckInheritance(p.Child, true); }
+        var startup = new Native.StartupInfoEx { Attributes = s.Attributes,
+            Startup = new Native.StartupInfo { Cb = 112, Flags = Native.UseStdHandles,
+                Stdin = pipes[0].Child, Stdout = pipes[1].Child, Stderr = pipes[2].Child } };
+        s.Application = Marshal.StringToHGlobalUni(exe);
+        s.Command = Marshal.StringToHGlobalUni("\"" + exe + "\" --synthetic-child " + s.Mode);
+        s.Directory = Marshal.StringToHGlobalUni(Path.GetDirectoryName(exe)!);
+        s.EnvironmentBlock = Marshal.StringToHGlobalUni("SystemRoot=C:\\Windows\0\0");
+        s.Clock.Start();
+        bool ok = Native.CreateProcess(s.Application, s.Command, IntPtr.Zero, IntPtr.Zero, true,
+            Native.Suspended | Native.ExtendedStartup | Native.UnicodeEnvironment | Native.NoWindow,
+            s.EnvironmentBlock, s.Directory, ref startup, out s.Info);
+        s.Created = ok;
+        if (!ok) s.Info = default;
+        Native.Require(ok && s.Info.Process != IntPtr.Zero && s.Info.Thread != IntPtr.Zero, "CREATE");
+        foreach (PipePair p in pipes) p.CloseChild();
+    }
+
+    private static async Task Write(State s)
+    {
+        try
+        {
+            // 64 KiB in cancel mode: exceeds pipe buffer while child never reads.
+            await s.Input.Stream!.WriteAsync(s.InputBytes.AsMemory(), s.Cancel.Token);
+            s.Input.CompleteInput(); s.Sent = true;
+        }
+        catch (OperationCanceledException) { if (s.CancellationIssued) s.WriteCancelled = true; else s.Fail(); }
+        catch { s.Fail(); }
+    }
+
+    private static async Task Read(State s, Stream stream, Channel channel)
+    {
+        byte[] buffer = new byte[4096];
+        try
+        {
+            while (true)
+            {
+                int n = await stream.ReadAsync(buffer.AsMemory(), s.Cancel.Token);
+                if (n == 0) { channel.Eof = true; return; }
+                int previous = channel.Count;
+                int kept = Math.Min(n, 65536 - previous);
+                for (int i = 0; i < kept; i++)
+                    if (s.Mode == "io" && buffer[i] != (byte)((previous + i) % 251)) channel.ContentValid = false;
+                channel.Count += kept;
+                if (kept != n) { channel.Overflow = true; return; }
+            }
+        }
+        catch (OperationCanceledException) { if (s.CancellationIssued) channel.Cancelled = true; else s.Fail(); }
+        catch { s.Fail(); }
+        // The buffer remains in the async state machine until awaited completion.
+    }
+
+    private static void Poll(State s)
+    {
+        if (!s.Created || s.Exited) return;
+        Native.Require(s.Info.Process != IntPtr.Zero, "PROCESS_HANDLE");
+        uint wait = Native.WaitForSingleObject(s.Info.Process, 0);
+        if (wait == 0)
+        {
+            Native.Require(Native.GetExitCodeProcess(s.Info.Process, out uint code), "EXIT_CODE");
+            s.ExitCode = code; s.Exited = true;
+        }
+        else Native.Require(wait == Native.WaitTimeout, "EXIT_WAIT");
+    }
+
+    private static async Task FinalizeRun(State s)
+    {
+        try
+        {
+            if (!s.Settled)
+            {
+                s.CancellationIssued = true; s.Cancel.Cancel();
+                if (!s.Input.RequestIoCancellation() || !s.Output.RequestIoCancellation() || !s.Error.RequestIoCancellation()) s.Fail();
+            }
+            if (s.Created)
+            {
+                Poll(s);
+                if (!s.Exited)
+                {
+                    Native.Require(Native.TerminateProcess(s.Info.Process, 126), "TERMINATION");
+                    s.Terminated = true;
+                }
+                while ((!s.Exited || !s.Settled) && s.Clock.ElapsedMilliseconds < 45000)
+                { Poll(s); await Task.Delay(10); }
+            }
+        }
+        catch { s.Fail(); }
+        finally
+        {
+            // Never free I/O state based only on a cancellation request.
+            s.Clean = Close(s.Input, s.WriteTask?.IsCompleted ?? true);
+            s.Clean &= Close(s.Output, s.OutTask?.IsCompleted ?? true);
+            s.Clean &= Close(s.Error, s.ErrTask?.IsCompleted ?? true);
+            try
+            {
+                if (s.AttributesReady) { Native.DeleteProcThreadAttributeList(s.Attributes); s.AttributesReady = false; }
+            }
+            catch { s.Clean = false; }
+            // Attribute memory must not be freed while deletion is unconfirmed.
+            if (!s.AttributesReady) { SafeFree(s, ref s.Attributes); SafeFree(s, ref s.Handles); }
+            SafeFree(s, ref s.Application);
+            SafeFree(s, ref s.Command); SafeFree(s, ref s.Directory); SafeFree(s, ref s.EnvironmentBlock);
+            if (s.Created) CloseOwned(s, ref s.Info.Thread);
+            if (s.Created && s.Exited) CloseOwned(s, ref s.Info.Process);
+            if (s.Settled) { try { s.Cancel.Dispose(); } catch { s.Clean = false; } }
+            else retained = s;
+            if (s.Input.NeedsRetention || s.Output.NeedsRetention || s.Error.NeedsRetention ||
+                s.Info.Process != IntPtr.Zero || s.Info.Thread != IntPtr.Zero || s.AttributesReady)
+            { retained = s; s.Clean = false; }
+        }
+    }
+
+    private static bool Close(PipePair pair, bool settled)
+    { try { return pair.CloseResources(settled); } catch { return false; } }
+    private static void SafeFree(State s, ref IntPtr value)
+    { try { if (value != IntPtr.Zero) { Marshal.FreeHGlobal(value); value = IntPtr.Zero; } } catch { s.Clean = false; } }
+    private static void CloseOwned(State s, ref IntPtr value)
+    {
+        try { if (value != IntPtr.Zero) { if (Native.CloseHandle(value)) value = IntPtr.Zero; else s.Clean = false; } }
+        catch { s.Clean = false; }
+    }
+
+    private sealed class Channel
+    {
+        internal int Count;
+        internal bool Eof, Cancelled, Overflow;
+        internal bool ContentValid = true;
+    }
+    private sealed class State(string mode)
+    {
+        internal readonly string Mode = mode;
+        internal readonly PipePair Input = new(true), Output = new(false), Error = new(false);
+        internal readonly Channel Stdout = new(), Stderr = new();
+        internal readonly CancellationTokenSource Cancel = new();
+        internal readonly Stopwatch Clock = new();
+        internal readonly byte[] InputBytes = Enumerable.Range(0, mode == "cancel" ? 65536 : 16384)
+            .Select(i => (byte)(i % 251)).ToArray();
+        internal Native.ProcessInformation Info;
+        internal IntPtr Attributes, Handles, Application, Command, Directory, EnvironmentBlock;
+        internal bool AttributesReady, Created, Exited, Terminated, Sent, PendingObserved, WriteCancelled,
+            CancellationIssued, OperationalExpired, Clean;
+        internal uint ExitCode;
+        internal Task? OutTask, ErrTask, WriteTask;
+        private int fault;
+        internal string? Fault => Volatile.Read(ref fault) == 0 ? null : "BLOCKED";
+        internal void Fail() => Interlocked.Exchange(ref fault, 1);
+        internal bool Overflow => Stdout.Overflow || Stderr.Overflow;
+        internal bool Settled => (OutTask?.IsCompleted ?? true) && (ErrTask?.IsCompleted ?? true) && (WriteTask?.IsCompleted ?? true);
+    }
+}

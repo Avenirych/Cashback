@@ -1,0 +1,292 @@
+using System.Buffers.Binary;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO.MemoryMappedFiles;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using Cashback.Synthetic.Controller;
+
+internal static class WatchdogNative
+{
+    [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool DuplicateHandle(IntPtr sourceProcess, IntPtr source,
+        IntPtr targetProcess, out IntPtr target, uint access,
+        [MarshalAs(UnmanagedType.Bool)] bool inherit, uint options);
+    [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+    internal static extern IntPtr MapViewOfFile(IntPtr mapping, uint access, uint high, uint low, nuint size);
+    [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool UnmapViewOfFile(IntPtr address);
+    [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool SetEvent(IntPtr handle);
+}
+
+internal sealed class WatchdogSession
+{
+    internal const string Executable = @"C:\Users\serge\cashback+\infra\finance-security-test\synthetic-harness\windows-controller\native-verification\job-supervisor\bin\Release\net10.0-windows\Cashback.NativeJobSupervisor.exe";
+    private const uint Magic = 0x31445743; // CWD1
+    private readonly long start, cutoff, deadline;
+    private readonly Guid nonce = Guid.NewGuid();
+    private EventWaitHandle? readyEvent, doneEvent;
+    private MemoryMappedFile? mapping;
+    private readonly IntPtr[] inherited = new IntPtr[5];
+    private Native.ProcessInformation info;
+    private IntPtr attributes, handles, application, command, directory, environment;
+    private bool initialized, created, ready, exited, doneSent, clean = true;
+    private uint exitCode;
+    private static int launchConsumed;
+
+    internal WatchdogSession(long startTick)
+    {
+        start = startTick;
+        cutoff = checked(start + checked(Stopwatch.Frequency * 40));
+        deadline = checked(start + checked(Stopwatch.Frequency * 45));
+    }
+    private static long Now => Stopwatch.GetTimestamp();
+    internal bool ReadyAndAlive => ready && !PollExit();
+
+    internal async Task StartAsync(IntPtr job, string apphostHash, string dllHash)
+    {
+        Native.Require(Interlocked.Exchange(ref launchConsumed, 1) == 0, "WATCHDOG_ONE_SHOT");
+        Native.Require(Now < cutoff, "WATCHDOG_START_DEADLINE");
+        readyEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
+        doneEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
+        mapping = MemoryMappedFile.CreateNew(null, 64, MemoryMappedFileAccess.ReadWrite,
+            MemoryMappedFileOptions.None, HandleInheritability.None);
+        byte[] record = new byte[64];
+        BinaryPrimitives.WriteUInt32LittleEndian(record, Magic);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.AsSpan(4), 1);
+        BinaryPrimitives.WriteInt64LittleEndian(record.AsSpan(8), start);
+        BinaryPrimitives.WriteInt64LittleEndian(record.AsSpan(16), Stopwatch.Frequency);
+        BinaryPrimitives.WriteInt64LittleEndian(record.AsSpan(24), deadline);
+        BinaryPrimitives.WriteInt64LittleEndian(record.AsSpan(32), cutoff);
+        nonce.ToByteArray().CopyTo(record, 40);
+        using (var view = mapping.CreateViewAccessor(0, 64, MemoryMappedFileAccess.Write))
+            view.WriteArray(0, record, 0, record.Length);
+
+        inherited[0] = Duplicate(job, 0x000C); // JOB_OBJECT_QUERY | TERMINATE, no all-access.
+        inherited[1] = Duplicate(new IntPtr(-1), 0x00101001); // Real supervisor handle: synchronize/query-limited/terminate.
+        inherited[2] = Duplicate(readyEvent.SafeWaitHandle, 2); // EVENT_MODIFY_STATE.
+        inherited[3] = Duplicate(doneEvent.SafeWaitHandle, 0x00100000); // SYNCHRONIZE only.
+        inherited[4] = Duplicate(mapping.SafeMemoryMappedFileHandle, 4); // SECTION_MAP_READ only.
+        Native.Require(inherited.Distinct().Count() == 5, "WATCHDOG_HANDLE_DUPLICATE");
+        foreach (IntPtr handle in inherited) PipePair.CheckInheritance(handle, true);
+        nuint size = 0;
+        bool sizing = Native.InitializeProcThreadAttributeList(IntPtr.Zero, 1, 0, ref size);
+        int error = Marshal.GetLastPInvokeError();
+        Native.Require(!sizing && error == 122 && size > 0 && size <= 65536, "WATCHDOG_ATTRIBUTE_SIZE");
+        attributes = Marshal.AllocHGlobal(checked((int)size));
+        Native.Require(Native.InitializeProcThreadAttributeList(attributes, 1, 0, ref size), "WATCHDOG_ATTRIBUTE_INIT");
+        initialized = true;
+        handles = Marshal.AllocHGlobal(40);
+        for (int i = 0; i < inherited.Length; i++) Marshal.WriteIntPtr(handles, i * 8, inherited[i]);
+        Native.Require(Native.UpdateProcThreadAttribute(attributes, 0, 0x20002, handles, 40,
+            IntPtr.Zero, IntPtr.Zero), "WATCHDOG_HANDLE_LIST");
+        string values = string.Join(" ", inherited.Select(h => h.ToInt64().ToString(CultureInfo.InvariantCulture)));
+        application = Marshal.StringToHGlobalUni(Executable);
+        command = Marshal.StringToHGlobalUni("\"" + Executable + "\" --watchdog " + values + " " +
+            nonce.ToString("N") + " " + apphostHash + " " + dllHash);
+        directory = Marshal.StringToHGlobalUni(Path.GetDirectoryName(Executable)!);
+        environment = Marshal.StringToHGlobalUni("SystemRoot=C:\\Windows\0\0");
+        // Watchdog starts running immediately outside the workload job. Suspending
+        // it would create a new parent-crash-before-resume orphan window.
+        // It has no stdio inheritance and cannot start any workload itself.
+        var startup = new Native.StartupInfoEx { Attributes = attributes,
+            Startup = new Native.StartupInfo { Cb = 112 } };
+        Native.Require(Now < cutoff, "WATCHDOG_CREATE_DEADLINE");
+        created = Native.CreateProcess(application, command, IntPtr.Zero, IntPtr.Zero, true,
+            Native.ExtendedStartup | Native.UnicodeEnvironment | Native.NoWindow,
+            environment, directory, ref startup, out info);
+        if (!created) info = default;
+        Native.Require(created && info.Process != IntPtr.Zero && info.Thread != IntPtr.Zero, "WATCHDOG_CREATE");
+        CloseTransferredCopies();
+        Native.Require(clean && Now < cutoff, "WATCHDOG_TRANSFER");
+        while (Now < cutoff)
+        {
+            Native.Require(!PollExit(), "WATCHDOG_EARLY_EXIT");
+            if (readyEvent.WaitOne(0)) { ready = true; Native.Require(ReadyAndAlive, "WATCHDOG_READY_EXIT"); return; }
+            await Task.Delay(10);
+        }
+        throw new PolicyFailure("WATCHDOG_READY_TIMEOUT");
+    }
+
+    private static IntPtr Duplicate(IntPtr source, uint access)
+    {
+        bool ok = WatchdogNative.DuplicateHandle(new IntPtr(-1), source, new IntPtr(-1),
+            out IntPtr result, access, true, 0);
+        Native.Require(ok && result != IntPtr.Zero && result != Native.Invalid, "WATCHDOG_DUPLICATE");
+        return result;
+    }
+    private static IntPtr Duplicate(SafeHandle source, uint access)
+    {
+        bool added = false;
+        try { source.DangerousAddRef(ref added); return Duplicate(source.DangerousGetHandle(), access); }
+        finally { if (added) source.DangerousRelease(); }
+    }
+    private bool PollExit()
+    {
+        if (exited || !created) return exited;
+        uint wait = Native.WaitForSingleObject(info.Process, 0);
+        if (wait == 0)
+        {
+            Native.Require(Native.GetExitCodeProcess(info.Process, out exitCode), "WATCHDOG_EXIT_CODE"); exited = true;
+        }
+        else Native.Require(wait == Native.WaitTimeout, "WATCHDOG_WAIT");
+        return exited;
+    }
+
+    internal async Task<bool> FinishAsync(bool workloadQuiescent)
+    {
+        try
+        {
+            // NORMAL_DONE means no future workload creation, confirmed root exit,
+            // job empty, and settled readers. It does not turn a failed run into PASS.
+            if (created && ready && workloadQuiescent && !PollExit() && Now < cutoff)
+            { Native.Require(doneEvent!.Set(), "WATCHDOG_DONE"); doneSent = true; }
+            if (created && !ready && !PollExit())
+                Native.Require(Native.TerminateProcess(info.Process, 126), "WATCHDOG_BOOTSTRAP_TERMINATE");
+            while (created && !PollExit() && Now < deadline) await Task.Delay(10);
+            if (created && !exited && workloadQuiescent)
+            {
+                // Cleanup only, no workload left to lose protection for.
+                if (!Native.TerminateProcess(info.Process, 126)) clean = false;
+                PollExit();
+            }
+        }
+        catch { clean = false; }
+        finally
+        {
+            CloseTransferredCopies();
+            try { if (initialized) { Native.DeleteProcThreadAttributeList(attributes); initialized = false; } }
+            catch { clean = false; }
+            if (!initialized) { Free(ref attributes); Free(ref handles); }
+            Free(ref application); Free(ref command); Free(ref directory); Free(ref environment);
+            if (created) Close(ref info.Thread);
+            if (created && exited) Close(ref info.Process);
+            // Keep all control objects rooted if the watchdog may still use them.
+            if (!created || exited)
+            {
+                try { readyEvent?.Dispose(); } catch { clean = false; }
+                try { doneEvent?.Dispose(); } catch { clean = false; }
+                try { mapping?.Dispose(); } catch { clean = false; }
+            }
+        }
+        return clean && (!created || exited && doneSent && exitCode == 0) && Now <= deadline;
+    }
+    private void CloseTransferredCopies()
+    {
+        for (int i = 0; i < inherited.Length; i++)
+        {
+            if (inherited[i] == IntPtr.Zero) continue;
+            try
+            {
+                bool cleared = Native.SetHandleInformation(inherited[i], Native.Inherit, 0);
+                bool closed = Native.CloseHandle(inherited[i]);
+                if (closed) inherited[i] = IntPtr.Zero;
+                if (!cleared || !closed) clean = false;
+            }
+            catch { clean = false; }
+        }
+    }
+    private void Close(ref IntPtr handle)
+    {
+        try { if (handle != IntPtr.Zero) { if (Native.CloseHandle(handle)) handle = IntPtr.Zero; else clean = false; } }
+        catch { clean = false; }
+    }
+    private void Free(ref IntPtr pointer)
+    {
+        try { if (pointer != IntPtr.Zero) { Marshal.FreeHGlobal(pointer); pointer = IntPtr.Zero; } }
+        catch { clean = false; }
+    }
+
+    // No process creation, filesystem access, raw output or descendants in this role.
+    internal static int RunChild(string[] args)
+    {
+        IntPtr[] received = new IntPtr[5];
+        bool admitted = false, success = false;
+        long limit = 0;
+        try
+        {
+            Native.Require(args.Length == 9 && Guid.TryParseExact(args[6], "N", out _), "WATCHDOG_BOOTSTRAP");
+            for (int i = 0; i < received.Length; i++)
+            {
+                Native.Require(args[i + 1].Length <= 19 && long.TryParse(args[i + 1], NumberStyles.None,
+                    CultureInfo.InvariantCulture, out long value) && value > 0, "WATCHDOG_HANDLE");
+                received[i] = new IntPtr(long.Parse(args[i + 1], CultureInfo.InvariantCulture));
+                PipePair.CheckInheritance(received[i], true);
+                Native.Require(Native.SetHandleInformation(received[i], Native.Inherit, 0), "WATCHDOG_INHERITANCE_CLEAR");
+                PipePair.CheckInheritance(received[i], false);
+            }
+            Native.Require(received.Distinct().Count() == 5, "WATCHDOG_HANDLES");
+            byte[] record = new byte[64];
+            IntPtr address = WatchdogNative.MapViewOfFile(received[4], 4, 0, 0, 64);
+            Native.Require(address != IntPtr.Zero, "WATCHDOG_MAP");
+            try { Marshal.Copy(address, record, 0, 64); }
+            finally { Native.Require(WatchdogNative.UnmapViewOfFile(address), "WATCHDOG_UNMAP"); }
+            long origin = BinaryPrimitives.ReadInt64LittleEndian(record.AsSpan(8));
+            long frequency = BinaryPrimitives.ReadInt64LittleEndian(record.AsSpan(16));
+            limit = BinaryPrimitives.ReadInt64LittleEndian(record.AsSpan(24));
+            long stop = BinaryPrimitives.ReadInt64LittleEndian(record.AsSpan(32));
+            Native.Require(BinaryPrimitives.ReadUInt32LittleEndian(record) == Magic &&
+                BinaryPrimitives.ReadUInt32LittleEndian(record.AsSpan(4)) == 1 &&
+                new Guid(record.AsSpan(40, 16)).ToString("N") == args[6] &&
+                BinaryPrimitives.ReadUInt64LittleEndian(record.AsSpan(56)) == 0 &&
+                frequency == Stopwatch.Frequency && frequency > 0 && origin > 0 &&
+                limit == checked(origin + checked(frequency * 45)) &&
+                stop == checked(origin + checked(frequency * 40)) && Now >= origin && Now < stop,
+                "WATCHDOG_RECORD");
+            Native.Require(Native.WaitForSingleObject(received[1], 0) == Native.WaitTimeout && Empty(received[0]),
+                "WATCHDOG_INITIAL_STATE");
+            admitted = true;
+            Native.Require(WatchdogNative.SetEvent(received[2]), "WATCHDOG_READY");
+            while (Now < stop)
+            {
+                uint parent = Native.WaitForSingleObject(received[1], 0);
+                Native.Require(parent == 0 || parent == Native.WaitTimeout, "WATCHDOG_PARENT_WAIT");
+                if (parent == 0) break;
+                uint done = Native.WaitForSingleObject(received[3], 0);
+                Native.Require(done == 0 || done == Native.WaitTimeout, "WATCHDOG_DONE_WAIT");
+                if (done == 0) { Native.Require(Empty(received[0]), "WATCHDOG_DONE_NOT_EMPTY"); success = true; break; }
+                Thread.Sleep(10);
+            }
+        }
+        catch { success = false; }
+        finally
+        {
+            if (admitted && !success)
+            {
+                // Stop creation authority and workload independently. Requests are
+                // never treated as confirmation, and neither failure skips the other.
+                bool parentRequested = false, jobRequested = false;
+                try { parentRequested = Native.WaitForSingleObject(received[1], 0) == 0 || Native.TerminateProcess(received[1], 126); }
+                catch { }
+                try { jobRequested = JobNative.Terminate(received[0], 126); } catch { }
+                bool confirmed = false;
+                while (Now < limit)
+                {
+                    try { confirmed = Native.WaitForSingleObject(received[1], 0) == 0 && Empty(received[0]); }
+                    catch { confirmed = false; }
+                    if (confirmed) break;
+                    Thread.Sleep(10);
+                }
+                // Timeout/death is always BLOCKED, even when cleanup confirmed.
+                _ = parentRequested && jobRequested && confirmed;
+            }
+            if (admitted)
+                foreach (IntPtr handle in received)
+                    try { if (!Native.CloseHandle(handle)) success = false; } catch { success = false; }
+        }
+        return success && Now <= limit ? 0 : 125;
+    }
+    private static bool Empty(IntPtr job)
+    {
+        Native.Require(JobNative.QueryAccounting(job, 1, out var accounting, 48, out uint length) &&
+            length == 48 && accounting.ActiveProcesses <= 2 && accounting.TotalProcesses <= 2,
+            "WATCHDOG_ACCOUNTING");
+        return accounting.ActiveProcesses == 0;
+    }
+}

@@ -1,3 +1,4 @@
+import { scaffoldDependencyMock } from '../../test/scaffold-mocks';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BonusTransferController } from './bonus-transfer.controller';
 
@@ -7,7 +8,7 @@ describe('BonusTransferController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [BonusTransferController],
-    }).compile();
+    }).useMocker(scaffoldDependencyMock).compile();
 
     controller = module.get<BonusTransferController>(BonusTransferController);
   });

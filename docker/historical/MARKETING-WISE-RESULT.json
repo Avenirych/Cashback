@@ -1,0 +1,134 @@
+{
+  "status": "MARKETING_PREFERENCES_WISE_READY",
+  "reference": "d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f",
+  "url": "http://localhost:3004/profile",
+  "registrationUrl": "http://localhost:3004/register",
+  "api": "GET/POST http://127.0.0.1:3006/user/marketing-preferences",
+  "marketingChoices": [
+    "specialOffers",
+    "partnerRecommendations",
+    "smsMarketing"
+  ],
+  "defaults": false,
+  "serviceNotificationsSeparate": true,
+  "wise": "native details, collapsed by default, all prior text retained",
+  "backupDirectory": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-marketing-1792509197596",
+  "backup": {
+    "status": "IDENTITY_AND_BACKUP_VERIFIED",
+    "cluster": "7698666936429441062",
+    "database": "cashback_historical_03573b7",
+    "oid": 16384,
+    "users": 3,
+    "columns": [
+      "id",
+      "email",
+      "name",
+      "avatar_url",
+      "password",
+      "balance",
+      "email_verified",
+      "email_token",
+      "email_token_expires_at",
+      "created_at",
+      "first_name",
+      "last_name",
+      "phone_e164"
+    ],
+    "backupBytes": 33882,
+    "sha256": "eca5721e3fc972c60d560ea8a3b095e454b952d3bc8c6bacf909e6b98f74c7c9",
+    "fullArchiveScan": true,
+    "trialDatabaseRestore": false,
+    "dpapiCurrentUser": true
+  },
+  "migration": {
+    "status": "COMMITTED_ONCE",
+    "sha256": "401af1fd755c8a665128431cb94f026248ee38733636fe36851ba8658e1944e6",
+    "existingUsersUnchanged": true,
+    "newTable": "marketing_preferences",
+    "newMarketingDefaults": false,
+    "boundedNewObjectGrants": true
+  },
+  "deployment": {
+    "status": "MARKETING_WISE_APPLICATION_STARTED",
+    "services": [
+      {
+        "name": "cashback-historical-03573b7-local-backend-1",
+        "id": "b5910499569e8becd7a03408d77a2f2af265f650afc673d8f29eb33cd1db2419",
+        "image": "sha256:671f4b577d213ed06f2abd052fec289078f980226515fc743b1f49d74c6b8538",
+        "status": "running",
+        "ports": {
+          "3006/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "3006"
+            }
+          ]
+        }
+      },
+      {
+        "name": "cashback-historical-03573b7-local-frontend-1",
+        "id": "3d98e1595ae6cb6600a2460313cf020f154b2ec4c4595fe24b4ff37d66e675da",
+        "image": "sha256:4286e712c805aaf379b674025762f156e87e2a4f75c2bee4188c7bbc1aa9ffb6",
+        "status": "running",
+        "ports": {
+          "3000/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "3004"
+            }
+          ]
+        }
+      }
+    ],
+    "otherContainersUnchanged": true,
+    "existingSecretsReused": true
+  },
+  "runtime": {
+    "status": "MARKETING_RUNTIME_PASS",
+    "stage": "COMPLETE",
+    "passwordsLogged": false,
+    "checks": {
+      "defaultsOff": true,
+      "optionalIndependentChoices": true,
+      "grantPersisted": true,
+      "repeatGrantTimestampPreserved": true,
+      "newSessionPersistence": true,
+      "withdrawalEffectiveInDatabase": true,
+      "serverTimestamps": true,
+      "anonymousDenied": true,
+      "crossUserPayloadDenied": true,
+      "serviceNotificationsUnchanged": true,
+      "noMarketingMessagesSent": true
+    },
+    "cleanup": {
+      "testAccountRemoved": true,
+      "testPreferencesRemoved": true,
+      "testMailRemoved": true,
+      "existingUsersUnchanged": true,
+      "existingForumUnchanged": true,
+      "originalUserCount": 3
+    }
+  },
+  "tests": {
+    "frontend": 109,
+    "backend": 125,
+    "browserVisual": "not automated; owner manual"
+  },
+  "changedFiles": [
+    "src/app.module.ts",
+    "src/marketing-preferences/ (recovered module/entity/controller/service/DTO and tests)",
+    "cashback-frontend/src/components/MarketingPreferencesPanel.tsx",
+    "cashback-frontend/src/components/MarketingPreferencesModal.tsx",
+    "cashback-frontend/src/components/MarketingPreferencesPanel.test.tsx",
+    "cashback-frontend/src/types/MarketingPreferences.ts",
+    "cashback-frontend/src/components/WiseAccountNotice.tsx",
+    "cashback-frontend/src/components/WiseAccountNotice.test.tsx",
+    "cashback-frontend/src/i18n.ts",
+    "cashback-frontend/src/backend.ts",
+    "cashback-frontend/src/pages/Register.tsx",
+    "cashback-frontend/src/pages/Profile.tsx",
+    "cashback-frontend/src/pages/PrivacyPolicy.tsx (section anchor only)",
+    "docker/historical/run-offline.cjs",
+    "docker/historical/migrations/20261020-marketing-preferences.sql"
+  ]
+}

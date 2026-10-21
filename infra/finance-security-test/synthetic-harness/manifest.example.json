@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "runner": {
+    "container_id": null,
+    "container_name": null,
+    "image_id": null,
+    "image_reference": null
+  },
+  "run_id": null,
+  "project": null,
+  "docker_context": "desktop-linux",
+  "service": "pg",
+  "container_name": null,
+  "container_id": null,
+  "image_reference": "postgres:17-bookworm@sha256:3645570cccdfa447589da9f57dd740faa29b30938e861289a5574b6ca6b03826",
+  "image_id": "sha256:3645570cccdfa447589da9f57dd740faa29b30938e861289a5574b6ca6b03826",
+  "volume": null,
+  "volume_driver": "local",
+  "volume_created_at": null,
+  "volume_destination": "/var/lib/postgresql/data",
+  "network": null,
+  "network_id": null,
+  "bootstrap_source": null,
+  "bootstrap_destination": "/run/secrets/bootstrap",
+  "database": "finance_security_test",
+  "bootstrap_user": "fs_bootstrap",
+  "expected_cluster_id": null,
+  "forbidden_cluster_ids": ["7696805878431612967", "7695793866029359141"],
+  "reviewed_source_sha256": {
+    "common.py": null,
+    "provision.py": null,
+    "sql/00_roles.sql": null,
+    "sql/10_boundary.sql": null
+  }
+}

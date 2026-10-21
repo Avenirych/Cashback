@@ -1,11 +1,7 @@
 import {
   Body,
   Controller,
-  Delete,
-  Get,
   Param,
-  Patch,
-  Post,
 } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,14 +9,13 @@ import { Repository } from 'typeorm';
 
 import { Topic } from './topics.entity';
 
+// Legacy HTTP handlers are unregistered pending an approved authorization model.
 @Controller('topics')
 export class TopicsController {
   constructor(
     @InjectRepository(Topic)
     private topicRepository: Repository<Topic>,
   ) {}
-
-  @Get()
   getTopics() {
     return this.topicRepository.find({
       relations: {
@@ -31,8 +26,6 @@ export class TopicsController {
       },
     });
   }
-
-  @Post()
   async createTopic(
     @Body() body: any,
   ) {
@@ -45,8 +38,6 @@ export class TopicsController {
       topic,
     );
   }
-
-  @Patch(':id')
   async updateTopic(
     @Param('id') id: string,
     @Body()
@@ -65,8 +56,6 @@ export class TopicsController {
       id: Number(id),
     });
   }
-
-  @Delete(':id')
   async deleteTopic(
     @Param('id') id: string,
   ) {

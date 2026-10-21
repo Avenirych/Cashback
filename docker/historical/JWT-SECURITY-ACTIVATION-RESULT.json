@@ -1,0 +1,53 @@
+{
+  "status": "SECURITY_ACTIVE",
+  "oldBackend": "feb2181f7ababf41d35968ede8a4d325cf6d1257752ab4b15f9397c755fdc0f6",
+  "oldImage": "sha256:9975cdeabba8f95f774fb23cf5133bf89bd26967ff47b4814d34718c5a0db153",
+  "newBackend": "ced2bf78f14226db06e758edb4cd7d1d9d99289e0ad4d89e4b6bc55cc6826c8a",
+  "newImage": "sha256:ff1f7c5ffebb7d0850403e49e5ea9c61612eee3fb63c139cc86858a83b5bb337",
+  "archive": "C:\\Users\\serge\\cashback+\\work\\security-regression-2b1b3a03-9e8a-4918-aa88-b2c1ad42a830",
+  "rollbackContainer": "cashback-historical-03573b7-local-backend-1-rollback-2b1b3a03-9e8a-4918-aa88-b2c1ad42a830",
+  "sourceHashes": [
+    {
+      "path": "src/auth/jwt.strategy.ts",
+      "sha256": "3cfd1060ff5f54fb4e20fb94ade60fcb31780d849f07c9e3c6606016d3f78807"
+    }
+  ],
+  "financeIncluded": false,
+  "liveChecks": {
+    "checks": [
+      "GET /users/1 401",
+      "GET /users/1 401",
+      "GET /users/1 403",
+      "GET /users/1 200",
+      "PATCH /users/1 400",
+      "PATCH /users/1 403",
+      "GET /users 404",
+      "POST /users 404",
+      "POST /users/1/balance 404",
+      "GET /topics 404",
+      "POST /topics 404",
+      "POST /posts 404",
+      "GET /auth/profile 401",
+      "GET /auth/profile 200",
+      "POST /auth/register 400",
+      "POST /auth/login 400",
+      "GET /auth/verify-email?token=invalid 400",
+      "GET /forum/topics 401",
+      "GET /forum/rules 200",
+      "GET /forum/topics 200",
+      "POST /forum/topic 400",
+      "GET /auth/profile 401",
+      "GET /user/marketing-preferences 401",
+      "GET /forum/topics 401",
+      "GET /auth/profile 401",
+      "GET /forum/user/AAA 200",
+      "GET /forum/user/AAA 200"
+    ],
+    "safeDto": true,
+    "shortLivedDiagnosticJWT": true,
+    "noAccountsCreated": true,
+    "positivePasswordLoginOrValidEmailConfirmation": false
+  },
+  "databaseUnchanged": true,
+  "rollbackRetained": true
+}

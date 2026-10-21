@@ -1,0 +1,30 @@
+{
+  "status": "HEADER_SITE_SEARCH_READY",
+  "frontendId": "a8a65d4fcf0258c53be2fbc87afd1c87c3efe28230bbe6877aa7ee2a62a45aff",
+  "image": "sha256:cf80172b119e6b198ea3ebc5dbaaab2260169c81e89bb253cb7c31fdfe2240f1",
+  "indexedPages": 15,
+  "tests": 80,
+  "queries": [
+    {
+      "query": "retention",
+      "result": "/privacy"
+    },
+    {
+      "query": "кешбэк",
+      "result": "/faq"
+    },
+    {
+      "query": "cookies",
+      "result": "/cookies"
+    },
+    {
+      "query": "Direct Research Payments",
+      "result": "/services"
+    }
+  ],
+  "httpRoutesVerified": true,
+  "servedJavaScriptVerified": true,
+  "otherContainersUnchanged": true,
+  "browserVisualVerified": false,
+  "backup": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-search-1792494457819"
+}

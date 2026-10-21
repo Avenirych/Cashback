@@ -1,0 +1,4123 @@
+{
+  "migrationReadiness": {
+    "status": "MIGRATION_READINESS_DISPOSABLE_PASS",
+    "cluster": "7699055890899750956",
+    "order": [
+      "CreateFinanceCore1791890000000",
+      "AddFinanceOutbox1791891000000",
+      "AddBankReceipts1791892000000",
+      "AddEvidenceControl1791893000000",
+      "AddSyntheticCoverage1791894000000",
+      "AddReceiptClassification1791895000000",
+      "FixClassificationCompleteness1791895100000",
+      "AddCorrectionReview1791896000000",
+      "AddCorrectionCandidates1791897000000",
+      "AddPurchaseLinkage1792500000000",
+      "AddIsolatedLotOperations1792510000000",
+      "AddIsolatedReceiptSettlement1792511000000",
+      "AddPurchaseLifecycleEvidence1792520000000",
+      "AddOwnerPolicyRecords1792530000000",
+      "AddPolicy21Allocations1792540000000",
+      "CoordinateCoverageRepayment1792541000000"
+    ],
+    "checks": [
+      "complete chronological chain commits on fresh empty PostgreSQL without accounts, postings or settlement",
+      "TypeORM migration-history replay applies zero migrations",
+      "raw up replay fails transactionally on existing objects without altering financial history",
+      "destructive down is refused; migration history is retained",
+      "registered finance entity columns map to the migrated schema without synchronization; exact money/time/varchar types checked",
+      "catalog verifies bigint money, source FKs, NULL-aware uniqueness, enabled immutable/capacity guards",
+      "synthetic non-finance public users/forum footprint is preserved; NOT a representative customer-data compatibility claim",
+      "pre-existing incompatible object aborts without partial finance tables",
+      "mid-chain injected failure rolls back all preceding DDL and history in one transaction",
+      "missing dependency fails atomically rather than enabling a partial policy schema",
+      "missing referenced column rolls back earlier constraint changes and leaves no half-created allocation table"
+    ],
+    "entityMappings": [
+      {
+        "entity": "FinanceAccount",
+        "table": "finance_accounts",
+        "columns": 8
+      },
+      {
+        "entity": "FinanceJournal",
+        "table": "finance_journals",
+        "columns": 5
+      },
+      {
+        "entity": "FinancePosting",
+        "table": "finance_postings",
+        "columns": 5
+      },
+      {
+        "entity": "FinanceBankReceipt",
+        "table": "finance_bank_receipts",
+        "columns": 17
+      },
+      {
+        "entity": "FinanceFundingLot",
+        "table": "finance_funding_lots",
+        "columns": 6
+      },
+      {
+        "entity": "FinanceBankOperation",
+        "table": "finance_bank_operations",
+        "columns": 8
+      },
+      {
+        "entity": "FinanceBankObservation",
+        "table": "finance_bank_observations",
+        "columns": 7
+      },
+      {
+        "entity": "FinanceBankDecision",
+        "table": "finance_bank_decisions",
+        "columns": 6
+      },
+      {
+        "entity": "FinanceBankRestoreReview",
+        "table": "finance_bank_restore_reviews",
+        "columns": 7
+      },
+      {
+        "entity": "FinanceEvidenceEvent",
+        "table": "finance_evidence_events",
+        "columns": 10
+      },
+      {
+        "entity": "FinanceCoverageMandate",
+        "table": "finance_coverage_mandates",
+        "columns": 7
+      },
+      {
+        "entity": "FinanceCoverageTarget",
+        "table": "finance_coverage_targets",
+        "columns": 10
+      },
+      {
+        "entity": "FinanceCoverageReservation",
+        "table": "finance_coverage_reservations",
+        "columns": 6
+      },
+      {
+        "entity": "FinanceCoverageAllocation",
+        "table": "finance_coverage_allocations",
+        "columns": 6
+      },
+      {
+        "entity": "FinanceReceiptClassification",
+        "table": "finance_receipt_classifications",
+        "columns": 8
+      },
+      {
+        "entity": "FinanceReceiptClassifiedPart",
+        "table": "finance_receipt_classified_parts",
+        "columns": 13
+      },
+      {
+        "entity": "FinanceClassificationCorrectionRequest",
+        "table": "finance_classification_correction_requests",
+        "columns": 11
+      },
+      {
+        "entity": "FinanceClassificationCorrectionDecision",
+        "table": "finance_classification_correction_decisions",
+        "columns": 18
+      },
+      {
+        "entity": "FinanceClassificationCorrectionCandidate",
+        "table": "finance_classification_correction_candidates",
+        "columns": 18
+      },
+      {
+        "entity": "FinanceOutbox",
+        "table": "finance_outbox",
+        "columns": 13
+      }
+    ],
+    "catalog": [
+      {
+        "table_name": "finance_accounts",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_accounts",
+        "column_name": "accountKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_accounts",
+        "column_name": "kind",
+        "type": "character varying(30)"
+      },
+      {
+        "table_name": "finance_accounts",
+        "column_name": "ownerReference",
+        "type": "character varying(100)"
+      },
+      {
+        "table_name": "finance_accounts",
+        "column_name": "currency",
+        "type": "character varying(3)"
+      },
+      {
+        "table_name": "finance_accounts",
+        "column_name": "normalSide",
+        "type": "character varying(6)"
+      },
+      {
+        "table_name": "finance_accounts",
+        "column_name": "nonnegative",
+        "type": "boolean"
+      },
+      {
+        "table_name": "finance_accounts",
+        "column_name": "balancePence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "column_name": "operationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "column_name": "observationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "column_name": "reviewerId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "column_name": "verifierReference",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "column_name": "documentReference",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "column_name": "evidenceReference",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "column_name": "source",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "column_name": "accountScope",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "column_name": "nativeId",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "column_name": "state",
+        "type": "character varying(24)"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "column_name": "submitterId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "column_name": "identity",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "column_name": "accountScope",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "column_name": "facts",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "column_name": "factsHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "column_name": "state",
+        "type": "character varying(24)"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "column_name": "version",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "column_name": "receiptId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "sourceNamespace",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "accountScope",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "transactionId",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "idempotencyKey",
+        "type": "character varying(100)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "materialHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "currency",
+        "type": "character varying(3)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "amountPence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "receivedAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "verificationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "evidenceReference",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "verifierReference",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "verificationStatus",
+        "type": "character varying(20)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "journalId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "eventId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "bankAccountId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "column_name": "unallocatedAccountId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "column_name": "operationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "column_name": "operationVersion",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "column_name": "reviewerId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "column_name": "observationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "column_name": "documentReference",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "column_name": "verifierReference",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "owner",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "origin",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "responsible",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "confirmedAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "kind",
+        "type": "character varying(30)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "parent",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "available",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "column_name": "reserved",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "column_name": "lot",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "column_name": "click",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "column_name": "amount",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "column_name": "state",
+        "type": "character varying(20)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "requestId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "originalPartId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "baseVersion",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "baseHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "metadata",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "operationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "operationVersion",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "actorId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "participantId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "contextId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "fingerprint",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "intentFingerprint",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "verificationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "verifierReference",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "commandKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "requestHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "requestId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "actorId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "participantId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "contextId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "decision",
+        "type": "character varying(12)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "reason",
+        "type": "character varying(1000)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "basisReference",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "operationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "operationVersion",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "commandKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "requestHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "candidateId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "candidateFingerprint",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "originalPartId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "baseVersion",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "column_name": "intentFingerprint",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "commandKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "requestHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "partId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "reason",
+        "type": "character varying(1000)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "actorId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "contextId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "status",
+        "type": "character varying(12)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "participantId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "column_name": "linkedFromRequestId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "column_name": "reservationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "column_name": "lotId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "column_name": "amountPence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "column_name": "currency",
+        "type": "character varying(3)"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "column_name": "state",
+        "type": "character varying(8)"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "column_name": "principalId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "column_name": "contextId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "column_name": "purpose",
+        "type": "character varying(30)"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "column_name": "currency",
+        "type": "character varying(3)"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "column_name": "limitPence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "column_name": "allowedLotIds",
+        "type": "uuid[]"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "column_name": "allocation",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "column_name": "command",
+        "type": "text"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "column_name": "actor",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "column_name": "amount",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "column_name": "proof",
+        "type": "text"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "column_name": "commandKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "column_name": "requestHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "column_name": "targetId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "column_name": "mandateId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "column_name": "result",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "contextId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "creatorId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "creationMandateId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "kind",
+        "type": "character varying(30)"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "currency",
+        "type": "character varying(3)"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "amountPence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "state",
+        "type": "character varying(8)"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "creationKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "column_name": "creationHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "actor",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "key",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "requestHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "action",
+        "type": "character varying(40)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "proof",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "command",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "result",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "commandKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "action",
+        "type": "character varying(20)"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "actorId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "requestHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "data",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "result",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "operationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "operationVersion",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "column_name": "receiptId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "column_name": "currency",
+        "type": "character varying(3)"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "column_name": "amountPence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "column_name": "status",
+        "type": "character varying(20)"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "column_name": "purpose",
+        "type": "character varying(40)"
+      },
+      {
+        "table_name": "finance_journals",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_journals",
+        "column_name": "eventKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_journals",
+        "column_name": "requestHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_journals",
+        "column_name": "sealed",
+        "type": "boolean"
+      },
+      {
+        "table_name": "finance_journals",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "column_name": "parent",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "column_name": "child",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "column_name": "amount",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "column_name": "command",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "eventId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "type",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "schemaVersion",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "idempotencyKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "operationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "journalId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "envelopeHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "payload",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "attempts",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "deliveredAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "leaseUntil",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_outbox",
+        "column_name": "availableAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "column_name": "debt",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "column_name": "confirmedAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "column_name": "proof",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "column_name": "policy",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "sequence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "kind",
+        "type": "character varying(40)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "scope",
+        "type": "character varying(400)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "key",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "policy",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "payload",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "hash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "journal",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "column_name": "ingestedAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "column_name": "journal",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "column_name": "debt",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "column_name": "scope",
+        "type": "text"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "column_name": "lot",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "column_name": "account",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "column_name": "kind",
+        "type": "text"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "column_name": "amount",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_postings",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_postings",
+        "column_name": "journalId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_postings",
+        "column_name": "accountId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_postings",
+        "column_name": "side",
+        "type": "character varying(6)"
+      },
+      {
+        "table_name": "finance_postings",
+        "column_name": "amountPence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "column_name": "id",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "column_name": "buyerReference",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "column_name": "partnerReference",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "column_name": "offerReference",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "column_name": "materialHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "source",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "event",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "actor",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "orderSource",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "orderId",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "version",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "kind",
+        "type": "character varying(30)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "material",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "materialHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "column_name": "sourceNamespace",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "column_name": "orderId",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "column_name": "clickId",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "column_name": "state",
+        "type": "character varying(30)"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "column_name": "click",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "column_name": "actor",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "column_name": "snapshotHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "column_name": "result",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_readiness_history",
+        "column_name": "id",
+        "type": "integer"
+      },
+      {
+        "table_name": "finance_readiness_history",
+        "column_name": "timestamp",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_readiness_history",
+        "column_name": "name",
+        "type": "character varying"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "column_name": "commandKey",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "column_name": "requestHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "column_name": "receiptId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "column_name": "actorId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "column_name": "contextId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "column_name": "result",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "column_name": "createdAt",
+        "type": "timestamp with time zone"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "classificationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "receiptId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "currency",
+        "type": "character varying(3)"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "offsetPence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "amountPence",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "category",
+        "type": "character varying(30)"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "sourceNamespace",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "sourceEventId",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "basisReference",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "documentReferences",
+        "type": "uuid[]"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "verificationId",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "column_name": "verifierReference",
+        "type": "character varying(60)"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "column_name": "receipt",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "column_name": "debt",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "column_name": "journal",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "column_name": "amount",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "source",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "receipt",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "actor",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "materialHash",
+        "type": "character varying(64)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "gross",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "userGross",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "platformGross",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "expenses",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "debtOffset",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "lot",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "journal",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "column_name": "result",
+        "type": "jsonb"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "source",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "refund",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "orderSource",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "orderId",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "actor",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "kind",
+        "type": "character varying(20)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "state",
+        "type": "character varying(20)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "column_name": "proof",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_settlement_expenses",
+        "column_name": "journal",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_settlement_expenses",
+        "column_name": "settlement",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "column_name": "id",
+        "type": "uuid"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "column_name": "debtor",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "column_name": "origin",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "column_name": "evidence",
+        "type": "character varying(160)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "column_name": "cap",
+        "type": "bigint"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "column_name": "account",
+        "type": "uuid"
+      }
+    ],
+    "constraints": [
+      {
+        "table_name": "finance_accounts",
+        "kind": "u",
+        "definition": "UNIQUE (\"accountKey\")"
+      },
+      {
+        "table_name": "finance_accounts",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_accounts",
+        "kind": "c",
+        "definition": "CHECK (((((kind)::text = ANY ((ARRAY['user_debt'::character varying, 'clearing'::character varying, 'company_bank_cash'::character varying, 'bank_fee_expense'::character varying, 'transfer_expense'::character varying, 'other_expense'::character varying])::text[])) AND ((\"normalSide\")::text = 'debit'::text)) OR (((kind)::text = ANY ((ARRAY['user_gbp'::character varying, 'platform_income'::character varying, 'bonus_liability'::character varying, 'reserved'::character varying, 'unallocated_received_funds'::character varying])::text[])) AND ((\"normalSide\")::text = 'credit'::text))))"
+      },
+      {
+        "table_name": "finance_accounts",
+        "kind": "c",
+        "definition": "CHECK ((nonnegative OR ((kind)::text = 'clearing'::text)))"
+      },
+      {
+        "table_name": "finance_accounts",
+        "kind": "c",
+        "definition": "CHECK (((currency)::text = 'GBP'::text))"
+      },
+      {
+        "table_name": "finance_accounts",
+        "kind": "c",
+        "definition": "CHECK (((kind)::text = ANY ((ARRAY['user_gbp'::character varying, 'platform_income'::character varying, 'bonus_liability'::character varying, 'reserved'::character varying, 'user_debt'::character varying, 'clearing'::character varying, 'company_bank_cash'::character varying, 'unallocated_received_funds'::character varying, 'bank_fee_expense'::character varying, 'transfer_expense'::character varying, 'other_expense'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_accounts",
+        "kind": "c",
+        "definition": "CHECK (((\"normalSide\")::text = ANY ((ARRAY['debit'::character varying, 'credit'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_accounts",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_accounts",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"observationId\") REFERENCES finance_bank_observations(id)"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"operationId\") REFERENCES finance_bank_operations(id)"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "kind": "u",
+        "definition": "UNIQUE (source, \"accountScope\", \"nativeId\")"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "kind": "c",
+        "definition": "CHECK (((state)::text = ANY ((ARRAY['pending_review'::character varying, 'quarantined'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "c",
+        "definition": "CHECK ((((facts ->> 'currency'::text) = 'GBP'::text) AND ((facts ->> 'accountScope'::text) = (\"accountScope\")::text) AND ((facts ->> 'amountPence'::text) ~ '^[1-9][0-9]*$'::text)))"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "c",
+        "definition": "CHECK (((identity)::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "u",
+        "definition": "UNIQUE (identity)"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"receiptId\") REFERENCES finance_bank_receipts(id)"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "u",
+        "definition": "UNIQUE (\"receiptId\")"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "c",
+        "definition": "CHECK (((state)::text = ANY ((ARRAY['eligible'::character varying, 'revoked'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "kind": "c",
+        "definition": "CHECK ((version > 0))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK ((\"amountPence\" > 0))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"bankAccountId\") REFERENCES finance_accounts(id)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK ((\"bankAccountId\" <> \"unallocatedAccountId\"))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK ((\"eventId\" = id))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK (((currency)::text = 'GBP'::text))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"eventId\") REFERENCES finance_outbox(\"eventId\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "u",
+        "definition": "UNIQUE (\"eventId\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "u",
+        "definition": "UNIQUE (\"idempotencyKey\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"journalId\") REFERENCES finance_journals(id)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "u",
+        "definition": "UNIQUE (\"journalId\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK (((\"materialHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "u",
+        "definition": "UNIQUE (\"sourceNamespace\", \"accountScope\", \"transactionId\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK (((\"sourceNamespace\")::text ~ '^[A-Za-z0-9:_-]{3,60}$'::text))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK (((\"transactionId\")::text ~ '^[A-Za-z0-9:_-]{1,160}$'::text))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"unallocatedAccountId\") REFERENCES finance_accounts(id)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK (((\"verificationStatus\")::text = 'verified'::text))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "c",
+        "definition": "CHECK (((\"verifierReference\")::text ~ '^[A-Za-z0-9:_-]{3,60}$'::text))"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"observationId\") REFERENCES finance_bank_observations(id)"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"operationId\") REFERENCES finance_bank_operations(id)"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "f",
+        "definition": "FOREIGN KEY (available) REFERENCES finance_accounts(id)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "u",
+        "definition": "UNIQUE (available)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "c",
+        "definition": "CHECK ((available <> reserved))"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "c",
+        "definition": "CHECK (((parent IS NULL) OR (parent <> id)))"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "c",
+        "definition": "CHECK (((kind)::text = ANY ((ARRAY['bonus'::character varying, 'withdrawal_gbp'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "f",
+        "definition": "FOREIGN KEY (parent) REFERENCES finance_bonus_lots(id)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "f",
+        "definition": "FOREIGN KEY (reserved) REFERENCES finance_accounts(id)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "kind": "u",
+        "definition": "UNIQUE (reserved)"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "kind": "c",
+        "definition": "CHECK ((amount > 0))"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "kind": "f",
+        "definition": "FOREIGN KEY (click) REFERENCES finance_purchase_clicks(id)"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "kind": "f",
+        "definition": "FOREIGN KEY (lot) REFERENCES finance_bonus_lots(id)"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "kind": "c",
+        "definition": "CHECK (((state)::text = ANY ((ARRAY['active'::character varying, 'released'::character varying, 'consumed'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "c",
+        "definition": "CHECK (((\"intentFingerprint\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "c",
+        "definition": "CHECK ((\"operationVersion\" > 0))"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"originalPartId\") REFERENCES finance_receipt_classified_parts(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "c",
+        "definition": "CHECK (((\"baseHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "c",
+        "definition": "CHECK ((\"baseVersion\" = 0))"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "u",
+        "definition": "UNIQUE (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "c",
+        "definition": "CHECK (((fingerprint)::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "c",
+        "definition": "CHECK ((((jsonb_typeof(metadata) = 'object'::text) AND (metadata ?& ARRAY['category'::text, 'sourceNamespace'::text, 'sourceEventId'::text, 'basisReference'::text, 'documentReferences'::text]) AND ((metadata - ARRAY['category'::text, 'sourceNamespace'::text, 'sourceEventId'::text, 'basisReference'::text, 'documentReferences'::text]) = '{}'::jsonb) AND ((metadata ->> 'category'::text) = ANY (ARRAY['shopping_cashback'::text, 'rewarded_ads'::text, 'research_referral'::text, 'passive_ads'::text, 'return_or_adjustment'::text, 'company_funding'::text])) AND (jsonb_typeof((metadata -> 'documentReferences'::text)) = 'array'::text)) IS TRUE))"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"operationId\") REFERENCES finance_bank_operations(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "c",
+        "definition": "CHECK (((\"requestHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"requestId\") REFERENCES finance_classification_correction_requests(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "u",
+        "definition": "UNIQUE (\"requestId\", \"operationVersion\")"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "c",
+        "definition": "CHECK ((\"operationVersion\" > 0))"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"candidateId\") REFERENCES finance_classification_correction_candidates(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "u",
+        "definition": "UNIQUE (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "c",
+        "definition": "CHECK (((decision)::text = ANY ((ARRAY['approved'::character varying, 'rejected'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"operationId\") REFERENCES finance_bank_operations(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"originalPartId\") REFERENCES finance_receipt_classified_parts(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "c",
+        "definition": "CHECK ((length(btrim((reason)::text)) > 0))"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "c",
+        "definition": "CHECK (((\"requestHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"requestId\") REFERENCES finance_classification_correction_requests(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "kind": "c",
+        "definition": "CHECK ((((\"candidateId\" IS NULL) AND (\"candidateFingerprint\" IS NULL) AND (\"originalPartId\" IS NULL) AND (\"baseVersion\" IS NULL) AND (\"intentFingerprint\" IS NULL)) OR ((\"candidateId\" IS NOT NULL) AND (\"candidateFingerprint\" IS NOT NULL) AND (\"originalPartId\" IS NOT NULL) AND (\"baseVersion\" IS NOT NULL) AND (\"baseVersion\" = 0) AND (\"intentFingerprint\" IS NOT NULL))))"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"linkedFromRequestId\") REFERENCES finance_classification_correction_requests(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "kind": "u",
+        "definition": "UNIQUE (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"partId\") REFERENCES finance_receipt_classified_parts(id)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "kind": "c",
+        "definition": "CHECK ((length(btrim((reason)::text)) > 0))"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "kind": "c",
+        "definition": "CHECK (((\"requestHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "kind": "c",
+        "definition": "CHECK (((status)::text = 'requested'::text))"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "kind": "c",
+        "definition": "CHECK ((\"amountPence\" > 0))"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "kind": "c",
+        "definition": "CHECK (((currency)::text = 'GBP'::text))"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"lotId\") REFERENCES finance_funding_lots(id)"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"reservationId\") REFERENCES finance_coverage_reservations(id)"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "kind": "u",
+        "definition": "UNIQUE (\"reservationId\", \"lotId\")"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "kind": "c",
+        "definition": "CHECK (((state)::text = 'held'::text))"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "kind": "c",
+        "definition": "CHECK (((cardinality(\"allowedLotIds\") >= 1) AND (cardinality(\"allowedLotIds\") <= 100)))"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "kind": "c",
+        "definition": "CHECK (((currency)::text = 'GBP'::text))"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "kind": "c",
+        "definition": "CHECK ((\"limitPence\" > 0))"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "kind": "c",
+        "definition": "CHECK (((purpose)::text = 'synthetic_test_coverage'::text))"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "kind": "f",
+        "definition": "FOREIGN KEY (allocation) REFERENCES finance_coverage_allocations(id)"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "kind": "c",
+        "definition": "CHECK ((amount > 0))"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "kind": "u",
+        "definition": "UNIQUE (command)"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "kind": "c",
+        "definition": "CHECK ((((jsonb_typeof(result) = 'object'::text) AND (jsonb_typeof((result -> 'allocationIds'::text)) = 'array'::text) AND ((result ->> 'reservationId'::text) = (id)::text) AND ((result ->> 'targetId'::text) = (\"targetId\")::text) AND ((result ->> 'mandateId'::text) = (\"mandateId\")::text) AND ((result ->> 'currency'::text) = 'GBP'::text) AND ((result ->> 'purpose'::text) = 'synthetic_test_coverage'::text)) IS TRUE))"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "kind": "u",
+        "definition": "UNIQUE (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"mandateId\") REFERENCES finance_coverage_mandates(id)"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "kind": "c",
+        "definition": "CHECK (((\"requestHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"targetId\") REFERENCES finance_coverage_targets(id)"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "kind": "u",
+        "definition": "UNIQUE (\"targetId\")"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "c",
+        "definition": "CHECK ((\"amountPence\" > 0))"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "c",
+        "definition": "CHECK (((\"creationHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "u",
+        "definition": "UNIQUE (\"creationKey\")"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"creationMandateId\") REFERENCES finance_coverage_mandates(id)"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "c",
+        "definition": "CHECK (((currency)::text = 'GBP'::text))"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "c",
+        "definition": "CHECK (((kind)::text = 'synthetic_test_coverage'::text))"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "kind": "c",
+        "definition": "CHECK (((state)::text = ANY ((ARRAY['created'::character varying, 'reserved'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "kind": "u",
+        "definition": "UNIQUE (actor, key)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "kind": "c",
+        "definition": "CHECK (((action)::text = ANY ((ARRAY['submit'::character varying, 'approve'::character varying, 'revoke'::character varying, 'recheck'::character varying, 'restore'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "kind": "u",
+        "definition": "UNIQUE (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"operationId\") REFERENCES finance_bank_operations(id)"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "kind": "c",
+        "definition": "CHECK (((\"requestHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "kind": "c",
+        "definition": "CHECK ((\"amountPence\" > 0))"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "kind": "c",
+        "definition": "CHECK (((currency)::text = 'GBP'::text))"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "kind": "c",
+        "definition": "CHECK (((purpose)::text = 'awaiting_classification'::text))"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"receiptId\") REFERENCES finance_bank_receipts(id)"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "kind": "u",
+        "definition": "UNIQUE (\"receiptId\")"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "kind": "c",
+        "definition": "CHECK (((status)::text = 'restricted'::text))"
+      },
+      {
+        "table_name": "finance_journals",
+        "kind": "u",
+        "definition": "UNIQUE (\"eventKey\")"
+      },
+      {
+        "table_name": "finance_journals",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_journals",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_journals",
+        "kind": "c",
+        "definition": "CHECK (((\"requestHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "kind": "c",
+        "definition": "CHECK ((amount > 0))"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "kind": "f",
+        "definition": "FOREIGN KEY (child) REFERENCES finance_bonus_lots(id)"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "kind": "u",
+        "definition": "UNIQUE (child)"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "kind": "f",
+        "definition": "FOREIGN KEY (command) REFERENCES finance_domain_commands(id) DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "kind": "f",
+        "definition": "FOREIGN KEY (parent) REFERENCES finance_bonus_lots(id)"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "u",
+        "definition": "UNIQUE (\"journalId\")"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "u",
+        "definition": "UNIQUE (\"idempotencyKey\")"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "c",
+        "definition": "CHECK ((attempts >= 0))"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "c",
+        "definition": "CHECK (((jsonb_typeof(payload) = 'object'::text) AND (payload ?& ARRAY['currency'::text, 'journalId'::text, 'postingCount'::text]) AND ((payload - ARRAY['currency'::text, 'journalId'::text, 'postingCount'::text]) = '{}'::jsonb) AND (jsonb_typeof((payload -> 'currency'::text)) = 'string'::text) AND (jsonb_typeof((payload -> 'journalId'::text)) = 'string'::text) AND ((payload ->> 'currency'::text) = 'GBP'::text) AND ((payload ->> 'journalId'::text) = (\"journalId\")::text) AND (jsonb_typeof((payload -> 'postingCount'::text)) = 'number'::text) AND ((((payload ->> 'postingCount'::text))::integer >= 2) AND (((payload ->> 'postingCount'::text))::integer <= 1000))))"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "c",
+        "definition": "CHECK (((\"envelopeHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "c",
+        "definition": "CHECK (((\"idempotencyKey\")::text ~ '^[A-Za-z0-9:_-]{8,160}$'::text))"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"journalId\") REFERENCES finance_journals(id)"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "p",
+        "definition": "PRIMARY KEY (\"eventId\")"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "c",
+        "definition": "CHECK ((\"schemaVersion\" = 1))"
+      },
+      {
+        "table_name": "finance_outbox",
+        "kind": "c",
+        "definition": "CHECK (((type)::text = 'finance.journal.posted'::text))"
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "kind": "f",
+        "definition": "FOREIGN KEY (debt) REFERENCES finance_verified_debts(id)"
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "kind": "p",
+        "definition": "PRIMARY KEY (debt)"
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "kind": "c",
+        "definition": "CHECK (((policy)::text = ANY ((ARRAY['FINANCIAL_BUSINESS_POLICY_2026_10_20'::character varying, 'FINANCIAL_POLICY_2026_10_21'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "kind": "f",
+        "definition": "FOREIGN KEY (journal) REFERENCES finance_journals(id)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "kind": "p",
+        "definition": "PRIMARY KEY (kind, scope, key)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "kind": "c",
+        "definition": "CHECK (((policy)::text = ANY ((ARRAY['FINANCIAL_BUSINESS_POLICY_2026_10_20'::character varying, 'FINANCIAL_POLICY_2026_10_21'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "kind": "u",
+        "definition": "UNIQUE (sequence)"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "kind": "u",
+        "definition": "UNIQUE NULLS NOT DISTINCT (journal, lot, account, kind, debt)"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "kind": "f",
+        "definition": "FOREIGN KEY (account) REFERENCES finance_accounts(id)"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "kind": "c",
+        "definition": "CHECK ((amount > 0))"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "kind": "f",
+        "definition": "FOREIGN KEY (debt) REFERENCES finance_verified_debts(id)"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "kind": "f",
+        "definition": "FOREIGN KEY (journal) REFERENCES finance_journals(id)"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "kind": "c",
+        "definition": "CHECK ((kind = ANY (ARRAY['collection'::text, 'restoration'::text])))"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "kind": "f",
+        "definition": "FOREIGN KEY (lot) REFERENCES finance_bonus_lots(id)"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_postings",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"accountId\") REFERENCES finance_accounts(id)"
+      },
+      {
+        "table_name": "finance_postings",
+        "kind": "c",
+        "definition": "CHECK ((\"amountPence\" > 0))"
+      },
+      {
+        "table_name": "finance_postings",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"journalId\") REFERENCES finance_journals(id)"
+      },
+      {
+        "table_name": "finance_postings",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_postings",
+        "kind": "c",
+        "definition": "CHECK (((side)::text = ANY ((ARRAY['debit'::character varying, 'credit'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "kind": "c",
+        "definition": "CHECK (((kind)::text = ANY ((ARRAY['order_update'::character varying, 'cancellation'::character varying, 'full_refund'::character varying, 'partial_refund'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"orderSource\", \"orderId\") REFERENCES finance_purchase_orders(\"sourceNamespace\", \"orderId\")"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "kind": "u",
+        "definition": "UNIQUE (\"orderSource\", \"orderId\", version)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "kind": "p",
+        "definition": "PRIMARY KEY (source, event)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "kind": "c",
+        "definition": "CHECK ((version > 0))"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"clickId\") REFERENCES finance_purchase_clicks(id)"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "kind": "p",
+        "definition": "PRIMARY KEY (\"sourceNamespace\", \"orderId\")"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "kind": "c",
+        "definition": "CHECK (((state)::text = 'pending_review'::text))"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "kind": "f",
+        "definition": "FOREIGN KEY (click) REFERENCES finance_purchase_clicks(id)"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "kind": "u",
+        "definition": "UNIQUE (click, \"snapshotHash\")"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_readiness_history",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "kind": "c",
+        "definition": "CHECK ((((jsonb_typeof(result) = 'object'::text) AND (jsonb_typeof((result -> 'parts'::text)) = 'array'::text) AND ((result ->> 'classificationId'::text) = (id)::text) AND ((result ->> 'receiptId'::text) = (\"receiptId\")::text) AND ((result ->> 'currency'::text) = 'GBP'::text) AND ((result ->> 'unclassifiedPenceAtCreation'::text) ~ '^(0|[1-9][0-9]*)$'::text)) IS TRUE))"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "kind": "u",
+        "definition": "UNIQUE (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"receiptId\") REFERENCES finance_bank_receipts(id)"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "kind": "c",
+        "definition": "CHECK (((\"requestHash\")::text ~ '^[0-9a-f]{64}$'::text))"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "t",
+        "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "c",
+        "definition": "CHECK ((\"amountPence\" > 0))"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "c",
+        "definition": "CHECK (((category)::text = ANY ((ARRAY['shopping_cashback'::character varying, 'rewarded_ads'::character varying, 'research_referral'::character varying, 'passive_ads'::character varying, 'return_or_adjustment'::character varying, 'company_funding'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"classificationId\") REFERENCES finance_receipt_classifications(id)"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "c",
+        "definition": "CHECK (((currency)::text = 'GBP'::text))"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "c",
+        "definition": "CHECK (((cardinality(\"documentReferences\") >= 1) AND (cardinality(\"documentReferences\") <= 20)))"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "c",
+        "definition": "CHECK ((\"offsetPence\" >= 0))"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"receiptId\") REFERENCES finance_bank_receipts(id)"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "kind": "c",
+        "definition": "CHECK ((amount > 0))"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "kind": "f",
+        "definition": "FOREIGN KEY (debt) REFERENCES finance_verified_debts(id)"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "kind": "f",
+        "definition": "FOREIGN KEY (journal) REFERENCES finance_journals(id)"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "kind": "u",
+        "definition": "UNIQUE (journal)"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "kind": "p",
+        "definition": "PRIMARY KEY (receipt)"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "kind": "f",
+        "definition": "FOREIGN KEY (receipt) REFERENCES finance_bank_receipts(id)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "c",
+        "definition": "CHECK (((\"debtOffset\" >= 0) AND (\"debtOffset\" <= \"userGross\")))"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "c",
+        "definition": "CHECK ((gross = (\"userGross\" + \"platformGross\")))"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "c",
+        "definition": "CHECK ((expenses >= 0))"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "c",
+        "definition": "CHECK ((gross > 0))"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "f",
+        "definition": "FOREIGN KEY (journal) REFERENCES finance_journals(id)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "u",
+        "definition": "UNIQUE (journal)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "f",
+        "definition": "FOREIGN KEY (lot) REFERENCES finance_bonus_lots(id)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "c",
+        "definition": "CHECK ((\"platformGross\" >= 0))"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "f",
+        "definition": "FOREIGN KEY (receipt) REFERENCES finance_bank_receipts(id)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "u",
+        "definition": "UNIQUE (receipt)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "u",
+        "definition": "UNIQUE (source)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "kind": "c",
+        "definition": "CHECK ((\"userGross\" >= 0))"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "kind": "c",
+        "definition": "CHECK (((kind)::text = ANY ((ARRAY['full'::character varying, 'partial'::character varying])::text[])))"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "kind": "f",
+        "definition": "FOREIGN KEY (\"orderSource\", \"orderId\") REFERENCES finance_purchase_orders(\"sourceNamespace\", \"orderId\")"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "kind": "u",
+        "definition": "UNIQUE (source, refund)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "kind": "c",
+        "definition": "CHECK (((state)::text = 'pending_review'::text))"
+      },
+      {
+        "table_name": "finance_settlement_expenses",
+        "kind": "f",
+        "definition": "FOREIGN KEY (journal) REFERENCES finance_journals(id)"
+      },
+      {
+        "table_name": "finance_settlement_expenses",
+        "kind": "p",
+        "definition": "PRIMARY KEY (journal)"
+      },
+      {
+        "table_name": "finance_settlement_expenses",
+        "kind": "f",
+        "definition": "FOREIGN KEY (settlement) REFERENCES finance_receipt_settlements(id) DEFERRABLE INITIALLY DEFERRED"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "kind": "f",
+        "definition": "FOREIGN KEY (account) REFERENCES finance_accounts(id)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "kind": "u",
+        "definition": "UNIQUE (account)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "kind": "c",
+        "definition": "CHECK ((cap > 0))"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "kind": "u",
+        "definition": "UNIQUE (evidence)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "kind": "p",
+        "definition": "PRIMARY KEY (id)"
+      }
+    ],
+    "triggers": [
+      {
+        "table_name": "finance_accounts",
+        "name": "finance_account_nonnegative",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_accounts",
+        "name": "finance_account_updates",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_accounts",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_accounts",
+        "name": "finance_reserved_account_consistent",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "name": "finance_decision_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "name": "finance_evidence_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "name": "finance_evidence_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "name": "finance_bank_control_complete",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "name": "finance_operation_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_receipt_complete",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_receipt_evidence",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_receipt_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "name": "finance_evidence_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "name": "finance_review_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "name": "finance_domain_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "name": "finance_lot_provenance",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "name": "finance_reservation_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "name": "finance_reservation_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "name": "finance_reserved_consistent",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "name": "finance_candidate_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "name": "finance_candidate_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_correction_decision_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_correction_review_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_exact_candidate_review_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "name": "finance_classification_correction_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "name": "finance_classification_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "name": "finance_correction_link_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "name": "finance_coverage_allocation_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "name": "finance_coverage_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "name": "finance_no_settled_coverage",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "name": "finance_policy_coverage_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "name": "finance_coverage_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "name": "finance_coverage_release_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "name": "finance_policy_release_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "name": "finance_coverage_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "name": "finance_reservation_complete",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "name": "finance_coverage_complete",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "name": "finance_coverage_target_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "name": "finance_domain_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "name": "finance_evidence_event_version",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "name": "finance_evidence_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "name": "finance_lot_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "name": "finance_lot_matches",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_journals",
+        "name": "finance_journal_balanced",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_journals",
+        "name": "finance_journal_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_journals",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "name": "finance_domain_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_outbox",
+        "name": "finance_outbox_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_outbox",
+        "name": "finance_outbox_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "name": "finance_policy_debt_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_policy_records",
+        "name": "finance_policy_records_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "name": "finance_policy_slice_owner",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "name": "finance_policy_slices_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_postings",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_postings",
+        "name": "finance_posting_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "name": "finance_linkage_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "name": "finance_purchase_evidence_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "name": "finance_linkage_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "name": "finance_purchase_review_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "name": "finance_classification_complete",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "name": "finance_classification_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "name": "finance_classification_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "name": "finance_classified_part_complete",
+        "enabled": "O",
+        "deferrable": true
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "name": "finance_classified_part_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "name": "finance_no_truncate",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "name": "finance_policy_repayment_guard",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "name": "finance_receipt_repayment_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "name": "finance_settlement_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "name": "finance_domain_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_settlement_expenses",
+        "name": "finance_expense_assignment_immutable",
+        "enabled": "O",
+        "deferrable": false
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "name": "finance_domain_immutable",
+        "enabled": "O",
+        "deferrable": false
+      }
+    ],
+    "indexes": [
+      {
+        "table_name": "finance_accounts",
+        "name": "UQ_finance_account_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"UQ_finance_account_key\" ON public.finance_accounts USING btree (\"accountKey\")"
+      },
+      {
+        "table_name": "finance_accounts",
+        "name": "finance_accounts_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_accounts_pkey ON public.finance_accounts USING btree (id)"
+      },
+      {
+        "table_name": "finance_bank_decisions",
+        "name": "finance_bank_decisions_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bank_decisions_pkey ON public.finance_bank_decisions USING btree (id)"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "name": "finance_bank_observations_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bank_observations_pkey ON public.finance_bank_observations USING btree (id)"
+      },
+      {
+        "table_name": "finance_bank_observations",
+        "name": "finance_bank_observations_source_accountScope_nativeId_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_bank_observations_source_accountScope_nativeId_key\" ON public.finance_bank_observations USING btree (source, \"accountScope\", \"nativeId\")"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "name": "finance_bank_operations_identity_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bank_operations_identity_key ON public.finance_bank_operations USING btree (identity)"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "name": "finance_bank_operations_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bank_operations_pkey ON public.finance_bank_operations USING btree (id)"
+      },
+      {
+        "table_name": "finance_bank_operations",
+        "name": "finance_bank_operations_receiptId_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_bank_operations_receiptId_key\" ON public.finance_bank_operations USING btree (\"receiptId\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_bank_receipts_eventId_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_bank_receipts_eventId_key\" ON public.finance_bank_receipts USING btree (\"eventId\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_bank_receipts_idempotencyKey_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_bank_receipts_idempotencyKey_key\" ON public.finance_bank_receipts USING btree (\"idempotencyKey\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_bank_receipts_journalId_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_bank_receipts_journalId_key\" ON public.finance_bank_receipts USING btree (\"journalId\")"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_bank_receipts_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bank_receipts_pkey ON public.finance_bank_receipts USING btree (id)"
+      },
+      {
+        "table_name": "finance_bank_receipts",
+        "name": "finance_bank_receipts_sourceNamespace_accountScope_transact_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_bank_receipts_sourceNamespace_accountScope_transact_key\" ON public.finance_bank_receipts USING btree (\"sourceNamespace\", \"accountScope\", \"transactionId\")"
+      },
+      {
+        "table_name": "finance_bank_restore_reviews",
+        "name": "finance_bank_restore_reviews_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bank_restore_reviews_pkey ON public.finance_bank_restore_reviews USING btree (id)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "name": "finance_bonus_lots_available_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bonus_lots_available_key ON public.finance_bonus_lots USING btree (available)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "name": "finance_bonus_lots_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bonus_lots_pkey ON public.finance_bonus_lots USING btree (id)"
+      },
+      {
+        "table_name": "finance_bonus_lots",
+        "name": "finance_bonus_lots_reserved_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bonus_lots_reserved_key ON public.finance_bonus_lots USING btree (reserved)"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "name": "finance_bonus_reservations_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_bonus_reservations_pkey ON public.finance_bonus_reservations USING btree (id)"
+      },
+      {
+        "table_name": "finance_bonus_reservations",
+        "name": "finance_one_active_lot_click",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_one_active_lot_click ON public.finance_bonus_reservations USING btree (lot, click) WHERE ((state)::text = 'active'::text)"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "name": "finance_classification_correction_candidates_commandKey_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_classification_correction_candidates_commandKey_key\" ON public.finance_classification_correction_candidates USING btree (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_classification_correction_candidates",
+        "name": "finance_classification_correction_candidates_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_classification_correction_candidates_pkey ON public.finance_classification_correction_candidates USING btree (id)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_classification_correctio_requestId_operationVersion_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_classification_correctio_requestId_operationVersion_key\" ON public.finance_classification_correction_decisions USING btree (\"requestId\", \"operationVersion\")"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_classification_correction_decisions_commandKey_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_classification_correction_decisions_commandKey_key\" ON public.finance_classification_correction_decisions USING btree (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_classification_correction_decisions_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_classification_correction_decisions_pkey ON public.finance_classification_correction_decisions USING btree (id)"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_one_exact_approval",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_one_exact_approval ON public.finance_classification_correction_decisions USING btree (\"originalPartId\", \"baseVersion\", \"operationVersion\") WHERE ((\"candidateId\" IS NOT NULL) AND ((decision)::text = 'approved'::text))"
+      },
+      {
+        "table_name": "finance_classification_correction_decisions",
+        "name": "finance_one_exact_intent_decision",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_one_exact_intent_decision ON public.finance_classification_correction_decisions USING btree (\"originalPartId\", \"baseVersion\", \"operationVersion\", \"intentFingerprint\") WHERE (\"candidateId\" IS NOT NULL)"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "name": "finance_classification_correction_requests_commandKey_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_classification_correction_requests_commandKey_key\" ON public.finance_classification_correction_requests USING btree (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_classification_correction_requests",
+        "name": "finance_classification_correction_requests_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_classification_correction_requests_pkey ON public.finance_classification_correction_requests USING btree (id)"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "name": "finance_coverage_allocations_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_coverage_allocations_pkey ON public.finance_coverage_allocations USING btree (id)"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "name": "finance_coverage_allocations_reservationId_lotId_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_coverage_allocations_reservationId_lotId_key\" ON public.finance_coverage_allocations USING btree (\"reservationId\", \"lotId\")"
+      },
+      {
+        "table_name": "finance_coverage_allocations",
+        "name": "finance_coverage_lot_idx",
+        "unique": false,
+        "valid": true,
+        "definition": "CREATE INDEX finance_coverage_lot_idx ON public.finance_coverage_allocations USING btree (\"lotId\")"
+      },
+      {
+        "table_name": "finance_coverage_mandates",
+        "name": "finance_coverage_mandates_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_coverage_mandates_pkey ON public.finance_coverage_mandates USING btree (id)"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "name": "finance_coverage_releases_command_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_coverage_releases_command_key ON public.finance_coverage_releases USING btree (command)"
+      },
+      {
+        "table_name": "finance_coverage_releases",
+        "name": "finance_coverage_releases_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_coverage_releases_pkey ON public.finance_coverage_releases USING btree (id)"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "name": "finance_coverage_mandate_idx",
+        "unique": false,
+        "valid": true,
+        "definition": "CREATE INDEX finance_coverage_mandate_idx ON public.finance_coverage_reservations USING btree (\"mandateId\")"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "name": "finance_coverage_reservations_commandKey_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_coverage_reservations_commandKey_key\" ON public.finance_coverage_reservations USING btree (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "name": "finance_coverage_reservations_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_coverage_reservations_pkey ON public.finance_coverage_reservations USING btree (id)"
+      },
+      {
+        "table_name": "finance_coverage_reservations",
+        "name": "finance_coverage_reservations_targetId_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_coverage_reservations_targetId_key\" ON public.finance_coverage_reservations USING btree (\"targetId\")"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "name": "finance_coverage_targets_creationKey_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_coverage_targets_creationKey_key\" ON public.finance_coverage_targets USING btree (\"creationKey\")"
+      },
+      {
+        "table_name": "finance_coverage_targets",
+        "name": "finance_coverage_targets_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_coverage_targets_pkey ON public.finance_coverage_targets USING btree (id)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "name": "finance_domain_commands_actor_key_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_domain_commands_actor_key_key ON public.finance_domain_commands USING btree (actor, key)"
+      },
+      {
+        "table_name": "finance_domain_commands",
+        "name": "finance_domain_commands_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_domain_commands_pkey ON public.finance_domain_commands USING btree (id)"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "name": "finance_evidence_events_commandKey_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_evidence_events_commandKey_key\" ON public.finance_evidence_events USING btree (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_evidence_events",
+        "name": "finance_evidence_events_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_evidence_events_pkey ON public.finance_evidence_events USING btree (id)"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "name": "finance_funding_lots_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_funding_lots_pkey ON public.finance_funding_lots USING btree (id)"
+      },
+      {
+        "table_name": "finance_funding_lots",
+        "name": "finance_funding_lots_receiptId_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_funding_lots_receiptId_key\" ON public.finance_funding_lots USING btree (\"receiptId\")"
+      },
+      {
+        "table_name": "finance_journals",
+        "name": "UQ_finance_event_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"UQ_finance_event_key\" ON public.finance_journals USING btree (\"eventKey\")"
+      },
+      {
+        "table_name": "finance_journals",
+        "name": "finance_journals_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_journals_pkey ON public.finance_journals USING btree (id)"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "name": "finance_lot_transfers_child_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_lot_transfers_child_key ON public.finance_lot_transfers USING btree (child)"
+      },
+      {
+        "table_name": "finance_lot_transfers",
+        "name": "finance_lot_transfers_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_lot_transfers_pkey ON public.finance_lot_transfers USING btree (id)"
+      },
+      {
+        "table_name": "finance_outbox",
+        "name": "IDX_finance_outbox_pending",
+        "unique": false,
+        "valid": true,
+        "definition": "CREATE INDEX \"IDX_finance_outbox_pending\" ON public.finance_outbox USING btree (\"availableAt\", \"eventId\") WHERE (\"deliveredAt\" IS NULL)"
+      },
+      {
+        "table_name": "finance_outbox",
+        "name": "UQ_finance_outbox_journal",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"UQ_finance_outbox_journal\" ON public.finance_outbox USING btree (\"journalId\")"
+      },
+      {
+        "table_name": "finance_outbox",
+        "name": "UQ_finance_outbox_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"UQ_finance_outbox_key\" ON public.finance_outbox USING btree (\"idempotencyKey\")"
+      },
+      {
+        "table_name": "finance_outbox",
+        "name": "finance_outbox_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_outbox_pkey ON public.finance_outbox USING btree (\"eventId\")"
+      },
+      {
+        "table_name": "finance_policy_debt_evidence",
+        "name": "finance_policy_debt_evidence_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_policy_debt_evidence_pkey ON public.finance_policy_debt_evidence USING btree (debt)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "name": "finance_policy_order_version",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_policy_order_version ON public.finance_policy_records USING btree (((payload ->> 'orderSource'::text)), ((payload ->> 'orderId'::text)), ((payload ->> 'version'::text))) WHERE ((kind)::text = 'order'::text)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "name": "finance_policy_records_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_policy_records_pkey ON public.finance_policy_records USING btree (kind, scope, key)"
+      },
+      {
+        "table_name": "finance_policy_records",
+        "name": "finance_policy_records_sequence_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_policy_records_sequence_key ON public.finance_policy_records USING btree (sequence)"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "name": "finance_policy_recovery_slice_journal_lot_account_kind_debt_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_policy_recovery_slice_journal_lot_account_kind_debt_key ON public.finance_policy_recovery_slices USING btree (journal, lot, account, kind, debt) NULLS NOT DISTINCT"
+      },
+      {
+        "table_name": "finance_policy_recovery_slices",
+        "name": "finance_policy_recovery_slices_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_policy_recovery_slices_pkey ON public.finance_policy_recovery_slices USING btree (id)"
+      },
+      {
+        "table_name": "finance_postings",
+        "name": "IDX_finance_postings_account",
+        "unique": false,
+        "valid": true,
+        "definition": "CREATE INDEX \"IDX_finance_postings_account\" ON public.finance_postings USING btree (\"accountId\")"
+      },
+      {
+        "table_name": "finance_postings",
+        "name": "IDX_finance_postings_journal",
+        "unique": false,
+        "valid": true,
+        "definition": "CREATE INDEX \"IDX_finance_postings_journal\" ON public.finance_postings USING btree (\"journalId\")"
+      },
+      {
+        "table_name": "finance_postings",
+        "name": "finance_postings_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_postings_pkey ON public.finance_postings USING btree (id)"
+      },
+      {
+        "table_name": "finance_purchase_clicks",
+        "name": "finance_purchase_clicks_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_purchase_clicks_pkey ON public.finance_purchase_clicks USING btree (id)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "name": "finance_purchase_evidence_orderSource_orderId_version_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_purchase_evidence_orderSource_orderId_version_key\" ON public.finance_purchase_evidence USING btree (\"orderSource\", \"orderId\", version)"
+      },
+      {
+        "table_name": "finance_purchase_evidence",
+        "name": "finance_purchase_evidence_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_purchase_evidence_pkey ON public.finance_purchase_evidence USING btree (source, event)"
+      },
+      {
+        "table_name": "finance_purchase_orders",
+        "name": "finance_purchase_orders_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_purchase_orders_pkey ON public.finance_purchase_orders USING btree (\"sourceNamespace\", \"orderId\")"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "name": "finance_purchase_reviews_click_snapshotHash_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_purchase_reviews_click_snapshotHash_key\" ON public.finance_purchase_reviews USING btree (click, \"snapshotHash\")"
+      },
+      {
+        "table_name": "finance_purchase_reviews",
+        "name": "finance_purchase_reviews_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_purchase_reviews_pkey ON public.finance_purchase_reviews USING btree (id)"
+      },
+      {
+        "table_name": "finance_readiness_history",
+        "name": "PK_b5cc77cdba10d89a34b469514a4",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"PK_b5cc77cdba10d89a34b469514a4\" ON public.finance_readiness_history USING btree (id)"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "name": "finance_receipt_classifications_commandKey_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX \"finance_receipt_classifications_commandKey_key\" ON public.finance_receipt_classifications USING btree (\"commandKey\")"
+      },
+      {
+        "table_name": "finance_receipt_classifications",
+        "name": "finance_receipt_classifications_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_receipt_classifications_pkey ON public.finance_receipt_classifications USING btree (id)"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "name": "finance_classified_receipt_idx",
+        "unique": false,
+        "valid": true,
+        "definition": "CREATE INDEX finance_classified_receipt_idx ON public.finance_receipt_classified_parts USING btree (\"receiptId\", \"offsetPence\")"
+      },
+      {
+        "table_name": "finance_receipt_classified_parts",
+        "name": "finance_receipt_classified_parts_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_receipt_classified_parts_pkey ON public.finance_receipt_classified_parts USING btree (id)"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "name": "finance_receipt_repayments_journal_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_receipt_repayments_journal_key ON public.finance_receipt_repayments USING btree (journal)"
+      },
+      {
+        "table_name": "finance_receipt_repayments",
+        "name": "finance_receipt_repayments_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_receipt_repayments_pkey ON public.finance_receipt_repayments USING btree (receipt)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "name": "finance_receipt_settlements_journal_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_receipt_settlements_journal_key ON public.finance_receipt_settlements USING btree (journal)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "name": "finance_receipt_settlements_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_receipt_settlements_pkey ON public.finance_receipt_settlements USING btree (id)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "name": "finance_receipt_settlements_receipt_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_receipt_settlements_receipt_key ON public.finance_receipt_settlements USING btree (receipt)"
+      },
+      {
+        "table_name": "finance_receipt_settlements",
+        "name": "finance_receipt_settlements_source_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_receipt_settlements_source_key ON public.finance_receipt_settlements USING btree (source)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "name": "finance_refund_reviews_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_refund_reviews_pkey ON public.finance_refund_reviews USING btree (id)"
+      },
+      {
+        "table_name": "finance_refund_reviews",
+        "name": "finance_refund_reviews_source_refund_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_refund_reviews_source_refund_key ON public.finance_refund_reviews USING btree (source, refund)"
+      },
+      {
+        "table_name": "finance_settlement_expenses",
+        "name": "finance_settlement_expenses_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_settlement_expenses_pkey ON public.finance_settlement_expenses USING btree (journal)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "name": "finance_verified_debts_account_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_verified_debts_account_key ON public.finance_verified_debts USING btree (account)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "name": "finance_verified_debts_evidence_key",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_verified_debts_evidence_key ON public.finance_verified_debts USING btree (evidence)"
+      },
+      {
+        "table_name": "finance_verified_debts",
+        "name": "finance_verified_debts_pkey",
+        "unique": true,
+        "valid": true,
+        "definition": "CREATE UNIQUE INDEX finance_verified_debts_pkey ON public.finance_verified_debts USING btree (id)"
+      }
+    ],
+    "representativeHistoricalData": "UNVERIFIED_NO_AUTHORIZED_REPRESENTATIVE_FIXTURE",
+    "automaticBalanceCreation": false
+  },
+  "status": "FINANCE_SERVICE_POSTGRES_PASS",
+  "checks": [
+    "default production authority denies before money movement",
+    "partial one-penny reservation, replay and changed command conflict",
+    "concurrent reservations cannot double spend",
+    "move is atomic and verified unused failure releases without resetting provenance",
+    "withdrawal-only GBP and another owner cannot reserve",
+    "partial transfer preserves immutable origin and original responsible account",
+    "confirmed bonus and withdrawal GBP both repay debt, concurrent replay only once",
+    "ambiguous multiple debts or source slices stay pending without money movement",
+    "linked recovery requires explicit originating obligation and protects reserves and unrelated funds",
+    "outer rollback undoes reservation, ledger and command together",
+    "one click supports multiple orders; full and partial refund evidence remain review-only",
+    "receipt/finality and expense gates cannot be bypassed by order confirmation",
+    "complete committed ledger and active reservations reconcile after all scenarios",
+    "receipt without finality and finality without receipt cannot settle",
+    "real service receipt settlement preserves 80/20, 50/50 and passive ratios",
+    "settlement outer rollback undoes customer lot, journal, outbox and evidence",
+    "unverified expenses and insufficient coverage stay pending",
+    "concurrent incoming verified income and collection cannot overcollect debt",
+    "all service settlement journals and cached balances reconcile",
+    "paid bank and transfer expenses remain separate and never reduce promised customer share",
+    "unmatched reserved ledger posting is rejected at commit and rolled back",
+    "final global ledger reconciliation includes expenses and rejected reservation bypass",
+    "lifecycle has no default production authority and requires a caller transaction",
+    "missing metric or incomplete group evidence stays durable pending without consuming reserve",
+    "unique highest and ties are review-only even with synthetic metric and finality evidence",
+    "late higher order, cancellation and late older versions never reapply or lose protected reserves",
+    "full refunds before/after payout and partial refunds preserve evidence with no invented correction or debt",
+    "duplicate lifecycle evidence is idempotent; changed event and canonical version conflicts roll back",
+    "lifecycle outer rollback preserves no partial event or review",
+    "each order from one click can independently settle receipt-backed cashback without bonus duplication",
+    "automatic payout evaluation uses free own principal, no-debt and separate full-fee gates without transfer",
+    "concurrent reservation, income settlement and debt collection conserve all monetary balances",
+    "already observed cancellation or refund blocks a stale positive settlement proof",
+    "owner policy default authority denies all actions without opening public endpoints",
+    "Q1/Q4/Q5 final group selects highest, caps consumption and returns exact excess atomically",
+    "eligible product values exclude delivery/ineligible products and missing caps fail closed",
+    "Q7 first verified ingestion survives replay and is fallback after missing placement",
+    "Q2 late higher order reselects before consumption and remains review-only after consumption",
+    "Q3 cancellation returns reserved or consumed bonus, once, and never reassigns automatically",
+    "Q6 conflicting attribution is persisted and blocks final allocation without rewriting canonical order",
+    "Q9 full refund recovers entire original cashback, replay/new callbacks cannot overrecover",
+    "Q10 partial refund uses merchant revised commission HALF_UP, then full refund adds only difference",
+    "Q9 cashback already paid becomes a capped debt without charging platform share or fees",
+    "Q12 distinct confirmed debts are repaid earliest first with partial remaining debt and immutable allocations",
+    "Q12 equal debt confirmation timestamps remain pending; Q13 reserves and source age stay intact",
+    "Q15 UTC calendar month-end/leap years and mixed-age eligible portions are auditable",
+    "Q16 concurrent holds cannot double reserve, unknown outcome blocks retry, failure restores liability and fee funds",
+    "policy operation rollback erases financial postings, hold and command together",
+    "Q11 actual fee stays separate and buyer debt requires explicit applicable terms, never twice",
+    "Q14 external repayment requires registered verified bank receipt and is capped/idempotent",
+    "Q16 insufficient fee funding and missing provider/recipient evidence never create hold",
+    "Q9 partial immediate recovery creates only remaining capped debt; Q13 multiple own sources repay without overcollection",
+    "Q12 concurrent verified incoming income allocates earliest debts before free availability",
+    "Q14 only proven direct free lineage is recoverable; distant, reserved and unrelated amounts remain protected",
+    "Q13 debtor reservation changes only through separate verified atomic purchase recalculation",
+    "Q16 mismatched provider amounts and terminal financial conflicts require reconciliation",
+    "Q15 internal transfer preserves exact original calendar age for payout",
+    "Q16 failed payout can charge verified platform expense while restoring full customer principal",
+    "Q7 verification scheduling cannot replace actual server first receipt with commit order",
+    "Q4/Q5 multi-lot groups consume all only when cap permits; partial source choice remains review-only",
+    "Q4 mandatory restrictions are complete and the minimum verified cap wins",
+    "Q9 unknown payout hold blocks refund even if a stale verifier reports reconciled payout",
+    "gift purchase return requires atomic original-debtor coordination; no recipient funds become free prematurely",
+    "external repayment fails closed when a separate coverage writer may reserve the receipt",
+    "policy journals, reserved states and all cached balances reconcile globally",
+    "21 FIFO oldest eligible sources, partial final lot, replay and concurrent collection conserve pence",
+    "21 FIFO equal-date ambiguity blocks partial selection without UUID ordering",
+    "21 FIFO purchase reservation and capped application preserve age and release youngest excess",
+    "21 mixed £4 mature plus £3 young holds only £4; failed outcome preserves both liabilities",
+    "21 young-only, all-mature, fee-blocked and independent £10 trigger",
+    "21 concurrent payout holds and rollback cannot double consume mature lots",
+    "21 downward target cancels unpaid debt before restoring actually collected funds, sequential revisions and later full refund",
+    "21 fully recovered multiple-source refund restores FIFO and retains active source restrictions",
+    "21 gifted winner cancellation before/after consumption atomically recovers only linked origin debt",
+    "21 gift cancellation rollback and concurrent cancellation/collection expose no temporary free value",
+    "21 gift cancellation with missing origin authority remains reserved and distant chains remain blocked",
+    "21 unpaid debt reductions never pretend unpaid amounts were collected",
+    "21 fully paid refund debt restores multiple original owners sources without new funds",
+    "21 concurrent collection and downward correction serialize cumulative target and exact remaining debt",
+    "21 equal-age refund restoration remains pending when exact partial source choice is ambiguous",
+    "21 FIFO reserved recalculation preserves unrelated reserves and original age",
+    "21 gift cancellation after an unverified distant transfer keeps all value restricted",
+    "21 uncommitted gifted cancellation is invisible as free money to another connection",
+    "21 policy upgrade restores only associations proven in immutable policy-20 journals",
+    "21 downward correction of linked gift recovery restores recipient ownership into a restricted original-age holding",
+    "21 FIFO selects gifted-origin funds by original age and preserves parent responsibility on replay",
+    "21 simultaneous FIFO reservations cannot split or consume the same available lot twice",
+    "21 partial refund then several increased commission revisions and final full refund remain cumulative",
+    "21 simultaneous first coverage and external repayment serialize on a stable receipt anchor",
+    "21 coverage release and partial repayment are atomic, replay-safe and cannot double book",
+    "21 two repayment attempts on one verified receipt cannot collect twice",
+    "21 coverage release plus debt repayment share one outer rollback and enforce release caps",
+    "21 released coverage capacity can be reserved again without rewriting original allocations",
+    "21 coverage release rejects another owner at both service and database boundaries",
+    "21 fully released coverage permits verified income settlement but cannot be allocated again after settlement",
+    "21 revoked bank proof blocks repayment and rolls back its provisional ledger entry",
+    "21 final complete ledger, recovery slices and coverage reconcile"
+  ],
+  "role": "finance_app",
+  "syntheticFixturesOnly": true,
+  "settlementPosted": true,
+  "fullRefundPosted": false,
+  "legacyRawLifecycleRefundPosted": false,
+  "ownerPolicyFullRefundPosted": true,
+  "ownerPolicyPartialRefundPosted": true,
+  "ownerPolicyPayoutSimulatorOnly": true,
+  "policy21Verified": true,
+  "prior65ChecksSha256": "15ad3aa35545574cc4351c604da0339affbfc9f36b4bc40d77e5b0d03f4bb54d",
+  "cluster": "7699055890899750956",
+  "testDatabase": "finance_completion_isolated",
+  "archive": "C:\\Users\\serge\\cashback+\\work\\finance-completion-290ff400-9955-4219-b9a7-8584921015b2",
+  "protectedContainerIdentitiesPreserved": true,
+  "originalNetworks": "e4cc5d75e824013d910c6740efc69815448f99585648a490861e7813a486dba9\n2351cab9bb7ca011143676f45e4c7b7d7e2f378ab501c1b78aeefde1f8f3c283\nc01dcdc8bad759b6bfda473a87c9a54b8f8036e1d0056dce170be3f482969807\n3443626f6e8fa753e667cf6505073c8a04d60b5a56e857ee87f27c9b1d2b4ae3\nec92b8dc8bf82702303ffa6736f308eff460dd49ee4e1ac7148abbf373075c98\nbeeac6d46204ae9138347ab8ea419f5a98c687199724fab0af96d4433d99fda8\n8d164c40dd4b88ee1ca0d6421f4d67f999d7bb54fb6d7b48522a40beb065e51c\nf1698c4e9fb1799efff96df332082337e3c58f5a96eeeee6326db0d8b32af31c\n724a39a4372862b41e0259c2f9991c7824f193b9aba508b08b1978b29c84cdd8\n6217313e0c31c0681c1fe16d891fbbca9c12334e59d944612c0a530dcfd5548f\n85c608b290d5944cf8839507943ca46d9bbe4af068095e670b7169fc59a051d5\n5b919ffab27b32dde52b9efc8b3fa2de8487d96870b63c7894dd76c2a7e85468",
+  "cleanup": "exact owned test containers/network removed; no volumes created"
+}

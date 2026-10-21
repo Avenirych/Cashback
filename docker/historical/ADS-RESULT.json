@@ -1,0 +1,47 @@
+{
+  "status": "HISTORICAL_ADS_DEMO_RESTORED",
+  "frontendId": "d144197c52abede0eb8728cba670896e93bfeea8df3e00d181df90343cd0f056",
+  "image": "sha256:e5dc683418ab51723d30fd5e5779c0d2feb2e7fb307a09ebdd45b5ca39496c7d",
+  "media": [
+    {
+      "path": "/ads/background.png",
+      "type": "image/png",
+      "bytes": 820609,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "/ads/Coin.png",
+      "type": "image/png",
+      "bytes": 2081789,
+      "width": 1024,
+      "height": 1024
+    }
+  ],
+  "model": "Historical CSS animation; local browser counter only; no video source or server credit",
+  "indexedPages": 15,
+  "tests": 88,
+  "queries": [
+    {
+      "query": "retention",
+      "result": "/privacy"
+    },
+    {
+      "query": "кешбэк",
+      "result": "/faq"
+    },
+    {
+      "query": "cookies",
+      "result": "/cookies"
+    },
+    {
+      "query": "Direct Research Payments",
+      "result": "/services"
+    }
+  ],
+  "httpRoutesVerified": true,
+  "servedJavaScriptVerified": true,
+  "otherContainersUnchanged": true,
+  "browserVisualVerified": false,
+  "backup": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-ads-1792505636532"
+}

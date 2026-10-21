@@ -1,0 +1,75 @@
+# Opt-in local SMTP capture. Use explicitly together with compose.yaml.
+services:
+  backend:
+    environment:
+      LOCAL_DEMO_MAILPIT: "true"
+      LOCAL_DEMO_SCENARIO: cashback-local-mailpit-registration
+      DATABASE_URL: ""
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      SMTP_SECURE: "false"
+      SMTP_USER: ""
+      SMTP_PASSWORD: ""
+      SMTP_FROM: "Cashback Test <noreply@example.test>"
+      USE_ETHEREAL: "false"
+      FRONTEND_URL: http://localhost:3000
+    networks:
+      - mail-test
+
+  mailpit:
+    profiles: ["application"]
+    image: axllent/mailpit:v1.31.5@sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea
+    networks:
+      - mail-test
+    tmpfs:
+      - /mailpit-data:size=64m,mode=1777,noexec,nosuid,nodev
+    environment:
+      MP_DATABASE: /mailpit-data/messages.db
+      MP_MAX_MESSAGES: "100"
+      MP_MAX_AGE: "24h"
+      MP_MAX_MESSAGE_SIZE: "5"
+      MP_DISABLE_VERSION_CHECK: "true"
+      MP_SMTP_DISABLE_RDNS: "true"
+      MP_SMTP_ALLOWED_RECIPIENTS: '@example\.test$'
+      MP_QUIET: "true"
+      MP_VERBOSE: "false"
+      MP_BLOCK_REMOTE_CSS_AND_FONTS: "true"
+      MP_ALLOWED_HOSTS: "localhost,127.0.0.1"
+      MP_SMTP_RELAY_ALL: "false"
+
+  mailpit-ui:
+    profiles: ["application"]
+    image: nginx:1.30.5-alpine@sha256:0985e772fb9f729e6fa0980da05fca5d9c468e870eed43071545afa9d2e27d94
+    entrypoint: ["nginx"]
+    command: ["-g", "daemon off;"]
+    user: "101:101"
+    read_only: true
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    sysctls:
+      net.ipv4.ip_forward: "0"
+      net.ipv6.conf.all.forwarding: "0"
+    ports:
+      - "127.0.0.1:8025:8025"
+    networks:
+      - mail-test
+      - mail-ui
+    volumes:
+      - type: bind
+        source: ./docker/mailpit-ui.nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        bind:
+          create_host_path: false
+    tmpfs:
+      - /tmp:size=16m,mode=1777,noexec,nosuid,nodev
+    depends_on:
+      mailpit:
+        condition: service_started
+
+networks:
+  mail-test:
+    internal: true
+  # Only the UI proxy has external routing. Mailpit stays internal-only.
+  mail-ui:
+    driver: bridge

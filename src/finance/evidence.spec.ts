@@ -1,0 +1,25 @@
+import { EvidenceService, snapshotBankFacts } from './evidence.service';
+import { DisabledEvidenceAuthority } from './evidence-authority';
+import type { TrustedEvidenceAuthority } from './evidence-authority';
+import { DisabledBankEvidenceVerifier } from './bank-evidence-verifier';
+import { BankReceiptsService } from './bank-receipts.service';
+import type { FinanceEventsService } from './finance-events.service';
+import type { DataSource, EntityManager, QueryRunner } from 'typeorm';
+import { AddEvidenceControl1791893000000 } from './migrations/1791893000000-AddEvidenceControl';
+import { lockBankIdentity } from './evidence-locks';
+const id=(n:number)=>'00000000-0000-0000-0000-'+String(n).padStart(12,'0');
+const f={sourceNamespace:'synthetic:bank',accountScope:id(1),transactionId:'tx:1',currency:'GBP' as const,amountPence:1000n,receivedAt:'2026-10-14T00:00:00.000Z'};
+function setup(authority:TrustedEvidenceAuthority=new DisabledEvidenceAuthority()){
+ const ds={} as DataSource;const query=jest.fn().mockResolvedValue([]);const m={connection:ds,query,transaction:jest.fn()} as unknown as EntityManager;Object.assign(m,{queryRunner:{connection:ds,manager:m,isTransactionActive:true,isReleased:false,commitTransaction:jest.fn(),rollbackTransaction:jest.fn()}});return {ds,m,query,service:new EvidenceService(ds,authority)};
+}
+it('production authority disables approvals observation and verification',async()=>{const h=setup();await expect(h.service.verifyWithManager(h.m,id(2),f)).rejects.toThrow('not configured');await expect(h.service.observeWithManager(h.m,id(3),{commandKey:'submit:unit',evidenceReference:id(2),source:'statement',accountScope:id(1),nativeId:'tx:1',ambiguous:false})).rejects.toThrow('not configured');expect(h.query.mock.calls.filter(([s])=>s.startsWith('INSERT'))).toHaveLength(0);});
+it('legacy-only verifier cannot be used as fallback',async()=>{const h=setup(),verify=jest.fn();const service=new BankReceiptsService(h.ds,{} as FinanceEventsService,{verify});await expect(service.registerWithManager(h.m,{...f,evidenceReference:id(2),bankAccountId:id(4),unallocatedAccountId:id(5)})).rejects.toThrow('legacy fallback forbidden');expect(verify).not.toHaveBeenCalled();});
+it('disabled verifier explicitly denies new manager method and legacy method',async()=>{const v=new DisabledBankEvidenceVerifier();await expect(v.verifyWithManager()).rejects.toThrow('not configured');await expect(v.verify()).rejects.toThrow('not configured');});
+it('scope locks precede canonical identity and caller retains transaction ownership',async()=>{const h=setup();await lockBankIdentity(h.m,f);expect(h.query.mock.calls.map(([s])=>s)).toEqual(['SELECT pg_advisory_xact_lock(726405, 0)','SELECT pg_advisory_xact_lock(726404, hashtext($1))','SELECT pg_advisory_xact_lock(726403, hashtext($1))']);expect(h.m.transaction).not.toHaveBeenCalled();expect(h.m.queryRunner!.commitTransaction).not.toHaveBeenCalled();});
+it.each([false,true])('rejects inactive/released manager %s',async released=>{const h=setup();Object.assign(h.m.queryRunner!,{isTransactionActive:released,isReleased:released});await expect(h.service.verifyWithManager(h.m,id(2),f)).rejects.toThrow('Active');expect(h.query).not.toHaveBeenCalled();});
+it.each([0n,-1n,1.5,9223372036854775808n])('rejects invalid amount %s',amount=>expect(()=>snapshotBankFacts({...f,amountPence:amount as bigint})).toThrow());
+it('rejects extra fact fields and invalid timestamp without assigning midnight',()=>{expect(()=>snapshotBankFacts({...f,extra:'synthetic'} as typeof f)).toThrow();expect(()=>snapshotBankFacts({...f,receivedAt:'2026-10-14'})).toThrow();});
+it('role string from caller is not authority, trusted authorization response must permit action',async()=>{const a={verifyReviewDocument:jest.fn(),assertVerificationEnabled:jest.fn(),inspect:jest.fn(),authorize:jest.fn().mockResolvedValue({principalId:id(3),role:'evidence_submitter'})};const h=setup(a);await expect(h.service.revokeWithManager(h.m,id(3),'revoke:unit',id(4),id(5))).rejects.toThrow('authorization denied');expect(h.query.mock.calls.filter(([s])=>s.startsWith('UPDATE'))).toHaveLength(0);});
+it('evidence migration is additive and protects history and receipt associations',async()=>{const query=jest.fn();await new AddEvidenceControl1791893000000().up({query} as unknown as QueryRunner);const sql=query.mock.calls[0][0];expect(sql).toContain('finance_bank_restore_reviews');expect(sql).toContain('DEFERRABLE INITIALLY DEFERRED');expect(sql).toContain('Independent matching review required');expect(sql).not.toMatch(/bonus_transfers|public.users|DROP TABLE/);});
+
+it('normalizes reordered JSONB facts to the same canonical material',()=>{const reordered={receivedAt:f.receivedAt,amountPence:f.amountPence,currency:f.currency,transactionId:f.transactionId,accountScope:f.accountScope,sourceNamespace:f.sourceNamespace};expect(Object.keys(snapshotBankFacts(reordered))).toEqual(Object.keys(snapshotBankFacts(f)));expect(snapshotBankFacts(reordered)).toEqual(snapshotBankFacts(f));});

@@ -1,3 +1,4 @@
+import { BACKEND_URL } from "../backend";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -11,11 +12,12 @@ import {
   validUserId,
   getOnboardingMessages,
 } from "../onboarding";
+import MarketingPreferencesPanel from "../components/MarketingPreferencesPanel";
 import WiseAccountNotice from "../components/WiseAccountNotice";
 import { validateEmail } from "../utils/emailValidator";
 import "./Profile.css";
 
-const PROFILE_URL = "http://localhost:3001/auth/profile";
+const PROFILE_URL = `${BACKEND_URL}/auth/profile`;
 
 type ProfileLang = "en" | "ru" | "de" | "fr";
 
@@ -217,6 +219,9 @@ export function formatBalance(value: unknown): string {
 interface ProfileData {
   email?: string;
   name?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone_e164?: string | null;
   avatar_url?: string | null;
   balance?: unknown;
 }
@@ -543,10 +548,12 @@ export default function Profile() {
           <div className="profile-row">
             <dt>{t.name}</dt>
             <dd data-testid="profile-name">
-              {profile.name || t.notSpecified}
+              {profile.firstName || profile.name || t.notSpecified}
             </dd>
           </div>
 
+          <div className="profile-row"><dt>{lang === "ru" ? "Фамилия" : "Last name"}</dt><dd>{profile.lastName || t.notSpecified}</dd></div>
+          <div className="profile-row"><dt>{lang === "ru" ? "Телефон" : "Phone"}</dt><dd>{profile.phone_e164 || t.notSpecified}</dd></div>
           <div className="profile-row">
             <dt>{t.email}</dt>
             <dd data-testid="profile-email">
@@ -562,6 +569,8 @@ export default function Profile() {
           </div>
         </dl>
       </section>
+
+      <MarketingPreferencesPanel key={user.id} lang={lang} hasPhone={Boolean(freshProfile?.phone_e164 || user.phone_e164)} />
 
       <WiseAccountNotice lang={lang} />
 

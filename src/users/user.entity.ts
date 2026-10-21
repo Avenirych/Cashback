@@ -11,6 +11,15 @@ export class User {
   @Column({ type: 'varchar' })
   name: string;
 
+  @Column({ type: 'varchar', name: 'first_name', nullable: true, select: false })
+  firstName: string | null;
+
+  @Column({ type: 'varchar', name: 'last_name', nullable: true, select: false })
+  lastName: string | null;
+
+  @Column({ type: 'varchar', nullable: true, select: false })
+  phone_e164: string | null;
+
   @Column({ type: 'varchar', nullable: true })
   avatar_url: string | null;
 

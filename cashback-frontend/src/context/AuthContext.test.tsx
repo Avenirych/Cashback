@@ -226,3 +226,20 @@ test("auth switch ignores a previous user's status response", async () => {
   expect(auth.user?.id).toBe(99);
   expect(auth.forumUser).toBeNull();
 });
+
+ test("pending account check uses actual server state before session activation", async () => {
+  localStorage.clear(); sessionStorage.setItem("cashback_pending_auth", "pending-token");
+  let verified = false;
+  (fetch as jest.Mock).mockImplementation(async (url) => {
+    if (String(url).endsWith("/auth/profile")) return response({...mainUser,email_verified:verified});
+    if (String(url).endsWith("/forum/status")) return response({registered:false});
+    throw new Error("Unexpected offline call");
+  });
+  mount(); await waitFor(()=>expect(auth.loading).toBe(false));
+  await act(async()=>{expect(await auth.checkVerification()).toBe(false)});
+  expect(localStorage.getItem("cashback_token")).toBeNull();
+  verified=true;
+  await act(async()=>{expect(await auth.checkVerification()).toBe(true)});
+  expect(auth.user?.email_verified).toBe(true);
+  expect(localStorage.getItem("cashback_token")).toBe("pending-token");
+ });

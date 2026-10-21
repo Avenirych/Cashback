@@ -1,0 +1,654 @@
+# CASHBACK+ — IMPLEMENT ALL 16 OWNER-APPROVED FINANCIAL RULES
+
+PROJECT:
+C:\Users\serge\cashback+
+
+OWNER APPROVAL DATE:
+20 October 2026
+
+POLICY VERSION:
+FINANCIAL_BUSINESS_POLICY_2026_10_20
+
+STATUS BEFORE EXECUTION:
+BACKEND_REGRESSION_CLEAN
+SECURITY_ACTIVE
+FINANCIAL_BUSINESS_LOGIC_PARTIAL
+
+ACTIVE FRONTEND:
+http://localhost:3004/
+
+ACTIVE BACKEND:
+http://127.0.0.1:3006/
+
+## PRIMARY MISSION
+
+Implement all 16 explicitly owner-approved financial business rules in the existing isolated Cashback+ finance architecture.
+
+Preserve existing approved business rules except where the new explicit owner decisions supersede them.
+
+Complete the internal purchase, bonus, refund, debt and payout logic.
+
+Test against disposable PostgreSQL.
+
+DO NOT deploy finance into the running website.
+
+DO NOT modify the active historical database or customer balances.
+
+DO NOT activate real payments, withdrawals or merchant callbacks.
+
+## 1. READ THE CURRENT IMPLEMENTATION
+
+Read:
+
+docker/historical/FINANCIAL-BUSINESS-LOGIC-COMPLETION.md
+
+docker/historical/BACKEND-REGRESSION-AND-SECURITY-RESULT.md
+
+docker/historical/FINANCE-COMPLETION-AND-SECURITY-RELEASE.md
+
+work/BUSINESS_SPEC_6B_FINAL.md
+
+Relevant previously approved amendments and current finance architecture.
+
+Inspect:
+
+src/finance/purchase-linkage.ts
+src/finance/purchase-lifecycle.ts
+src/finance/lot-operations.ts
+src/finance/receipt-settlement.ts
+src/finance/payout-policy.ts
+
+And existing finance ledger, debt, refund, transfer, receipt, coverage, reconciliation and outbox services.
+
+Do not recreate the finance subsystem.
+
+Do not replace working code with historical drafts.
+
+## 2. APPROVAL PRIORITY
+
+The following 16 decisions are explicitly approved by the owner on 20 October 2026.
+
+They supersede conflicting older decisions within their stated scope.
+
+Previously approved rules remain binding where not superseded.
+
+Do not silently expand these decisions into unrelated policies.
+
+Use integer GBP pence, immutable journals, atomic transactions, idempotency and fail-closed evidence validation throughout.
+
+## 3. PREVIOUSLY APPROVED PURCHASE SELECTION RULES
+
+Compare orders by:
+
+Cashback-eligible product value after applicable discounts.
+
+Exclude:
+- Delivery.
+- Cashback-ineligible products.
+- Other excluded line items.
+
+Use independently verified item-level evidence or an authoritative partner-provided eligible amount.
+
+When eligible comparison amounts are equal, prefer the order placed earlier using trustworthy order-placement timestamps.
+
+The new Q7 provides a fallback when trustworthy placement timestamps cannot distinguish orders.
+
+Each eligible order can independently generate cashback.
+
+Reserved bonuses are applied to only one selected eligible order.
+
+## 4. Q1 — FINAL PURCHASE GROUP SELECTION
+
+Approved:
+
+Select the final winning order only after the seller confirms completion of the entire relevant order group AND applicable finality requirements have been met.
+
+Requirements:
+
+- Trusted seller/group completion evidence.
+- All relevant canonical orders considered.
+- Verified order eligibility.
+- Applicable return/finality conditions satisfied.
+- No guessed fixed waiting period.
+- No universal arbitrary TTL.
+- Missing or contradictory evidence results in pending_review.
+
+Do not finalize from the first callback alone.
+
+## 5. Q2 — LATE HIGHER-VALUE ORDERS
+
+Approved:
+
+Before final bonus application, recalculate the winning order when a higher eligible order is discovered.
+
+After final application, do not silently reassign the bonus.
+
+Use review and linked correcting entries where required.
+
+Requirements:
+
+- Preserve immutable original winner evidence.
+- Record later events and their versions.
+- Prevent double bonus consumption.
+- Preserve idempotency and concurrency safety.
+- Never mutate old journal entries.
+
+A late event must not silently create a second bonus application.
+
+## 6. Q3 — CANCELLED WINNING ORDER
+
+Approved owner choice B:
+
+Always return the bonus to the buyer when the selected winning order is cancelled.
+
+Do not automatically transfer that bonus to the next order.
+
+Implementation:
+
+Before final bonus consumption:
+- Verify cancellation.
+- Release the affected reservation back to the buyer's eligible available balance.
+- Preserve original lot identity, source conditions and confirmation age.
+- Prevent duplicate release.
+
+After bonus consumption:
+- Use an immutable correcting transaction.
+- Restore only the amount the buyer is entitled to receive.
+- Avoid creating money twice.
+- If the financial reversal requires recovery of previously spent value, use the existing protected debt/reconciliation machinery.
+- Never debit unrelated third-party funds.
+
+If the precise financial state cannot be reconciled, retain pending_review rather than crediting money speculatively.
+
+Do not erase the original purchase or settlement history.
+
+## 7. Q4 — MAXIMUM BONUS APPLICATION
+
+Approved:
+
+Applied bonus cannot exceed:
+
+- Verified cashback-eligible purchase value.
+- Available reserved bonus value.
+- Any additional mandatory merchant restrictions.
+
+Use the smallest applicable verified cap.
+
+Missing merchant cap/restriction evidence must not be interpreted as unlimited eligibility.
+
+Support partial application in integer pence.
+
+Never consume the excess reservation.
+
+## 8. Q5 — UNUSED BONUS RELEASE
+
+Approved:
+
+Release unused bonus only after verified completion of the order group and final calculation of the applicable bonus.
+
+Without reliable completion evidence, preserve the reservation.
+
+Requirements:
+
+- Atomic reserve-to-available movement.
+- No duplicate release.
+- Original lot conditions and age preserved.
+- Correct handling of partially consumed reservations.
+- Consistency with Q3 cancellation.
+
+Do not invent an automatic expiration deadline.
+
+## 9. Q6 — REPEATED CLICKS AND ATTRIBUTION
+
+Approved:
+
+One canonical order has one confirmed attribution.
+
+Conflicting click/partner attribution must be reviewed.
+
+Requirements:
+
+- Immutable order identity.
+- No reassignment based solely on a newer callback.
+- No duplicate cashback or bonus allocation.
+- Conflicting evidence stored for audit.
+- No money movement while attribution is unresolved.
+
+## 10. Q7 — TIE-BREAKING
+
+Approved owner choice C:
+
+For equal eligible purchase amounts:
+
+1. Prefer the earlier order using trustworthy original order-placement time.
+2. If original placement time is missing, untrusted or exactly equal, prefer the order whose verified seller message was received first.
+
+For this fallback:
+
+- Use a server-recorded first-ingestion timestamp.
+- Preserve canonical source message identity.
+- Do not use client-supplied timestamps.
+- Do not overwrite the first-ingestion timestamp during replay.
+- Do not allow duplicate callbacks to change ordering.
+- Do not use unverified message content as seller authority.
+
+If both trustworthy comparison timestamps are identical or indistinguishable, leave pending_review.
+
+Do not invent a third tie-breaker.
+
+## 11. Q8 — REFUND WINDOW AND FINALITY
+
+Approved:
+
+Use verified terms of the specific merchant/order.
+
+If the applicable return period or finality conditions are unknown, do not make cashback finally available.
+
+Requirements:
+
+- Merchant-specific trusted policy evidence.
+- Versioned applicable conditions.
+- Clear order linkage.
+- No universal 14-day/30-day assumption.
+- No arbitrary finality based on callback timing.
+
+Preserve the existing mandatory actual merchant receipt requirement.
+
+Both verified receipt and finality must hold before available cashback settlement.
+
+## 12. Q9 — FULL REFUND CASHBACK RECOVERY
+
+Approved owner choice B:
+
+When a purchase is fully refunded, recover the entire cashback accrued for that refunded purchase from the buyer.
+
+Implement:
+
+- Link refund to canonical purchase and original cashback journals.
+- Identify the total buyer cashback accrued for that order.
+- Reverse or reclaim the entire affected buyer cashback entitlement.
+- Include already paid cashback in the buyer's outstanding debt when it cannot be recovered immediately.
+- Recover debt from eligible confirmed own monetary sources under Q12/Q13.
+- Never recover more than the original affected cashback amount.
+- Subtract prior valid recoveries and reversals.
+- Never double-charge on replay or multiple refund callbacks.
+- Preserve the original immutable journal and post linked corrections.
+- Keep platform accounting separate.
+- Do not automatically charge merchant fees, platform share or unrelated amounts to the buyer.
+
+The approved full-refund recovery rule does not itself establish merchant reimbursement obligations or transfer-fee liability.
+
+Those components must use separately verified and approved evidence.
+
+If the original cashback basis or payout state cannot be reconciled, block the monetary correction pending_review.
+
+## 13. Q10 — PARTIAL REFUND CASHBACK RECALCULATION
+
+Approved:
+
+Recalculate cashback using the merchant-confirmed revised commission for the remaining eligible products.
+
+If the revised commission is unavailable or unverified, wait.
+
+Requirements:
+
+- Verify refund and remaining-order identity.
+- Verify revised commission basis and currency.
+- Recalculate the customer's applicable 80% share using existing exact rounding rules.
+- Compare against original customer cashback for that purchase.
+- Post only the verified difference using linked immutable correction entries.
+- Avoid double recovery.
+- Create a capped customer debt only when required.
+- Preserve platform accounting and separate expense evidence.
+- Do not apply an invented proportional refund formula.
+- Do not use product price as a substitute for revised commission.
+
+If partial refund affects winning-order selection or consumed bonus and the financial state cannot be safely corrected under approved rules, keep that bonus-specific operation pending_review.
+
+## 14. Q11 — BANK AND TRANSFER FEES ON REFUNDS
+
+Approved:
+
+Record actual website banking and transfer expenses separately.
+
+Recover such expenses from the buyer only where the buyer is explicitly obliged to reimburse them under approved applicable terms.
+
+Requirements:
+
+- Verified fee amount and provider evidence.
+- Separate expense journal.
+- No automatic customer fee liability.
+- No deduction from unrelated customer funds.
+- No double attribution of one expense.
+- Preserve existing customer cashback liability and platform accounting distinctions.
+
+## 15. Q12 — MULTIPLE CUSTOMER DEBTS
+
+Approved:
+
+Repay the earliest confirmed outstanding debt first.
+
+Use verified original debt-confirmation timestamps.
+
+If timestamps are equal and priority is unresolved, do not arbitrarily choose.
+
+Requirements:
+
+- Deterministic ordering for distinct verified timestamps.
+- Partial repayment.
+- Multiple eligible own funding sources.
+- Transactional locking.
+- No double collection.
+- Immutable allocation records.
+- Remaining debt balances cannot become negative.
+
+When competing debt priorities cannot be established, preserve pending_review.
+
+Do not use database row order as an undocumented tie-breaker.
+
+## 16. Q13 — ELIGIBLE DEBT RECOVERY FUNDS
+
+Approved:
+
+Use all free, confirmed monetary funds owned by the debtor.
+
+This includes eligible cashback and monetary bonus balances, not only cashback.
+
+Reserved funds may be reduced only through a separate safe purchase recalculation.
+
+Requirements:
+
+- Protect reserved funds by default.
+- Protect unrelated recipient funds.
+- Preserve transfer lineage.
+- Avoid arbitrary seizure of money.
+- Recalculate purchase obligations atomically before reducing a reservation.
+- Do not consume the same money twice.
+- Preserve original confirmation age and source conditions.
+
+If safe reservation recalculation is not possible, leave those funds reserved.
+
+## 17. Q14 — TRANSFER CHAINS AND EXTERNAL REPAYMENT
+
+Approved:
+
+Linked recovery may use only proven related free monetary amounts.
+
+More distant or insufficiently verified transfer chains require review.
+
+External debt repayment is recognized only after verified bank receipt.
+
+Requirements:
+
+- Preserve immutable transfer lineage.
+- Protect unrelated recipient balances.
+- Protect reserved and consumed recipient funds.
+- Cap linked recovery by proven original obligation.
+- Prevent double recovery across transfer paths.
+- Reconcile verified bank receipt with debt journal.
+- Do not treat a customer-declared payment as receipt confirmation.
+- Do not create an unverified external payment provider integration.
+
+## 18. Q15 — SIX-CALENDAR-MONTH PAYOUT TRIGGER
+
+Approved:
+
+For eligible balances below £10, evaluate six calendar months from the original confirmation time of each monetary receipt.
+
+Use UTC calendar months.
+
+When the target month lacks the original day number, use the last valid day of that month.
+
+Requirements:
+
+- Preserve original confirmation age across internal transfers.
+- Use exact UTC timestamps.
+- Do not substitute 180 days.
+- Evaluate independently confirmed eligible lots.
+- Exclude restricted, reserved, disputed or debt-encumbered amounts.
+- Do not treat newer receipts as resetting older confirmation dates.
+
+Implement an auditable eligibility calculation for the amount actually eligible under the six-month rule.
+
+If the payout amount or grouping of differently aged lots is not sufficiently defined by approved policy, keep that portion pending_review and report the precise unresolved question.
+
+## 19. Q16 — PAYOUT FEES, HOLDS AND UNKNOWN OUTCOMES
+
+Approved:
+
+The full verified payout fee is funded separately by the platform.
+
+Before payment, atomically reserve the eligible customer principal.
+
+If the provider outcome is unknown, reconcile before attempting another payment.
+
+Requirements:
+
+- Preserve the full customer principal.
+- Separate platform fee funding.
+- Verified fee quote and applicable provider conditions.
+- Confirmed financial coverage.
+- No outstanding disqualifying debt.
+- No restrictions.
+- Verified recipient and provider eligibility.
+- Atomic idempotent payout claim/hold.
+- Immutable payout attempt identity.
+- No duplicate payout.
+- Unknown outcome blocks retry until reconciliation.
+- Failed or unavailable payout preserves customer liability.
+- No customer fee deduction.
+
+Do not call real Wise, bank or other payment APIs.
+
+Implement the internal state machine and isolated provider simulator only.
+
+## 20. PRESERVE EXISTING FINANCIAL RULES
+
+Continue enforcing:
+
+- Merchant money actually received before cashback availability.
+- Applicable finality completed.
+- Cashback 80% customer / 20% platform.
+- Rewarded advertising 80% / 20%.
+- Research referral 50% / 50%.
+- Passive advertising 0% / 100%.
+- Ratios apply to verified relevant income, not order price.
+- Customer monetary liabilities are not platform income.
+- Banking and transfer costs are separate.
+- Positive margin and coverage gates.
+- Exact GBP integer-pence accounting.
+- Immutable balanced journal.
+- Idempotent commands and events.
+- No arbitrary expiration of confirmed monetary liabilities.
+- £10 payout trigger OR approved six-calendar-month trigger, subject to common payout gates.
+
+Do not silently change previously approved rounding or money ownership rules.
+
+## 21. IMPLEMENTATION APPROACH
+
+Extend the current isolated architecture.
+
+Prefer small focused services and migrations.
+
+Reuse:
+
+- Existing caller-owned TypeORM transactions.
+- Purchase linkage.
+- Purchase lifecycle.
+- Lot operations.
+- Receipt settlement.
+- Debt collector.
+- Bank receipt evidence.
+- Ledger.
+- Outbox.
+- Coverage and reconciliation infrastructure.
+
+Use trusted authority interfaces with default-deny production behavior.
+
+Synthetic authorities are permitted only inside isolated tests.
+
+Do not use browser data as financial authority.
+
+Avoid destructive migration rollback paths.
+
+Record policy version and relevant evidence in financial command/journal metadata where supported.
+
+## 22. TESTING — DISPOSABLE POSTGRESQL
+
+Retain all existing 33 service-level scenarios.
+
+Add tests covering:
+
+PURCHASES:
+- Eligible item values after discounts.
+- Excluded delivery and products.
+- Highest eligible order.
+- Equal amounts, earlier order placement.
+- Missing or identical placement time.
+- First verified seller-message ingestion fallback.
+- Callback replay cannot change first-ingestion order.
+- Late higher-value order before application.
+- Late order after application.
+- Cancelled winning order and buyer bonus return.
+- No automatic reassignment after cancellation.
+- Merchant bonus caps.
+- Excess reserve release after verified finality.
+- Incomplete group remains pending.
+- Conflicting attribution.
+- Multiple eligible orders each earning cashback.
+
+REFUNDS:
+- Full refund before cashback payout.
+- Full refund after cashback payout.
+- Complete cashback recovery.
+- Partial recovery and outstanding debt.
+- No over-recovery or duplicate correction.
+- Partial refund using revised verified commission.
+- Missing revised commission blocks correction.
+- Refund callback replay/conflict.
+- Separate bank/transfer fee expense.
+- No unauthorized customer fee debt.
+
+DEBT:
+- Earliest confirmed debt first.
+- Equal timestamps remain pending.
+- Multiple monetary sources.
+- Partial repayment.
+- Transfer lineage protection.
+- Restricted reservation protection.
+- Verified external repayment evidence.
+- Concurrent collection and incoming funds.
+
+PAYOUT:
+- £10 threshold.
+- Below-£10 six-calendar-month threshold.
+- UTC month-end transitions.
+- Leap years.
+- Different lot confirmation ages.
+- Transfers preserve original age.
+- Insufficient fee funding.
+- Missing provider/recipient evidence.
+- Atomic payout hold.
+- Concurrent payout attempts.
+- Unknown outcome and reconciliation.
+- Failure preserves liability.
+- No real external payment.
+
+GENERAL:
+- Transaction rollback.
+- Event version conflicts.
+- Replay idempotency.
+- Journal balance.
+- Monetary conservation.
+- Source lineage.
+- No negative balances.
+- No double reservation, collection or payout.
+
+Do not invent missing financial facts merely to pass tests.
+
+## 23. FULL REGRESSION
+
+Run:
+
+- Complete backend Jest suite.
+- Backend TypeScript and production build.
+- Complete frontend Jest suite.
+- Frontend TypeScript and production build.
+- Isolated PostgreSQL service integration.
+- Node syntax checks.
+- git diff --check.
+
+Existing verified baseline:
+
+Backend: 496/496 PASS.
+Frontend: 208/208 PASS.
+PostgreSQL finance: 33/33 PASS.
+
+Do not skip, remove or weaken tests.
+
+Report any existing frontend SiteSearch TCPWRAP separately.
+
+## 24. STRICT LIVE-SYSTEM PROTECTION
+
+The active historical PostgreSQL database must remain untouched.
+
+Do not:
+
+- Apply finance migrations to active PostgreSQL.
+- Connect FinanceModule to active AppModule.
+- Expose finance write endpoints.
+- Execute real payments.
+- Change customer balances.
+- Rebuild/restart active backend.
+- Modify active security release.
+- Restart frontend, PostgreSQL, Mailpit or bonus-api.
+- Remove protected containers, images or volumes.
+- Run broad Docker cleanup.
+- Run destructive seed/reset.
+- Enable synchronize or automatic migrations.
+
+Preserve all security release and rollback artifacts.
+
+Only positively identified disposable test resources may be removed after verification.
+
+## 25. REQUIRED REPORT
+
+Create:
+
+docker/historical/FINANCIAL-POLICY-2026-10-20-IMPLEMENTATION.md
+
+Include:
+
+1. The 16 approved owner decisions.
+2. Previously approved purchase-selection rules.
+3. Exact interpretation implemented for each rule.
+4. Services and migrations created/changed.
+5. Full refund correction and customer debt handling.
+6. Partial refund commission recalculation.
+7. Cancelled winner bonus return.
+8. Tie-breaking using verified seller-message ingestion.
+9. Multiple-debt priority.
+10. Six-month payout calculation.
+11. Atomic payout hold and unknown-outcome handling.
+12. Complete PostgreSQL integration test results.
+13. Complete backend/frontend regression results.
+14. Any remaining decisions that cannot safely be inferred.
+15. Exact evidence that live services, financial balances and database were preserved.
+
+FINAL STATUS:
+
+FINANCIAL_POLICY_IMPLEMENTED_IN_ISOLATION
+
+Only if the approved rules are implemented and verified.
+
+Otherwise:
+
+FINANCIAL_POLICY_PARTIAL
+
+For each remaining blocker, explain why the 16 approved rules are insufficient and what exact additional owner decision is required.
+
+Never report financial production readiness solely because isolated tests pass.
+
+PRIMARY GOAL:
+
+Implement the owner's approved financial policy accurately, preserve all customer money and history, and prepare a fully tested isolated financial subsystem for a later separately authorized production integration.

@@ -1,12 +1,14 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProductOffers from "./pages/ProductOffers";
+import { BonusesProvider } from "./context/BonusesContext";
 import { AuthProvider } from "./context/AuthContext";
 import {
   LanguageProvider,
   useLang,
 } from "./context/LanguageContext";
 
+import SiteSearch from "./components/SiteSearch";
 import Header from "./components/Header";
 import CookieConsent from "./components/CookieConsent";
 import BonusGuard from "./components/BonusGuard";
@@ -15,6 +17,9 @@ import ForumGuard from "./components/ForumGuard";
 import ForumRegister from "./pages/ForumRegister";
 import ForumRules from "./pages/ForumRules";
 
+import FAQ from "./pages/FAQ";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CookiePolicy from "./pages/CookiePolicy";
 import Welcome from "./pages/Welcome";
 import AboutUs from "./pages/AboutUs";
 import Services from "./pages/Services";
@@ -51,6 +56,10 @@ export function AppRoutes() {
         <Route path="/about" element={<AboutUs lang={lang} />} />
         <Route path="/services" element={<Services lang={lang} />} />
         <Route path="/contacts" element={<Contacts lang={lang} />} />
+        <Route path="/privacy" element={<PrivacyPolicy lang={L} />} />
+        <Route path="/search" element={<SiteSearch resultsPage />} />
+        <Route path="/faq" element={<FAQ lang={L} />} />
+        <Route path="/cookies" element={<CookiePolicy />} />
         <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/forum/rules" element={<ForumRules />} />
 
@@ -145,7 +154,7 @@ export default function App() {
     <BrowserRouter>
       <LanguageProvider>
         <AuthProvider>
-          <AppRoutes />
+          <BonusesProvider><AppRoutes /></BonusesProvider>
         </AuthProvider>
       </LanguageProvider>
     </BrowserRouter>

@@ -4,6 +4,7 @@ import Coint1 from "../assets/Coint1.png";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import { forumAvatarUrl } from "../forum";
+import SiteSearch from "./SiteSearch";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const labels: Record<string, Record<string, string>> = {
@@ -115,6 +116,8 @@ export default function Header() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "16px",
         padding: "12px 24px",
         background: "linear-gradient(90deg, #f5e8d3, #e3d2b8, #d9c4a8)",
         borderBottom: "1px solid rgba(0,0,0,0.08)",
@@ -156,7 +159,8 @@ export default function Header() {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "24px",
+          gap: "16px",
+          flexWrap: "wrap",
         }}
       >
         <Link to="/about" style={navLinkStyle}>
@@ -170,6 +174,7 @@ export default function Header() {
         </Link>
       </nav>
 
+      <SiteSearch />
       {/* RIGHT PANEL */}
       <div
         style={{

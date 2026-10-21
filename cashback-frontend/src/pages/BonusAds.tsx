@@ -5,8 +5,9 @@ import { useLang } from "../context/LanguageContext";
 import { useOnboarding } from "../onboarding";
 import "./BonusAds.css";
 
-const BACKGROUND_URL = "/ads/background.png";
-const COIN_URL = "/ads/coin.png";
+const ASSET_BASE = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
+const BACKGROUND_URL = `${ASSET_BASE}/ads/background.png`;
+const COIN_URL = `${ASSET_BASE}/ads/Coin.png`;
 const DURATION_MS = 5000;
 
 type Reward = 1 | 2 | 3;
@@ -26,7 +27,7 @@ const messages = {
   RU: {
     consent: "Согласен смотреть рекламу",
     cost: (value: Reward) =>
-      `Стоимость — ${value} ${value === 1 ? "бонус" : "бонуса"}`,
+      `За полный просмотр — ${value} ${value === 1 ? "бонус" : "бонуса"}`,
     session: "За текущую сессию",
     daily: "За сегодня",
     unit: "бонусов",
@@ -36,10 +37,10 @@ const messages = {
     loading: "Загрузка изображений…",
     waiting: "Подождите…",
     imageError:
-      "Не удалось загрузить фон или монету. Проверь пути к изображениям.",
+      "Не удалось загрузить демонстрацию. Обновите страницу и попробуйте снова.",
     storageError:
       "Дневной результат не удалось сохранить. Он доступен только до ухода со страницы.",
-    demo: "Тестовые бонусы. Реальный баланс не изменяется.",
+    demo: "Демонстрационная анимация, не видеоролик. Тестовый счётчик хранится только в этом браузере и не связан с бонусами обмена на форуме. Реальный баланс не изменяется.",
     brandLine: "More video, more rewards",
   },
   EN: {
@@ -55,10 +56,10 @@ const messages = {
     loading: "Loading images…",
     waiting: "Please wait…",
     imageError:
-      "Could not load the background or coin. Check the image paths.",
+      "Could not load the demonstration. Refresh the page and try again.",
     storageError:
       "Could not save today's total. It is available only until you leave this page.",
-    demo: "Test bonuses. Your real balance is not changed.",
+    demo: "Demo animation, not a video. This browser-only test counter is separate from forum exchange bonuses. Your real balance is not changed.",
     brandLine: "More video, more rewards",
   },
   DE: {

@@ -1,0 +1,4 @@
+# Verified wheel bytes; CPython 3.13 / linux amd64 only.
+# See dependency-provenance.json; do not regenerate from guessed hashes.
+psycopg[binary]==3.2.10 --hash=sha256:ab5caf09a9ec42e314a21f5216dbcceac528e0e05142e42eea83a3b28b320ac3
+psycopg-binary==3.2.10 --hash=sha256:a92ff1c2cd79b3966d6a87e26ceb222ecd5581b5ae4b58961f126af806a861ed

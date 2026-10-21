@@ -1,0 +1,116 @@
+{
+  "status": "CASHBACK_HISTORICAL_RUNNING",
+  "canonical": "C:\\Users\\serge\\cashback+",
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "branch": "cutover/historical-03573b7-20261020",
+  "rollbackArchive": "C:/Users/serge/AppData/Local/Temp/cashback-final-cutover-c21f3bb8a7b04bc6bceee8ff308aaa77",
+  "services": [
+    {
+      "service": "frontend",
+      "id": "002916bc8e42acc3e182c87c327fcfe6cf1578039b26b462eea91c44a7d0dec2",
+      "image": "sha256:c2fa8fa85cd0bbbc5f382738118a1099b1b76836441c472ac5f9ad25817e8667",
+      "status": "running",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3004"
+          }
+        ]
+      },
+      "mounts": []
+    },
+    {
+      "service": "backend",
+      "id": "947fe77fcc4ca378538e45b7879cf5af8fe852a524cdd0f7c3370717d09a2567",
+      "image": "sha256:14ae02af98b8c4da4860a22683c39a0c6f1727e5b383cf5b3c1b6ef09a13174e",
+      "status": "running",
+      "ports": {
+        "3006/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3006"
+          }
+        ]
+      },
+      "mounts": [
+        {
+          "type": "volume",
+          "name": "cashback-historical-03573b7-local-avatars",
+          "destination": "/app/public/avatars"
+        }
+      ]
+    },
+    {
+      "service": "historical-postgres",
+      "id": "48dca500f37c30e2787c9510e8b9111917c19136ea970d036ff43ca4570bec84",
+      "image": "sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+      "status": "running",
+      "ports": {
+        "5432/tcp": null
+      },
+      "mounts": [
+        {
+          "type": "volume",
+          "name": "cashback-historical-03573b7-local-pgdata",
+          "destination": "/var/lib/postgresql/data"
+        }
+      ]
+    },
+    {
+      "service": "historical-mailpit",
+      "id": "4f60adf3ecbb3bd57c731e8d4bc25422c08c7843187ab8fad4a08d141fa0d636",
+      "image": "sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea",
+      "status": "running",
+      "ports": {
+        "8025/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8036"
+          }
+        ]
+      },
+      "mounts": []
+    }
+  ],
+  "urls": {
+    "frontend": "http://localhost:3004/",
+    "backend": "http://127.0.0.1:3006",
+    "mailpit": "http://127.0.0.1:8036"
+  },
+  "database": {
+    "container": "48dca500f37c30e2787c9510e8b9111917c19136ea970d036ff43ca4570bec84",
+    "cluster": "7698666936429441062",
+    "name": "cashback_historical_03573b7",
+    "oid": 16384,
+    "role": "cashback_hist_runtime",
+    "volume": "cashback-historical-03573b7-local-pgdata",
+    "users": 0,
+    "evidence": "GET /topics returned 200 []; pg_stat_activity cashback_hist_runtime from backend 172.25.0.3"
+  },
+  "tests": {
+    "backendTypecheck": "PASS",
+    "frontendTypecheck": "PASS",
+    "offlineSuites": 16,
+    "offlineTests": 169,
+    "backendBuild": "PASS npm ci + nest build",
+    "frontendBuild": "PASS npm ci + react-scripts build with existing warnings",
+    "publicPages": "200 /, /register, /forum",
+    "routes": "200 /forum/rules; 200 /topics; 401 /auth/profile and /forum/status; POST auth/register and forum/register mapped in startup logs",
+    "cors": "204; exact localhost:3004 origin",
+    "frontendServedApi": "127.0.0.1:3006",
+    "liveRegistration": "NOT_PERFORMED"
+  },
+  "rollback": "NOT_REQUIRED_OLD_CONTAINERS_RETAINED",
+  "existingResourceIds": "PRESERVED",
+  "inventory": {
+    "containers": 16,
+    "networks": 12,
+    "volumes": 5
+  },
+  "technicalChanges": "Prepared environment-only config, explicit JWT, disabled synchronize/migrations/extensions, shared API and CORS; frontend Dockerfile adds build-time compilation",
+  "knownWarnings": "Historical npm audit: backend 32 including 1 critical; frontend 102 including 64 high. No automatic dependency updates.",
+  "emailVerificationReport": "docker/historical/EMAIL-VERIFICATION-RESULT.json",
+  "confirmationUiReport": "docker/historical/EMAIL-CONFIRMATION-UI-RESULT.json",
+  "forumDemoReport": "docker/historical/FORUM-DEMO-RESULT.json"
+}

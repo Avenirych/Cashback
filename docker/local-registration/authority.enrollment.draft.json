@@ -1,0 +1,43 @@
+{
+  "status": "DRAFT",
+  "target": {
+    "context": "desktop-linux",
+    "daemonId": "ec3d6303-4d66-4410-8317-b739cebc046c",
+    "project": "cashback-registration-20261016-4f8c2a96b17d",
+    "container": "cashback-registration-20261016-4f8c2a96b17d-postgres-test-1",
+    "containerId": "e0818fd64b0149f50ed975d8a519ffc4b615dcff9544a403f224fd82a2291d88",
+    "image": "postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+    "platform": "linux/amd64",
+    "database": "cashback_docker_test",
+    "oid": "16384",
+    "systemIdentifier": "7697703338450784294",
+    "serverVersionNum": "170011",
+    "owner": "registration_bootstrap",
+    "volume": "cashback-registration-20261016-4f8c2a96b17d-pg17-data",
+    "network": "cashback-registration-20261016-4f8c2a96b17d-database"
+  },
+  "anchor": {
+    "issuer": "registration-enrollment-authority",
+    "keyId": null,
+    "publicKeyPem": null,
+    "endpoint": null,
+    "audience": "cashback-registration-migration",
+    "purpose": "enrollment"
+  },
+  "ownerPublicKeyFile": "C:\\approved-registration-infrastructure\\public\\enrollment.owner-review.pem",
+  "privateKeyFile": "C:\\approved-registration-infrastructure\\enrollment\\enrollment-v1.private.pem",
+  "ledgerDirectory": "C:\\approved-registration-infrastructure\\ledger",
+  "payloadDirectory": "C:\\approved-registration-infrastructure\\enrollment\\reviewed-payloads",
+  "tls": {
+    "certificateFile": "C:\\approved-registration-infrastructure\\enrollment\\tls-certificate.pem",
+    "privateKeyFile": "C:\\approved-registration-infrastructure\\enrollment\\tls-key.pem",
+    "clientCaFile": "C:\\approved-registration-infrastructure\\enrollment\\client-ca.pem",
+    "ownerCertificateSha256": null,
+    "consumerCertificateSha256": null
+  },
+  "listen": {
+    "host": "127.0.0.1",
+    "port": 8445
+  },
+  "ownerPublicKeySha256": null
+}

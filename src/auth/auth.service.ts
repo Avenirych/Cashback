@@ -3,11 +3,13 @@ import {
   BadRequestException,
   UnauthorizedException,
   Logger,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { UsersService } from '../users/users.service';
+import { normalizePhone } from '../users/phone-normalization';
 import { User } from '../users/user.entity';
 import { MailService } from '../mail/mail.service';
 
@@ -30,6 +32,7 @@ function isValidEmailFormat(email: string): boolean {
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private readonly resendCooldown = new Map<string, number>();
 
   constructor(
     private readonly usersService: UsersService,
@@ -66,6 +69,9 @@ export class AuthService {
       id: user.id,
       email: user.email,
       name: user.name,
+      firstName: user.firstName ?? null,
+      lastName: user.lastName ?? null,
+      phone_e164: user.phone_e164 ?? null,
       avatar_url: user.avatar_url,
       balance: user.balance,
       email_verified: user.email_verified,
@@ -73,7 +79,7 @@ export class AuthService {
     };
   }
 
-  async register(email: string, password: string, name: string) {
+  async register(email: string, password: string, name: string, details?: { firstName?: unknown; lastName?: unknown; phone_e164?: unknown }) {
     if (
       typeof email !== 'string' ||
       typeof password !== 'string' ||
@@ -85,9 +91,10 @@ export class AuthService {
       throw new BadRequestException('Email, password, and name are required');
     }
 
-    if (password.length < 3) {
-      throw new BadRequestException('Password must be at least 3 characters');
-    }
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/\d/.test(password) || !/[^A-Za-z0-9]/.test(password)) throw new BadRequestException('Password must contain at least 8 characters, an uppercase letter, a lowercase letter, a digit, and a special character');
+    if (typeof details?.firstName !== 'string' || typeof details.lastName !== 'string' || details.firstName.trim().length < 2 || details.lastName.trim().length < 2 || details.firstName.trim().length > 100 || details.lastName.trim().length > 100) throw new BadRequestException('First and last names are required (2–100 characters each)');
+    const firstName = details.firstName.trim(), lastName = details.lastName.trim();
+    const phone = normalizePhone(details.phone_e164);
 
     if (name.trim().length < 2) {
       throw new BadRequestException('Name must be at least 2 characters');
@@ -107,16 +114,18 @@ export class AuthService {
     const passwordHash = await bcrypt.hash(password, 10);
     const emailToken = this.generateEmailToken();
 
-    const user = await this.usersService.create({
+    let user: User;
+    try { user = await this.usersService.create({
       email: normalizedEmail,
-      name: name.trim(),
+      name: `${firstName} ${lastName}`,
+      firstName, lastName, phone_e164: phone,
       password: passwordHash,
       avatar_url: null,
       balance: 0,
       email_verified: false,
       email_token: emailToken,
       email_token_expires_at: this.getEmailTokenExpiration(),
-    });
+    }); } catch { throw new ServiceUnavailableException('Registration temporarily unavailable'); }
 
     let verificationEmailSent = false;
     let previewUrl: string | null = null;
@@ -130,7 +139,7 @@ export class AuthService {
       verificationEmailSent = true;
     } catch (error) {
       this.logger.error(
-        `Verification email could not be sent for user ID ${user.id}: ${error}`,
+        `Verification email delivery failed for user ID ${user.id}`,
       );
     }
 
@@ -138,7 +147,7 @@ export class AuthService {
       access_token: this.createAccessToken(user),
       user: this.safeUser(user),
       verification_email_sent: verificationEmailSent,
-      preview_url: this.isProduction ? undefined : previewUrl,
+
       message: verificationEmailSent
         ? 'Registration successful. Please check your email to verify your account.'
         : 'Account created, but the verification email could not be sent. Please request another email.',
@@ -150,27 +159,10 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired verification token');
     }
 
-    const user = await this.usersService.findByEmailToken(token);
-
-    if (!user) {
-      throw new BadRequestException('Invalid or expired verification token');
-    }
-
-    const expiresAt = user.email_token_expires_at;
-
-    if (
-      !expiresAt ||
-      !Number.isFinite(new Date(expiresAt).getTime()) ||
-      new Date(expiresAt).getTime() <= Date.now()
-    ) {
-      throw new BadRequestException('Invalid or expired verification token');
-    }
-
-    const updatedUser = await this.usersService.update(user.id, {
-      email_verified: true,
-      email_token: null,
-      email_token_expires_at: null,
-    });
+    let updatedUser: User | null;
+    try { updatedUser = await this.usersService.consumeEmailToken(token); }
+    catch { throw new ServiceUnavailableException('Verification temporarily unavailable. Check account status before retrying.'); }
+    if (!updatedUser) throw new BadRequestException('Invalid or expired verification token');
 
     return {
       access_token: this.createAccessToken(updatedUser),
@@ -180,28 +172,33 @@ export class AuthService {
   }
 
   async resendVerificationEmail(email: string) {
-    if (typeof email !== 'string' || !email.trim()) {
+    if (typeof email !== 'string' || !email.trim() || email.length > 320) {
       throw new BadRequestException('Email is required');
     }
 
     const normalizedEmail = this.normalizeEmail(email);
-    const user = await this.usersService.getByEmail(normalizedEmail);
+    const now = Date.now();
+    for (const [key, expiry] of this.resendCooldown) if (expiry <= now) this.resendCooldown.delete(key);
+    const limited = this.resendCooldown.has(normalizedEmail) || this.resendCooldown.size >= 10000;
+    if (!limited) this.resendCooldown.set(normalizedEmail, now + 60000);
 
     const response: { message: string; preview_url?: string | null } = {
       message:
         'If this account exists and requires verification, a verification email has been sent.',
     };
 
+    if (limited) return response;
+    const user = await this.usersService.getByEmail(normalizedEmail);
     if (!user || user.email_verified) {
       return response;
     }
 
     const emailToken = this.generateEmailToken();
 
-    await this.usersService.update(user.id, {
+    try { await this.usersService.update(user.id, {
       email_token: emailToken,
       email_token_expires_at: this.getEmailTokenExpiration(),
-    });
+    }); } catch { this.logger.error('Verification resend update failed'); return response; }
 
     try {
       const previewUrl = await this.mailService.sendResendVerificationEmail(
@@ -209,12 +206,10 @@ export class AuthService {
         emailToken,
         user.name,
       );
-      if (!this.isProduction) {
-        response.preview_url = previewUrl;
-      }
+
     } catch (error) {
       this.logger.error(
-        `Verification email resend failed for user ID ${user.id}: ${error}`,
+        `Verification email resend failed for user ID ${user.id}`,
       );
     }
 
@@ -251,7 +246,7 @@ export class AuthService {
   }
 
   async profile(user: { id: number; email: string; name?: string }) {
-    const dbUser = await this.usersService.getById(user.id);
+    const dbUser = await this.usersService.getById(user.id, true);
 
     if (!dbUser) {
       throw new UnauthorizedException('User not found');

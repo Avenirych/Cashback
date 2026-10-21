@@ -1,0 +1,57 @@
+{
+  "policy": "FINANCIAL_BUSINESS_POLICY_2026_10_20",
+  "scope": "ISOLATED_ONLY_NO_DEPLOYMENT_AUTHORITY",
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "originalRestoredFiles": 43,
+  "originalRestoredFilesChanged": [],
+  "files": [
+    {
+      "path": "src/finance/owner-policy.ts",
+      "sha256": "c8448b2083b8f2d82b2ecffda57e966f6ac1b65b7dd6ae00ddf44fd8e42984eb"
+    },
+    {
+      "path": "src/finance/owner-policy.spec.ts",
+      "sha256": "56cb4f157ab734387d1655fbae9ca15411748d79b4a418075576a011f032f124"
+    },
+    {
+      "path": "src/finance/policy-context.ts",
+      "sha256": "584d908844060eee8352425f9bfc4132c52974074c12dc2ea3dd05cca6c9d522"
+    },
+    {
+      "path": "src/finance/policy-purchase.ts",
+      "sha256": "a714579cce799d3620dea90065db7e0241e294f4bc67ab56dad165f5a007a514"
+    },
+    {
+      "path": "src/finance/policy-debt-refund.ts",
+      "sha256": "9e7af209bcc32b826711605b095ac1b4ed9a7ef59e244e45b57fcb3384098821"
+    },
+    {
+      "path": "src/finance/policy-payout.ts",
+      "sha256": "f13345a88587e16676aa22161c5dc9d92ee3986f107a39e04acec0683d8cb8cf"
+    },
+    {
+      "path": "src/finance/migrations/1792530000000-AddOwnerPolicyRecords.ts",
+      "sha256": "cc0aff5344b6b97c64385c87f89da1dbaa4935d4f0b34ea5c022cb302d27532a"
+    },
+    {
+      "path": "src/finance/payout-policy.ts",
+      "sha256": "f03aca61884b3dcb2d988fde334cb7285521c38f4853173a3db091c80184ee0b"
+    },
+    {
+      "path": "src/finance/receipt-settlement.ts",
+      "sha256": "aceda0846b6ba9e103dea90691d707cf88414569ac1d2f22353e9516a73f0485"
+    },
+    {
+      "path": "docker/historical/owner-policy-scenarios.cjs",
+      "sha256": "f6ae25cd50574608d085cf1a1c5ea767422f46440330f222c546309feebdc400"
+    },
+    {
+      "path": "docker/historical/finance-service-scenarios.cjs",
+      "sha256": "33cfd71a9d873d54b806af41ea04d08aa4628d3f6effc93fcc768e2bb4db00db"
+    },
+    {
+      "path": "docker/historical/finance-service-postgres.cjs",
+      "sha256": "adfa45b8cc7d21651f494a6b47fdc8f0ac00210c838c9bc71a7ce5d03ce91918"
+    }
+  ]
+}

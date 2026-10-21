@@ -1,0 +1,80 @@
+{
+  "status": "EMAIL_CONFIRMATION_STILL_BLOCKED",
+  "sourceAndActivation": "PASS",
+  "rootCause": "Confirmed missing local-mailbox discovery: old served JS had Check email but no Mailpit URL/link; local mail was captured instead of delivered externally. User exact prior click sequence cannot be reconstructed without browser evidence.",
+  "changedFiles": [
+    "cashback-frontend/src/pages/Register.tsx",
+    "cashback-frontend/src/localTestMailbox.ts",
+    "cashback-frontend/src/pages/EmailFlow.test.tsx"
+  ],
+  "frontend": {
+    "id": "f7543d1d5a8b36a2edcbb5370592629fc077a74b9412c92c5ff7e58857bb8b4f",
+    "image": "sha256:c988eb10af17d212c3be6a9b4d494198ae266822e2a190b6defcfdeb2b7af4bb",
+    "url": "http://localhost:3004/register"
+  },
+  "backend": {
+    "id": "a636426365e24910403c4f4afcae421dc06aeedb084a42950e2ea83b5b5e40a5",
+    "url": "http://127.0.0.1:3006",
+    "changed": false,
+    "restarted": false
+  },
+  "mailbox": "http://127.0.0.1:8036/",
+  "verificationRoute": "http://localhost:3004/verify-email?token=<single-use token from email>",
+  "profile": "http://localhost:3004/profile",
+  "guard": {
+    "mode": "development",
+    "origin": "http://localhost:3004",
+    "api": "http://127.0.0.1:3006",
+    "otherwise": "HIDDEN"
+  },
+  "validation": {
+    "frontendSuites": 4,
+    "frontendTests": 62,
+    "typecheck": "PASS",
+    "build": "PASS_WITH_EXISTING_WARNINGS",
+    "servedJavaScript": "CONFIRMED_NEW_TITLE_MAILPIT_LINK_API_AND_SUCCESS_TEXT",
+    "browser": "UNAVAILABLE apps=[] browsers=[]",
+    "screenshot": "NOT_AVAILABLE"
+  },
+  "live": {
+    "stage": "DONE",
+    "browserUi": "UNVERIFIED_NO_BROWSER_AVAILABLE",
+    "externalEmailSent": false,
+    "originalUserCount": 2,
+    "originalMailCount": 6,
+    "testUserId": 5,
+    "statusBefore": false,
+    "unverifiedProtectedStatus": 403,
+    "mailDelivery": "TWO_MESSAGES_CAPTURED_FOR_EXACT_TEST_RECIPIENT",
+    "resend": "PASS_ROTATION_COOLDOWN_GENERIC_RESPONSE",
+    "emailLinkFrontendHttp": 200,
+    "concurrentTokenStatuses": [
+      200,
+      400
+    ],
+    "reusedTokenStatus": 400,
+    "statusAfter": true,
+    "actualDatabase": {
+      "verified": true,
+      "tokenNull": true,
+      "expiryNull": true
+    },
+    "profile": {
+      "api": 200,
+      "page": 200,
+      "uiNavigation": "MOCK_VERIFIED_ONLY"
+    },
+    "status": "LIVE_EMAIL_PROTOCOL_PASS_BROWSER_UI_UNVERIFIED",
+    "stageBeforeCleanup": "ATOMIC_VERIFICATION",
+    "accountCleanup": "EXACT_ID_EMAIL_NAME_DELETED",
+    "messagesDeleted": 2,
+    "originalUsersUnchanged": true,
+    "originalMessagesPreserved": true,
+    "cleanup": "PASS"
+  },
+  "remainingBlocker": "Actual visual browser rendering/click navigation unverified; do not label UI fixed solely on mocks/HTTP.",
+  "backups": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-confirmation-ui-8755d8dec3854c549b94456a9a20523b",
+  "patch": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-confirmation-ui-8755d8dec3854c549b94456a9a20523b\\confirmation-ui.patch",
+  "unrelatedContainers": "UNCHANGED",
+  "schemaChanged": false
+}

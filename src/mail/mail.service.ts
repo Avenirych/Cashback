@@ -24,6 +24,7 @@ export class MailService {
       if (process.env.SMTP_HOST) {
         this.transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST,
+          connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 10000,
           port: parseInt(process.env.SMTP_PORT || '587', 10),
           secure: process.env.SMTP_SECURE === 'true',
           auth: {
@@ -64,7 +65,7 @@ export class MailService {
       );
     } catch (error) {
       this.transporter = null;
-      this.logger.error(`Failed to initialize mail transporter: ${error}`);
+      this.logger.error('Mail transport initialization failed');
     }
   }
 
@@ -95,15 +96,7 @@ export class MailService {
       token,
     )}`;
 
-    if (this.mode === 'preview') {
-      if (this.isProduction) {
-        throw new Error('Mail transporter is not configured');
-      }
-      this.logger.log(
-        `[local preview] Verification link for ${email}: ${link}`,
-      );
-      return link;
-    }
+    if (this.mode === 'preview') throw new Error('Mail delivery is not configured');
 
     if (!this.transporter) {
       throw new Error('Mail transporter is not initialized');
@@ -116,21 +109,20 @@ export class MailService {
         process.env.SMTP_FROM ||
         'Cashback+ <noreply@cashback-plus.app>',
       to: email,
-      subject: 'Verify your email address — Cashback+',
+      subject: 'Подтвердите электронную почту — Cashback+',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #0d6efd;">Welcome to Cashback+, ${safeName}!</h2>
-          <p>Please verify your email address to activate your account.</p>
+          <h2 style="color: #0d6efd;">Добро пожаловать в Cashback+, ${safeName}!</h2>
+          <p>Подтвердите электронную почту, чтобы завершить регистрацию.</p>
           <p style="margin: 24px 0;">
             <a href="${link}" style="display:inline-block;padding:12px 24px;background:#0d6efd;color:#fff;text-decoration:none;border-radius:6px;font-weight:bold;">
-              Verify Email
+              Подтвердить почту
             </a>
           </p>
-          <p>Or copy this link into your browser:</p>
-          <p style="word-break: break-all; color: #666;">${link}</p>
+
           <hr style="margin: 24px 0; border: none; border-top: 1px solid #ddd;">
           <p style="font-size: 12px; color: #999;">
-            This link expires in 24 hours. If you did not create this account, ignore this email.
+            Ссылка действует 24 часа и может быть использована только один раз. Если вы не регистрировались, проигнорируйте письмо.
           </p>
         </div>
       `,
@@ -138,7 +130,7 @@ export class MailService {
 
     if (this.mode === 'ethereal') {
       const previewUrl = nodemailer.getTestMessageUrl(info) || null;
-      this.logger.log(`Verification email preview: ${previewUrl}`);
+
       return previewUrl;
     }
 

@@ -18,6 +18,14 @@ export default function Footer({ lang }: FooterProps) {
         marginTop: "40px",
       }}
     >
+      <nav aria-labelledby="footer-information">
+        <h2 id="footer-information" style={{ fontSize: "18px", margin: "0 0 16px" }}>{t.footerInformation}</h2>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", marginBottom: "16px", lineHeight: 1.6 }}>
+          <Link to="/privacy">{t.footerPrivacy}</Link>
+          <Link to="/faq">{t.footerFaq}</Link>
+          <Link to="/cookies">{t.footerCookies}</Link>
+        </div>
+      </nav>
       <div style={{ marginBottom: "10px" }}>
         <Link to="/terms" style={{ marginRight: "20px" }}>
           {t.terms ?? "Terms"}

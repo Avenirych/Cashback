@@ -1,0 +1,55 @@
+{
+  "security": "SECURITY_ACTIVE",
+  "backend": "feb2181f7ababf41d35968ede8a4d325cf6d1257752ab4b15f9397c755fdc0f6",
+  "rollbackStopped": true,
+  "services": [
+    {
+      "id": "feb2181f7ababf41d35968ede8a4d325cf6d1257752ab4b15f9397c755fdc0f6",
+      "name": "/cashback-historical-03573b7-local-backend-1",
+      "image": "sha256:9975cdeabba8f95f774fb23cf5133bf89bd26967ff47b4814d34718c5a0db153",
+      "ports": {
+        "3006/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3006"
+          }
+        ]
+      }
+    },
+    {
+      "id": "3d98e1595ae6cb6600a2460313cf020f154b2ec4c4595fe24b4ff37d66e675da",
+      "name": "/cashback-historical-03573b7-local-frontend-1",
+      "image": "sha256:4286e712c805aaf379b674025762f156e87e2a4f75c2bee4188c7bbc1aa9ffb6",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3004"
+          }
+        ]
+      }
+    },
+    {
+      "id": "4f60adf3ecbb3bd57c731e8d4bc25422c08c7843187ab8fad4a08d141fa0d636",
+      "name": "/cashback-historical-03573b7-local-historical-mailpit-1",
+      "image": "sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea",
+      "ports": {
+        "8025/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8036"
+          }
+        ]
+      }
+    },
+    {
+      "id": "48dca500f37c30e2787c9510e8b9111917c19136ea970d036ff43ca4570bec84",
+      "name": "/cashback-historical-03573b7-local-historical-postgres-1",
+      "image": "sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+      "ports": {
+        "5432/tcp": null
+      }
+    }
+  ],
+  "financeAppModuleImported": false
+}

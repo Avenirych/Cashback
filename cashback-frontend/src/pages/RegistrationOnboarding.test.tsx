@@ -1,40 +1,23 @@
-import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "../context/AuthContext";
-import { enrollmentKey, readOnboarding, wiseKey } from "../onboarding";
-import Register from "./Register";
-import Welcome from "./Welcome";
-
-test("registration with accepted terms creates a session, not program enrollment", async () => {
-  localStorage.clear();
-  const user = { id: 201, name: "New Demo", email: "new@example.com" };
-  global.fetch = jest.fn().mockResolvedValue({
-    ok: true, text: async () => JSON.stringify({ access_token: "demo-session", user }),
-  }) as typeof fetch;
-  render(
-    <AuthProvider>
-      <MemoryRouter initialEntries={["/register"]}>
-        <Routes>
-          <Route path="/register" element={<Register lang="EN" onLangChange={() => {}} />} />
-          <Route path="/" element={<Welcome lang="EN" />} />
-        </Routes>
-      </MemoryRouter>
-    </AuthProvider>
-  );
-  fireEvent.change(screen.getByPlaceholderText("Name"), { target: { value: user.name } });
-  fireEvent.change(screen.getByPlaceholderText("Email"), { target: { value: user.email } });
-  fireEvent.change(screen.getByPlaceholderText("Password (min 3 characters)"), {
-    target: { value: "demo-password" },
-  });
-  expect(screen.getByRole("button", { name: "Register" })).toBeDisabled();
-  fireEvent.click(screen.getByRole("checkbox"));
-  fireEvent.click(screen.getByRole("button", { name: "Register" }));
-  expect(await screen.findByRole("button", { name: "Get bonuses" })).toBeDisabled();
-  expect(localStorage.getItem("cashback_token")).toBe("demo-session");
-  expect(localStorage.getItem(wiseKey)).toBeNull();
-  expect(localStorage.getItem(enrollmentKey)).toBeNull();
+import React from 'react';
+import {act,fireEvent,render,screen,waitFor} from '@testing-library/react';
+import {MemoryRouter} from 'react-router-dom';
+import {AuthProvider} from '../context/AuthContext';
+import {enrollmentKey,readOnboarding,wiseKey} from '../onboarding';
+import Register from './Register';
+test('terms and current fields create pending email verification, never program enrollment',async()=>{
+  localStorage.clear();sessionStorage.clear();
+  const user={id:201,name:'New Buyer',email:'new@example.test',email_verified:false};
+  const response={access_token:'mock-pending-session',user,verification_email_sent:true};
+  global.fetch=jest.fn().mockResolvedValue({ok:true,text:async()=>JSON.stringify(response),json:async()=>response}) as typeof fetch;
+  render(<AuthProvider><MemoryRouter><Register lang="EN" onLangChange={()=>{}}/></MemoryRouter></AuthProvider>);
+  act(()=>{for(const [id,value] of [['firstName','New'],['lastName','Buyer'],['email',user.email],['phone','02079460123'],['password','Strong8!Buyer']])fireEvent.change(document.getElementById(id)!,{target:{value}});});
+  expect(screen.getByRole('button',{name:'Register'})).toBeDisabled();
+  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'Register'}));
+  await waitFor(()=>expect(global.fetch).toHaveBeenCalledTimes(1));
+  await screen.findByRole('heading',{name:'Confirm your email'});
+  expect(localStorage.getItem('cashback_token')).toBeNull();
+  expect(sessionStorage.getItem('cashback_pending_auth')).toBe('mock-pending-session');
+  expect(localStorage.getItem(wiseKey)).toBeNull();expect(localStorage.getItem(enrollmentKey)).toBeNull();
   expect(readOnboarding(user.id).eligible).toBe(false);
-  expect(screen.getByRole("link", { name: "Complete onboarding in Profile" }))
-    .toHaveAttribute("href", "/profile");
+  expect(screen.queryByRole('link',{name:'Go to profile'})).not.toBeInTheDocument();
 });

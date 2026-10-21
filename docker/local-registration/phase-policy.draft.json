@@ -1,0 +1,27 @@
+{
+  "format": "registration-phase-proposal/v1",
+  "status": "DRAFT",
+  "context": "desktop-linux",
+  "daemonId": "ec3d6303-4d66-4410-8317-b739cebc046c",
+  "project": "cashback-registration-20261016-4f8c2a96b17d",
+  "platform": "linux/amd64",
+  "postgresImage": "postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+  "postgresContainerId": "e0818fd64b0149f50ed975d8a519ffc4b615dcff9544a403f224fd82a2291d88",
+  "phase": "baseline",
+  "servicePhase": null,
+  "helpers": [
+    {"service":"migration-executor","name":"cashback-registration-20261016-4f8c2a96b17d-migration-executor-1","image":null,"id":null,"configurationSha256":null,"mounts":null,"ports":[],"labels":{"com.docker.compose.project":"cashback-registration-20261016-4f8c2a96b17d","com.docker.compose.service":"migration-executor"}},
+    {"service":"observer","name":"cashback-registration-20261016-4f8c2a96b17d-observer-1","image":null,"id":null,"configurationSha256":null,"mounts":null,"ports":[],"labels":{"com.docker.compose.project":"cashback-registration-20261016-4f8c2a96b17d","com.docker.compose.service":"observer"}}
+  ],
+  "networks": {
+    "database":{"name":"cashback-registration-20261016-4f8c2a96b17d-database","id":null,"configurationSha256":null},
+    "authority":{"name":"cashback-registration-20261016-4f8c2a96b17d-authority","id":null,"configurationSha256":null}
+  },
+  "fingerprints":{"composeTemplate":null,"effectiveCompose":null,"postgres":null,"volume":null,"authorityConfigurations":null},
+  "connections":["executor -> database:5432","observer -> database:5432","executor/observer -> pinned host authorities:8443,8444,8445"],
+  "postgresNetworks":["cashback-registration-20261016-4f8c2a96b17d-database"],
+  "mountPolicy":"Exact independently reviewed read-only binds under C:/approved-registration-infrastructure only; unresolved mounts block admission",
+  "transitionRules":["Independent creation approval before any mutation","Created identities are unverified, never admitted by name/label","Independent full identity attestation before service admission","Fresh post-start collector required","STOP before SQL, HBA, ACL, role changes or migrations"],
+  "creationAuthority":null,
+  "externalFencingProvider":null
+}

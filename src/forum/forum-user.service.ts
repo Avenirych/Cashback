@@ -134,7 +134,7 @@ export class ForumUserService {
 
   getByUsername(username: unknown): Promise<ForumUser | null> {
     this.validateUsername(username);
-    return this.forumUserRepo.findOne({ where: { username } });
+    return this.forumUserRepo.createQueryBuilder('forum').where('LOWER(forum.username) = LOWER(:username)', { username }).getOne();
   }
 
   getByUserIds(userIds: number[]): Promise<ForumUser[]> {

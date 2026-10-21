@@ -1,0 +1,10 @@
+import {fifo} from './policy-2026-10-21';
+const lot=(id:string,amount:string,confirmed='2026-01-01T00:00:00Z')=>({id,amount,confirmed});
+it('uses oldest lots and partially consumes the final lot without changing source age',()=>{const a=lot('a','60'),b=lot('b','80','2026-02-01T00:00:00Z'),r=fifo([b,a],90n);expect(r.status).toBe('ready');if(r.status==='ready'){expect(r.allocations.map(x=>[x.lot.id,x.amount])).toEqual([['a',60n],['b',30n]]);expect(r.unfunded).toBe(0n);expect(r.allocations[1].lot.confirmed).toBe(b.confirmed);}expect(b.amount).toBe('80');});
+it('never selects an arbitrary part of an equal-date source group',()=>{expect(fifo([lot('z','60'),lot('a','80')],90n)).toEqual({status:'pending_review',reason:'FIFO_EQUAL_CONFIRMATION_AMBIGUITY'});});
+it('allows an entire equal-date group without an economic tie-break',()=>{const r=fifo([lot('z','60'),lot('a','80')],140n);expect(r.status).toBe('ready');if(r.status==='ready')expect(r.allocated).toBe(140n);});
+it('ignores an untouched later equal-date group',()=>{const r=fifo([lot('old','20','2025-01-01T00:00:00Z'),lot('a','60'),lot('b','80')],20n);expect(r.status).toBe('ready');if(r.status==='ready')expect(r.allocations).toHaveLength(1);});
+it('preserves microsecond confirmation order',()=>{const r=fifo([lot('later','10','2026-01-01T00:00:00.000002Z'),lot('first','10','2026-01-01T00:00:00.000001Z')],1n);expect(r.status).toBe('ready');if(r.status==='ready')expect(r.allocations[0].lot.id).toBe('first');});
+it('reports insufficient eligible funds without manufacturing a slice',()=>{const r=fifo([lot('a','20')],30n);expect(r.status).toBe('ready');if(r.status==='ready'){expect(r.allocated).toBe(20n);expect(r.unfunded).toBe(10n);}});
+it('rejects duplicate source identities',()=>{expect(()=>fifo([lot('a','20'),lot('a','20')],10n)).toThrow('Duplicate');});
+it('rejects negative allocation',()=>{expect(()=>fifo([lot('a','20')],-1n)).toThrow('Negative');});

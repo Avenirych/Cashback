@@ -1,4 +1,5 @@
-export const FORUM_API_URL = "http://localhost:3001";
+import { BACKEND_URL } from "./backend";
+export const FORUM_API_URL = BACKEND_URL;
 
 export interface ForumUserData {
   id: number;

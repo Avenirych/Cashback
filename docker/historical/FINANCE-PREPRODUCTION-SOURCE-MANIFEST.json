@@ -1,0 +1,109 @@
+{
+  "status": "FINANCE_PREPRODUCTION_READINESS_COMPLETE",
+  "productionActivation": "NO_GO",
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "backup": "work/preproduction-backup-2026-10-21T09-00-57-592Z",
+  "verifiedBackupFiles": 10,
+  "changedExisting": [
+    {
+      "path": "cashback-frontend/src/pages/Register.tsx",
+      "before": "cea7b97411865284e9f88361ce10771bac4de0c78cbe1e3694b17c3fad15878e",
+      "after": "0b8c779b1585de682085c09a926432860e42d0dee326b4bcb9669f261536cfe4"
+    },
+    {
+      "path": "cashback-frontend/src/utils/emailValidator.ts",
+      "before": "2ccf011cf84642481aa23805c7243cf37fe9f942b08401e5a63b537f2458dfbc",
+      "after": "2fe8ada5e5ddc5a1202caa09ade368ea0e67f2dfdb3dfcf692191be1d9673968"
+    },
+    {
+      "path": "cashback-frontend/src/App.test.tsx",
+      "before": "8bc31b6d7189f7f68e7ebc6e1df9010d35830fe33e267828c1a03e5aaecc5509",
+      "after": "71b7a8e61ce0a75cacb6bfb805f90e4c8d6b2f9077154a0b8f86cee12bbc621c"
+    },
+    {
+      "path": "cashback-frontend/src/components/SiteSearch.test.tsx",
+      "before": "9b6223d3b4f18d2c8c6e794891078b52a7fc86690f53434c647bb443ea005c95",
+      "after": "9a2e7f859f06d821119f73f2fe078da4efe22dc504bbaffa58c7a5efc704a6a9"
+    },
+    {
+      "path": "docker/historical/finance-service-scenarios.cjs",
+      "before": "070efc5a992f13f8acc568bfbe2961dbee8d60343470607a3901b6168be7c8a0",
+      "after": "a8da0a6c595eea1b9be18dd9b7d8674ce4723be61f70e07b9ace5f037f3ac04d"
+    },
+    {
+      "path": "docker/historical/finance-service-postgres.cjs",
+      "before": "a77c8f4d628f5cfe7886cffd9d61607ed7ab3a58efb9bd913f0fe83aa5f54412",
+      "after": "764712bcf1e43cec3716aa4785a4a3c335e1e39efbf44db48eda42de1d7ff432"
+    },
+    {
+      "path": "package.json",
+      "before": "9dcfd825264b8db74b3b6a643f1d57bdc6ea09174c6a6de099a7124add92ac6f",
+      "after": "d7bc4d93846a7971f66aeaca42236a1b747bf9565f16d1769f723438d9dac607"
+    },
+    {
+      "path": "cashback-frontend/package.json",
+      "before": "5722214bbd43e69dd47cc3cd81136d16d99ef10db7d92dd6b7fcdb54fa4ab126",
+      "after": "1db1814de57707b4d5dcdec8dcbe2d08489212a8e2fe3e85a2bb7afa24b09068"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "before": "86c6b49df2f6e3459ba6eaec72c2a08186ec09a5804d5fa38e3d24fb63aa0862",
+      "after": "356d3097158dd448ce8435f0a44f2035eebd34864dbba3f0ba12a030c8fb09c1"
+    },
+    {
+      "path": "src/finance/finance.entities.ts",
+      "before": "f3625b47d3217addf36f15fa427bbb59947670fb3ce67a69722db651af7d4f5f",
+      "after": "b890d3d15501100854175e6343681de2425a2e1ccad15fb90feea78dc3fbc20a"
+    }
+  ],
+  "added": [
+    {
+      "path": "cashback-frontend/src/utils/emailValidator.test.ts",
+      "sha256": "0b56ccac83de2c472473ded2a7ec0869b4f346806f5eb9d4a00ad7e1efdafb95"
+    },
+    {
+      "path": "cashback-frontend/src/pages/register-return-path.test.ts",
+      "sha256": "af1138264ab585ade6ff64f6d1304fbc343f3073ce49a41a62a4b1b05069a9f1"
+    },
+    {
+      "path": "docker/historical/finance-migration-readiness.cjs",
+      "sha256": "2455ed81e49dbd07a247e345765a5314e3d77e1972392c8c9559e314b2da2286"
+    },
+    {
+      "path": "docker/historical/FINANCE-PREPRODUCTION-READINESS-2026-10-21.md",
+      "sha256": "402571cabd282982b8d4833319a31ab26409213d0d05df3e8fea547b73bb91dc"
+    }
+  ],
+  "changedFinance": [
+    "src\\finance\\finance.entities.ts"
+  ],
+  "validation": {
+    "backend": {
+      "passed": 519,
+      "suites": 61,
+      "openHandles": 0
+    },
+    "frontend": {
+      "passed": 233,
+      "suites": 17,
+      "openHandles": 0
+    },
+    "strictFrontendCiBuild": "PASS",
+    "standardFrontendBuild": "PASS",
+    "backendBuild": "PASS",
+    "typescript": "PASS",
+    "postgresGroups": 97,
+    "migrations": 16,
+    "migrationChecks": 11,
+    "entities": 20,
+    "indexes": 86,
+    "archive": "C:\\Users\\serge\\cashback+\\work\\finance-completion-c74ac350-4439-4bc2-a82e-f0f0b07067c6",
+    "nodeSyntax": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "protectedContainers": 18,
+  "realDataCompatibility": "UNVERIFIED",
+  "productionAdapters": "MISSING",
+  "providerEvidence": "NOT_OBTAINED",
+  "hostedCi": "NOT_EXECUTED"
+}

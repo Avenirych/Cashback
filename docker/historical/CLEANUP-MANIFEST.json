@@ -1,0 +1,83 @@
+{
+  "mode": "PLAN_ONLY_NO_DELETION",
+  "items": [
+    {
+      "classification": "REMOVE_ONLY_AFTER_SEPARATE_APPROVAL",
+      "type": "container",
+      "id": "c9b40faedba2ea07a1a523cdb32f785d49b5be612a427d7c5f55d50beab5ef22",
+      "reason": "Stopped replaced application container retained for rollback",
+      "rollback": "Retained exact container/image"
+    },
+    {
+      "classification": "REMOVE_ONLY_AFTER_SEPARATE_APPROVAL",
+      "type": "container",
+      "id": "3eb73efb43dc91eefeaba4ca7930631b7d0bcd94da2e9c7e11fce19df5fea146",
+      "reason": "Stopped replaced application container retained for rollback",
+      "rollback": "Retained exact container/image"
+    },
+    {
+      "classification": "KEEP",
+      "type": "volume",
+      "name": "cashback-historical-03573b7-local-pgdata",
+      "reason": "Active historical database"
+    },
+    {
+      "classification": "KEEP",
+      "type": "volume",
+      "name": "cashback-docker-test_backend-avatars",
+      "reason": "Existing stored data; removal prohibited"
+    },
+    {
+      "classification": "KEEP",
+      "type": "volume",
+      "name": "cashback-docker-test_postgres-test-data",
+      "reason": "Existing stored data; removal prohibited"
+    },
+    {
+      "classification": "KEEP",
+      "type": "volume",
+      "name": "cashback-finance-security-9f_pgdata",
+      "reason": "Existing stored data; removal prohibited"
+    },
+    {
+      "classification": "KEEP",
+      "type": "volume",
+      "name": "cashback-registration-20261016-4f8c2a96b17d-pg17-data",
+      "reason": "Existing stored data; removal prohibited"
+    },
+    {
+      "classification": "KEEP",
+      "path": "C:/Users/serge/AppData/Local/Temp/cashback-final-cutover-c21f3bb8a7b04bc6bceee8ff308aaa77",
+      "reason": "Verified rollback source and dependency archive; frontend node_modules junction uses this archive"
+    },
+    {
+      "classification": "KEEP",
+      "path": "docker/mailpit-ui.nginx.conf",
+      "reason": "Still mounted by preserved old Mailpit UI"
+    },
+    {
+      "classification": "REVIEW_NOT_ACTIVE",
+      "paths": [
+        "scripts",
+        "config-backups",
+        "work"
+      ],
+      "reason": "Obsolete launch scripts/configuration/candidate trees are outside canonical src/test and excluded from images; no deletion approved"
+    },
+    {
+      "classification": "UNKNOWN",
+      "project": "cashback-e2e-2740dce3a683487b9420c9315cc9c864",
+      "reason": "Old test resources, including tmpfs PostgreSQL; preserve"
+    },
+    {
+      "classification": "KEEP",
+      "projects": [
+        "cashback-finance-security-9f",
+        "cashback-registration-20261016-4f8c2a96b17d",
+        "cashback-docker-test"
+      ],
+      "reason": "Preserve old PostgreSQL, volumes, Mailpit and all other non-replaced resources"
+    }
+  ],
+  "priorExactManifest": "docker/historical/UNIFICATION-MANIFEST.json"
+}

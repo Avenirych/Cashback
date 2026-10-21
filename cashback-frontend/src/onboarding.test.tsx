@@ -1,344 +1,156 @@
-import React from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
-import { Link, MemoryRouter, useLocation } from "react-router-dom";
-import { AppRoutes } from "./App";
-import { useAuth } from "./context/AuthContext";
-import { LanguageProvider } from "./context/LanguageContext";
-import Profile, { messages } from "./pages/Profile";
-import Welcome from "./pages/Welcome";
-import {
-  emptyWiseForm, enrollmentKey, enrollInProgram, getOnboardingMessages,
-  readOnboarding, saveCredentials, wiseKey,
-} from "./onboarding";
+import React from 'react';
+import {act,fireEvent,render,screen} from '@testing-library/react';
+import {MemoryRouter,Route,Routes,useLocation} from 'react-router-dom';
+import {AppRoutes} from './App';
+import {useAuth} from './context/AuthContext';
+import {LanguageProvider} from './context/LanguageContext';
+import BonusGuard from './components/BonusGuard';
+import Profile,{messages} from './pages/Profile';
+import Welcome from './pages/Welcome';
+import {translations} from './i18n';
+import {emptyWiseForm,enrollmentKey,enrollInProgram,getOnboardingMessages,readOnboarding,saveCredentials,useOnboarding,wiseKey} from './onboarding';
+jest.mock('./context/AuthContext',()=>({useAuth:jest.fn()}));
+jest.mock('./components/Header',()=>()=>null);
+jest.mock('./components/CookieConsent',()=>()=>null);
+const mockAuth=useAuth as jest.Mock;
+const user={id:101,name:'Demo User',email:'demo@example.test',email_verified:true};
+const form={fullName:user.name,email:user.email,wiseEmail:'wise@example.test',currency:'GBP',accountType:'Business'};
+const saved={...form,userId:user.id,savedAt:'2026-10-06T10:30:00Z'};
+function auth(current:unknown=user,loading=false){mockAuth.mockReturnValue({user:current,loading,token:null,isEmailVerificationPending:false});}
+function Location(){return <output data-testid="location">{useLocation().pathname}</output>}
+function State(){return <output data-testid="eligible">{String(useOnboarding().eligible)}</output>}
+function wrapper(children:React.ReactNode,path='/'){return <LanguageProvider><MemoryRouter initialEntries={[path]}>{children}<Location/></MemoryRouter></LanguageProvider>}
+function gate(){return <Routes><Route element={<BonusGuard/>}><Route path="/participate" element={<p>Protected participation</p>}/></Route><Route path="/profile" element={<p>Profile required</p>}/><Route path="/register" element={<p>Registration required</p>}/><Route path="/verify-email" element={<p>Email required</p>}/></Routes>}
+function seed(data:unknown,enrolled:unknown={userId:user.id,enrolledAt:saved.savedAt}){localStorage.setItem(wiseKey,typeof data==='string'?data:JSON.stringify(data));localStorage.setItem(enrollmentKey,JSON.stringify(enrolled));}
+function fill(){for(const key of Object.keys(form) as (keyof typeof form)[])fireEvent.change(screen.getByLabelText(messages.en[key]),{target:{value:form[key]}});}
+beforeEach(()=>{localStorage.clear();sessionStorage.clear();auth();global.fetch=jest.fn().mockResolvedValue({ok:true,json:async()=>[]}) as typeof fetch;});
+afterEach(()=>jest.restoreAllMocks());
 
-jest.mock("./context/AuthContext", () => ({ useAuth: jest.fn() }));
-jest.mock("./components/Header", () => () => null);
-jest.mock("./components/CookieConsent", () => () => null);
-
-const mockedUseAuth = useAuth as jest.Mock;
-const user = { id: 101, name: "Demo User", email: "demo@example.com" };
-const form = {
-  fullName: "Demo User", email: "demo@example.com", wiseEmail: "wise@example.com",
-  currency: "GBP", accountType: "Business",
-};
-
-function auth(currentUser: unknown = user, loading = false) {
-  mockedUseAuth.mockReturnValue({ user: currentUser, loading, token: null });
-}
-
-function Location() {
-  return <output data-testid="location">{useLocation().pathname}</output>;
-}
-
-function routeTree(path: string) {
-  return (
-    <LanguageProvider>
-      <MemoryRouter initialEntries={[path]}>
-        <Link to="/bonuses">Alternate bonus entry</Link>
-        <AppRoutes />
-        <Location />
-      </MemoryRouter>
-    </LanguageProvider>
-  );
-}
-
-function renderWelcome(lang = "en", withProfile = false) {
-  return render(
-    <LanguageProvider>
-      <MemoryRouter>
-        <Welcome lang={lang} />
-        {withProfile && <Profile />}
-        <Location />
-      </MemoryRouter>
-    </LanguageProvider>
-  );
-}
-
-function fillForm() {
-  for (const field of Object.keys(form) as (keyof typeof form)[]) {
-    fireEvent.change(screen.getByLabelText(messages.en[field]), {
-      target: { value: form[field] },
-    });
-  }
-}
-
-function seed(saved: unknown, enrolled: unknown = {
-  userId: user.id, enrolledAt: "2026-10-06T10:30:00Z",
-}) {
-  localStorage.setItem(wiseKey, typeof saved === "string" ? saved : JSON.stringify(saved));
-  localStorage.setItem(enrollmentKey, JSON.stringify(enrolled));
-}
-
-const saved = { ...form, userId: user.id, savedAt: "2026-10-06T10:30:00Z" };
-
-beforeEach(() => {
-  localStorage.clear();
-  auth();
-  global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => [] }) as typeof fetch;
-});
-
-afterEach(() => jest.restoreAllMocks());
-
+// Later historical public browsing supersedes the earlier Welcome gate. Validation
+// still applies to helpers and protected participation; it is not removed to pass tests.
 test.each([
-  ["empty", null],
-  ["partial", { userId: user.id, fullName: form.fullName }],
-  ["invalid email", { ...saved, wiseEmail: "bad" }],
-  ["invalid currency", { ...saved, currency: "CAD" }],
-  ["invalid account type", { ...saved, accountType: "Other" }],
-  ["non-string field", { ...saved, email: 42 }],
-  ["missing saved marker", { ...saved, savedAt: undefined }],
-  ["invalid saved marker", { ...saved, savedAt: "bad" }],
-  ["corrupt JSON", "not-json"],
-  ["array", []],
-  ["other owner", { ...saved, userId: 102 }],
-  ["no owner", { ...saved, userId: undefined }],
-])("%s credentials fail closed despite an old enrollment", (_name, data) => {
-  seed(data);
-  renderWelcome();
-  const button = screen.getByRole("button", { name: "Get bonuses" });
-  expect(button).toBeDisabled();
-  expect(button).toHaveAccessibleDescription(getOnboardingMessages("en").explanation);
-  fireEvent.click(button);
-  expect(screen.getByTestId("location")).toHaveTextContent(/^\/$/);
-  expect(readOnboarding(user.id).eligible).toBe(false);
+ ['empty',null],['partial',{userId:user.id,fullName:form.fullName}],['invalid email',{...saved,wiseEmail:'bad'}],
+ ['invalid currency',{...saved,currency:'CAD'}],['invalid account type',{...saved,accountType:'Other'}],
+ ['non-string field',{...saved,email:42}],['missing saved marker',{...saved,savedAt:undefined}],
+ ['invalid saved marker',{...saved,savedAt:'bad'}],['corrupt JSON','not-json'],['array',[]],
+ ['other owner',{...saved,userId:102}],['no owner',{...saved,userId:undefined}]
+])('%s credentials never authorize protected participation despite an old enrollment',(_name,data)=>{
+ seed(data);expect(readOnboarding(user.id).eligible).toBe(false);
+ render(wrapper(gate(),'/participate'));expect(screen.getByTestId('location')).toHaveTextContent('/profile');
+ expect(screen.queryByText('Protected participation')).not.toBeInTheDocument();
+ expect(()=>enrollInProgram(user.id)).toThrow();
 });
-
-test.each([undefined, null, 0, -1, NaN, Infinity, 1.5, "101"])(
-  "invalid user identity %p cannot save or access bonuses", (id) => {
-    seed({ ...saved, userId: id }, { userId: id, enrolledAt: saved.savedAt });
-    auth({ ...user, id });
-    renderWelcome();
-    expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
-    expect(() => saveCredentials(id, form)).toThrow();
-    expect(() => enrollInProgram(id)).toThrow();
-  }
-);
-
-test("unsaved typing, save and explicit enrollment update Welcome immediately", () => {
-  renderWelcome("en", true);
-  fillForm();
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
-  expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
-  fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
-  expect(readOnboarding(user.id).credentialsSaved).toBe(true);
-  expect(localStorage.getItem(enrollmentKey)).toBeNull();
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
-  fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
-  fireEvent.click(screen.getByRole("button", { name: "Get bonuses" }));
-  expect(screen.getByTestId("location")).toHaveTextContent("/bonuses");
-  expect(global.fetch).not.toHaveBeenCalled();
+test.each([undefined,null,0,-1,NaN,Infinity,1.5,'101'])('invalid user identity %p cannot save or access protected bonuses',id=>{
+ seed({...saved,userId:id},{userId:id,enrolledAt:saved.savedAt});auth({...user,id});
+ expect(readOnboarding(id).eligible).toBe(false);expect(()=>saveCredentials(id,form)).toThrow();expect(()=>enrollInProgram(id)).toThrow();
+ render(wrapper(gate(),'/participate'));expect(screen.queryByText('Protected participation')).not.toBeInTheDocument();
 });
-
-test.each(["en", "ru", "de", "fr"])("localized %s explanation has a working profile link", (lang) => {
-  renderWelcome(lang);
-  const t = getOnboardingMessages(lang);
-  expect(screen.getByText(t.explanation)).toBeInTheDocument();
-  const link = screen.getByRole("link", { name: t.profile });
-  expect(link).toHaveAttribute("href", "/profile");
-  fireEvent.click(link);
-  expect(screen.getByTestId("location")).toHaveTextContent("/profile");
+test('typing does not enroll; saving and explicit enrollment update the production hook',()=>{
+ render(wrapper(<><Profile/><State/></>));fill();
+ expect(screen.getByTestId('eligible')).toHaveTextContent('false');
+ expect(screen.getByRole('button',{name:messages.en.enroll})).toBeDisabled();
+ fireEvent.click(screen.getByRole('button',{name:messages.en.saveCredentials}));
+ expect(readOnboarding(user.id).credentialsSaved).toBe(true);expect(localStorage.getItem(enrollmentKey)).toBeNull();
+ expect(screen.getByTestId('eligible')).toHaveTextContent('false');
+ fireEvent.click(screen.getByRole('button',{name:messages.en.enroll}));expect(screen.getByTestId('eligible')).toHaveTextContent('true');
+ expect(global.fetch).not.toHaveBeenCalled();
 });
-
-test.each(["/bonuses", "/bonuses/ads", "/bonuses/research"])(
-  "direct %s redirects ineligible users before rendering bonus content", (path) => {
-    render(routeTree(path));
-    expect(screen.getByTestId("location")).toHaveTextContent("/profile");
-    expect(screen.getByText(getOnboardingMessages("en").explanation)).toBeInTheDocument();
-    expect(screen.getByLabelText(messages.en.fullName)).not.toHaveAttribute("readonly");
-    expect(screen.queryByRole("heading", { name: /Бонусы|Получение бонусов/ })).not.toBeInTheDocument();
-  }
-);
-
-test.each(["/bonuses", "/bonuses/ads", "/bonuses/research"])(
-  "direct %s preserves guest registration onboarding", (path) => {
-    auth(null);
-    render(routeTree(path));
-    expect(screen.getByTestId("location")).toHaveTextContent("/register");
-    expect(screen.getByRole("button", { name: "Register" })).toBeInTheDocument();
-  }
-);
-
-test.each(["/bonuses", "/bonuses/ads", "/bonuses/research"])(
-  "eligible owner may refresh on %s", (path) => {
-    seed(saved);
-    const view = render(routeTree(path));
-    expect(screen.getByTestId("location")).toHaveTextContent(path);
-    expect(screen.queryByLabelText(messages.en.fullName)).not.toBeInTheDocument();
-    view.unmount();
-    render(routeTree(path));
-    expect(screen.getByTestId("location")).toHaveTextContent(path);
-  }
-);
-
-test("alternate link cannot bypass the gate; shop remains accessible", () => {
-  render(routeTree("/"));
-  fireEvent.click(screen.getByRole("link", { name: "Alternate bonus entry" }));
-  expect(screen.getByTestId("location")).toHaveTextContent("/profile");
-  fireEvent.click(screen.getByRole("link", { name: messages.en.shop }));
-  expect(screen.getByTestId("location")).toHaveTextContent("/shop");
+test.each(['en','ru','de','fr'])('public Welcome retains localized %s browsing without granting enrollment',lang=>{
+ render(wrapper(<Welcome lang={lang}/>));
+ const t=translations[lang.toUpperCase() as keyof typeof translations];
+ const button=screen.getByRole('button',{name:t.getBonuses});expect(button).toBeEnabled();
+ fireEvent.click(button);expect(screen.getByTestId('location')).toHaveTextContent('/bonuses');
+ expect(readOnboarding(user.id).eligible).toBe(false);expect(getOnboardingMessages(lang).explanation.length).toBeGreaterThan(20);
 });
-
-test("button handler rechecks storage even before a storage event updates the UI", () => {
-  seed(saved);
-  renderWelcome();
-  localStorage.removeItem(wiseKey);
-  fireEvent.click(screen.getByRole("button", { name: "Get bonuses" }));
-  expect(screen.getByTestId("location")).toHaveTextContent("/profile");
+test.each(['/bonuses','/bonuses/ads','/bonuses/research'])('direct %s permits public browsing, not onboarding',path=>{
+ render(wrapper(<AppRoutes/>,path));expect(screen.getByTestId('location')).toHaveTextContent(path);
+ expect(readOnboarding(user.id).eligible).toBe(false);expect(localStorage.getItem(enrollmentKey)).toBeNull();
 });
-
-test("invalid old enrollment leaves form editable and requires fresh enrollment after repair", () => {
-  seed({ ...saved, email: "bad" });
-  renderWelcome("en", true);
-  expect(screen.getByLabelText(messages.en.fullName)).not.toHaveAttribute("readonly");
-  fillForm();
-  fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
-  expect(screen.queryByText(messages.en.enrolled, { exact: false })).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
+test.each(['/bonuses','/bonuses/ads','/bonuses/research'])('guests can browse %s without creating an account or enrollment',path=>{
+ auth(null);render(wrapper(<AppRoutes/>,path));expect(screen.getByTestId('location')).toHaveTextContent(path);
+ expect(localStorage.getItem(enrollmentKey)).toBeNull();expect(global.fetch).not.toHaveBeenCalled();
 });
-
-test("corrupt enrollment can be repaired by saving credentials and explicitly enrolling", () => {
-  localStorage.setItem(enrollmentKey, "corrupt");
-  renderWelcome("en", true);
-  fillForm();
-  fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
-  expect(screen.getByRole("button", { name: messages.en.enroll })).toBeEnabled();
-  fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
+test.each(['/bonuses','/bonuses/ads','/bonuses/research'])('eligible owner may refresh %s without losing eligibility',path=>{
+ seed(saved);const view=render(wrapper(<AppRoutes/>,path));expect(readOnboarding(user.id).eligible).toBe(true);
+ view.unmount();render(wrapper(<AppRoutes/>,path));expect(screen.getByTestId('location')).toHaveTextContent(path);expect(readOnboarding(user.id).eligible).toBe(true);
 });
-
-test("account switch, logout and return never inherit eligibility", () => {
-  seed(saved);
-  const view = render(routeTree("/bonuses"));
-  auth({ ...user, id: 102 });
-  view.rerender(routeTree("/bonuses"));
-  expect(screen.getByTestId("location")).toHaveTextContent("/profile");
-  expect(screen.getByLabelText(messages.en.fullName)).toHaveValue("");
-  auth(null);
-  view.rerender(routeTree("/bonuses"));
-  expect(screen.getByRole("heading", { name: messages.en.guestTitle })).toBeInTheDocument();
-  auth();
-  view.rerender(routeTree("/bonuses"));
-  expect(screen.getByLabelText(messages.en.fullName)).toHaveValue(form.fullName);
-  expect(readOnboarding(user.id).eligible).toBe(true);
-  expect(readOnboarding(102).eligible).toBe(false);
+test('public shopping and bonus links do not bypass the participation gate',()=>{
+ const view=render(wrapper(<Welcome lang="en"/>));fireEvent.click(screen.getByRole('button',{name:'Go shopping'}));expect(screen.getByTestId('location')).toHaveTextContent('/shop');
+ view.unmount();render(wrapper(gate(),'/participate'));expect(screen.getByTestId('location')).toHaveTextContent('/profile');
 });
-
-test("scoped records take precedence over stale unscoped records from another account", () => {
-  saveCredentials(user.id, form);
-  enrollInProgram(user.id);
-  seed({ ...saved, userId: 102 }, { userId: 102, enrolledAt: saved.savedAt });
-  expect(readOnboarding(user.id).eligible).toBe(true);
-  expect(readOnboarding(103).eligible).toBe(false);
-  localStorage.setItem(`${wiseKey}:${user.id}`, "corrupt");
-  expect(readOnboarding(user.id).eligible).toBe(false);
+test('storage revoked before a protected route render cannot grant access',()=>{
+ seed(saved);localStorage.removeItem(wiseKey);render(wrapper(gate(),'/participate'));expect(screen.queryByText('Protected participation')).not.toBeInTheDocument();
 });
-
-test("repairing one user's scoped data never removes another user's enrollment", () => {
-  localStorage.setItem(enrollmentKey, JSON.stringify({ userId: 102, enrolledAt: saved.savedAt }));
-  localStorage.setItem(`${enrollmentKey}:${user.id}`, JSON.stringify({
-    userId: user.id, enrolledAt: saved.savedAt,
-  }));
-  saveCredentials(user.id, form);
-  expect(JSON.parse(localStorage.getItem(enrollmentKey)!).userId).toBe(102);
-  expect(readOnboarding(user.id).eligible).toBe(false);
+test('invalid old enrollment requires fresh enrollment after credential repair',()=>{
+ seed({...saved,email:'bad'});render(wrapper(<><Profile/><State/></>));fill();
+ fireEvent.click(screen.getByRole('button',{name:messages.en.saveCredentials}));expect(readOnboarding(user.id).eligible).toBe(false);
+ fireEvent.click(screen.getByRole('button',{name:messages.en.enroll}));expect(readOnboarding(user.id).eligible).toBe(true);
 });
-
-test("relevant storage changes revoke bonus route access and update the form", () => {
-  seed(saved);
-  render(routeTree("/bonuses/ads"));
-  act(() => {
-    localStorage.removeItem(wiseKey);
-    window.dispatchEvent(new StorageEvent("storage", { key: wiseKey }));
-  });
-  expect(screen.getByTestId("location")).toHaveTextContent("/profile");
-  expect(screen.getByLabelText(messages.en.fullName)).toHaveValue("");
-  expect(screen.getByRole("button", { name: messages.en.enroll })).toBeDisabled();
+test('corrupt enrollment can be repaired by saving and explicitly enrolling',()=>{
+ localStorage.setItem(enrollmentKey,'corrupt');saveCredentials(user.id,form);expect(readOnboarding(user.id).eligible).toBe(false);enrollInProgram(user.id);expect(readOnboarding(user.id).eligible).toBe(true);
 });
-
-test("storage clearing and enrollment changes update already mounted Welcome", () => {
-  renderWelcome();
-  act(() => saveCredentials(user.id, form));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
-  act(() => enrollInProgram(user.id));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
-  act(() => {
-    localStorage.clear();
-    window.dispatchEvent(new StorageEvent("storage", { key: null }));
-  });
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+test('account switch, logout and return never inherit another account eligibility',()=>{
+ seed(saved);const view=render(wrapper(<State/>));expect(screen.getByTestId('eligible')).toHaveTextContent('true');
+ auth({...user,id:102});view.rerender(wrapper(<State/>));expect(screen.getByTestId('eligible')).toHaveTextContent('false');
+ auth(null);view.rerender(wrapper(<State/>));expect(screen.getByTestId('eligible')).toHaveTextContent('false');
+ auth();view.rerender(wrapper(<State/>));expect(screen.getByTestId('eligible')).toHaveTextContent('true');expect(readOnboarding(102).eligible).toBe(false);
 });
-
-test("read failures and save/enrollment write failures fail closed and are recoverable", () => {
-  seed(saved);
-  const getItem = jest.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
-    throw new Error("Storage denied");
-  });
-  expect(readOnboarding(user.id).eligible).toBe(false);
-  expect(() => enrollInProgram(user.id)).toThrow();
-  getItem.mockRestore();
-  localStorage.clear();
-  renderWelcome("en", true);
-  fillForm();
-  const setItem = jest.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
-    throw new Error("Storage full");
-  });
-  fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
-  expect(screen.getByRole("alert")).toHaveTextContent(messages.en.storageError);
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
-  setItem.mockRestore();
-  fireEvent.click(screen.getByRole("button", { name: messages.en.saveCredentials }));
-  const failEnrollment = jest.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
-    throw new Error("Storage full");
-  });
-  fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("alert")).toHaveTextContent(messages.en.storageError);
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
-  failEnrollment.mockRestore();
-  fireEvent.click(screen.getByRole("button", { name: messages.en.enroll }));
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeEnabled();
+test('scoped records take precedence over stale unscoped data from another account',()=>{
+ saveCredentials(user.id,form);enrollInProgram(user.id);seed({...saved,userId:102},{userId:102,enrolledAt:saved.savedAt});
+ expect(readOnboarding(user.id).eligible).toBe(true);expect(readOnboarding(103).eligible).toBe(false);
+ localStorage.setItem(`${wiseKey}:${user.id}`,'corrupt');expect(readOnboarding(user.id).eligible).toBe(false);
 });
-
-test("partial enrollment write rolls back and does not survive refresh", () => {
-  saveCredentials(user.id, form);
-  const original = Storage.prototype.setItem;
-  jest.spyOn(Storage.prototype, "setItem").mockImplementation(function (
-    this: Storage, key: string, value: string
-  ) {
-    if (key === enrollmentKey) throw new Error("Storage full");
-    original.call(this, key, value);
-  });
-  expect(() => enrollInProgram(user.id)).toThrow();
-  expect(localStorage.getItem(`${enrollmentKey}:${user.id}`)).toBeNull();
-  expect(readOnboarding(user.id).eligible).toBe(false);
-  renderWelcome();
-  expect(screen.getByRole("button", { name: "Get bonuses" })).toBeDisabled();
+test('repairing one scoped record never deletes another owner enrollment',()=>{
+ localStorage.setItem(enrollmentKey,JSON.stringify({userId:102,enrolledAt:saved.savedAt}));localStorage.setItem(`${enrollmentKey}:${user.id}`,JSON.stringify({userId:user.id,enrolledAt:saved.savedAt}));
+ saveCredentials(user.id,form);expect(JSON.parse(localStorage.getItem(enrollmentKey)!).userId).toBe(102);expect(readOnboarding(user.id).eligible).toBe(false);
 });
-
-test("loading session does not prematurely redirect or allow bonuses", () => {
-  seed(saved);
-  auth(user, true);
-  const view = render(routeTree("/bonuses"));
-  expect(screen.getByTestId("location")).toHaveTextContent("/bonuses");
-  expect(screen.queryByRole("heading", { name: "Получение бонусов" })).not.toBeInTheDocument();
-  auth();
-  view.rerender(routeTree("/bonuses"));
-  expect(screen.getByRole("heading", { name: "Получение бонусов" })).toBeInTheDocument();
+test('storage events revoke access on an already mounted protected route',()=>{
+ seed(saved);render(wrapper(gate(),'/participate'));expect(screen.getByText('Protected participation')).toBeInTheDocument();
+ act(()=>{localStorage.removeItem(wiseKey);window.dispatchEvent(new StorageEvent('storage',{key:wiseKey}));});
+ expect(screen.getByTestId('location')).toHaveTextContent('/profile');expect(screen.queryByText('Protected participation')).not.toBeInTheDocument();
 });
-
-test("guests keep the enabled registration button", () => {
-  auth(null);
-  renderWelcome();
-  const button = screen.getByRole("button", { name: "Get bonuses" });
-  expect(button).toBeEnabled();
-  fireEvent.click(button);
-  expect(screen.getByTestId("location")).toHaveTextContent("/register");
+test('save, enrollment and storage clearing update the mounted production hook',()=>{
+ render(wrapper(<State/>));act(()=>saveCredentials(user.id,form));expect(screen.getByTestId('eligible')).toHaveTextContent('false');
+ act(()=>enrollInProgram(user.id));expect(screen.getByTestId('eligible')).toHaveTextContent('true');
+ act(()=>{localStorage.clear();window.dispatchEvent(new StorageEvent('storage',{key:null}));});expect(screen.getByTestId('eligible')).toHaveTextContent('false');
 });
-
-test("invalid form cannot be saved or enrolled through helper calls", () => {
-  expect(() => saveCredentials(user.id, emptyWiseForm)).toThrow();
-  expect(() => enrollInProgram(user.id)).toThrow();
+test('read and write failures fail closed and helper recovery is explicit',()=>{
+ seed(saved);const read=jest.spyOn(Storage.prototype,'getItem').mockImplementation(()=>{throw Error('denied')});
+ expect(readOnboarding(user.id).eligible).toBe(false);expect(()=>enrollInProgram(user.id)).toThrow();read.mockRestore();localStorage.clear();
+ const write=jest.spyOn(Storage.prototype,'setItem').mockImplementation(()=>{throw Error('full')});
+ expect(()=>saveCredentials(user.id,form)).toThrow();expect(readOnboarding(user.id).eligible).toBe(false);write.mockRestore();
+ saveCredentials(user.id,form);const enrollment=jest.spyOn(Storage.prototype,'setItem').mockImplementation(()=>{throw Error('full')});
+ expect(()=>enrollInProgram(user.id)).toThrow();expect(readOnboarding(user.id).eligible).toBe(false);enrollment.mockRestore();enrollInProgram(user.id);expect(readOnboarding(user.id).eligible).toBe(true);
+});
+test('partial enrollment write rolls back and never survives refresh',()=>{
+ saveCredentials(user.id,form);const original=Storage.prototype.setItem;
+ jest.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,key:string,value:string){if(key===enrollmentKey)throw Error('full');original.call(this,key,value)});
+ expect(()=>enrollInProgram(user.id)).toThrow();expect(localStorage.getItem(`${enrollmentKey}:${user.id}`)).toBeNull();expect(readOnboarding(user.id).eligible).toBe(false);
+ render(wrapper(gate(),'/participate'));expect(screen.queryByText('Protected participation')).not.toBeInTheDocument();
+});
+test('loading session never renders protected participation or redirects prematurely',()=>{
+ seed(saved);auth(user,true);const view=render(wrapper(gate(),'/participate'));expect(screen.queryByText('Protected participation')).not.toBeInTheDocument();expect(screen.getByTestId('location')).toHaveTextContent('/participate');
+ auth();view.rerender(wrapper(gate(),'/participate'));expect(screen.getByText('Protected participation')).toBeInTheDocument();
+});
+test('guests must register for actual participation even though public browsing is enabled',()=>{
+ auth(null);render(wrapper(gate(),'/participate'));expect(screen.getByTestId('location')).toHaveTextContent('/register');
+});
+test('unverified users cannot participate even with saved enrollment',()=>{
+ seed(saved);auth({...user,email_verified:false});render(wrapper(gate(),'/participate'));expect(screen.getByTestId('location')).toHaveTextContent('/verify-email');
+});
+test('invalid form cannot be saved or enrolled through direct helper calls',()=>{
+ expect(()=>saveCredentials(user.id,emptyWiseForm)).toThrow();expect(()=>enrollInProgram(user.id)).toThrow();
+});
+test('Profile displays save and enrollment storage errors, preserves fail-closed state and supports retry',()=>{
+ render(wrapper(<Profile/>));fill();
+ const failedSave=jest.spyOn(Storage.prototype,'setItem').mockImplementation(()=>{throw Error('full')});
+ fireEvent.click(screen.getByRole('button',{name:messages.en.saveCredentials}));
+ expect(screen.getByText(messages.en.storageError)).toBeInTheDocument();expect(readOnboarding(user.id).eligible).toBe(false);
+ failedSave.mockRestore();fireEvent.click(screen.getByRole('button',{name:messages.en.saveCredentials}));
+ expect(readOnboarding(user.id).credentialsSaved).toBe(true);
+ const failedEnrollment=jest.spyOn(Storage.prototype,'setItem').mockImplementation(()=>{throw Error('full')});
+ fireEvent.click(screen.getByRole('button',{name:messages.en.enroll}));
+ expect(screen.getByText(messages.en.storageError)).toBeInTheDocument();expect(readOnboarding(user.id).eligible).toBe(false);
+ failedEnrollment.mockRestore();fireEvent.click(screen.getByRole('button',{name:messages.en.enroll}));
+ expect(readOnboarding(user.id).eligible).toBe(true);
 });
