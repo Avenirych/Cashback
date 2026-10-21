@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Query } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 
 @Controller('analytics')
@@ -7,7 +7,7 @@ export class AnalyticsController {
     private readonly analyticsService: AnalyticsService,
   ) {}
 
-  @Get()
+  // Internal service functionality remains; no unapproved public analytics route.
   async getEvents(
     @Query('userId') userId?: number,
     @Query('type') type?: string,

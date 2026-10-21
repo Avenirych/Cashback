@@ -286,11 +286,16 @@ test("banned active membership never exposes topic creation or message inputs", 
 test("active forum header exit invokes only forum logout", async () => {
   auth.forumUser = profile; auth.forumSessionActive = true;
   (fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => [] });
-  render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+    const view = render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
   fireEvent.click(screen.getByRole("button", { name: "Exit Forum" }));
-  expect(auth.logoutFromForum).toHaveBeenCalled();
+    expect(auth.logoutFromForum).toHaveBeenCalledTimes(1);
   expect(auth.logout).not.toHaveBeenCalled();
-  await screen.findByText(/first/i);
+    expect(auth.user).toEqual(mainUser);
+    expect(auth.token).toBe('main-token');
+    await screen.findByText(/first/i);
+    auth.forumUser = null; auth.forumSessionActive = false;
+    view.rerender(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
+    expect(screen.queryByRole('button', {name:'Exit Forum'})).not.toBeInTheDocument();
 });
 
 test("avatar validation enforces exact byte limit and safe backend origin", () => {

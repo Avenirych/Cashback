@@ -53,7 +53,7 @@ export class MailService {
         });
         this.mode = 'ethereal';
         this.logger.log(
-          `Mail service initialized (Ethereal). Test account: ${testAccount.user}`,
+          'Mail service initialized (Ethereal)',
         );
         return;
       }
@@ -83,7 +83,7 @@ export class MailService {
    * link itself in local preview mode). Returns null for real SMTP.
    * Throws if sending fails.
    */
-  async sendVerificationEmail(
+  private async deliverVerificationEmail(
     email: string,
     token: string,
     userName: string,
@@ -134,8 +134,24 @@ export class MailService {
       return previewUrl;
     }
 
-    this.logger.log(`Verification email sent to ${email}`);
     return null;
+  }
+
+  async sendVerificationEmail(email: string, token: string, userName: string): Promise<string | null> {
+    return this.sendSafely('verification', email, token, userName);
+  }
+
+  private async sendSafely(operation: 'verification' | 'resend-verification', email: string,
+    token: string, userName: string): Promise<string | null> {
+    this.logger.log(`Mail delivery attempt (${operation})`);
+    try {
+      const result = await this.deliverVerificationEmail(email, token, userName);
+      this.logger.log(`Mail delivery completed (${operation}, ${this.mode})`);
+      return result;
+    } catch {
+      this.logger.error(`Mail delivery failed (${operation})`);
+      throw new Error('Mail delivery failed');
+    }
   }
 
   async sendResendVerificationEmail(
@@ -143,6 +159,6 @@ export class MailService {
     token: string,
     userName: string,
   ): Promise<string | null> {
-    return this.sendVerificationEmail(email, token, userName);
+    return this.sendSafely('resend-verification', email, token, userName);
   }
 }

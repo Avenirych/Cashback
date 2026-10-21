@@ -27,11 +27,14 @@ export function parseOwnUserPatch(body: unknown): UpdateOwnUserDto {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     throw new BadRequestException('Expected a profile object');
   }
-  const fields = Object.keys(body);
-  if (fields.length !== 1 || fields[0] !== 'name') {
+  const fields = Reflect.ownKeys(body);
+  if (![Object.prototype, null].includes(Object.getPrototypeOf(body)) ||
+      fields.length !== 1 || fields[0] !== 'name') {
     throw new BadRequestException('Only name may be updated');
   }
-  const name = (body as Record<string, unknown>).name;
+  // Reject accessors rather than executing attacker-controlled property getters.
+  const descriptor = Object.getOwnPropertyDescriptor(body, 'name');
+  const name: unknown = descriptor && 'value' in descriptor ? descriptor.value : undefined;
   if (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100) {
     throw new BadRequestException('Name must contain 2 to 100 characters');
   }

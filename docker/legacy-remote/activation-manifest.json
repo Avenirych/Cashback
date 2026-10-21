@@ -1,0 +1,552 @@
+{
+  "status": "REFERENCE_ONLY_NOT_ACTIVATED",
+  "approvedRemote": "d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f",
+  "activeApplicationMigrationList": [],
+  "activeFinanceModule": false,
+  "legacyBonusApi": "CI_ONLY_MEMORY_DATABASE_NO_LISTENER",
+  "deferredPhoneFeature": true,
+  "automaticMigrations": false,
+  "synchronize": false,
+  "archives": [
+    {
+      "originalPath": ".vscode/tasks.json",
+      "archive": "docker/legacy-remote/source/.vscode/tasks.json.source.txt",
+      "gitBlob": "beb92a6d14c34a1790a3b27507b3795a527b944d",
+      "sha256": "998f3b8bad2f41d2be310ca7c2966a59cdd5526b7e1fb8f459ffa1999dda1561",
+      "bytes": 307,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Older local launcher/demo documentation. Preserve ancestry; not authority for current 3004/3006 historical environment."
+    },
+    {
+      "originalPath": "cashback-frontend/REGISTRATION-DEMO.md",
+      "archive": "docker/legacy-remote/source/cashback-frontend/REGISTRATION-DEMO.md.source.txt",
+      "gitBlob": "86a96b65943ff63062555e1c695c59dab004e3a6",
+      "sha256": "2e0a24c51556acd79f443fd07309405dda1eea0561f72f3f3c616822de673631",
+      "bytes": 1630,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Older local launcher/demo documentation. Preserve ancestry; not authority for current 3004/3006 historical environment."
+    },
+    {
+      "originalPath": "cashback-frontend/bonus-api/.gitignore",
+      "archive": "docker/legacy-remote/source/cashback-frontend/bonus-api/.gitignore.source.txt",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Separate SQLite demo bonus implementation; canonical uses the Nest demo bonus path. Inactive source may satisfy existing CI bonus-api job, but wiring/data-source decisions require owner review."
+    },
+    {
+      "originalPath": "cashback-frontend/bonus-api/package-lock.json",
+      "archive": "docker/legacy-remote/source/cashback-frontend/bonus-api/package-lock.json.source.txt",
+      "gitBlob": "605cad0ea0c51a1ee471e7904cdf547e2b2a1bb8",
+      "sha256": "862623ae26554a1afe063cc2efb1d45fee9edc867862be12f7279728526afb8b",
+      "bytes": 29767,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Separate SQLite demo bonus implementation; canonical uses the Nest demo bonus path. Inactive source may satisfy existing CI bonus-api job, but wiring/data-source decisions require owner review."
+    },
+    {
+      "originalPath": "cashback-frontend/bonus-api/package.json",
+      "archive": "docker/legacy-remote/source/cashback-frontend/bonus-api/package.json.source.txt",
+      "gitBlob": "4439915dfad9c158e82a57167b5b691e51969ee5",
+      "sha256": "d5a13f549a2c77d20ebf7bf09881d4a80ae5f4fd76399420ac643675b352f71f",
+      "bytes": 294,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Separate SQLite demo bonus implementation; canonical uses the Nest demo bonus path. Inactive source may satisfy existing CI bonus-api job, but wiring/data-source decisions require owner review."
+    },
+    {
+      "originalPath": "cashback-frontend/bonus-api/server.mjs",
+      "archive": "docker/legacy-remote/source/cashback-frontend/bonus-api/server.mjs.source.txt",
+      "gitBlob": "a47e9789bff19b3dace4969a6374d7ef34eecec8",
+      "sha256": "abfdd41e1a7fa14b57417360f3072ffc072e6f7fedfad619d46fdb19558af2d9",
+      "bytes": 17788,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Separate SQLite demo bonus implementation; canonical uses the Nest demo bonus path. Inactive source may satisfy existing CI bonus-api job, but wiring/data-source decisions require owner review."
+    },
+    {
+      "originalPath": "cashback-frontend/src/backend.test.ts",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/backend.test.ts.source.txt",
+      "gitBlob": "4fc7c0270219efc0b338059ea0cf1d8de574d758",
+      "sha256": "5ce09c4b8943dcadab2ca4b287a08a4d6d98ba323aeee4bed3838541954182bd",
+      "bytes": 1564,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Additional frontend isolation/phone/bonus tests or owner-phone UI; compare/adapt current contract rather than replacing canonical regressions or activating remote APIs."
+    },
+    {
+      "originalPath": "cashback-frontend/src/bonus-access.test.tsx",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/bonus-access.test.tsx.source.txt",
+      "gitBlob": "eb12c8bbb018ced13f870540c6c3f825f20854b0",
+      "sha256": "82b28c94d3b3ceb9235f67567f12953112df9a7ae95d62fe6b9dead6bb9e5f0e",
+      "bytes": 9129,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Additional frontend isolation/phone/bonus tests or owner-phone UI; compare/adapt current contract rather than replacing canonical regressions or activating remote APIs."
+    },
+    {
+      "originalPath": "cashback-frontend/src/components/OwnPhonePanel.tsx",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/components/OwnPhonePanel.tsx.source.txt",
+      "gitBlob": "dc9396eb10aa19a5bc7dff40fb96aed055dcc6d3",
+      "sha256": "561d3dd1c4608bff81622f2fac15fcafa5922196b679e9d8df29b2dd260522d7",
+      "bytes": 3585,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Additional frontend isolation/phone/bonus tests or owner-phone UI; compare/adapt current contract rather than replacing canonical regressions or activating remote APIs."
+    },
+    {
+      "originalPath": "cashback-frontend/src/components/PhoneInput.test.tsx",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/components/PhoneInput.test.tsx.source.txt",
+      "gitBlob": "d32ae79a3ebb2ca18346d7abcd61143f25c8df1f",
+      "sha256": "db86ca9cc52da44c9e098c66968afa42cbe5e199964ad0cf3f6f1722e0da3f4f",
+      "bytes": 4471,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Additional frontend isolation/phone/bonus tests or owner-phone UI; compare/adapt current contract rather than replacing canonical regressions or activating remote APIs."
+    },
+    {
+      "originalPath": "cashback-frontend/src/pages/LocalRegistrationFlow.test.tsx",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/pages/LocalRegistrationFlow.test.tsx.source.txt",
+      "gitBlob": "3719391dd31b67c784b9a97593ea25a52ba1299e",
+      "sha256": "70a942fabc3ab4f4726ddc803974abf3cbb3b6840c79b61787c632ea1f3d7c5d",
+      "bytes": 2274,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Additional frontend isolation/phone/bonus tests or owner-phone UI; compare/adapt current contract rather than replacing canonical regressions or activating remote APIs."
+    },
+    {
+      "originalPath": "cashback-frontend/src/pages/RegistrationFields.test.tsx",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/pages/RegistrationFields.test.tsx.source.txt",
+      "gitBlob": "b2858d2c542bca00eb8c840ef3fc948eb6600baa",
+      "sha256": "d53e80759013abb654b369bee96dcd58e7e8a845b4950c31497098acf9bd76c0",
+      "bytes": 6511,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Additional frontend isolation/phone/bonus tests or owner-phone UI; compare/adapt current contract rather than replacing canonical regressions or activating remote APIs."
+    },
+    {
+      "originalPath": "cashback-frontend/src/registrationIsolation.test.tsx",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/registrationIsolation.test.tsx.source.txt",
+      "gitBlob": "e643db56957f010ad8dbc19f3190ff8c5a507bf3",
+      "sha256": "eb06fa8f2ec83339bf06b4264298a55b5d8e7f3f81981a98e6e0bfd84f07ba33",
+      "bytes": 3077,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Additional frontend isolation/phone/bonus tests or owner-phone UI; compare/adapt current contract rather than replacing canonical regressions or activating remote APIs."
+    },
+    {
+      "originalPath": "cashback-frontend/src/services/bonusApi.ts",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/services/bonusApi.ts.source.txt",
+      "gitBlob": "f65c74471c66f1cd72b9c5c301aca63c07c8c133",
+      "sha256": "515ae4265a53c5e46f85dfeba363f7c3ba53603ecee9b2527d96da290ae84564",
+      "bytes": 2838,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Separate SQLite demo bonus implementation; canonical uses the Nest demo bonus path. Inactive source may satisfy existing CI bonus-api job, but wiring/data-source decisions require owner review."
+    },
+    {
+      "originalPath": "cashback-frontend/src/utils/phone.test.ts",
+      "archive": "docker/legacy-remote/source/cashback-frontend/src/utils/phone.test.ts.source.txt",
+      "gitBlob": "d3fb95c6a183c53759fc56bde063fe140c299c19",
+      "sha256": "aeaabdb8d1b09ab3e898d7525988967b63b03a4ca033d9e903c7d88dcda475aa",
+      "bytes": 618,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Additional frontend isolation/phone/bonus tests or owner-phone UI; compare/adapt current contract rather than replacing canonical regressions or activating remote APIs."
+    },
+    {
+      "originalPath": "src/auth/auth-email-uniqueness.spec.ts",
+      "archive": "docker/legacy-remote/source/src/auth/auth-email-uniqueness.spec.ts.source.txt",
+      "gitBlob": "cfcdfe1afc8b1d63375587f88fd19965ef1dbf49",
+      "sha256": "436d63e84a6540f32a1f0b95ff957c5aa0c33d2010b10dfccf35f80cba52454f",
+      "bytes": 6887,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/auth/auth-registration-security.spec.ts",
+      "archive": "docker/legacy-remote/source/src/auth/auth-registration-security.spec.ts.source.txt",
+      "gitBlob": "6b17aad978ee1792cd1351a331d41b7c3e8cfdaf",
+      "sha256": "c551f2a650894018933bfdc1145b793cc28287cd571c11f3a8c1947b6e08d629",
+      "bytes": 6903,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/auth/auth-resend-security.spec.ts",
+      "archive": "docker/legacy-remote/source/src/auth/auth-resend-security.spec.ts.source.txt",
+      "gitBlob": "2f942058e144a81a2b6d400d76ab2ce2c179dd72",
+      "sha256": "2b5fcada3a0ca5b417bcbfb1989a728bfd689dd3688cae89dced8776b58ebf4f",
+      "bytes": 5231,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/auth/auth-users-contract.spec.ts",
+      "archive": "docker/legacy-remote/source/src/auth/auth-users-contract.spec.ts.source.txt",
+      "gitBlob": "ff766f45cedc3313f4ac1692bc1e492d4d93bc94",
+      "sha256": "07798c44f1a835d478623b89fcdf586381db6b8654137fd95b82d7c26838c68a",
+      "bytes": 4947,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/auth/jwt-configuration.spec.ts",
+      "archive": "docker/legacy-remote/source/src/auth/jwt-configuration.spec.ts.source.txt",
+      "gitBlob": "9849f0c8def8deef58ac6c54d0791b461dd0767e",
+      "sha256": "52304dc375099cc0e0c9d6d9e9240b66ffd4ea7ef1328e73b5a41c88196e7d8e",
+      "bytes": 4456,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/auth/jwt-configuration.ts",
+      "archive": "docker/legacy-remote/source/src/auth/jwt-configuration.ts.source.txt",
+      "gitBlob": "a31ecfdeaa0d11860d10534f2851b095f6bd1cbe",
+      "sha256": "0bb56beb93b621d192ad121c12c7c9996ac350335edf99abc5771821dddc2604",
+      "bytes": 1155,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Retained solely as unwired compatibility module for original remote configuration tests; canonical AuthModule and JwtStrategy use requiredJwtSecret. Not imported by application wiring."
+    },
+    {
+      "originalPath": "src/auth/jwt-user-existence.spec.ts",
+      "archive": "docker/legacy-remote/source/src/auth/jwt-user-existence.spec.ts.source.txt",
+      "gitBlob": "48d6a7063aa673f34a7823b07beaf1e36ea44ae0",
+      "sha256": "c4ccafa6faf385d71ade140e8e9745ed0d28c803604fef1b863d09dc55165e4d",
+      "bytes": 8488,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/auth/registration-readiness.spec.ts",
+      "archive": "docker/legacy-remote/source/src/auth/registration-readiness.spec.ts.source.txt",
+      "gitBlob": "34003094450c14bb1aaa738eebcf60ddc4b2b40d",
+      "sha256": "57113c89cf9ed9c178007c8a64b29129d2c52280950a8e00806bc10d9c50b7a9",
+      "bytes": 5997,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/auth/registration-readiness.ts",
+      "archive": "docker/legacy-remote/source/src/auth/registration-readiness.ts.source.txt",
+      "gitBlob": "ebe38f811352ac6b0939b3aef5a5576adcb7397d",
+      "sha256": "32cc5feed1e2b3a01a244c58915876471588b6039337efd698f6e685b7461e35",
+      "bytes": 5336,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/data-source.ts",
+      "archive": "docker/legacy-remote/source/src/data-source.ts.source.txt",
+      "gitBlob": "b419c7123410eee12c0de0be0f76b02a54b3edb8",
+      "sha256": "488c3cdcd2ae364bf13588bf6cc631170110efc099d2383594437ff96a641055",
+      "bytes": 1444,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/docker-main-test-data-source.ts",
+      "archive": "docker/legacy-remote/source/src/docker-main-test-data-source.ts.source.txt",
+      "gitBlob": "985f1edb4975098c12f8e4ade0b15e35776dc4cf",
+      "sha256": "a3c4f473edbc9462d1eca9bbc9a99cf22a4d0abfa698e364d52eb57b3cec0518",
+      "bytes": 4473,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/docker-main-test-preflight.spec.ts",
+      "archive": "docker/legacy-remote/source/src/docker-main-test-preflight.spec.ts.source.txt",
+      "gitBlob": "5d94f43570d7ced7360c4d19d540e78aa9efa32e",
+      "sha256": "0826ed238995566d209f6ad79d69a40fd64810f37eeb75d66feebf8f79005990",
+      "bytes": 4692,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/docker-main-test-preflight.ts",
+      "archive": "docker/legacy-remote/source/src/docker-main-test-preflight.ts.source.txt",
+      "gitBlob": "4d541a03aaf8cac210a60524801d9a3e2ab91727",
+      "sha256": "3e24d0fa038b8f007f5b0c58f86ce84ed89869e8f37a47ae8514240cb4b751e8",
+      "bytes": 7394,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/docker-phone-migration-data-source.ts",
+      "archive": "docker/legacy-remote/source/src/docker-phone-migration-data-source.ts.source.txt",
+      "gitBlob": "439112e7772474deb85f017646a970a36589e3de",
+      "sha256": "042855f18d5f2a2bed622a5b0c61ccd4a0f5dd0e41960a5c609f86b0d2387122",
+      "bytes": 1849,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/docker-phone-migration-preflight.spec.ts",
+      "archive": "docker/legacy-remote/source/src/docker-phone-migration-preflight.spec.ts.source.txt",
+      "gitBlob": "a5579739a7867bf7cad0e0cf507a32a22a957d62",
+      "sha256": "082a6193511f3de753d5bb3ee2aa56e21c71cac7f93d8ce1ba3afd100b7f9d3b",
+      "bytes": 16768,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/docker-phone-migration-preflight.ts",
+      "archive": "docker/legacy-remote/source/src/docker-phone-migration-preflight.ts.source.txt",
+      "gitBlob": "1f859f7b4a9c521c0e1cb05a3875e563d95e03c7",
+      "sha256": "eff80ac79eafa62083f6179c9b402cd183d9b949f8289b678df11220e03a15e1",
+      "bytes": 17568,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/docker-phone-migration-runner.ts",
+      "archive": "docker/legacy-remote/source/src/docker-phone-migration-runner.ts.source.txt",
+      "gitBlob": "ba8134f6f7f42be3be36367fb88ea55d19369f77",
+      "sha256": "e19d60d8c3ecc5beeb7ef1dedabba17fe8e6aa9843488612963d15b74912c560",
+      "bytes": 6541,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/docker-test-data-source.ts",
+      "archive": "docker/legacy-remote/source/src/docker-test-data-source.ts.source.txt",
+      "gitBlob": "21acd22eff1c747c42acc595908003791e4991db",
+      "sha256": "11a2541d4a3a18a056d5330bc11e59fa5716f9ff2aab3cbfb4b78b3ee5f626be",
+      "bytes": 2839,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/legacy-routes-security.spec.ts",
+      "archive": "docker/legacy-remote/source/src/legacy-routes-security.spec.ts.source.txt",
+      "gitBlob": "f3a79c64747076fb4a56631763f442ad37725d99",
+      "sha256": "454caf495a3694966c6c0dd52a868697af8af333ac6d260bf27445de5f44b8be",
+      "bytes": 7781,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/mail/local-demo-mailpit.ts",
+      "archive": "docker/legacy-remote/source/src/mail/local-demo-mailpit.ts.source.txt",
+      "gitBlob": "25a25928fda9de26d87ac154724040a535976deb",
+      "sha256": "d2247994ec6ac7ecb09f9bebf1cf30cb3af891fec791e71fe81f651808e81361",
+      "bytes": 1790,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/mail/mail-security.spec.ts",
+      "archive": "docker/legacy-remote/source/src/mail/mail-security.spec.ts.source.txt",
+      "gitBlob": "99c18645298928fdcb1ea6757874df54489102f9",
+      "sha256": "fddcbb240a77ed406db842fd445888a74af0a8165ae8b6323e8b9713aed40bcf",
+      "bytes": 6083,
+      "activeSourceRetained": true,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/migration-registration.spec.ts",
+      "archive": "docker/legacy-remote/source/src/migration-registration.spec.ts.source.txt",
+      "gitBlob": "b2b0760123424eeaf260d13ac8957c962041de5b",
+      "sha256": "32154f4b665a4a8c11fdf13607f9d580db6af5bc206602f10e54fec3207e7ea2",
+      "bytes": 2096,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/migrations/1733927999000-InitialApplicationTables.ts",
+      "archive": "docker/legacy-remote/source/src/migrations/1733927999000-InitialApplicationTables.ts.source.txt",
+      "gitBlob": "b7d54f9c1d4ac6cb63745f1c230a7238d1b4d532",
+      "sha256": "9ffe9832c7daecb6da4df031d37e6f964dfc1e94849f0c811112973dc458b7a3",
+      "bytes": 2474,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/migrations/1733928000000-AddMarketingPreferences.ts",
+      "archive": "docker/legacy-remote/source/src/migrations/1733928000000-AddMarketingPreferences.ts.source.txt",
+      "gitBlob": "f3ed119b2d407ba5f0ffc65376d0721b1293c10b",
+      "sha256": "b4ba118089015678b72ba1c9b90fa306f0f73589aaa3ad1a2a1972f742e77f76",
+      "bytes": 1563,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/migrations/1791888000000-AddUsersEmailUnique.ts",
+      "archive": "docker/legacy-remote/source/src/migrations/1791888000000-AddUsersEmailUnique.ts.source.txt",
+      "gitBlob": "4dfabe126d7a2662c156b6af48599de29e93fe59",
+      "sha256": "ea8425ac74e2ca37f3ce8e81637c12db0fa86775d08c8851138a578b52e6691d",
+      "bytes": 777,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/migrations/1792195200000-AddUserPhoneAndSmsConsent.ts",
+      "archive": "docker/legacy-remote/source/src/migrations/1792195200000-AddUserPhoneAndSmsConsent.ts.source.txt",
+      "gitBlob": "b9fa833857a9077d277fcc1fdce89f7f0527eeb6",
+      "sha256": "efa9eea1013700679d37b1f6434a5e4d726513e6f6a98012ae81b63f55095951",
+      "bytes": 2526,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/migrations/CreateBonusTables.ts",
+      "archive": "docker/legacy-remote/source/src/migrations/CreateBonusTables.ts.source.txt",
+      "gitBlob": "85391ef0ecb10294668de6bf496895bd6666e798",
+      "sha256": "4fae01394194b3a0c39f91bab2d810ba08517a5e9c1ba88cba5daa0fef9048a3",
+      "bytes": 2871,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/migrations/user-phone.spec.ts",
+      "archive": "docker/legacy-remote/source/src/migrations/user-phone.spec.ts.source.txt",
+      "gitBlob": "cc5548680f04e485b7163035bb4627b5f7eef3d6",
+      "sha256": "38fe3cbfe794fe36f2b5c098937a389bf1c7dcc9e705cb6196eb74eb3f6eb608",
+      "bytes": 940,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/migrations/users-email-unique.spec.ts",
+      "archive": "docker/legacy-remote/source/src/migrations/users-email-unique.spec.ts.source.txt",
+      "gitBlob": "139335c3f2e760ff9b04ab22361c30adc1d53c83",
+      "sha256": "88350bf56c91b3012bf5ed1bf2e0ef40531b90fdee15a15f9bb22dc8cad71ea1",
+      "bytes": 2824,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "src/users/email-normalization.ts",
+      "archive": "docker/legacy-remote/source/src/users/email-normalization.ts.source.txt",
+      "gitBlob": "1b60ba10d26384dfc35a8bb51111033fef62c60c",
+      "sha256": "9ccaa7c5737e4a8e8c218c4b72c4cd69e3ec170da20ea7215bd8a67becde8488",
+      "bytes": 178,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/users/phone-normalization.spec.ts",
+      "archive": "docker/legacy-remote/source/src/users/phone-normalization.spec.ts.source.txt",
+      "gitBlob": "5b04594f9f817e13e069d9b95a0b6d9aad2c5d37",
+      "sha256": "3f9aec0e26cae0e5525e505c6fd8a1231aa134e0ed110a03c523af39d474e397",
+      "bytes": 1091,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/users/users-email-normalization.spec.ts",
+      "archive": "docker/legacy-remote/source/src/users/users-email-normalization.spec.ts.source.txt",
+      "gitBlob": "08e7600a71889a6ce70383264f39ef2b535a655d",
+      "sha256": "d5013139b81912fb3dc4d83588d9b8f8fd637cf212e4743677334ac2a25ae858",
+      "bytes": 2270,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/users/users-phone.spec.ts",
+      "archive": "docker/legacy-remote/source/src/users/users-phone.spec.ts.source.txt",
+      "gitBlob": "c6a025ba9f233b64a8b47affba3ee38dcb0a0b39",
+      "sha256": "0250ff4795d885810c1c7e9df67ab4c2410116af608149d9f6cca0e319427e8d",
+      "bytes": 4808,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "src/users/users.controller.spec.ts",
+      "archive": "docker/legacy-remote/source/src/users/users.controller.spec.ts.source.txt",
+      "gitBlob": "2a0dc8f415e6a6636fecea3f92aabb38156adf28",
+      "sha256": "3353d68c8aecd1e44dad21ace56835d1d7efd7de3d58bbc79c3c922551d38494",
+      "bytes": 7360,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Useful security/normalization/readiness/phone tests or helpers; retain semantics for a narrow approved port. Several require remote-only entity/DI/auth contracts; importing wholesale would alter behavior or fail current tests."
+    },
+    {
+      "originalPath": "test/email-unique/README.md",
+      "archive": "docker/legacy-remote/source/test/email-unique/README.md.source.txt",
+      "gitBlob": "64b03b850d7caa364aa085e9221aeaf271294cfb",
+      "sha256": "e6c2b9de68d34df4e6346b4051945b87a74d6af8d35ed1bfcad60425711a9c46",
+      "bytes": 7730,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "test/email-unique/config.spec.ts",
+      "archive": "docker/legacy-remote/source/test/email-unique/config.spec.ts.source.txt",
+      "gitBlob": "5c0e4ea0f662050610dce61e6d82ba601ee6e08d",
+      "sha256": "cefc94f17fb9dabc81900012c3b6fdcbcc258d3cf3ad42ae6ea7a4ef960a6e73",
+      "bytes": 1959,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "test/email-unique/data-source.ts",
+      "archive": "docker/legacy-remote/source/test/email-unique/data-source.ts.source.txt",
+      "gitBlob": "43b85ba021e91f5fc6d0f4e0df3717974d7cabbb",
+      "sha256": "7dbee2f0b4774b527e4ef7c6a7082bf4c6cb2197ecac419ec7c1a4ab12cab982",
+      "bytes": 5691,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "test/email-unique/run.integration.ts",
+      "archive": "docker/legacy-remote/source/test/email-unique/run.integration.ts.source.txt",
+      "gitBlob": "c5de7a2a91164528bd3a54836814fb7143c59bf2",
+      "sha256": "c49e8e02f8861951d35b25a2565e07e4096620682f749ea42c74bd797ff00fd4",
+      "bytes": 6517,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    },
+    {
+      "originalPath": "test/email-unique/tsconfig.json",
+      "archive": "docker/legacy-remote/source/test/email-unique/tsconfig.json.source.txt",
+      "gitBlob": "d8247aca85ed49951299044fef854708046e570c",
+      "sha256": "3baa9e734087086a54feb8c55bd693c38f4f49a94debc43126b533b22593d413",
+      "bytes": 244,
+      "activeSourceRetained": false,
+      "activationAllowed": false,
+      "reason": "Earlier bootstrap/phone/uniqueness migration or isolated harness. Preserve exact history; do not execute, enable or mix with initialized historical schema and 16 finance migrations."
+    }
+  ]
+}

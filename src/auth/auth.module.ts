@@ -1,4 +1,4 @@
-import { required } from '../local-configuration';
+import { requiredJwtSecret } from '../local-configuration';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -14,7 +14,7 @@ import { User } from '../users/user.entity';
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: required('JWT_SECRET'),
+      secret: requiredJwtSecret(),
       signOptions: { expiresIn: '24h' },
     }),
     PassportModule,

@@ -132,3 +132,10 @@ backend-logs.txt
 !/work/policy-2026-10-21-backup-2026-10-21T08-05-28-613Z/
 /work/policy-2026-10-21-backup-2026-10-21T08-05-28-613Z/*
 !/work/policy-2026-10-21-backup-2026-10-21T08-05-28-613Z/OWNER-APPROVED-POLICY.txt
+
+# Inactive legacy CI component: never version runtime SQLite data.
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+/cashback-frontend/bonus-api/data/

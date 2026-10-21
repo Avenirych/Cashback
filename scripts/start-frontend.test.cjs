@@ -12,7 +12,10 @@ function harness() {
     open:async url=>{opened.push(url);}, pause:async()=>{}, log:()=>{}, report:e=>errors.push(e), setExitCode:e=>exits.push(e), attempts:3};
   return {options,probes,spawns,opened,errors,exits,child};
 }
-test('root npm start invokes existing launcher',()=>assert.equal(require('../package.json').scripts.start,'node scripts/start-frontend.cjs'));
+test('canonical npm start remains Nest and does not activate the dormant 3003/3005 demo launcher',()=>{
+  assert.equal(require('../package.json').scripts.start,'nest start');
+  assert.equal(require('../cashback-frontend/package.json').scripts.start,'react-scripts start');
+});
 test('default and explicit port are only 3003',()=>{
   assert.equal(selectedPort({}),3003);assert.equal(selectedPort({PORT:'3003'}),3003);
   for(const PORT of ['3000','3002','3004','','03003'])assert.throws(()=>selectedPort({PORT}),/only PORT=3003/);

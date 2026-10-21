@@ -73,6 +73,7 @@ jobs:
           cache-dependency-path: cashback-frontend/bonus-api/package-lock.json
       - run: npm ci --no-audit --no-fund
       - run: node --check server.mjs
+      - run: npm test
 
   compose-config:
     runs-on: ubuntu-24.04

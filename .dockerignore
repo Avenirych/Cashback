@@ -6,3 +6,27 @@
 .historical.env
 **/*.log
 work
+
+# Reviewed merge hardening: exclude secrets/data, retain required SQL fixtures.
+**/*.env
+**/*.env.*
+**/.npmrc
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.dpapi
+**/*.sqlite
+**/*.sqlite-*
+**/*.db
+**/*.db-*
+**/data
+**/config-backups
+**/.vscode
+**/.idea
+**/coverage
+**/*.tsbuildinfo
+**/*logs.txt
+docker/legacy-remote/source
+!docker/compose.env.example
+!docker/historical/env.example

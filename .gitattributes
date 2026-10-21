@@ -1,0 +1,2 @@
+# Preserve exact provenance blobs, including original EOF spacing, across Windows checkouts.
+/docker/legacy-remote/source/** -text whitespace=-blank-at-eof

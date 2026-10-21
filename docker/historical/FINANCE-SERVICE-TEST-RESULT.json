@@ -1,7 +1,7 @@
 {
   "migrationReadiness": {
     "status": "MIGRATION_READINESS_DISPOSABLE_PASS",
-    "cluster": "7699055890899750956",
+    "cluster": "7699113594403258412",
     "order": [
       "CreateFinanceCore1791890000000",
       "AddFinanceOutbox1791891000000",
@@ -4114,9 +4114,9 @@
   "ownerPolicyPayoutSimulatorOnly": true,
   "policy21Verified": true,
   "prior65ChecksSha256": "15ad3aa35545574cc4351c604da0339affbfc9f36b4bc40d77e5b0d03f4bb54d",
-  "cluster": "7699055890899750956",
+  "cluster": "7699113594403258412",
   "testDatabase": "finance_completion_isolated",
-  "archive": "C:\\Users\\serge\\cashback+\\work\\finance-completion-290ff400-9955-4219-b9a7-8584921015b2",
+  "archive": "C:\\Users\\serge\\cashback+\\work\\github-reconciliation-2026-10-21\\work\\finance-completion-37ffb270-d34c-495c-8957-59ca7f217ba9",
   "protectedContainerIdentitiesPreserved": true,
   "originalNetworks": "e4cc5d75e824013d910c6740efc69815448f99585648a490861e7813a486dba9\n2351cab9bb7ca011143676f45e4c7b7d7e2f378ab501c1b78aeefde1f8f3c283\nc01dcdc8bad759b6bfda473a87c9a54b8f8036e1d0056dce170be3f482969807\n3443626f6e8fa753e667cf6505073c8a04d60b5a56e857ee87f27c9b1d2b4ae3\nec92b8dc8bf82702303ffa6736f308eff460dd49ee4e1ac7148abbf373075c98\nbeeac6d46204ae9138347ab8ea419f5a98c687199724fab0af96d4433d99fda8\n8d164c40dd4b88ee1ca0d6421f4d67f999d7bb54fb6d7b48522a40beb065e51c\nf1698c4e9fb1799efff96df332082337e3c58f5a96eeeee6326db0d8b32af31c\n724a39a4372862b41e0259c2f9991c7824f193b9aba508b08b1978b29c84cdd8\n6217313e0c31c0681c1fe16d891fbbca9c12334e59d944612c0a530dcfd5548f\n85c608b290d5944cf8839507943ca46d9bbe4af068095e670b7169fc59a051d5\n5b919ffab27b32dde52b9efc8b3fa2de8487d96870b63c7894dd76c2a7e85468",
   "cleanup": "exact owned test containers/network removed; no volumes created"
