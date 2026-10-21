@@ -105,4 +105,59 @@ retention decision. Their reported recoverable space is zero until item-specific
 Many are referenced by reports, junctions or even stopped Docker bind mounts: names alone do
 not establish disposability. No blanket deletion request is made and no such deletion performed.
 
-New baseline and cleanup outcome details follow after final Git/resource verification.
+## Final local outcome
+
+**BASELINE_SAVED_LOCALLY**: baseline commit
+`a27fa64889bed8c9ed0d98903ab3ab8fe0f8c54f`, branch
+`baseline/canonical-2026-10-21`, annotated tag `cashback-baseline-2026-10-21`.
+The tag deliberately identifies the application baseline; a subsequent documentation-only
+audit commit records this final report and resource/merge review results.
+The baseline tree has 903 files, including all 16 finance migrations. The change from the
+historical ancestor has 690 changed paths; this includes pre-existing owner work, not 690
+new changes made by this preservation task.
+
+Staging the formerly untracked files exposed six pre-existing extra blank lines at EOF,
+which an unstaged-only diff check had not covered. They were removed without changing
+non-whitespace content: `cashback-frontend/src/components/SiteSearch.test.tsx`,
+`docker/historical/run-offline.cjs`,
+`docker/local-registration/INFRASTRUCTURE-EXECUTION-PLAN.md`,
+`infra/finance-security-test/Dockerfile`,
+`infra/finance-security-test/synthetic-harness/SOURCE_INTEGRITY_MANIFEST.md`,
+`src/marketing-preferences/marketing-preferences.security.spec.ts`.
+The staged diff check then passed; no assertions or application behavior were changed.
+
+**BASELINE_PUBLISHED_AND_VERIFIED: NOT COMPLETE.** Read-only merge preview found 74
+conflicting paths, recorded individually in `CANONICAL-BASELINE-MERGE-REVIEW.json`.
+No conflict resolution, merge commit, GitHub push or hosted Actions run is claimed.
+The owner authorized preparation for review; resolving those conflicts and promoting main
+remains a separate reviewed step. Retain the current verified application, inspect remote-only
+additions for obsolete auth/launcher changes, and preserve both histories in an ordinary merge.
+
+**CLEANUP_SAFE_PART_COMPLETED**: only
+`C:\Users\serge\cashback+\tsconfig.build.tsbuildinfo` was deleted: **253,346 bytes**.
+This exact regular file was checked within the project boundary, was not a reparse point or
+Docker mount, and was removed after all compiler processes/tests completed and the baseline
+commit existed. It is reproducible; the pre-task cache is also in the verified backup.
+Removal metadata/hash: local `work/canonical-cleanup-removed.json`.
+Exactly one tracked path was removed from the new Git tree: `backend-logs.txt`, using
+`git rm --cached`; its disk contents were not deleted. No other tracked file was removed.
+
+**CLEANUP_REQUIRES_OWNER_APPROVAL** for any further disposal. The 288-entry local inventory
+is a retention/review list, not a request to approve deletion of all entries. Required policy
+documents must remain. For example, `C:\Users\serge\cashback+\config-backups` (17 files,
+1,491,081 bytes) is retained because configuration/recovery references have not been
+independently disproved. Historical finance validation archives, bind-mounted snapshots,
+dependency junction targets and external backups are likewise retained. Recoverable space
+from these items is not claimed. Item-specific review and exact approval are required before
+removing any potentially valuable archive or configuration.
+
+Final Docker comparison: `CANONICAL-BASELINE-PROTECTED-RESULT.json` — all 18 original
+containers, identities/images/start times/ports/mounts, volume and network inventories
+unchanged; original images preserved. One newly generated disposable test image is retained.
+The initial comparator's missing-vs-undefined JSON field mismatch on bind mounts was corrected
+by JSON normalization; it was not a resource change or relaxed identity check.
+
+No baseline/backup failure remains after verification. Remaining boundaries: unreviewed merge
+conflicts, no published candidate/hosted Actions result, and no active PostgreSQL backup/restore
+authorization. Existing Git history may still contain previously committed logs; rewriting it
+was neither attempted nor authorized. The live website was not redeployed or runtime-modified.
