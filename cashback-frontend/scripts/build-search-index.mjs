@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import ts from 'typescript';
+import vm from 'node:vm';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,7 +13,7 @@ const routes = [
   ['/', 'Welcome'], ['/about', 'AboutUs'], ['/services', 'Services'],
   ['/shop', 'Shop'], ['/forum', 'TopicsPage'], ['/bonuses', 'Bonuses'],
   ['/bonuses/ads', 'BonusAds'], ['/bonuses/research', 'BonusResearch'],
-  ['/faq', 'FAQ'], ['/contacts', 'Contacts'], ['/terms', 'TermsAndConditions'],
+  ['/cookies', 'CookiePolicy'], ['/faq', 'FAQ'], ['/contacts', 'Contacts'], ['/terms', 'TermsAndConditions'],
   ['/privacy', 'PrivacyPolicy'], ['/product-offers', 'ProductOffers'],
   ['/forum/rules', 'ForumRules'],
 ];
@@ -23,6 +25,7 @@ const titles = {
   '/bonuses/research': ['Исследования', 'Research'],
   '/faq': ['Вопросы и ответы', 'FAQ'], '/contacts': ['Контакты', 'Contacts'],
   '/terms': ['Условия использования', 'Terms'],
+  '/cookies': ['Политика Cookies', 'Cookie Policy'],
   '/privacy': ['Конфиденциальность', 'Privacy'],
   '/product-offers': ['Предложения', 'Product offers'],
   '/forum/rules': ['Правила форума', 'Forum rules'],
@@ -47,22 +50,31 @@ function extract(code) {
   for (const match of clean.matchAll(/(?:\b(?:title|description|question|answer|label|placeholder|text|heading|subtitle)\b\s*[:=]\s*)["'`]([^"'`]{3,300})["'`]/g)) fragments.push(match[1]);
   return fragments.join(' ').replace(/&(?:amp|nbsp|quot|lt|gt);/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 16000);
 }
-const sharedTranslations = extract(read(path.join(src, 'i18n.ts'))) + ' ' + extract(read(path.join(src, 'i18n', 'index.ts')));
+
+// Parse only reviewed public source files. Never execute a page or inspect APIs.
+const scope = {};
+vm.runInNewContext(ts.transpileModule(read(path.join(src,'i18n.ts')), {compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText, {exports:scope});
+function strings(value) { return typeof value === 'string' ? [value] : Array.isArray(value) ? value.flatMap(strings) : value && typeof value === 'object' ? Object.values(value).flatMap(strings) : []; }
 const index = routes.map(([url, filename]) => {
-  const candidates = ['.tsx', '.jsx'].map((extension) =>
-    path.join(src, 'pages', `${filename}${extension}`),
-  );
-  const file = candidates.find((candidate) => fs.existsSync(candidate));
-  if (!file) {
-    throw new Error(`Missing page: ${candidates.join(' or ')}`);
+  const file = ['.tsx','.jsx','.ts','.js'].map(ext=>path.join(src,'pages',filename+ext)).find(fs.existsSync);
+  if (!file) throw Error('Missing public page: '+filename);
+  const code=read(file), tree=ts.createSourceFile(file,code,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX), fragments=[];
+  function visit(node) {
+    if(ts.isJsxText(node)) fragments.push(node.text);
+    // Existing pages also keep their public copy in inline RU/EN dictionaries.
+    if(ts.isObjectLiteralExpression(node) && node.properties.some(p=>p.name && ['ru','en','RU','EN'].includes(p.name.getText(tree).replace(/["']/g,'')))) {
+      const collect=n=>{if(ts.isStringLiteral(n)||ts.isNoSubstitutionTemplateLiteral(n)) fragments.push(n.text);ts.forEachChild(n,collect);};
+      collect(node);
+    }
+    ts.forEachChild(node,visit);
   }
-  return {
-    path: url,
-    title: titles[url][0],
-    titleEn: titles[url][1],
-    text: [extract(read(file)), ...(url === '/' || url === '/faq' ? [sharedTranslations] : [])].join(' ').slice(0, 22000),
-  };
+  visit(tree);
+  const keys=new Set(Array.from(code.matchAll(/\bt\.([A-Za-z0-9_]+)/g),m=>m[1]));
+  for(const dict of Object.values(scope.translations)) for(const [key,value] of Object.entries(dict)) {
+    if(keys.has(key)||(url==='/privacy'&&key.startsWith('privacy'))||(url==='/faq'&&key.startsWith('faq'))) fragments.push(...strings(value));
+  }
+  return {path:url,title:titles[url][0],titleEn:titles[url][1],text:fragments.join(' ').replace(/\s+/g,' ').trim().slice(0,80000)};
 });
-fs.mkdirSync(path.dirname(output), { recursive: true });
-fs.writeFileSync(output, JSON.stringify(index, null, 2) + '\n', 'utf8');
-console.log(`Search index created: ${index.length} public pages -> ${output}`);
+fs.mkdirSync(path.dirname(output),{recursive:true});
+fs.writeFileSync(output,JSON.stringify(index,null,2)+'\n');
+console.log('Search index created: '+index.length+' public pages');

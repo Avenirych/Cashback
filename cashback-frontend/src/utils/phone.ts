@@ -6,7 +6,7 @@ export function canonicalPhone(value: string, country: CountryCode): string | nu
   if (value.length > 64 || !/^\+?[0-9 ()-]+$/.test(value.trim())) return null;
   try {
     const phone = parsePhoneNumberWithError(value.trim(), { defaultCountry: country, extract: false });
-    return !phone.ext && phone.isValid() && /^\+[1-9][0-9]{1,14}$/.test(phone.number)
+    return phone.country === country && !phone.ext && phone.isValid() && /^\+[1-9][0-9]{1,14}$/.test(phone.number)
       ? phone.number : null;
   } catch {
     return null;

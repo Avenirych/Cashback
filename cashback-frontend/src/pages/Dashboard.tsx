@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import { useBonuses } from "../context/BonusesContext";
 import "./Dashboard.css";
 
 type CashbackStatus = "pending" | "confirmed";
@@ -12,7 +11,7 @@ interface PurchaseRow {
   appliedBonus: number;
   cashback: number;
   cashbackStatus: CashbackStatus;
-  preparedToPayout: number;
+  preparedToPayout: number; // 0 until cashback confirmed; then applied+cashback
   payoutStatus: PayoutStatus;
   payoutDate: string | null;
 }
@@ -24,97 +23,274 @@ interface PayoutRow {
   purchaseIds: string[];
 }
 
+interface AdBonusRow {
+  id: string;
+  viewDate: string; // DD.MM.YYYY
+  expectedBonus: number;
+  confirmedBonus: number;
+  expiresAt: string; // DD.MM.YYYY
+}
+
+interface ResearchBonusRow {
+  id: string;
+  startDate: string; // DD.MM.YYYY
+  topic: string;
+  expectedBonus: number;
+  confirmedBonus: number;
+  expiresAt: string; // DD.MM.YYYY
+}
+
 interface DashboardProps {
   lang: string;
 }
 
-function toDDMMYYYY(isoLike: string): string {
-  const d = new Date(isoLike);
-  if (Number.isNaN(d.getTime())) return "—";
+function createRandom(seed: number) {
+  let state = seed >>> 0;
+  return () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
+}
+
+const intInRange = (r: () => number, min: number, max: number) =>
+  min + Math.floor(r() * (max - min + 1));
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+function formatDate(d: Date): string {
   const dd = String(d.getDate()).padStart(2, "0");
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const yyyy = d.getFullYear();
   return `${dd}.${mm}.${yyyy}`;
 }
 
-function round2(n: number) {
-  return Math.round(n * 100) / 100;
+function parseDDMMYYYY(s: string): Date {
+  const [dd, mm, yyyy] = s.split(".").map(Number);
+  return new Date(yyyy, mm - 1, dd);
+}
+
+function addDays(date: Date, days: number): Date {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+/**
+ * История бонусов за рекламу (1 месяц), даты сверху последние.
+ * Правило срока годности: +30 дней с даты подтверждения/начисления.
+ */
+function generateAdHistory(count = 20): AdBonusRow[] {
+  const rand = createRandom(555001);
+  const now = new Date();
+  const monthAgo = addDays(now, -30);
+
+  const rows: AdBonusRow[] = Array.from({ length: count }, (_, i) => {
+    const viewDate = addDays(monthAgo, intInRange(rand, 0, 29));
+    const expected = round2(intInRange(rand, 4, 18));
+    const isConfirmed = rand() > 0.2;
+    const confirmed = isConfirmed ? expected : 0;
+    const expiresAt = addDays(viewDate, 30);
+
+    return {
+      id: `AD-${i + 1}`,
+      viewDate: formatDate(viewDate),
+      expectedBonus: expected,
+      confirmedBonus: confirmed,
+      expiresAt: formatDate(expiresAt),
+    };
+  });
+
+  return rows.sort(
+    (a, b) => parseDDMMYYYY(b.viewDate).getTime() - parseDDMMYYYY(a.viewDate).getTime()
+  );
+}
+
+/**
+ * История бонусов за исследования (1 месяц), даты сверху последние.
+ */
+function generateResearchHistory(count = 14): ResearchBonusRow[] {
+  const rand = createRandom(777331);
+  const now = new Date();
+  const monthAgo = addDays(now, -30);
+  const topics = [
+    "UI/UX Feedback",
+    "Payment Experience",
+    "Checkout Funnel",
+    "Delivery Satisfaction",
+    "Loyalty Program Survey",
+    "Mobile App Usability",
+    "Search Relevance",
+    "Customer Support Quality",
+    "Price Perception Study",
+  ];
+
+  const rows: ResearchBonusRow[] = Array.from({ length: count }, (_, i) => {
+    const startDate = addDays(monthAgo, intInRange(rand, 0, 29));
+    const expected = round2(intInRange(rand, 10, 35));
+    const isConfirmed = rand() > 0.25;
+    const confirmed = isConfirmed ? expected : 0;
+    const topic = topics[intInRange(rand, 0, topics.length - 1)];
+    const expiresAt = addDays(startDate, 30);
+
+    return {
+      id: `RS-${i + 1}`,
+      startDate: formatDate(startDate),
+      topic,
+      expectedBonus: expected,
+      confirmedBonus: confirmed,
+      expiresAt: formatDate(expiresAt),
+    };
+  });
+
+  return rows.sort(
+    (a, b) => parseDDMMYYYY(b.startDate).getTime() - parseDDMMYYYY(a.startDate).getTime()
+  );
+}
+
+/**
+ * История покупок + авто-выплаты.
+ * Правило:
+ * - appliedBonus списан при покупке
+ * - в prepared_to_payout попадает только когда cashback confirmed:
+ *   prepared = appliedBonus + cashback
+ * - авто-выплата, когда батч >= 100
+ */
+function generatePurchaseAndPayoutModel() {
+  const rand = createRandom(20261009);
+  const now = new Date();
+  const monthAgo = addDays(now, -30);
+
+  const purchases: PurchaseRow[] = Array.from(
+    { length: 10 },
+    (_, i): PurchaseRow => {
+      const purchaseDate = addDays(monthAgo, intInRange(rand, 0, 27));
+      const appliedBonus = round2(intInRange(rand, 10, 40));
+      const cashback = round2(intInRange(rand, 5, 30));
+      const cashbackConfirmed = rand() > 0.25;
+
+      return {
+        id: `P-${i + 1}`,
+        date: formatDate(purchaseDate),
+        product: `Sample Product #${intInRange(rand, 1, 120)}`,
+        appliedBonus,
+        cashback,
+        cashbackStatus: cashbackConfirmed ? "confirmed" : "pending",
+        preparedToPayout: 0,
+        payoutStatus: "not_ready",
+        payoutDate: null,
+      };
+    }
+  ).sort(
+    (a, b) =>
+      parseDDMMYYYY(a.date).getTime() - parseDDMMYYYY(b.date).getTime()
+  );
+
+  // Формируем очередь готовых к выплате (только confirmed cashback)
+  const readyQueue: PurchaseRow[] = [];
+  for (const row of purchases) {
+    if (row.cashbackStatus === "confirmed") {
+      row.preparedToPayout = round2(row.appliedBonus + row.cashback);
+      row.payoutStatus = "ready";
+      readyQueue.push(row);
+    }
+  }
+
+  const payouts: PayoutRow[] = [];
+  let batch: PurchaseRow[] = [];
+  let batchSum = 0;
+
+  const flushBatch = (baseDate: Date) => {
+    if (batch.length === 0) return;
+
+    const payoutDate = formatDate(addDays(baseDate, 1));
+    const payoutId = `W-${payouts.length + 1}`;
+
+    payouts.push({
+      id: payoutId,
+      date: payoutDate,
+      amount: round2(batchSum),
+      purchaseIds: batch.map((x) => x.id),
+    });
+
+    for (const item of batch) {
+      item.payoutStatus = "paid";
+      item.payoutDate = payoutDate;
+    }
+
+    batch = [];
+    batchSum = 0;
+  };
+
+  for (const row of readyQueue) {
+    batch.push(row);
+    batchSum = round2(batchSum + row.preparedToPayout);
+
+    if (batchSum >= 100) {
+      flushBatch(parseDDMMYYYY(row.date));
+    }
+  }
+
+  // Сортировка на вывод: последние даты сверху
+  const purchasesSorted = [...purchases].sort(
+    (a, b) => parseDDMMYYYY(b.date).getTime() - parseDDMMYYYY(a.date).getTime()
+  );
+  const payoutsSorted = [...payouts].sort(
+    (a, b) => parseDDMMYYYY(b.date).getTime() - parseDDMMYYYY(a.date).getTime()
+  );
+
+  return {
+    purchases: purchasesSorted,
+    payouts: payoutsSorted,
+  };
 }
 
 export default function Dashboard({ lang }: DashboardProps) {
   const isRu = lang?.toUpperCase() === "RU";
-  const { summary, items, transfers, loading, error } = useBonuses();
-
-  // Временная история покупок/выплат, пока не подключён отдельный ledger endpoint.
-  // Не удаляй, иначе снова пропадут таблицы операций.
-  const [purchaseRows] = useState<PurchaseRow[]>([
-    {
-      id: "P-1001",
-      date: "10.10.2026",
-      product: "Sample Product #1",
-      appliedBonus: 20,
-      cashback: 10,
-      cashbackStatus: "confirmed",
-      preparedToPayout: 30,
-      payoutStatus: "ready",
-      payoutDate: null,
-    },
-    {
-      id: "P-1002",
-      date: "09.10.2026",
-      product: "Sample Product #2",
-      appliedBonus: 15,
-      cashback: 8,
-      cashbackStatus: "pending",
-      preparedToPayout: 0,
-      payoutStatus: "not_ready",
-      payoutDate: null,
-    },
-  ]);
-
-  const [payoutRows] = useState<PayoutRow[]>([
-    {
-      id: "W-1",
-      date: "11.10.2026",
-      amount: 30,
-      purchaseIds: ["P-1001"],
-    },
-  ]);
 
   const t = {
     title: "Dashboard",
     currency: "GBP",
 
     summary: isRu
-      ? "Сводка бонусов"
-      : "Bonuses summary",
+      ? "Сводка (только подтвержденные бонусы по разделам)"
+      : "Summary (confirmed bonuses by section)",
 
-    totalConfirmed: isRu ? "Подтверждено" : "Confirmed",
-    totalPending: isRu ? "Ожидает подтверждения" : "Pending",
-    totalAvailable: isRu ? "Доступно" : "Available",
-    totalSpent: isRu ? "Списано" : "Spent",
-    totalExpired: isRu ? "Сгорело" : "Expired",
+    adConfirmed: isRu ? "Реклама: подтверждено" : "Ads: confirmed",
+    researchConfirmed: isRu ? "Исследования: подтверждено" : "Research: confirmed",
+    totalConfirmed: isRu ? "Итого подтверждено" : "Total confirmed",
+    preparedPool: isRu
+      ? "Подготовлено к автовыплате (покупки+cashback)"
+      : "Prepared for auto payout (purchases+cashback)",
+    paidOut: isRu ? "Уже выведено автоматически" : "Already auto-paid out",
 
     open: isRu ? "Открыть" : "Open",
     close: isRu ? "Скрыть" : "Hide",
 
     onlyConfirmed: isRu ? "Только подтвержденные бонусы" : "Confirmed bonuses only",
-    pendingSection: isRu ? "Ожидающие подтверждения бонусы" : "Bonuses awaiting confirmation",
+    pendingSection: isRu
+      ? "Ожидающие подтверждения бонусы"
+      : "Bonuses awaiting confirmation",
 
-    adsSectionTitle: isRu ? "Раздел: Бонусы за рекламу" : "Section: Ads bonuses",
-    researchSectionTitle: isRu ? "Раздел: Бонусы за исследования" : "Section: Research bonuses",
-    transfersSectionTitle: isRu ? "Раздел: Переводы бонусов" : "Section: Bonus transfers",
-    opsSectionTitle: isRu ? "Раздел: Операции покупок и выплат" : "Section: Purchases & payouts operations",
+    adsSectionTitle: isRu
+      ? "Раздел: Бонусы за рекламу"
+      : "Section: Ads bonuses",
 
+    researchSectionTitle: isRu
+      ? "Раздел: Бонусы за исследования"
+      : "Section: Research bonuses",
+
+    opsSectionTitle: isRu
+      ? "Раздел: Операции покупок и выплат"
+      : "Section: Purchases & payouts operations",
+
+    // Таблицы
     date: isRu ? "Дата" : "Date",
     expected: isRu ? "Ожидаемо" : "Expected",
     confirmed: isRu ? "Подтверждено" : "Confirmed",
     expiry: isRu ? "Срок действия" : "Expiry date",
-    amount: isRu ? "Сумма" : "Amount",
-    from: isRu ? "От кого" : "From",
-    to: isRu ? "Кому" : "To",
-    status: isRu ? "Статус" : "Status",
-    source: isRu ? "Источник" : "Source",
+
+    startDate: isRu ? "Дата старта" : "Start date",
+    topic: isRu ? "Тема" : "Topic",
 
     pId: isRu ? "Покупка" : "Purchase",
     pDate: isRu ? "Дата покупки" : "Purchase date",
@@ -132,143 +308,84 @@ export default function Dashboard({ lang }: DashboardProps) {
 
     pendingStatus: isRu ? "ожидает" : "pending",
     confirmedStatus: isRu ? "подтвержден" : "confirmed",
-    doneStatus: isRu ? "выполнен" : "done",
-
-    ads: isRu ? "Реклама" : "Ads",
-    research: isRu ? "Исследования" : "Research",
-    transfer: isRu ? "Перевод" : "Transfer",
-    other: isRu ? "Другое" : "Other",
 
     noData: isRu ? "Нет данных" : "No data",
-    loading: isRu ? "Загрузка..." : "Loading...",
     dash: "—",
   };
 
-  const sourceLabel = (source: string) => {
-    if (source === "ads") return t.ads;
-    if (source === "research") return t.research;
-    if (source === "transfer") return t.transfer;
-    return t.other;
-  };
+  const adRows = useMemo(() => generateAdHistory(20), []);
+  const researchRows = useMemo(() => generateResearchHistory(14), []);
+  const model = useMemo(() => generatePurchaseAndPayoutModel(), []);
 
-  const adsConfirmedRows = useMemo(
-    () =>
-      items.filter(
-        (x) =>
-          x.source === "ads" &&
-          x.status === "confirmed" &&
-          x.isExpired !== true
-      ),
-    [items]
+  // confirmed / pending разрезы
+  const adConfirmedRows = adRows.filter((r) => r.confirmedBonus > 0);
+  const adPendingRows = adRows.filter((r) => r.confirmedBonus === 0);
+
+  const researchConfirmedRows = researchRows.filter((r) => r.confirmedBonus > 0);
+  const researchPendingRows = researchRows.filter((r) => r.confirmedBonus === 0);
+
+  // сводка
+  const adConfirmedSum = round2(
+    adConfirmedRows.reduce((acc, r) => acc + r.confirmedBonus, 0)
+  );
+  const researchConfirmedSum = round2(
+    researchConfirmedRows.reduce((acc, r) => acc + r.confirmedBonus, 0)
+  );
+  const totalConfirmed = round2(adConfirmedSum + researchConfirmedSum);
+
+  const preparedPool = round2(
+    model.purchases
+      .filter((p) => p.payoutStatus === "ready")
+      .reduce((acc, p) => acc + p.preparedToPayout, 0)
   );
 
-  const adsPendingRows = useMemo(
-    () =>
-      items.filter(
-        (x) =>
-          x.source === "ads" &&
-          (x.status === "pending" || x.status === "failed")
-      ),
-    [items]
+  const paidOutSum = round2(
+    model.payouts.reduce((acc, p) => acc + p.amount, 0)
   );
 
-  const researchConfirmedRows = useMemo(
-    () =>
-      items.filter(
-        (x) =>
-          x.source === "research" &&
-          x.status === "confirmed" &&
-          x.isExpired !== true
-      ),
-    [items]
-  );
-
-  const researchPendingRows = useMemo(
-    () =>
-      items.filter(
-        (x) =>
-          x.source === "research" &&
-          (x.status === "pending" || x.status === "failed")
-      ),
-    [items]
-  );
-
-  const preparedPool = useMemo(
-    () =>
-      round2(
-        purchaseRows
-          .filter((p) => p.payoutStatus === "ready")
-          .reduce((acc, p) => acc + p.preparedToPayout, 0)
-      ),
-    [purchaseRows]
-  );
-
-  const paidOutSum = useMemo(
-    () =>
-      round2(payoutRows.reduce((acc, p) => acc + p.amount, 0)),
-    [payoutRows]
-  );
-
-  const [openAds, setOpenAds] = useState(true);
-  const [openResearch, setOpenResearch] = useState(true);
-  const [openTransfers, setOpenTransfers] = useState(true);
-  const [openOps, setOpenOps] = useState(true);
+  // треи
+  const [openAds, setOpenAds] = useState(false);
+  const [openResearch, setOpenResearch] = useState(false);
+  const [openOps, setOpenOps] = useState(false);
 
   return (
     <main className="dashboard-page">
       <section className="dashboard-container">
         <h1 className="dashboard-title">{t.title}</h1>
 
-        {loading && <p>{t.loading}</p>}
-        {error && <p role="alert">{error}</p>}
-
         <div className="summary-box">
           <h2>{t.summary}</h2>
           <div className="summary-grid">
             <div className="sum-card">
+              <p>{t.adConfirmed}</p>
+              <strong>
+                {adConfirmedSum} {t.currency}
+              </strong>
+            </div>
+
+            <div className="sum-card">
+              <p>{t.researchConfirmed}</p>
+              <strong>
+                {researchConfirmedSum} {t.currency}
+              </strong>
+            </div>
+
+            <div className="sum-card">
               <p>{t.totalConfirmed}</p>
               <strong>
-                {summary?.confirmed ?? 0} {t.currency}
+                {totalConfirmed} {t.currency}
               </strong>
             </div>
 
             <div className="sum-card">
-              <p>{t.totalPending}</p>
-              <strong>
-                {summary?.pending ?? 0} {t.currency}
-              </strong>
-            </div>
-
-            <div className="sum-card">
-              <p>{t.totalAvailable}</p>
-              <strong>
-                {summary?.available ?? 0} {t.currency}
-              </strong>
-            </div>
-
-            <div className="sum-card">
-              <p>{t.totalSpent}</p>
-              <strong>
-                {summary?.spent ?? 0} {t.currency}
-              </strong>
-            </div>
-
-            <div className="sum-card">
-              <p>{t.totalExpired}</p>
-              <strong>
-                {summary?.expired ?? 0} {t.currency}
-              </strong>
-            </div>
-
-            <div className="sum-card">
-              <p>{isRu ? "Подготовлено к выплате" : "Prepared to payout"}</p>
+              <p>{t.preparedPool}</p>
               <strong>
                 {preparedPool} {t.currency}
               </strong>
             </div>
 
             <div className="sum-card">
-              <p>{isRu ? "Уже выплачено" : "Already paid out"}</p>
+              <p>{t.paidOut}</p>
               <strong>
                 {paidOutSum} {t.currency}
               </strong>
@@ -276,7 +393,7 @@ export default function Dashboard({ lang }: DashboardProps) {
           </div>
         </div>
 
-        {/* ADS */}
+        {/* SECTION: ADS */}
         <section className="section-block">
           <div className="section-header">
             <h3>{t.adsSectionTitle}</h3>
@@ -298,18 +415,18 @@ export default function Dashboard({ lang }: DashboardProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {adsConfirmedRows.length === 0 ? (
+                    {adConfirmedRows.length === 0 ? (
                       <tr>
                         <td colSpan={3}>{t.noData}</td>
                       </tr>
                     ) : (
-                      adsConfirmedRows.map((r) => (
+                      adConfirmedRows.map((r) => (
                         <tr key={`ad-c-${r.id}`}>
-                          <td>{toDDMMYYYY(r.createdAt)}</td>
+                          <td>{r.viewDate}</td>
                           <td>
-                            {r.amount} {t.currency}
+                            {r.confirmedBonus} {t.currency}
                           </td>
-                          <td>{toDDMMYYYY(r.expiresAt)}</td>
+                          <td>{r.expiresAt}</td>
                         </tr>
                       ))
                     )}
@@ -329,21 +446,21 @@ export default function Dashboard({ lang }: DashboardProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {adsPendingRows.length === 0 ? (
+                    {adPendingRows.length === 0 ? (
                       <tr>
                         <td colSpan={4}>{t.noData}</td>
                       </tr>
                     ) : (
-                      adsPendingRows.map((r) => (
+                      adPendingRows.map((r) => (
                         <tr key={`ad-p-${r.id}`}>
-                          <td>{toDDMMYYYY(r.createdAt)}</td>
+                          <td>{r.viewDate}</td>
                           <td>
-                            {r.amount} {t.currency}
+                            {r.expectedBonus} {t.currency}
                           </td>
                           <td>
-                            {r.status === "confirmed" ? `${r.amount} ${t.currency}` : `0 ${t.currency}`}
+                            {r.confirmedBonus} {t.currency}
                           </td>
-                          <td>{toDDMMYYYY(r.expiresAt)}</td>
+                          <td>{r.expiresAt}</td>
                         </tr>
                       ))
                     )}
@@ -354,11 +471,14 @@ export default function Dashboard({ lang }: DashboardProps) {
           )}
         </section>
 
-        {/* RESEARCH */}
+        {/* SECTION: RESEARCH */}
         <section className="section-block">
           <div className="section-header">
             <h3>{t.researchSectionTitle}</h3>
-            <button className="arrow-btn" onClick={() => setOpenResearch((v) => !v)}>
+            <button
+              className="arrow-btn"
+              onClick={() => setOpenResearch((v) => !v)}
+            >
               {openResearch ? "▴" : "▾"} {openResearch ? t.close : t.open}
             </button>
           </div>
@@ -370,8 +490,8 @@ export default function Dashboard({ lang }: DashboardProps) {
                 <table className="dash-table">
                   <thead>
                     <tr>
-                      <th>{t.date}</th>
-                      <th>{t.source}</th>
+                      <th>{t.startDate}</th>
+                      <th>{t.topic}</th>
                       <th>{t.confirmed}</th>
                       <th>{t.expiry}</th>
                     </tr>
@@ -384,12 +504,12 @@ export default function Dashboard({ lang }: DashboardProps) {
                     ) : (
                       researchConfirmedRows.map((r) => (
                         <tr key={`rs-c-${r.id}`}>
-                          <td>{toDDMMYYYY(r.createdAt)}</td>
-                          <td>{sourceLabel(r.source)}</td>
+                          <td>{r.startDate}</td>
+                          <td>{r.topic}</td>
                           <td>
-                            {r.amount} {t.currency}
+                            {r.confirmedBonus} {t.currency}
                           </td>
-                          <td>{toDDMMYYYY(r.expiresAt)}</td>
+                          <td>{r.expiresAt}</td>
                         </tr>
                       ))
                     )}
@@ -402,8 +522,8 @@ export default function Dashboard({ lang }: DashboardProps) {
                 <table className="dash-table">
                   <thead>
                     <tr>
-                      <th>{t.date}</th>
-                      <th>{t.source}</th>
+                      <th>{t.startDate}</th>
+                      <th>{t.topic}</th>
                       <th>{t.expected}</th>
                       <th>{t.confirmed}</th>
                       <th>{t.expiry}</th>
@@ -417,13 +537,15 @@ export default function Dashboard({ lang }: DashboardProps) {
                     ) : (
                       researchPendingRows.map((r) => (
                         <tr key={`rs-p-${r.id}`}>
-                          <td>{toDDMMYYYY(r.createdAt)}</td>
-                          <td>{sourceLabel(r.source)}</td>
+                          <td>{r.startDate}</td>
+                          <td>{r.topic}</td>
                           <td>
-                            {r.amount} {t.currency}
+                            {r.expectedBonus} {t.currency}
                           </td>
-                          <td>0 {t.currency}</td>
-                          <td>{toDDMMYYYY(r.expiresAt)}</td>
+                          <td>
+                            {r.confirmedBonus} {t.currency}
+                          </td>
+                          <td>{r.expiresAt}</td>
                         </tr>
                       ))
                     )}
@@ -434,58 +556,7 @@ export default function Dashboard({ lang }: DashboardProps) {
           )}
         </section>
 
-        {/* TRANSFERS */}
-        <section className="section-block">
-          <div className="section-header">
-            <h3>{t.transfersSectionTitle}</h3>
-            <button className="arrow-btn" onClick={() => setOpenTransfers((v) => !v)}>
-              {openTransfers ? "▴" : "▾"} {openTransfers ? t.close : t.open}
-            </button>
-          </div>
-
-          {openTransfers && (
-            <div className="table-wrap">
-              <table className="dash-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>{t.date}</th>
-                    <th>{t.from}</th>
-                    <th>{t.to}</th>
-                    <th>{t.amount}</th>
-                    <th>{t.expiry}</th>
-                    <th>{t.status}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transfers.length === 0 ? (
-                    <tr>
-                      <td colSpan={7}>{t.noData}</td>
-                    </tr>
-                  ) : (
-                    transfers.map((tr) => (
-                      <tr key={tr.id}>
-                        <td>{tr.id}</td>
-                        <td>{toDDMMYYYY(tr.createdAt)}</td>
-                        <td>{tr.fromUsername}</td>
-                        <td>{tr.toUsername}</td>
-                        <td>
-                          {tr.amount} {t.currency}
-                        </td>
-                        <td>{toDDMMYYYY(tr.expiresAt)}</td>
-                        <td>
-                          {tr.status === "completed" ? t.doneStatus : t.pendingStatus}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
-
-        {/* OPERATIONS */}
+        {/* SECTION: OPERATIONS */}
         <section className="section-block">
           <div className="section-header">
             <h3>{t.opsSectionTitle}</h3>
@@ -512,12 +583,12 @@ export default function Dashboard({ lang }: DashboardProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {purchaseRows.length === 0 ? (
+                    {model.purchases.length === 0 ? (
                       <tr>
                         <td colSpan={8}>{t.noData}</td>
                       </tr>
                     ) : (
-                      purchaseRows.map((p) => (
+                      model.purchases.map((p) => (
                         <tr key={p.id}>
                           <td>{p.id}</td>
                           <td>{p.date}</td>
@@ -556,12 +627,12 @@ export default function Dashboard({ lang }: DashboardProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {payoutRows.length === 0 ? (
+                    {model.payouts.length === 0 ? (
                       <tr>
                         <td colSpan={4}>{t.noData}</td>
                       </tr>
                     ) : (
-                      payoutRows.map((w) => (
+                      model.payouts.map((w) => (
                         <tr key={w.id}>
                           <td>{w.id}</td>
                           <td>{w.date}</td>

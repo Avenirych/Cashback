@@ -1,0 +1,45 @@
+{
+  "status": "ISOLATED_ONLY_NOT_DEPLOYMENT_AUTHORITY",
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "receiptBeforeSha256": "d826d7a92b92feeb47cb64799cbbe36d0a405b6ee7e5efa0e090a6dc5781b912",
+  "files": [
+    {
+      "path": "src/finance/purchase-lifecycle.ts",
+      "sha256": "d2a6728dac5703d36955059d894ee39ebdce94343c8053de45911fc4b9bab4c1"
+    },
+    {
+      "path": "src/finance/payout-policy.ts",
+      "sha256": "3f2924132dafced9a5ced910da2f78eea3b417b35a66dc1c71d1a7c3b18d4deb"
+    },
+    {
+      "path": "src/finance/payout-policy.spec.ts",
+      "sha256": "7cf5ad3f5ed1ec657106d91affeb5fd7da4c418b12038cc9057e6fa8a96c6d83"
+    },
+    {
+      "path": "src/finance/receipt-settlement.ts",
+      "sha256": "d3d7987fe24435e9cf3397ee84aacbd94e8534064413c5f2d82198a05449d499"
+    },
+    {
+      "path": "src/finance/migrations/1792520000000-AddPurchaseLifecycleEvidence.ts",
+      "sha256": "0b220b19025432c3d435c6c98f559dd1723e757329556f16b8abec5fcd9cb371"
+    },
+    {
+      "path": "docker/historical/finance-service-scenarios.cjs",
+      "sha256": "24d8174a3ae65fc579b5c225c6e759e489e71e91ac75a01676ed07ce581f8870"
+    },
+    {
+      "path": "cashback-frontend/src/pages/RegistrationOnboarding.test.tsx",
+      "sha256": "5142c8df85a088bcce2e12e253bc2435b1b3286751d302c0954f14cc6279a494"
+    },
+    {
+      "path": "cashback-frontend/src/components/ExtendedRegistration.test.tsx",
+      "sha256": "4e7a9db7c17514a86e0d0bbb64e2a53102a6a8bccbd841eb3a27cfacda3934c9"
+    }
+  ],
+  "validation": {
+    "backendTests": 496,
+    "frontendTests": 208,
+    "postgresGroups": 33,
+    "activeFinanceEnabled": false
+  }
+}

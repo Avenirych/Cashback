@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useLang } from "../context/LanguageContext";
 import "./SiteSearch.css";
 
 type SearchPage = { path: string; title: string; titleEn: string; text: string };
 
-const fallbackPages: SearchPage[] = [
+export const fallbackPages: SearchPage[] = [
+  { path: "/cookies", title: "Политика Cookies", titleEn: "Cookie Policy", text: "cookies файлы cookie" },
   { path: "/", title: "Главная", titleEn: "Home", text: "cashback welcome главная старт" },
   { path: "/about", title: "О нас", titleEn: "About us", text: "компания проект about" },
   { path: "/services", title: "Как это работает", titleEn: "How it works", text: "помощь инструкция cashback services" },
@@ -52,19 +53,21 @@ function getPageTitle(page: SearchPage, language: string): string {
 }
 
 const ui: Record<string, { placeholder: string; empty: string; search: string }> = {
-  ru: { placeholder: "Поиск по сайту...", empty: "Ничего не найдено", search: "Поиск" },
-  en: { placeholder: "Search the site...", empty: "No results found", search: "Search" },
+  ru: { placeholder: "Поиск по сайту", empty: "Ничего не найдено", search: "Найти" },
+  en: { placeholder: "Search the site", empty: "No results found", search: "Search" },
   de: { placeholder: "Website durchsuchen...", empty: "Keine Ergebnisse", search: "Suche" },
   fr: { placeholder: "Rechercher sur le site...", empty: "Aucun résultat", search: "Rechercher" },
 };
 
-export default function SiteSearch() {
+export default function SiteSearch({ resultsPage = false }: { resultsPage?: boolean }) {
   const { lang } = useLang();
   const language = (lang || "en").toLowerCase();
   const t = ui[language] || ui.en;
   const navigate = useNavigate();
   const root = useRef<HTMLDivElement>(null);
-  const [query, setQuery] = useState("");
+  const [params] = useSearchParams();
+  const [query, setQuery] = useState(params.get("q") || "");
+  useEffect(() => { setQuery(params.get("q") || ""); }, [params]);
   const [open, setOpen] = useState(false);
   const [pages, setPages] = useState<SearchPage[]>(fallbackPages);
 
@@ -124,33 +127,30 @@ export default function SiteSearch() {
     };
   }, []);
 
-  const go = (path: string) => {
-    if (!isAllowedPath(path)) return;
-    navigate(path); setQuery(""); setOpen(false);
-  };
   return (
-    <div className="site-search" ref={root} role="search">
+    <div className={resultsPage ? "site-search site-search-page" : "site-search"} ref={root} role="search">
+      {resultsPage && <h1>{language === "ru" ? "Результаты поиска" : "Search results"}</h1>}
       <form className="site-search-form" onSubmit={(event) => {
         event.preventDefault();
-        if (results.length) go(results[0].path);
-        else setOpen(true);
+        if (query.trim()) navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+        setOpen(true);
       }}>
         <input aria-label={t.search} type="search" autoComplete="off" value={query}
           placeholder={t.placeholder} onFocus={() => setOpen(true)}
           onChange={(event) => { setQuery(event.target.value); setOpen(true); }} />
         <button type="submit" aria-label={t.search} title={t.search}>
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          <span>{t.search}</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" />
           </svg>
         </button>
       </form>
-      {open && query.trim() && (
-        <div className="site-search-results" aria-label={t.search}>
+      {(open || resultsPage) && query.trim() && (
+        <div className={resultsPage ? "site-search-results search-page-results" : "site-search-results"} aria-label={t.search}>
           {results.length ? results.map((page) => (
-            <button key={page.path} type="button" onClick={() => go(page.path)}>
+            <Link key={page.path} to={page.path} onClick={() => setOpen(false)}>
               <span>{getPageTitle(page, language)}</span>
-              <small>{page.path}</small>
-            </button>
+              <small>{page.text.slice(Math.max(0, page.text.toLocaleLowerCase().indexOf(query.trim().toLocaleLowerCase()) - 50), Math.max(0, page.text.toLocaleLowerCase().indexOf(query.trim().toLocaleLowerCase()) - 50) + 200)}</small>
+            </Link>
           )) : <div className="site-search-empty">{t.empty}</div>}
         </div>
       )}

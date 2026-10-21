@@ -1,0 +1,128 @@
+{
+  "status": "EMAIL_VERIFICATION_BLOCKED",
+  "implementation": "ACTIVATED_LIVE_EMAIL_PROTOCOL_PASS",
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "filesChanged": [
+    "src/auth/auth.service.ts",
+    "src/auth/auth.controller.ts",
+    "src/users/users.service.ts",
+    "src/mail/mail.service.ts",
+    "cashback-frontend/src/context/AuthContext.tsx",
+    "cashback-frontend/src/pages/Register.tsx",
+    "cashback-frontend/src/pages/VerifyEmail.tsx",
+    "cashback-frontend/src/pages/Forum.test.tsx",
+    "cashback-frontend/src/context/AuthContext.test.tsx",
+    "cashback-frontend/public/index.html",
+    "docker/historical/run-offline.cjs",
+    "src/auth/email-flow.spec.ts",
+    "cashback-frontend/src/pages/EmailFlow.test.tsx"
+  ],
+  "patch": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-email-fix-fcd95a21714c4efba17c0d53288ad2ef\\email-verification.patch",
+  "backup": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-email-fix-fcd95a21714c4efba17c0d53288ad2ef",
+  "services": [
+    {
+      "service": "backend",
+      "id": "a636426365e24910403c4f4afcae421dc06aeedb084a42950e2ea83b5b5e40a5",
+      "image": "sha256:0962300f90482c37d98a5f25e69d2560dec460812aa1bf442a9e49319da3c7b3",
+      "state": "running",
+      "ports": {
+        "3006/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3006"
+          }
+        ]
+      }
+    },
+    {
+      "service": "frontend",
+      "id": "f32f34f4af69e4b8f47468f1130cfb92825de5c68be4ac4392b6c2c53cc23722",
+      "image": "sha256:eb719c7503aac7b85ef32381a1e5210cf6d27fa376ae17f49ba561f1f20b740b",
+      "state": "running",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3004"
+          }
+        ]
+      }
+    },
+    {
+      "service": "historical-mailpit",
+      "id": "4f60adf3ecbb3bd57c731e8d4bc25422c08c7843187ab8fad4a08d141fa0d636",
+      "image": "sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea",
+      "state": "running",
+      "ports": {
+        "8025/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8036"
+          }
+        ]
+      }
+    },
+    {
+      "service": "historical-postgres",
+      "id": "48dca500f37c30e2787c9510e8b9111917c19136ea970d036ff43ca4570bec84",
+      "image": "sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+      "state": "running",
+      "ports": {
+        "5432/tcp": null
+      }
+    }
+  ],
+  "tests": {
+    "backendSuites": 5,
+    "backendTests": 38,
+    "frontendSuites": 4,
+    "frontendTests": 54,
+    "backendTypecheck": "PASS",
+    "frontendTypecheck": "PASS",
+    "backendBuild": "PASS",
+    "frontendBuild": "PASS_WITH_EXISTING_WARNINGS"
+  },
+  "live": {
+    "stage": "DONE",
+    "browserUi": "UNVERIFIED_NO_BROWSER_AVAILABLE",
+    "externalEmailSent": false,
+    "originalUserCount": 1,
+    "originalMailCount": 3,
+    "testUserId": 3,
+    "statusBefore": false,
+    "unverifiedProtectedStatus": 403,
+    "mailDelivery": "TWO_MESSAGES_CAPTURED_FOR_EXACT_TEST_RECIPIENT",
+    "resend": "PASS_ROTATION_COOLDOWN_GENERIC_RESPONSE",
+    "emailLinkFrontendHttp": 200,
+    "concurrentTokenStatuses": [
+      200,
+      400
+    ],
+    "reusedTokenStatus": 400,
+    "statusAfter": true,
+    "actualDatabase": {
+      "verified": true,
+      "tokenNull": true,
+      "expiryNull": true
+    },
+    "profile": {
+      "api": 200,
+      "page": 200,
+      "uiNavigation": "MOCK_VERIFIED_ONLY"
+    },
+    "status": "LIVE_EMAIL_PROTOCOL_PASS_BROWSER_UI_UNVERIFIED",
+    "stageBeforeCleanup": "ATOMIC_VERIFICATION",
+    "accountCleanup": "EXACT_ID_EMAIL_NAME_DELETED",
+    "messagesDeleted": 2,
+    "originalUsersUnchanged": true,
+    "originalMessagesPreserved": true,
+    "cleanup": "PASS"
+  },
+  "remainingBlockers": [
+    "Mailpit captures local mail; it does not deliver to the buyer personal inbox. Real inbox delivery requires separately configured trusted SMTP, unavailable in the approved local-only configuration.",
+    "No connected browser available; visual browser flow and actual profile-button navigation not live verified. Mock UI tests and real HTTP/token/database checks passed."
+  ],
+  "schemaChanged": false,
+  "otherContainersPreserved": true,
+  "jwtSecretPreserved": true
+}

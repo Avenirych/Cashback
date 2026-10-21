@@ -1,0 +1,11 @@
+{
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "files": [
+    {
+      "path": "src/auth/jwt.strategy.ts",
+      "sha256": "3cfd1060ff5f54fb4e20fb94ade60fcb31780d849f07c9e3c6606016d3f78807"
+    }
+  ],
+  "schemaChanges": [],
+  "financeIncluded": false
+}

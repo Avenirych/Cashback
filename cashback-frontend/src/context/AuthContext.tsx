@@ -1,4 +1,4 @@
-import { BACKEND_URL, backendFetch } from "../backend";
+import { BACKEND_URL } from "../backend";
 import React, {
   createContext,
   useContext,
@@ -21,13 +21,12 @@ interface User {
   id: number;
   email: string;
   name: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone_e164?: string | null;
   avatar_url?: string | null;
   balance?: number;
   email_verified?: boolean;
-  // Owner-profile data is memory-only, never serialized to browser storage.
-  phone_e164?: string | null;
-  phone_verified?: boolean;
-  phone_verified_at?: string | null;
 }
 
 export interface RegisterResult {
@@ -52,11 +51,14 @@ interface AuthContextType {
   }) => Promise<void>;
   register: (data: {
     name: string;
+    firstName?: string;
+    lastName?: string;
+    phone_e164?: string;
     email: string;
     password: string;
-    phone_e164: string;
   }) => Promise<RegisterResult>;
   verifyEmail: (token: string) => Promise<void>;
+  checkVerification: () => Promise<boolean>;
   resendVerification: (email: string) => Promise<ResendResult>;
   logout: () => void;
   forumUser: ForumUserData | null;
@@ -71,6 +73,14 @@ interface AuthContextType {
   ) => Promise<void>;
   logoutFromForum: () => void;
   checkForumStatus: (reenter?: boolean) => Promise<void>;
+}
+
+// Bounded auth requests, no automatic retries (token outcome may be unknown).
+async function authFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try { return await fetch(input, { ...init, signal: controller.signal }); }
+  finally { clearTimeout(timer); }
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -214,7 +224,7 @@ export const AuthProvider = ({
       setForumLoading(true);
 
       try {
-        const response = await backendFetch(`${API_URL}/forum/status`, {
+        const response = await fetch(`${API_URL}/forum/status`, {
           headers: {
             Authorization: `Bearer ${current.token}`,
           },
@@ -371,7 +381,7 @@ export const AuthProvider = ({
         let profile = forumProfile.current;
 
         if (!profile) {
-          const response = await backendFetch(
+          const response = await fetch(
             `${API_URL}/forum/register`,
             {
               method: "POST",
@@ -418,7 +428,7 @@ export const AuthProvider = ({
           const body = new FormData();
           body.append("file", avatarFile);
 
-          const response = await backendFetch(`${API_URL}/forum/avatar`, {
+          const response = await fetch(`${API_URL}/forum/avatar`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${current.token}`,
@@ -492,7 +502,7 @@ export const AuthProvider = ({
       }
 
       try {
-        const response = await backendFetch(`${API_URL}/auth/profile`, {
+        const response = await fetch(`${API_URL}/auth/profile`, {
           headers: {
             Authorization: `Bearer ${savedToken}`,
           },
@@ -615,7 +625,7 @@ export const AuthProvider = ({
     email: string;
     password: string;
   }) => {
-    const response = await backendFetch(`${API_URL}/auth/login`, {
+    const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -633,11 +643,13 @@ export const AuthProvider = ({
 
   const register = async (data: {
     name: string;
+    firstName?: string;
+    lastName?: string;
+    phone_e164?: string;
     email: string;
     password: string;
-    phone_e164: string;
   }): Promise<RegisterResult> => {
-    const response = await backendFetch(`${API_URL}/auth/register`, {
+    const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -672,7 +684,7 @@ export const AuthProvider = ({
   };
 
   const verifyEmail = async (verificationToken: string) => {
-    const response = await backendFetch(
+    const response = await authFetch(
       `${API_URL}/auth/verify-email?token=${encodeURIComponent(
         verificationToken
       )}`
@@ -693,7 +705,7 @@ export const AuthProvider = ({
   const resendVerification = async (
     email: string
   ): Promise<ResendResult> => {
-    const response = await backendFetch(
+    const response = await authFetch(
       `${API_URL}/auth/resend-verification`,
       {
         method: "POST",
@@ -711,6 +723,23 @@ export const AuthProvider = ({
     }
 
     return JSON.parse(text);
+  };
+
+  const checkVerification = async (): Promise<boolean> => {
+    const current = session.current;
+    const currentToken = current.token || storageGet("local", TOKEN_KEY);
+    if (!currentToken) throw new Error("Войдите в аккаунт, чтобы проверить подтверждение почты.");
+    const response = await authFetch(API_URL + "/auth/profile", {
+      headers: { Authorization: "Bearer " + currentToken },
+    });
+    if (!response.ok) throw new Error("Не удалось проверить почту. Войдите в аккаунт или повторите проверку позже.");
+    const actual = await response.json();
+    if (session.current !== current) throw new Error("Сессия изменилась. Повторите проверку.");
+    if (actual.email_verified === true) {
+      applySessionPersistent(currentToken, actual);
+      return true;
+    }
+    return false;
   };
 
   const logout = () => {
@@ -737,6 +766,7 @@ export const AuthProvider = ({
         login,
         register,
         verifyEmail,
+        checkVerification,
         resendVerification,
         logout,
         forumUser,

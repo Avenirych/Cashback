@@ -1,0 +1,10 @@
+import React from 'react';
+import {render,screen,fireEvent,waitFor} from '@testing-library/react';
+import Panel from './ForumBonusExchangePanel';
+import {useAuth} from '../context/AuthContext';
+import {useBonuses} from '../context/BonusesContext';
+jest.mock('../context/AuthContext',()=>({useAuth:jest.fn()}));jest.mock('../context/BonusesContext',()=>({useBonuses:jest.fn()}));
+let transfer:jest.Mock;
+beforeEach(()=>{transfer=jest.fn().mockResolvedValue([]);(useAuth as jest.Mock).mockReturnValue({user:{id:1,email_verified:true},forumUser:{username:'Sender_REAL',banned:false}});(useBonuses as jest.Mock).mockReturnValue({items:[{id:'bonus-1',amount:6.25,expiresAt:'2030-01-01',source:'ads'}],transfers:[],availableBonusIds:['bonus-1'],loading:false,error:null,refresh:jest.fn(),transfer});Object.defineProperty(globalThis,'crypto',{configurable:true,value:{randomUUID:()=> 'test-idempotency-key-001'}});});
+test('demo panel uses real forum identity and only the existing transfer contract',async()=>{render(<Panel lang="RU"/>);expect(screen.getByText('Sender_REAL')).toBeInTheDocument();expect(screen.getByRole('note')).toHaveTextContent('ДЕМО');expect(screen.queryByRole('combobox')).not.toBeInTheDocument();fireEvent.click(screen.getByText('Выбрать'));fireEvent.change(screen.getByLabelText('Username получателя'),{target:{value:'Receiver_REAL'}});fireEvent.click(screen.getByText('Поделиться'));await waitFor(()=>expect(transfer).toHaveBeenCalledWith({toUsername:'Receiver_REAL',bonusIds:['bonus-1']},'test-idempotency-key-001'));await screen.findByText('Перевод выполнен');});
+test('self-transfer is rejected without request',async()=>{render(<Panel lang="RU"/>);fireEvent.click(screen.getByText('Выбрать'));fireEvent.change(screen.getByLabelText('Username получателя'),{target:{value:'sender_real'}});fireEvent.click(screen.getByText('Поделиться'));await screen.findByText('Нельзя отправить себе');expect(transfer).not.toHaveBeenCalled();});

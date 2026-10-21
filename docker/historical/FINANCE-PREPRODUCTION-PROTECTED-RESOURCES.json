@@ -1,0 +1,200 @@
+{
+  "status": "PROTECTED_IDENTITIES_VERIFIED",
+  "services": [
+    {
+      "id": "ced2bf78f14226db06e758edb4cd7d1d9d99289e0ad4d89e4b6bc55cc6826c8a",
+      "name": "/cashback-historical-03573b7-local-backend-1",
+      "image": "sha256:ff1f7c5ffebb7d0850403e49e5ea9c61612eee3fb63c139cc86858a83b5bb337",
+      "startedAt": "2026-10-20T20:07:26.433323836Z",
+      "running": true,
+      "ports": {
+        "3006/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3006"
+          }
+        ]
+      }
+    },
+    {
+      "id": "3d98e1595ae6cb6600a2460313cf020f154b2ec4c4595fe24b4ff37d66e675da",
+      "name": "/cashback-historical-03573b7-local-frontend-1",
+      "image": "sha256:4286e712c805aaf379b674025762f156e87e2a4f75c2bee4188c7bbc1aa9ffb6",
+      "startedAt": "2026-10-20T15:22:23.78395977Z",
+      "running": true,
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3004"
+          }
+        ]
+      }
+    },
+    {
+      "id": "4f60adf3ecbb3bd57c731e8d4bc25422c08c7843187ab8fad4a08d141fa0d636",
+      "name": "/cashback-historical-03573b7-local-historical-mailpit-1",
+      "image": "sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea",
+      "startedAt": "2026-10-20T08:50:50.581725369Z",
+      "running": true,
+      "ports": {
+        "8025/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8036"
+          }
+        ]
+      }
+    },
+    {
+      "id": "48dca500f37c30e2787c9510e8b9111917c19136ea970d036ff43ca4570bec84",
+      "name": "/cashback-historical-03573b7-local-historical-postgres-1",
+      "image": "sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+      "startedAt": "2026-10-20T08:39:37.283760977Z",
+      "running": true,
+      "ports": {
+        "5432/tcp": null
+      }
+    }
+  ],
+  "inventory": [
+    {
+      "id": "ced2bf78f14226db06e758edb4cd7d1d9d99289e0ad4d89e4b6bc55cc6826c8a",
+      "name": "/cashback-historical-03573b7-local-backend-1",
+      "image": "sha256:ff1f7c5ffebb7d0850403e49e5ea9c61612eee3fb63c139cc86858a83b5bb337",
+      "running": true,
+      "startedAt": "2026-10-20T20:07:26.433323836Z"
+    },
+    {
+      "id": "feb2181f7ababf41d35968ede8a4d325cf6d1257752ab4b15f9397c755fdc0f6",
+      "name": "/cashback-historical-03573b7-local-backend-1-rollback-2b1b3a03-9e8a-4918-aa88-b2c1ad42a830",
+      "image": "sha256:9975cdeabba8f95f774fb23cf5133bf89bd26967ff47b4814d34718c5a0db153",
+      "running": false,
+      "startedAt": "2026-10-20T19:25:12.05401769Z"
+    },
+    {
+      "id": "b5910499569e8becd7a03408d77a2f2af265f650afc673d8f29eb33cd1db2419",
+      "name": "/cashback-historical-03573b7-local-backend-1-rollback-5ee2c121-4ead-435c-8a0d-d299d9c6278c",
+      "image": "sha256:671f4b577d213ed06f2abd052fec289078f980226515fc743b1f49d74c6b8538",
+      "running": false,
+      "startedAt": "2026-10-20T15:22:23.177598004Z"
+    },
+    {
+      "id": "3d98e1595ae6cb6600a2460313cf020f154b2ec4c4595fe24b4ff37d66e675da",
+      "name": "/cashback-historical-03573b7-local-frontend-1",
+      "image": "sha256:4286e712c805aaf379b674025762f156e87e2a4f75c2bee4188c7bbc1aa9ffb6",
+      "running": true,
+      "startedAt": "2026-10-20T15:22:23.78395977Z"
+    },
+    {
+      "id": "4f60adf3ecbb3bd57c731e8d4bc25422c08c7843187ab8fad4a08d141fa0d636",
+      "name": "/cashback-historical-03573b7-local-historical-mailpit-1",
+      "image": "sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea",
+      "running": true,
+      "startedAt": "2026-10-20T08:50:50.581725369Z"
+    },
+    {
+      "id": "48dca500f37c30e2787c9510e8b9111917c19136ea970d036ff43ca4570bec84",
+      "name": "/cashback-historical-03573b7-local-historical-postgres-1",
+      "image": "sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+      "running": true,
+      "startedAt": "2026-10-20T08:39:37.283760977Z"
+    },
+    {
+      "id": "0d520ea1e635fdea0150aa3ba5fe9d606297f1c0b152e360a37a9e70a04a51d5",
+      "name": "/cashback-e2e-2740dce3a683487b9420c9315cc9c864-worker-1",
+      "image": "sha256:44d4c39e9d4cc026dcae82a477d83c7a97752850f2ab7989477a5c7e3e5a1132",
+      "running": false,
+      "startedAt": "2026-10-19T14:43:49.202617256Z"
+    },
+    {
+      "id": "0e48a7f9dbe6b81e7ea970a4c74066ceb7d46a50771a542821207b196e4fff73",
+      "name": "/cashback-e2e-2740dce3a683487b9420c9315cc9c864-mailpit-1",
+      "image": "sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea",
+      "running": true,
+      "startedAt": "2026-10-19T14:43:49.617125043Z"
+    },
+    {
+      "id": "07dc8c31dd4042bd6deb8a59e8d9d77107a208645cf01ddf01f7fba42434b5db",
+      "name": "/cashback-e2e-2740dce3a683487b9420c9315cc9c864-postgres-test-1",
+      "image": "sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+      "running": true,
+      "startedAt": "2026-10-19T14:43:50.293940342Z"
+    },
+    {
+      "id": "e0818fd64b0149f50ed975d8a519ffc4b615dcff9544a403f224fd82a2291d88",
+      "name": "/cashback-registration-20261016-4f8c2a96b17d-postgres-test-1",
+      "image": "sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+      "running": true,
+      "startedAt": "2026-10-19T14:44:15.203202137Z"
+    },
+    {
+      "id": "c532c93dc021a9812a70eafa5f381079882ceaa9873ceff188037b3308348a3e",
+      "name": "/cashback-finance-security-9f-pg-1",
+      "image": "sha256:3645570cccdfa447589da9f57dd740faa29b30938e861289a5574b6ca6b03826",
+      "running": true,
+      "startedAt": "2026-10-19T14:44:26.730165496Z"
+    },
+    {
+      "id": "c9b40faedba2ea07a1a523cdb32f785d49b5be612a427d7c5f55d50beab5ef22",
+      "name": "/cashback-docker-test-backend-1",
+      "image": "sha256:4f517952d47042d5d5a0c23b5db8440c6581e8f5f484bc61c04716a59e3a83de",
+      "running": false,
+      "startedAt": "2026-10-19T14:44:52.631037058Z"
+    },
+    {
+      "id": "63ef64ad6a34a378af8168862e812505103a5672f358d70c8ce48e3a3239989d",
+      "name": "/cashback-manual-email-unique-1df74ad631f3",
+      "image": "sha256:75e11107da9b293742daf99c9ac8e9b976894d6ae7b11f634cfd3c3764c8827b",
+      "running": false,
+      "startedAt": "2026-10-13T11:42:53.045958781Z"
+    },
+    {
+      "id": "4d0e444ff67be177aebfb15efd9e4bc3535af601575849e6a4d129ab1768dbe5",
+      "name": "/cashback-email-unique-it-d74c73299b0d",
+      "image": "sha256:75e11107da9b293742daf99c9ac8e9b976894d6ae7b11f634cfd3c3764c8827b",
+      "running": false,
+      "startedAt": "2026-10-13T11:23:59.154338149Z"
+    },
+    {
+      "id": "869f63d81b32dd2354b07cbe77e2e6a50107d255fa12a46159d1c170464ef1fb",
+      "name": "/cashback-docker-test-mailpit-ui-1",
+      "image": "sha256:0985e772fb9f729e6fa0980da05fca5d9c468e870eed43071545afa9d2e27d94",
+      "running": true,
+      "startedAt": "2026-10-19T14:44:50.953082174Z"
+    },
+    {
+      "id": "d8fdf65ebce02b6cb940b75a803151e0064c459ec67c406ab0c1e629c9976480",
+      "name": "/cashback-docker-test-mailpit-1",
+      "image": "sha256:94f6b70c1436defae6799d9ac7ff0eeff9540465b842026d5cdb018f1c0234ea",
+      "running": true,
+      "startedAt": "2026-10-19T14:44:49.292803466Z"
+    },
+    {
+      "id": "3eb73efb43dc91eefeaba4ca7930631b7d0bcd94da2e9c7e11fce19df5fea146",
+      "name": "/cashback-docker-test-frontend-1",
+      "image": "sha256:daffa6c1d7aa77f43fb0af37628a8838da0d6798becd71879953a5c3fb992437",
+      "running": false,
+      "startedAt": "2026-10-19T14:44:50.07619247Z"
+    },
+    {
+      "id": "02cabe6180fc651b16c87afc8dbd29b7209157d71d89545e51f6005c1f01aed4",
+      "name": "/cashback-docker-test-postgres-test-1",
+      "image": "sha256:3645570cccdfa447589da9f57dd740faa29b30938e861289a5574b6ca6b03826",
+      "running": true,
+      "startedAt": "2026-10-19T14:44:48.391952698Z"
+    }
+  ],
+  "financeAppModuleImported": false,
+  "activeDatabaseAccessed": false,
+  "persistentVolumes": [
+    "cashback-docker-test_backend-avatars",
+    "cashback-docker-test_postgres-test-data",
+    "cashback-finance-security-9f_pgdata",
+    "cashback-historical-03573b7-local-avatars",
+    "cashback-historical-03573b7-local-pgdata",
+    "cashback-registration-20261016-4f8c2a96b17d-pg17-data"
+  ],
+  "note": "Read-only Docker inspection; no database connection or HTTP request.",
+  "comparison": "ALL_PREEXISTING_CONTAINER_IDENTITIES_IMAGES_START_TIMES_STATES_AND_VOLUMES_UNCHANGED"
+}

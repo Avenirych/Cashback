@@ -55,7 +55,7 @@ test('private networks do not attach backend or SMTP to an external-routed bridg
 
 test('only intended UI/API ports publish on loopback; all app services require explicit profile', () => {
   expect(services.backend.ports).toEqual(['127.0.0.1:3001:3001']);
-  expect(services.frontend.ports).toEqual(['127.0.0.1:3000:3000']);
+  expect(services.frontend.ports).toEqual(['127.0.0.1:3003:3000']);
   expect(services['mailpit-ui'].ports).toEqual(['127.0.0.1:8025:8025']);
   for (const name of ['postgres-test', 'mailpit']) expect(services[name]).not.toHaveProperty('ports');
   for (const name of ['backend', 'frontend', 'mailpit', 'mailpit-ui']) {

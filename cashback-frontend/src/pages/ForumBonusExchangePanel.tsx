@@ -181,6 +181,7 @@ export default function ForumBonusExchangePanel({
 
   return (
     <section className="fx-panel">
+      <p role="note" style={{padding:12,background:"#fff3cd",borderRadius:8}}>{text("ДЕМО: бонусы не имеют денежной стоимости. Вывод средств и реальные платежи недоступны.","DEMO: credits have no monetary value. No withdrawals or real payments.")}</p>
       <h2>
         {text(
           "Обмен бонусами между участниками",

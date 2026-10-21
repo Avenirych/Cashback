@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -18,14 +19,14 @@ describe('Registration email conflict and normalization', () => {
   const mail = { sendVerificationEmail: jest.fn(), sendResendVerificationEmail: jest.fn() };
   const jwt = { sign: jest.fn() };
   const email = 'first.last+alias@example.test';
-  const input = { name: 'Synthetic', email, password: 'Synthetic1!', phone_e164: '+12025550123' };
+  const input = { firstName: "Synthetic", lastName: "Buyer", name: 'Synthetic', email, password: 'Synthetic1!', phone_e164: '+12025550123' };
   const fixture = { id: 42, email, name: input.name, email_verified: false, password: 'synthetic-hash' };
   beforeAll(async () => {
     auth = new AuthService(users as unknown as UsersService, jwt as unknown as JwtService, mail as unknown as MailService);
     const module = await Test.createTestingModule({ controllers: [AuthController], providers: [{ provide: AuthService, useValue: auth }] }).compile();
     app = module.createNestApplication();
     app.useLogger(false);
-    await app.init();
+    await startGuardedHttpTestApp(app);
   });
   afterAll(async () => { await app.close(); });
   beforeEach(() => {
@@ -57,17 +58,17 @@ describe('Registration email conflict and normalization', () => {
     expect(mail.sendVerificationEmail).toHaveBeenCalledTimes(1);
     expect(jwt.sign).toHaveBeenCalledTimes(1);
   });
-  it('returns the same safe 409 for preflight and the exact named database conflict', async () => {
+  it('preserves canonical duplicate and creation-failure contracts without leaking database details', async () => {
     users.getByEmail.mockResolvedValue(fixture);
-    const preflight = await request(app.getHttpServer()).post('/auth/register').send(input).expect(409);
+    const preflight = await request(app.getHttpServer()).post('/auth/register').send(input).expect(400);
+    expect(preflight.body).toEqual({ statusCode: 400, error: 'Bad Request', message: 'User with this email already exists' });
     expect(users.create).not.toHaveBeenCalled();
     expect(bcrypt.hash).not.toHaveBeenCalled();
     noDeliveryOrSession();
     users.getByEmail.mockResolvedValue(null);
     users.create.mockRejectedValue(dbError('23505', 'UQ_users_email'));
-    const raced = await request(app.getHttpServer()).post('/auth/register').send(input).expect(409);
-    expect(raced.body).toEqual(preflight.body);
-    expect(raced.body).toEqual({ statusCode: 409, error: 'Conflict', message: 'Registration with this email is unavailable' });
+    const raced = await request(app.getHttpServer()).post('/auth/register').send(input).expect(503);
+    expect(raced.body).toEqual({ statusCode: 503, error: 'Service Unavailable', message: 'Registration temporarily unavailable' });
     expect(users.create).toHaveBeenCalledTimes(1); // Attempt fails; no account was persisted by the mock.
     noDeliveryOrSession();
     const publicData = JSON.stringify(raced.body) + JSON.stringify(raced.headers);
@@ -84,19 +85,19 @@ describe('Registration email conflict and normalization', () => {
     { driverError: null },
   ])('does not misclassify another creation failure: case %#', async failure => {
     users.create.mockRejectedValue(failure);
-    await expect(auth.register(email, input.password, input.name, input.phone_e164)).rejects.toMatchObject({ status: 503, message: 'Registration service unavailable' });
+    await expect(auth.register(email, input.password, input.name, {firstName:input.firstName,lastName:input.lastName,phone_e164:input.phone_e164})).rejects.toMatchObject({ status: 503, message: 'Registration temporarily unavailable' });
     noDeliveryOrSession();
   });
   it.each([dbError('23505', 'UQ_other'), dbError('08006', 'UQ_users_email')])('does not expose other database failure details in HTTP: case %#', async failure => {
     users.create.mockRejectedValue(failure);
     const response = await request(app.getHttpServer()).post('/auth/register').send(input).expect(503);
-    expect(response.body).toEqual({ statusCode: 503, error: 'Service Unavailable', message: 'Registration service unavailable' });
+    expect(response.body).toEqual({ statusCode: 503, error: 'Service Unavailable', message: 'Registration temporarily unavailable' });
     noDeliveryOrSession();
   });
   it('does not convert lookup failures into email conflicts', async () => {
     const failure = dbError('23505', 'UQ_users_email');
     users.getByEmail.mockRejectedValue(failure);
-    await expect(auth.register(email, input.password, input.name, input.phone_e164)).rejects.toBe(failure);
+    await expect(auth.register(email, input.password, input.name, { firstName: input.firstName, lastName: input.lastName, phone_e164: input.phone_e164 })).rejects.toBe(failure);
     expect(users.create).not.toHaveBeenCalled();
     noDeliveryOrSession();
   });

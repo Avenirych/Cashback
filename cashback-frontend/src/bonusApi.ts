@@ -1,3 +1,4 @@
+import { BACKEND_URL } from './backend';
 import { assertBonusNetworkAllowed } from './registrationIsolation';
 import type {
   BonusSnapshot,
@@ -5,12 +6,7 @@ import type {
   BonusTransferRequest,
 } from "./bonus.types";
 
-const API_BASE = (
-  process.env.REACT_APP_BONUS_API_BASE ??
-  "http://localhost:3002"
-)
-  .trim()
-  .replace(/\/+$/, "");
+const API_BASE = BACKEND_URL;
 
 function isRecord(
   value: unknown

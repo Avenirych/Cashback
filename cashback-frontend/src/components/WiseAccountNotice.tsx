@@ -67,7 +67,7 @@ export default function WiseAccountNotice({ lang }: { lang: string }) {
   const t = messages[key] || messages.en;
 
   return (
-    <aside
+    <details
       aria-labelledby="wise-account-notice-title"
       style={{
         margin: "24px 0",
@@ -81,7 +81,7 @@ export default function WiseAccountNotice({ lang }: { lang: string }) {
         overflowWrap: "anywhere",
       }}
     >
-      <h2
+      <summary
         id="wise-account-notice-title"
         style={{
           margin: "0 0 12px",
@@ -90,7 +90,7 @@ export default function WiseAccountNotice({ lang }: { lang: string }) {
         }}
       >
         {t.title}
-      </h2>
+      </summary>
 
       <p style={{ margin: "0 0 12px" }}>{t.recommendation}</p>
       <p style={{ margin: "0 0 12px" }}>{t.accountType}</p>
@@ -118,6 +118,6 @@ export default function WiseAccountNotice({ lang }: { lang: string }) {
       <p style={{ margin: "16px 0 0", fontSize: "14px" }}>
         {t.existingAccount}
       </p>
-    </aside>
+    </details>
   );
 }

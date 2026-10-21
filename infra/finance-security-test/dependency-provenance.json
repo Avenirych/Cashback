@@ -1,0 +1,53 @@
+{
+  "target": "CPython3.13/linux/amd64",
+  "verified_date": "2026-10-14",
+  "wheels": [
+    {
+      "package": "psycopg",
+      "version": "3.2.10",
+      "filename": "psycopg-3.2.10-py3-none-any.whl",
+      "sha256": "ab5caf09a9ec42e314a21f5216dbcceac528e0e05142e42eea83a3b28b320ac3",
+      "url": "https://files.pythonhosted.org/packages/4a/90/422ffbbeeb9418c795dae2a768db860401446af0c6768bc061ce22325f58/psycopg-3.2.10-py3-none-any.whl",
+      "requires_dist": [
+        "backports.zoneinfo>=0.2.0; python_version < \"3.9\"",
+        "typing-extensions>=4.6; python_version < \"3.13\"",
+        "tzdata; sys_platform == \"win32\"",
+        "psycopg-c==3.2.10; implementation_name != \"pypy\" and extra == \"c\"",
+        "psycopg-binary==3.2.10; implementation_name != \"pypy\" and extra == \"binary\"",
+        "psycopg-pool; extra == \"pool\"",
+        "anyio>=4.0; extra == \"test\"",
+        "mypy>=1.14; extra == \"test\"",
+        "pproxy>=2.7; extra == \"test\"",
+        "pytest>=6.2.5; extra == \"test\"",
+        "pytest-cov>=3.0; extra == \"test\"",
+        "pytest-randomly>=3.5; extra == \"test\"",
+        "ast-comments>=1.1.2; extra == \"dev\"",
+        "black>=24.1.0; extra == \"dev\"",
+        "codespell>=2.2; extra == \"dev\"",
+        "dnspython>=2.1; extra == \"dev\"",
+        "flake8>=4.0; extra == \"dev\"",
+        "isort[colors]>=6.0; extra == \"dev\"",
+        "isort-psycopg; extra == \"dev\"",
+        "mypy>=1.14; extra == \"dev\"",
+        "pre-commit>=4.0.1; extra == \"dev\"",
+        "types-setuptools>=57.4; extra == \"dev\"",
+        "types-shapely>=2.0; extra == \"dev\"",
+        "wheel>=0.37; extra == \"dev\"",
+        "Sphinx>=5.0; extra == \"docs\"",
+        "furo==2022.6.21; extra == \"docs\"",
+        "sphinx-autobuild>=2021.3.14; extra == \"docs\"",
+        "sphinx-autodoc-typehints>=1.12; extra == \"docs\""
+      ],
+      "verified_download_bytes": 206586
+    },
+    {
+      "package": "psycopg-binary",
+      "version": "3.2.10",
+      "filename": "psycopg_binary-3.2.10-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "a92ff1c2cd79b3966d6a87e26ceb222ecd5581b5ae4b58961f126af806a861ed",
+      "url": "https://files.pythonhosted.org/packages/fc/0d/59024313b5e6c5da3e2a016103494c609d73a95157a86317e0f600c8acb3/psycopg_binary-3.2.10-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "requires_dist": [],
+      "verified_download_bytes": 4392679
+    }
+  ]
+}

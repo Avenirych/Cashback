@@ -1,0 +1,6 @@
+{
+ "rootDir":"../..", "roots":["<rootDir>/src"], "testEnvironment":"node",
+ "testMatch":["**/*.spec.ts"],
+ "transform":{"^.+\\.ts$":["ts-jest",{"tsconfig":"<rootDir>/tsconfig.json"}]},
+ "setupFiles":["<rootDir>/docker/historical/finance-full-suite-guard.cjs"]
+}

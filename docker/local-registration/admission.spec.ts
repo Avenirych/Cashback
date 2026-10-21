@@ -1,6 +1,8 @@
+import { serviceFixture } from './service-phase.fixture';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { admitRegistrationResources, AdmissionInput, AdmissionPolicy, COMPOSE_FILE, REGISTRATION_PROJECT } from './admission';
+import { admitRegistrationResources, AdmissionInput, AdmissionPolicy, COMPOSE_FILE, REGISTRATION_PROJECT, configDigest } from './admission';
+import { REGISTRATION_PHONE_EXPECTED as E, registrationNetworkFingerprint, registrationPeerFingerprint } from '../../src/docker-phone-registration-target';
 const template = JSON.parse(readFileSync(resolve(__dirname, 'compose.registration.json'), 'utf8'));
 const now = 200000;
 const image = `postgres:17-bookworm@sha256:${'a'.repeat(64)}`; // Synthetic unit fixture, NOT an approved image.
@@ -56,3 +58,36 @@ test('refuses absent policy and incomplete observations rather than guessing', (
   expect(() => admitRegistrationResources({} as AdmissionInput, policy, now)).toThrow();
   expect(() => admitRegistrationResources(fixture(), {} as AdmissionPolicy, now)).toThrow();
 });
+
+// Synthetic future phase fixture only. No owner approval, Docker resources or real evidence.
+// Shared synthetic fixture also exercises the trusted collector.
+test('future opt-in phase verifies exact PG and service identities while original owner policy remains insufficient',()=>{
+  const f=serviceFixture();expect(()=>admitRegistrationResources(f.input,f.policy,now)).not.toThrow();
+  const {servicePhase,...originalPolicy}=f.policy;expect(()=>admitRegistrationResources(f.input,originalPolicy,now)).toThrow();
+  f.input.inventory.containers.push({name:'cashback-finance-security-9f-pg-1',composeProject:'cashback-finance-security-9f'});
+  expect(()=>admitRegistrationResources(f.input,f.policy,now)).not.toThrow(); // Presence is not permission to touch it.
+});
+test.each(['id','project','image','platform','descriptor-platform','PG-ID','PG-image','PG-volume','PG-port','peer-port','published-peer-port','NIC','control-member','control-id','volume-options','mount','privileged','config','stale','unknown-container','backend','wildcard'])(
+  'future service phase refuses %s drift',kind=>{
+    const f=serviceFixture(),s=f.input.servicePhase!,p=f.policy.servicePhase!,peer=s.peers[0].container;
+    if(kind==='id')peer.Id='d'.repeat(64);if(kind==='project')f.input.invocation.project='cashback-docker-test';
+    if(kind==='image')s.peers[0].image.Descriptor.digest='d'.repeat(64);if(kind==='platform')s.peers[0].image.Architecture='arm64';
+    if(kind==='descriptor-platform')s.peers[0].image.Descriptor.platform={os:'linux',architecture:'arm64'};
+    if(kind==='PG-ID')s.postgres.Id='d'.repeat(64);if(kind==='PG-image')s.postgresImage.Descriptor.digest='d'.repeat(64);
+    if(kind==='PG-volume')s.postgres.Mounts[0].Name='cashback-finance-security-9f-data';
+    if(kind==='PG-port')s.postgres.HostConfig.PortBindings={'5432/tcp':[{}]};
+    if(kind==='peer-port')peer.HostConfig.PortBindings={'5432/tcp':[{}]};
+    if(kind==='published-peer-port')peer.NetworkSettings.Ports={'5432/tcp':[{HostIp:'0.0.0.0',HostPort:'5432'}]};
+    if(kind==='NIC')peer.NetworkSettings.Networks.old={NetworkID:'old'};
+    if(kind==='control-member')s.controlNetwork.Containers['d'.repeat(64)]={IPv4Address:'172.31.0.9/24'};
+    if(kind==='control-id')s.controlNetwork.Id='d'.repeat(64);if(kind==='volume-options')s.volume.Options={device:'old'};
+    if(kind==='mount')peer.Mounts=[{Type:'volume',Name:'cashback-finance-security-9f-data',RW:false}];
+    if(kind==='privileged')peer.HostConfig.Privileged=true;
+    if(['mount','privileged'].includes(kind))p.peers[0].configurationSha256=registrationPeerFingerprint(peer);
+    if(kind==='volume-options')p.volumeSha256=configDigest(s.volume);
+    if(kind==='config')(f.input.effectiveConfig as any).unknown=true;
+    if(kind==='stale')s.observedAt=now-30001;
+    if(kind==='unknown-container')f.input.inventory.containers.push({name:E.project+'-unknown-1',composeProject:E.project});
+    if(kind==='backend')f.input.invocation.services=['backend'];if(kind==='wildcard')p.peers[0].id='*';
+    expect(()=>admitRegistrationResources(f.input,f.policy,now)).toThrow('ADMISSION_BLOCKED');
+  });

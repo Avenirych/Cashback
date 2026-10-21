@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { PATH_METADATA, METHOD_METADATA } from '@nestjs/common/constants';
@@ -14,7 +15,7 @@ import { AnalyticsService } from './analytics/analytics.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { JwtStrategy } from './auth/jwt.strategy';
-import { JWT_CONFIGURATION } from './auth/jwt-configuration';
+
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { ForumController } from './forum/forum.controller';
@@ -44,16 +45,17 @@ describe('Unregistered legacy Topics/Posts/Analytics HTTP handlers', () => {
   const users = { getById: jest.fn(), update: jest.fn() };
   const forumUsers = { publicProfile: jest.fn(), status: jest.fn() };
   beforeAll(async () => {
+    process.env.JWT_SECRET = secret;
     const module = await Test.createTestingModule({
       imports: [PassportModule],
       controllers: [TopicsController, PostsController, AnalyticsController, AuthController, UsersController, ForumController, BonusController, MarketingPreferencesController],
-      providers: [JwtStrategy, { provide: JWT_CONFIGURATION, useValue: { secret } },
+      providers: [JwtStrategy,
         { provide: getRepositoryToken(Topic), useValue: repo }, { provide: PostsService, useValue: posts }, { provide: AnalyticsService, useValue: analytics },
         { provide: UsersService, useValue: users }, { provide: AuthService, useValue: {} },
         { provide: ForumService, useValue: {} }, { provide: ForumUserService, useValue: forumUsers },
         { provide: BonusService, useValue: {} }, { provide: MarketingPreferencesService, useValue: {} }],
     }).compile();
-    app = module.createNestApplication(); await app.init();
+    app = module.createNestApplication(); await startGuardedHttpTestApp(app);
   });
   afterAll(async () => { await app.close(); });
   beforeEach(() => {
@@ -67,7 +69,8 @@ describe('Unregistered legacy Topics/Posts/Analytics HTTP handlers', () => {
   it('has no HTTP metadata on any legacy controller method', () => {
     for (const controller of [TopicsController, PostsController, AnalyticsController]) {
       for (const key of Object.getOwnPropertyNames(controller.prototype).filter(k => k !== 'constructor')) {
-        const method = controller.prototype[key];
+        const method = Object.getOwnPropertyDescriptor(controller.prototype, key)?.value;
+        expect(typeof method).toBe('function');
         expect(Reflect.getMetadata(PATH_METADATA, method)).toBeUndefined();
         expect(Reflect.getMetadata(METHOD_METADATA, method)).toBeUndefined();
       }
@@ -75,9 +78,10 @@ describe('Unregistered legacy Topics/Posts/Analytics HTTP handlers', () => {
   });
   it('real initialized Express route registry has no legacy route and retains active controllers', () => {
     const instance = app.getHttpAdapter().getInstance();
-    const stack = instance.router?.stack ?? instance._router?.stack;
+    type RouteLayer = { route?: { path: string; methods: Record<string, boolean> } };
+    const stack: RouteLayer[] = instance.router?.stack ?? instance._router?.stack;
     expect(stack).toBeDefined();
-    const paths = stack.filter(layer => layer.route).map(layer => layer.route.path);
+    const paths = stack.filter(layer => layer.route).map(layer => layer.route!.path);
     for (const prefix of ['/topics', '/posts', '/analytics']) expect(paths.some(p => p === prefix || p.startsWith(prefix + '/'))).toBe(false);
     const expected = [
       ['post', '/auth/register'], ['post', '/auth/login'], ['post', '/auth/resend-verification'], ['get', '/auth/verify-email'], ['get', '/auth/profile'],
@@ -110,4 +114,3 @@ describe('Unregistered legacy Topics/Posts/Analytics HTTP handlers', () => {
     expect(forumUsers.publicProfile).toHaveBeenCalledWith('Synthetic');
   });
 });
-

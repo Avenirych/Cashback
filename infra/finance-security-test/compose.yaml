@@ -1,0 +1,107 @@
+name: cashback-finance-security-9f
+services:
+  pg:
+    image: ${FS_PG_IMAGE:?Set pinned PostgreSQL 17 image digest}
+    command:
+      - postgres
+      - -c
+      - log_statement=none
+      - -c
+      - log_min_error_statement=panic
+      - -c
+      - log_min_messages=panic
+      - -c
+      - log_min_duration_statement=-1
+      - -c
+      - log_min_duration_sample=-1
+      - -c
+      - log_statement_sample_rate=0
+      - -c
+      - log_transaction_sample_rate=0
+      - -c
+      - log_duration=off
+      - -c
+      - log_parameter_max_length=0
+      - -c
+      - log_parameter_max_length_on_error=0
+      - -c
+      - debug_print_parse=off
+      - -c
+      - debug_print_rewritten=off
+      - -c
+      - debug_print_plan=off
+      - -c
+      - log_parser_stats=off
+      - -c
+      - log_planner_stats=off
+      - -c
+      - log_executor_stats=off
+      - -c
+      - log_statement_stats=off
+      - -c
+      - shared_preload_libraries=
+      - -c
+      - session_preload_libraries=
+      - -c
+      - local_preload_libraries=
+    environment:
+      POSTGRES_DB: finance_security_test
+      POSTGRES_USER: fs_bootstrap
+      POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 --auth-local=scram-sha-256
+      PGDATA: /var/lib/postgresql/data/pgdata
+    secrets: [bootstrap]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    networks: [private]
+    restart: "no"
+    labels: {com.cashback.finance-security.scope: isolated-9f}
+    healthcheck:
+      test: [CMD, pg_isready, -h, "127.0.0.1", -U, fs_bootstrap, -d, finance_security_test]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+  inventory:
+    profiles: [tools]
+    build: .
+    command: [python, inventory.py]
+    secrets: [bootstrap]
+    networks: [private]
+  admission-faults:
+    profiles: [tools]
+    build: .
+    command: [python, test_admission_faults.py]
+    environment: {FS_EXPECTED_CLUSTER: "${FS_EXPECTED_CLUSTER:?Set reviewed new cluster ID}"}
+    secrets: [bootstrap]
+    networks: [private]
+  installer:
+    profiles: [tools]
+    build: .
+    command: [python, provision.py]
+    environment: {FS_EXPECTED_CLUSTER: "${FS_EXPECTED_CLUSTER:?Set reviewed new cluster ID}"}
+    secrets: [bootstrap, installer, runtime, authority, operator]
+    networks: [private]
+    depends_on: {pg: {condition: service_healthy}}
+  tests:
+    profiles: [tools]
+    build: .
+    command: [python, test_security.py]
+    environment: {FS_EXPECTED_CLUSTER: "${FS_EXPECTED_CLUSTER:?Set reviewed new cluster ID}"}
+    secrets: [runtime, authority, operator]
+    networks: [private]
+    depends_on: {pg: {condition: service_healthy}}
+networks:
+  private:
+    name: cashback-finance-security-9f_private
+    internal: true
+    labels: {com.cashback.finance-security.scope: isolated-9f}
+volumes:
+  pgdata:
+    name: cashback-finance-security-9f_pgdata
+    labels: {com.cashback.finance-security.scope: isolated-9f}
+secrets:
+  bootstrap: {file: "${FS_BOOTSTRAP_FILE:?Set new external secret path}"}
+  installer: {file: "${FS_INSTALLER_FILE:?Set new external secret path}"}
+  runtime: {file: "${FS_RUNTIME_FILE:?Set new external secret path}"}
+  authority: {file: "${FS_AUTHORITY_FILE:?Set new external secret path}"}
+  operator: {file: "${FS_OPERATOR_FILE:?Set new external secret path}"}

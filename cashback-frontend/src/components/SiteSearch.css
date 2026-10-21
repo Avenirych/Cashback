@@ -11,3 +11,9 @@
 .site-search-empty { padding: 13px; color: #666; font-size: 14px; }
 @media (max-width: 1050px) { .site-search { order: 3; flex: 1 0 100%; width: 100%; } }
 
+
+.site-search-results a { display:flex; flex-direction:column; gap:4px; padding:12px; color:#242424; text-decoration:none; overflow-wrap:anywhere; }
+.site-search-results a:hover, .site-search-results a:focus-visible { background:#f5e8d3; }
+.site-search-page { width:auto; max-width:900px; margin:24px auto; padding:0 16px; }
+.search-page-results { position:static; max-height:none; margin-top:16px; }
+.site-search-form button { display:flex; gap:6px; }

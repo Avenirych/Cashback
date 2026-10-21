@@ -1,24 +1,10 @@
 import {
   Injectable,
   NotFoundException,
-  BadRequestException,
-  ConflictException,
-  HttpException,
-  ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { normalizeEmail } from './email-normalization';
-import { MarketingPreferences } from '../marketing-preferences/marketing-preferences.entity';
-import { normalizePhone } from './phone-normalization';
-import type { UpdateOwnUserDto } from './users.dto';
-
-const ownProfileSelect = {
-  id: true, email: true, name: true, avatar_url: true, balance: true,
-  email_verified: true, created_at: true,
-  phone_e164: true, phone_verified: true, phone_verified_at: true,
-} as const;
 
 @Injectable()
 export class UsersService {
@@ -31,64 +17,17 @@ export class UsersService {
     return this.userRepo.find();
   }
 
-  async getById(id: number): Promise<User | null> {
-    return this.userRepo.findOne({
-      where: { id },
-    });
+  async getById(id: number, includePrivate = false): Promise<User | null> {
+    if (includePrivate) return this.userRepo.createQueryBuilder('u').addSelect(['u.firstName','u.lastName','u.phone_e164']).where('u.id = :id', {id}).getOne();
+    return this.userRepo.findOne({ where: { id } });
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    return this.userRepo.findOne({
-      where: { email: normalizeEmail(email) },
-    });
-  }
-
-  /** Call only behind owner authorization; generic lookups exclude phone. */
-  async getOwnProfile(id: number): Promise<User | null> {
-    try {
-      return await this.userRepo.findOne({ where: { id }, select: ownProfileSelect });
-    } catch {
-      throw new ServiceUnavailableException('Profile service unavailable');
-    }
-  }
-
-  async updateOwnProfile(id: number, data: UpdateOwnUserDto): Promise<User> {
-    const phone = data.phone_e164 === undefined ? undefined : normalizePhone(data.phone_e164);
-    try {
-      return await this.userRepo.manager.transaction('READ COMMITTED', async manager => {
-        const users = manager.getRepository(User);
-        const user = await users.findOne({
-          where: { id }, select: ownProfileSelect, lock: { mode: 'pessimistic_write' },
-        });
-        if (!user) throw new NotFoundException('User not found');
-        if (data.name !== undefined) user.name = data.name;
-        if (phone !== undefined && phone !== user.phone_e164) {
-          const repo = manager.getRepository(MarketingPreferences);
-          const rows = await repo.find({ where: { userId: id }, order: { id: 'ASC' }, take: 2 });
-          if (rows.length > 1) throw new ConflictException('Duplicate marketing preferences');
-          const prefs = rows[0];
-          if (prefs?.smsMarketing) {
-            prefs.smsMarketing = false;
-            prefs.smsMarketingRevokedAt = new Date();
-            await repo.save(prefs);
-          }
-          user.phone_e164 = phone;
-          user.phone_verified = false;
-          user.phone_verified_at = null;
-        }
-        return users.save(user);
-      });
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new ServiceUnavailableException('Profile service unavailable');
-    }
+    return this.userRepo.createQueryBuilder('u').addSelect(['u.firstName','u.lastName','u.phone_e164']).where('u.email = :email', {email}).getOne();
   }
 
   async create(data: Partial<User>): Promise<User> {
-    const user = this.userRepo.create({
-      ...data,
-      ...(typeof data.email === 'string' ? { email: normalizeEmail(data.email) } : {}),
-    });
+    const user = this.userRepo.create(data);
     return this.userRepo.save(user);
   }
 
@@ -96,13 +35,7 @@ export class UsersService {
     id: number,
     data: Partial<User>,
   ): Promise<User> {
-    if (['phone_e164', 'phone_verified', 'phone_verified_at'].some(key => Object.hasOwn(data, key))) {
-      throw new BadRequestException('Phone changes require the owner profile operation');
-    }
-    await this.userRepo.update(id, {
-      ...data,
-      ...(typeof data.email === 'string' ? { email: normalizeEmail(data.email) } : {}),
-    });
+    await this.userRepo.update(id, data);
 
     const user = await this.getById(id);
 
@@ -126,6 +59,17 @@ export class UsersService {
     user.balance = Number(newBalance);
 
     return this.userRepo.save(user);
+  }
+
+  /** One conditional UPDATE consumes a token even under concurrent requests. */
+  async consumeEmailToken(token: string): Promise<User | null> {
+    const result = await this.userRepo.createQueryBuilder()
+      .update(User)
+      .set({ email_verified: true, email_token: null, email_token_expires_at: null })
+      .where('email_token = :token AND email_verified = false AND email_token_expires_at > CURRENT_TIMESTAMP', { token })
+      .returning('id').execute();
+    const id = result.raw[0]?.id;
+    return id ? this.getById(id, true) : null;
   }
 
   async findByEmailToken(

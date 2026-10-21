@@ -1,0 +1,102 @@
+{
+  "format": "registration-helper-artifacts/v1",
+  "status": "DRAFT",
+  "target": {
+    "context": "desktop-linux",
+    "daemonId": "ec3d6303-4d66-4410-8317-b739cebc046c",
+    "project": "cashback-registration-20261016-4f8c2a96b17d",
+    "platform": "linux/amd64",
+    "postgresContainerId": "e0818fd64b0149f50ed975d8a519ffc4b615dcff9544a403f224fd82a2291d88",
+    "postgresImage": "postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+    "databaseNetwork": "cashback-registration-20261016-4f8c2a96b17d-database"
+  },
+  "composeFile": "docker/local-registration/helpers/compose.helpers.json",
+  "composeTemplateSha256": "2c11dff293487295c8c0b1ab2ca923bcd3745a7dbd35ee693358f83c17e15bd2",
+  "effectiveComposeSha256": null,
+  "buildContext": ".",
+  "baseImages": {
+    "node": null,
+    "nodeReferenceRequirement": "node:24.21.0-bookworm@sha256:<independently verified linux/amd64 manifest digest>",
+    "postgres": "postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df"
+  },
+  "helpers": [
+    {
+      "service": "migration-executor",
+      "name": "cashback-registration-20261016-4f8c2a96b17d-migration-executor-1",
+      "image": null,
+      "containerId": null,
+      "configurationSha256": null,
+      "dockerfile": "docker/local-registration/helpers/Dockerfile.executor",
+      "entrypoint": ["/usr/local/bin/node"],
+      "command": ["/opt/cashback/helpers/helper-entrypoint.cjs", "migration-executor"],
+      "networks": ["cashback-registration-20261016-4f8c2a96b17d-database", "cashback-registration-20261016-4f8c2a96b17d-authority"],
+      "mounts": [
+        {"type":"bind","source":"C:/approved-registration-infrastructure/public","target":"/run/registration/public","read_only":true,"bind":{"create_host_path":false}},
+        {"type":"bind","source":"C:/approved-registration-infrastructure/executor","target":"/run/registration/private","read_only":true,"bind":{"create_host_path":false}},
+        {"type":"bind","source":"C:/approved-registration-infrastructure/review-payloads","target":"/run/registration/review-payloads","read_only":true,"bind":{"create_host_path":false}}
+      ],
+      "credentialConfigurationSha256": null,
+      "ports": [],
+      "cap_drop": ["ALL"],
+      "cap_add": [],
+      "security_opt": ["no-new-privileges:true"],
+      "user": "999:999",
+      "read_only": true
+    },
+    {
+      "service": "observer",
+      "name": "cashback-registration-20261016-4f8c2a96b17d-observer-1",
+      "image": null,
+      "containerId": null,
+      "configurationSha256": null,
+      "dockerfile": "docker/local-registration/helpers/Dockerfile.observer",
+      "entrypoint": ["/usr/local/bin/node"],
+      "command": ["/opt/cashback/helpers/helper-entrypoint.cjs", "observer"],
+      "networks": ["cashback-registration-20261016-4f8c2a96b17d-database", "cashback-registration-20261016-4f8c2a96b17d-authority"],
+      "mounts": [
+        {"type":"bind","source":"C:/approved-registration-infrastructure/public","target":"/run/registration/public","read_only":true,"bind":{"create_host_path":false}},
+        {"type":"bind","source":"C:/approved-registration-infrastructure/observer","target":"/run/registration/private","read_only":true,"bind":{"create_host_path":false}}
+      ],
+      "credentialConfigurationSha256": null,
+      "ports": [],
+      "cap_drop": ["ALL"],
+      "cap_add": [],
+      "security_opt": ["no-new-privileges:true"],
+      "user": "999:999",
+      "read_only": true
+    }
+  ],
+  "authorityNetwork": {
+    "name": "cashback-registration-20261016-4f8c2a96b17d-authority",
+    "id": null,
+    "configurationSha256": null,
+    "internal": true
+  },
+  "connections": [
+    "migration-executor -> exact isolated PostgreSQL:5432 (requires later SQL/HBA approval)",
+    "observer -> exact isolated PostgreSQL:5432 read-only (requires later SQL/HBA approval)",
+    "helpers -> independently pinned host authority mTLS endpoints on authority network"
+  ],
+  "authorityEndpoints": null,
+  "externalFencingProvider": null,
+  "taskTransport": {
+    "authority": "existing enrollment authority",
+    "endpoint": "/helper-task",
+    "authentication": "TLSv1.3 mutual TLS and exact separately provisioned helper certificate pins",
+    "configurationFile": "/run/registration/private/helper.production.json",
+    "operations": ["helper.describe", "migration.plan", "migration.catalog", "observer.identity"],
+    "sqlPolicy": "Fixed read-only query recipe only; separate receipts-authority SQL approval and durable begin required",
+    "durability": "Existing host ledger; no writable helper state or ledger mount",
+    "migrationApply": "BLOCKED by unchanged existing Harness concurrency gate; no alternate apply dispatcher"
+  },
+  "unresolved": [
+    "Node base image digest, helper build verification and immutable published references",
+    "Exact effective Compose and observed container/network fingerprints",
+    "Independent creation authorization, authority anchors and mTLS credentials",
+    "External fencing provider",
+    "Reviewed helper runtime configs, exact helper mTLS client pins, real task/SQL approvals and reachable endpoints"
+  ],
+  "SERVICE_ADMITTED": false,
+  "APPLY_ELIGIBLE": false,
+  "PHONE_APPLY_CONCURRENCY_VERIFIED": false
+}

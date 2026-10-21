@@ -1,19 +1,20 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Link,
-  Navigate,
   useLocation,
   useNavigate,
 } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { RegisterResult } from "../context/AuthContext";
+import PhoneInput from "../components/PhoneInput";
+import { canonicalPhone } from "../utils/phone";
+import { readDraft, saveDraft, clearDraft, passwordChecks } from "../utils/registrationDraft";
+import MarketingPreferencesPanel from "../components/MarketingPreferencesPanel";
 import ForumLogo from "../components/ForumLogo";
 import MoneyTree from "../components/MoneyTree";
 import { translations } from "../i18n";
+import { localTestMailboxEnabled, LOCAL_TEST_MAILBOX_URL } from "../localTestMailbox";
 import { validateEmail } from "../utils/emailValidator";
-import { canonicalPhone } from "../utils/phone";
-import PhoneInput from "../components/PhoneInput";
-import type { CountryCode } from "libphonenumber-js";
 
 const PENDING_VERIFICATION_KEY = "cashback_pending_verification";
 const RETURN_PATH_KEY = "cashback_post_auth_next";
@@ -22,48 +23,17 @@ interface PendingVerification extends RegisterResult {
   email: string;
 }
 
-type PasswordChecks = {
-  minLen: boolean;
-  hasUpper: boolean;
-  hasLower: boolean;
-  hasDigit: boolean;
-  hasSpecial: boolean;
-};
-
-function getPasswordChecks(password: string): PasswordChecks {
-  return {
-    minLen: password.length >= 8,
-    hasUpper: /[A-Z]/.test(password),
-    hasLower: /[a-z]/.test(password),
-    hasDigit: /\d/.test(password),
-    hasSpecial: /[^A-Za-z0-9]/.test(password),
-  };
-}
-
-function isStrongPassword(password: string): boolean {
-  const c = getPasswordChecks(password);
-  return (
-    c.minLen &&
-    c.hasUpper &&
-    c.hasLower &&
-    c.hasDigit &&
-    c.hasSpecial
-  );
-}
-
 /**
  * Разрешаем возвращаться только в разделы магазина и бонусов.
  * Внешние адреса и произвольные маршруты не принимаем.
  */
-function safeReturnPath(value: string | null): string | null {
+export function safeReturnPath(value: string | null): string | null {
   if (
     !value ||
     !value.startsWith("/") ||
     value.startsWith("//") ||
     value.includes("\\") ||
-    Array.from(value).some(
-      (char) => char.charCodeAt(0) <= 0x1f || char.charCodeAt(0) === 0x7f
-    )
+    value.split("").some((character) => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)
   ) {
     return null;
   }
@@ -71,7 +41,9 @@ function safeReturnPath(value: string | null): string | null {
   try {
     const url = new URL(value, window.location.origin);
 
-    if (url.origin !== window.location.origin) return null;
+    if (url.origin !== window.location.origin) {
+      return null;
+    }
 
     const allowed =
       url.pathname === "/shop" ||
@@ -138,7 +110,7 @@ function savePendingVerification(data: PendingVerification) {
 
 const verifyText = {
   en: {
-    title: "Check your email",
+    title: "Confirm your email",
     sent: "We sent a verification link to",
     pending: "Email verification is pending for",
     notSent:
@@ -155,7 +127,7 @@ const verifyText = {
     waiting: "Please wait...",
   },
   ru: {
-    title: "Проверьте почту",
+    title: "Подтвердите электронную почту",
     sent: "Мы отправили ссылку для подтверждения на адрес",
     pending: "Ожидается подтверждение почты",
     notSent:
@@ -163,7 +135,7 @@ const verifyText = {
     demo:
       "Тестовый режим: откройте письмо по ссылке ниже. В рабочем режиме письмо приходит на ваш адрес.",
     preview: "Открыть тестовое письмо",
-    resend: "Отправить письмо ещё раз",
+    resend: "Отправить письмо повторно",
     resent:
       "Запрос обработан. Если аккаунту ещё требуется подтверждение и отправка будет успешной, придёт новое письмо.",
     later: "Продолжить просмотр",
@@ -182,6 +154,7 @@ export default function Register({
   const {
     register,
     resendVerification,
+    checkVerification,
     user,
     loading: authLoading,
   } = useAuth();
@@ -207,30 +180,13 @@ export default function Register({
     readPendingVerification
   );
 
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState(() => ({ ...readDraft(), password: "" }));
 
-  const demoEmail = process.env.REACT_APP_REGISTRATION_ISOLATED === "true";
-  const registrationEmail = demoEmail ? `${form.email}@example.test` : form.email;
-  const validateRegistrationEmail = (value: string) => {
-    if (demoEmail && !/^[a-zA-Z0-9._+-]{1,64}$/.test(value)) {
-      return {valid: false, error: "Invalid email format"};
-    }
-    return validateEmail(demoEmail ? `${value}@example.test` : value);
-  };
+  useEffect(() => { if (!user && !pending) saveDraft(form); }, [form, user, pending]);
 
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [phoneCountry, setPhoneCountry] = useState<CountryCode>("GB");
-  const [phoneTouched, setPhoneTouched] = useState(false);
-  const phoneE164 = canonicalPhone(phone, phoneCountry);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const [busy, setBusy] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
 
@@ -240,11 +196,6 @@ export default function Register({
     translations.EN;
 
   const v = language === "RU" ? verifyText.ru : verifyText.en;
-
-  const passwordChecks = useMemo(
-    () => getPasswordChecks(form.password),
-    [form.password]
-  );
 
   useEffect(() => {
     if (!requestedReturnPath) return;
@@ -270,43 +221,14 @@ export default function Register({
     }
   }, [user?.email_verified]);
 
+  // Данные текущего аккаунта имеют приоритет
+  // над сохранённым адресом.
   const verification: PendingVerification | null =
     user && !user.email_verified
       ? pending?.email === user.email
         ? pending
         : { email: user.email }
       : pending;
-
-  const handleGoogleRegister = () => {
-    if (busy) return;
-
-    // Чтобы не ломать локальный запуск без backend/oauth:
-    // перевключай через env-переменную.
-    const browserProcess = typeof window !== "undefined"
-      ? (window as Window & {process?: {env?: Record<string, string | undefined>}}).process : undefined;
-    const enabled =
-      (typeof window !== "undefined" &&
-        browserProcess?.env?.REACT_APP_GOOGLE_AUTH_ENABLED === "true") ||
-      (typeof process !== "undefined" &&
-        process.env.REACT_APP_GOOGLE_AUTH_ENABLED === "true");
-
-    if (!enabled) {
-      setError(
-        language === "RU"
-          ? "Google регистрация временно недоступна."
-          : "Google registration is temporarily unavailable."
-      );
-      return;
-    }
-
-    if (!termsAccepted) {
-      setError(t.mustAcceptTerms);
-      return;
-    }
-
-    const next = encodeURIComponent(returnPath);
-    window.location.href = `/auth/google/start?next=${next}`;
-  };
 
   const handleEmailChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -316,7 +238,7 @@ export default function Register({
     setForm((previous) => ({ ...previous, email }));
 
     setEmailError(
-      email.trim() ? validateRegistrationEmail(email).error || "" : ""
+      email.trim() ? validateEmail(email).error || "" : ""
     );
   };
 
@@ -328,62 +250,44 @@ export default function Register({
     setError("");
     setResendMessage("");
 
-    setPhoneTouched(true);
-    if (!phoneE164) return;
-
     if (!termsAccepted) {
       setError(t.mustAcceptTerms);
       return;
     }
 
-    const validation = validateRegistrationEmail(form.email);
+    const validation = validateEmail(form.email);
 
     if (!validation.valid) {
       setEmailError(validation.error || "Invalid email");
       return;
-    } else {
-      setEmailError("");
     }
 
-    if (!isStrongPassword(form.password)) {
-      setPasswordError(
-        language === "RU"
-          ? "Пароль слишком простой: минимум 8 символов, A-Z, a-z, цифра и спецсимвол."
-          : "Password is too weak: min 8 chars, A-Z, a-z, digit and special symbol."
-      );
-      return;
-    } else {
-      setPasswordError("");
-    }
-
+    if (!isFormValid) { setError(language === "RU" ? "Проверьте имя, фамилию, телефон и требования к паролю." : "Check names, phone and password requirements."); return; }
     setBusy(true);
 
     try {
-      const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`.trim();
-
       const result = await register({
-        name: fullName,
-        email: registrationEmail.trim().toLowerCase(),
+        name: `${form.firstName.trim()} ${form.lastName.trim()}`,
+        firstName: form.firstName.trim(), lastName: form.lastName.trim(),
+        phone_e164: canonicalPhone(form.phone,form.country)!,
+        email: form.email.trim().toLowerCase(),
         password: form.password,
-        phone_e164: phoneE164,
       });
 
       const pendingVerification: PendingVerification = {
         ...result,
-        email: registrationEmail.trim().toLowerCase(),
+        email: form.email.trim().toLowerCase(),
       };
 
+      clearDraft();
       savePendingVerification(pendingVerification);
       setPending(pendingVerification);
-      setPhone("");
-      setPhoneTouched(false);
 
-      setForm((previous) => ({
-        ...previous,
-        firstName: "",
-        lastName: "",
-        password: "",
-      }));
+      // Пароль нигде не сохраняем.
+      setForm((previous) => ({ ...previous, password: "" }));
+
+      // Не пропускаем подтверждение почты.
+      // Переход для подтверждённого аккаунта выполняется ниже.
     } catch (err) {
       setError(
         err instanceof Error ? err.message : t.loginRegister
@@ -391,6 +295,17 @@ export default function Register({
     } finally {
       setBusy(false);
     }
+  };
+
+  const handleCheck = async () => {
+    if (busy) return;
+    setBusy(true); setError(""); setResendMessage("");
+    try {
+      if (!await checkVerification()) setResendMessage(language === "RU"
+        ? "Почта ещё не подтверждена. Откройте письмо и нажмите ссылку подтверждения."
+        : "Your email is not verified yet. Open the confirmation link in your email.");
+    } catch { setError(language === "RU" ? "Не удалось проверить статус. Попробуйте позже или войдите в аккаунт." : "Could not check verification. Retry later or log in."); }
+    finally { setBusy(false); }
   };
 
   const handleResend = async () => {
@@ -423,13 +338,13 @@ export default function Register({
     }
   };
 
-  const isFormValid =
-    form.firstName.trim().length >= 2 &&
-    form.lastName.trim().length >= 2 &&
-    validateRegistrationEmail(form.email).valid &&
-    isStrongPassword(form.password) &&
-    Boolean(phoneE164) &&
-    termsAccepted;
+  const isFormValid = Boolean(
+    form.firstName.trim().length >= 2 && form.lastName.trim().length >= 2 &&
+      Boolean(canonicalPhone(form.phone, form.country)) &&
+      passwordChecks(form.password).every(Boolean) &&
+      termsAccepted &&
+      validateEmail(form.email).valid
+  );
 
   const inputStyle: React.CSSProperties = {
     padding: "12px",
@@ -455,7 +370,11 @@ export default function Register({
   }
 
   if (user?.email_verified) {
-    return <Navigate to={returnPath} replace />;
+    return <section aria-live="polite" style={{maxWidth: 560, margin: "48px auto", padding: 32, background: "white", borderRadius: 12}}>
+      <h1>{language === "RU" ? "Электронная почта подтверждена!" : "Email verified!"}</h1>
+      <p>{language === "RU" ? "Перейдите в профиль и завершите регистрацию." : "Continue to your profile to complete registration."}</p>
+      <Link to="/profile" style={{...buttonStyle, display: "inline-block", textDecoration: "none"}}>{language === "RU" ? "Перейти в профиль" : "Continue to profile"}</Link>
+    </section>;
   }
 
   return (
@@ -547,18 +466,18 @@ export default function Register({
                   </p>
                 )}
 
-                {verification.preview_url && (
-                  <>
-                    <p style={{ margin: 0 }}>{v.demo}</p>
-                    <a
-                      href={verification.preview_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: "#0d6efd" }}
-                    >
-                      {v.preview}
+                {localTestMailboxEnabled() && (
+                  <aside aria-label={language === "RU" ? "Локальная тестовая почта" : "Local test mailbox"}
+                    style={{padding: 18, border: "2px solid #0d6efd", borderRadius: 10, background: "#eef5ff"}}>
+                    <strong>{language === "RU" ? "Где найти письмо в локальной версии" : "Where to find your local test message"}</strong>
+                    <p>{language === "RU"
+                      ? "Это локальная версия Cashback+. Письма перехватываются тестовой почтой и не приходят в ваш обычный ящик. Откройте письмо для указанного выше адреса и нажмите «Подтвердить почту». Затем вернитесь сюда и нажмите «Проверить почту»."
+                      : "This is local Cashback+. Messages arrive in the test mailbox, not your personal inbox. Open the message addressed to your email and click its confirmation link. Then return here and check the status."}</p>
+                    <a href={LOCAL_TEST_MAILBOX_URL} target="_blank" rel="noopener noreferrer"
+                      style={{display: "inline-block", padding: "12px 18px", background: "#0d6efd", color: "white", borderRadius: 8, fontWeight: 700, textDecoration: "none"}}>
+                      {language === "RU" ? "Открыть тестовую почту" : "Open test mailbox"}
                     </a>
-                  </>
+                  </aside>
                 )}
 
                 <p style={{ margin: 0 }}>{v.note}</p>
@@ -569,6 +488,9 @@ export default function Register({
                   </p>
                 )}
 
+                <button type="button" onClick={handleCheck} disabled={busy} style={buttonStyle}>
+                  {busy ? v.waiting : language === "RU" ? "Проверить почту" : "Check email"}
+                </button>
                 <button
                   type="button"
                   onClick={handleResend}
@@ -599,90 +521,18 @@ export default function Register({
               </div>
             ) : (
               <>
-                <button
-                  type="button"
-                  onClick={handleGoogleRegister}
-                  disabled={busy}
-                  style={{
-                    ...buttonStyle,
-                    width: "100%",
-                    background: "#fff",
-                    color: "#111",
-                    border: "1px solid #d9d9d9",
-                    marginBottom: 12,
-                  }}
-                >
-                  Continue with Google
-                </button>
-
-                <div
-                  style={{
-                    textAlign: "center",
-                    margin: "10px 0 14px",
-                    color: "#777",
-                  }}
-                >
-                  or
-                </div>
-
+                <p>{language === "RU" ? "Маркетинговые сообщения необязательны и отключены по умолчанию. После создания аккаунта их можно настроить здесь или в профиле. Сервисные письма и согласие с условиями сайта — отдельно." : "Marketing is optional and off by default. After creating your account you can choose preferences here or in your profile. Service messages and site terms are separate."} <Link to="/privacy#privacySection12">{language === "RU" ? "Подробнее" : "Learn more"}</Link></p>
                 <form
                   onSubmit={submit}
                   style={{ display: "grid", gap: "12px" }}
                 >
-                  <input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    aria-label={
-                      language === "RU" ? "Имя" : "First name"
-                    }
-                    placeholder={
-                      language === "RU" ? "Имя" : "First name"
-                    }
-                    value={form.firstName}
-                    onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        firstName: e.target.value,
-                      }))
-                    }
-                    required
-                    minLength={2}
-                    autoComplete="given-name"
-                    disabled={busy}
-                    style={inputStyle}
-                  />
-
-                  <input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    aria-label={
-                      language === "RU" ? "Фамилия" : "Last name"
-                    }
-                    placeholder={
-                      language === "RU" ? "Фамилия" : "Last name"
-                    }
-                    value={form.lastName}
-                    onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        lastName: e.target.value,
-                      }))
-                    }
-                    required
-                    minLength={2}
-                    autoComplete="family-name"
-                    disabled={busy}
-                    style={inputStyle}
-                  />
+                  {(["firstName","lastName"] as const).map((field) => <input key={field} id={field} name={field} type="text" aria-label={language === "RU" ? (field === "firstName" ? "Имя" : "Фамилия") : (field === "firstName" ? "First name" : "Last name")} placeholder={language === "RU" ? (field === "firstName" ? "Имя" : "Фамилия") : (field === "firstName" ? "First name" : "Last name")} value={form[field]} onChange={e=>setForm({...form,[field]:e.target.value})} required minLength={2} maxLength={100} autoComplete={field === "firstName" ? "given-name" : "family-name"} disabled={busy} style={inputStyle}/>)}
 
                   <div>
-                    <div style={demoEmail ? {display:"flex", alignItems:"center", border:"1px solid #ddd", borderRadius:6} : undefined}>
                     <input
                       id="email"
                       name="email"
-                      type={demoEmail ? "text" : "email"}
+                      type="email"
                       aria-label={t.email}
                       placeholder={t.email}
                       value={form.email}
@@ -692,13 +542,10 @@ export default function Register({
                       disabled={busy}
                       aria-invalid={Boolean(emailError)}
                       aria-describedby={
-                        [demoEmail ? "demo-email" : "", emailError ? "email-error" : ""].filter(Boolean).join(" ") || undefined
+                        emailError ? "email-error" : undefined
                       }
-                      style={demoEmail ? {...inputStyle, border:0, minWidth:0} : inputStyle}
+                      style={inputStyle}
                     />
-                    {demoEmail && <span aria-hidden="true" style={{paddingRight:12}}>@example.test</span>}
-                    </div>
-                    {demoEmail && <output id="demo-email">{registrationEmail}</output>}
 
                     {emailError && (
                       <p
@@ -714,12 +561,7 @@ export default function Register({
                     )}
                   </div>
 
-                  <PhoneInput id="registration-phone" country={phoneCountry} onCountry={setPhoneCountry}
-                    onBlur={() => setPhoneTouched(true)}
-                    value={phone} onChange={value => { setPhone(value); setPhoneTouched(true); }}
-                    label={t.phone} countryLabel={t.phoneCountry} locale={language} disabled={busy}
-                    error={phoneTouched && !phoneE164 ? (phone.trim() ? t.phoneInvalid : t.phoneRequired) : undefined} />
-
+                  <PhoneInput id="phone" country={form.country} onCountry={country=>setForm({...form,country})} value={form.phone} onChange={phone=>setForm({...form,phone})} label={language === "RU" ? "Телефон" : "Phone"} countryLabel={language === "RU" ? "Страна" : "Country"} locale={lang} disabled={busy} error={form.phone && !canonicalPhone(form.phone,form.country) ? (language === "RU" ? "Введите корректный номер для выбранной страны" : "Enter a valid number for the selected country") : undefined}/>
                   <input
                     id="password"
                     name="password"
@@ -728,10 +570,7 @@ export default function Register({
                     placeholder={t.minPassword}
                     value={form.password}
                     onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        password: e.target.value,
-                      }))
+                      setForm({ ...form, password: e.target.value })
                     }
                     required
                     minLength={8}
@@ -740,75 +579,7 @@ export default function Register({
                     style={inputStyle}
                   />
 
-                  {passwordError && (
-                    <p
-                      role="alert"
-                      style={{
-                        color: "#b42318",
-                        fontSize: "12px",
-                        margin: 0,
-                      }}
-                    >
-                      {passwordError}
-                    </p>
-                  )}
-
-                  <ul
-                    style={{
-                      margin: 0,
-                      paddingLeft: 18,
-                      fontSize: 12,
-                      color: "#444",
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    <li
-                      style={{
-                        color: passwordChecks.minLen ? "green" : "#666",
-                      }}
-                    >
-                      {language === "RU"
-                        ? "Минимум 8 символов"
-                        : "At least 8 characters"}
-                    </li>
-                    <li
-                      style={{
-                        color: passwordChecks.hasUpper ? "green" : "#666",
-                      }}
-                    >
-                      {language === "RU"
-                        ? "Хотя бы 1 заглавная буква (A-Z)"
-                        : "At least 1 uppercase letter (A-Z)"}
-                    </li>
-                    <li
-                      style={{
-                        color: passwordChecks.hasLower ? "green" : "#666",
-                      }}
-                    >
-                      {language === "RU"
-                        ? "Хотя бы 1 строчная буква (a-z)"
-                        : "At least 1 lowercase letter (a-z)"}
-                    </li>
-                    <li
-                      style={{
-                        color: passwordChecks.hasDigit ? "green" : "#666",
-                      }}
-                    >
-                      {language === "RU"
-                        ? "Хотя бы 1 цифра"
-                        : "At least 1 digit"}
-                    </li>
-                    <li
-                      style={{
-                        color: passwordChecks.hasSpecial ? "green" : "#666",
-                      }}
-                    >
-                      {language === "RU"
-                        ? "Хотя бы 1 спецсимвол"
-                        : "At least 1 special character"}
-                    </li>
-                  </ul>
-
+                  <div role="status" aria-live="polite"><strong>{language === "RU" ? "Надёжность пароля" : "Password strength"}: {passwordChecks(form.password).filter(Boolean).length}/5</strong><ul>{(language === "RU" ? ["Не менее 8 символов","Заглавная латинская буква","Строчная латинская буква","Цифра","Специальный символ"] : ["At least 8 characters","Uppercase Latin letter","Lowercase Latin letter","Digit","Special character"]).map((label,i)=><li key={label}>{passwordChecks(form.password)[i] ? "✓" : "○"} {label}</li>)}</ul></div>
                   <div
                     style={{
                       display: "flex",
@@ -819,7 +590,6 @@ export default function Register({
                     <input
                       id="terms"
                       type="checkbox"
-                      required
                       checked={termsAccepted}
                       onChange={(e) =>
                         setTermsAccepted(e.target.checked)
@@ -841,7 +611,7 @@ export default function Register({
                       </Link>{" "}
                       {t.and}{" "}
                       <Link
-                        to="/privacy"
+                        to="/contacts"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -855,8 +625,7 @@ export default function Register({
                     disabled={busy || !isFormValid}
                     style={{
                       ...buttonStyle,
-                      opacity:
-                        busy || !isFormValid ? 0.6 : 1,
+                      opacity: busy || !isFormValid ? 0.6 : 1,
                     }}
                   >
                     {busy ? t.creating : t.register}
@@ -887,6 +656,7 @@ export default function Register({
           <MoneyTree />
         </div>
       </div>
+      {user && verification && <MarketingPreferencesPanel key={user.id} lang={lang} hasPhone={Boolean(user.phone_e164)} />}
     </div>
   );
 }

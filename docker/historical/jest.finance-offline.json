@@ -1,0 +1,15 @@
+{
+  "rootDir": "../..",
+  "roots": ["<rootDir>/src"],
+  "testEnvironment": "node",
+  "testMatch": [
+    "<rootDir>/src/finance/*.spec.ts",
+    "<rootDir>/src/users/restored-security.spec.ts",
+    "<rootDir>/src/auth/email-flow.spec.ts",
+    "<rootDir>/src/auth/extended-registration.spec.ts",
+    "<rootDir>/src/bonus/demo-bonus.spec.ts",
+    "<rootDir>/src/marketing-preferences/marketing-offline.spec.ts"
+  ],
+  "transform": {"^.+\\.ts$": ["ts-jest", {"tsconfig": "<rootDir>/tsconfig.json"}]},
+  "setupFiles": ["<rootDir>/docker/historical/finance-offline-process-guard.cjs"]
+}

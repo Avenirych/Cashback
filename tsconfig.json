@@ -25,13 +25,11 @@
   },
   "include": [
     "src/**/*.ts",
-    "test/**/*.ts",
-    "jest.config.ts"
+    "test/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "cashback-frontend",
-    "config-backups"
+    "cashback-frontend"
   ]
 }

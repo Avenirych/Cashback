@@ -1,4 +1,4 @@
-import { PromoService } from './promo.service';
+import { scaffoldDependencyMock } from '../../test/scaffold-mocks';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PromoController } from './promo.controller';
 
@@ -8,8 +8,7 @@ describe('PromoController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PromoController],
-      providers: [{ provide: PromoService, useValue: {} }],
-    }).compile();
+    }).useMocker(scaffoldDependencyMock).compile();
 
     controller = module.get<PromoController>(PromoController);
   });

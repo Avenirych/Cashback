@@ -1,26 +1,27 @@
+import { requiredJwtSecret } from '../local-configuration';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
-import { RegistrationReadiness } from './registration-readiness';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { MailModule } from '../mail/mail.module';
 import { User } from '../users/user.entity';
-import { JwtConfigurationModule, jwtRegistrationOptions } from './jwt-configuration';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    JwtConfigurationModule,
-    JwtModule.registerAsync(jwtRegistrationOptions),
+    JwtModule.register({
+      secret: requiredJwtSecret(),
+      signOptions: { expiresIn: '24h' },
+    }),
     PassportModule,
     UsersModule,
     MailModule,
   ],
-  providers: [AuthService, JwtStrategy, RegistrationReadiness],
+  providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })

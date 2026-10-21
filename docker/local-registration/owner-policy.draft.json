@@ -1,0 +1,12 @@
+{
+  "status": "DRAFT_NOT_APPROVED",
+  "ownerApprovalRequired": true,
+  "policy": {
+    "daemonId": "ec3d6303-4d66-4410-8317-b739cebc046c",
+    "context": "desktop-linux",
+    "postgresImage": "postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+    "platform": "linux/amd64"
+  },
+  "scope": "Only the new empty registration PostgreSQL; separate creation/start permission and fresh admission required",
+  "note": "This envelope is NOT an approved AdmissionPolicy. No top-level runtime policy fields are supplied. Owner approval, secret generation, image-store writes and resource creation are separate permissions."
+}

@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "@mui/material/Select";
+import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import { getCountries, getCountryCallingCode } from "libphonenumber-js";
 import type { CountryCode } from "libphonenumber-js";
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export default function PhoneInput(props: Props) {
+  const [search, setSearch] = React.useState("");
   const options = React.useMemo(() => countryOptions(props.locale), [props.locale]);
   return <div>
     <label htmlFor={props.id}>{props.label}</label>
@@ -28,7 +30,7 @@ export default function PhoneInput(props: Props) {
       inputProps={{"aria-label": props.countryLabel}}
       onChange={event => {
         const code = getCountries().find(country => country === event.target.value);
-        if (code) props.onCountry(code);
+        if (code) { props.onCountry(code); setSearch(""); }
       }}
       renderValue={country => <span style={{display:"inline-flex",alignItems:"center",gap:8}}>
         <CountryFlag key={country} country={country} />
@@ -43,7 +45,8 @@ export default function PhoneInput(props: Props) {
         "&.Mui-focused .MuiOutlinedInput-notchedOutline":{border:"2px solid #0d6efd"},
         "& .MuiSelect-select":{padding:"12px 32px 12px 10px",display:"flex",alignItems:"center"}}}
     >
-      {options.map(({country, name}) => <MenuItem key={country} value={country}
+      <CountrySearchHeader><input aria-label={props.locale.toLowerCase() === "ru" ? "Поиск страны" : "Search countries"} placeholder={props.locale.toLowerCase() === "ru" ? "Страна или код" : "Country or calling code"} value={search} onChange={e=>setSearch(e.target.value)} onKeyDown={e=>{if(!["Escape","ArrowDown","ArrowUp","Tab"].includes(e.key))e.stopPropagation();}} style={{width:"100%",padding:10,boxSizing:"border-box"}} /></CountrySearchHeader>
+      {options.filter(o => o.country === "GB" || o.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()) || ("+"+getCountryCallingCode(o.country)).includes(search.trim())).map(({country, name}) => <MenuItem key={country} value={country}
         sx={{gap:1,whiteSpace:"normal"}}>
         <CountryFlag country={country} /> <span>{name} (+{getCountryCallingCode(country)})</span>
       </MenuItem>)}
@@ -80,3 +83,6 @@ export function countryOptions(language: string) {
   try { compare = new Intl.Collator(locale).compare; } catch { /* deterministic fallback */ }
   return options.sort((a,b) => a.country === b.country ? 0 : a.country === "GB" ? -1 : b.country === "GB" ? 1 : compare(a.name,b.name) || compare(a.country,b.country));
 }
+
+function CountrySearchHeader({children}: {children:React.ReactNode}) { return <ListSubheader role="presentation">{children}</ListSubheader>; }
+CountrySearchHeader.muiSkipListHighlight = true;

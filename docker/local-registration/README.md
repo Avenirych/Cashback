@@ -24,10 +24,10 @@ retains existing fail-closed behavior. Bonus API is not supplied. REACT_APP_REGI
 clients before fetch; the provider does not start auto-refresh, focus/visibility
 refresh or timers. Manual bonus requests are refused; no financial data is invented.
 
-Future published ports are only 127.0.0.1:3000 (frontend), :3001 (backend), :8025
+Future published ports are only 127.0.0.1:3003 (frontend), :3001 (backend), :8025
 (Mailpit UI). PostgreSQL 5432 and SMTP 1025 are internal only. No process may be
 stopped to claim these ports without approval. Canonical browser origin is
-http://localhost:3000, as required by the existing Mailpit guard.
+http://localhost:3003, as required by the existing Mailpit guard.
 
 Mailpit messages and avatars use bounded tmpfs, not existing files or volumes.
 Frontend uses the repository's existing Dockerfile and may write its own container
@@ -65,7 +65,7 @@ The unchanged validateLocalDemoMailpit function is exercised directly by static
 tests with this backend environment. It requires development mode, exact scenario
 cashback-local-mailpit-registration, postgres-test:5432, cashback_docker_test,
 mailpit:1025, no SMTP credentials, no DATABASE_URL, USE_ETHEREAL=false,
-SMTP_SECURE=false and FRONTEND_URL=http://localhost:3000. These values match.
+SMTP_SECURE=false and FRONTEND_URL=http://localhost:3003. These values match.
 The database NAME is the same as the older test environment solely to satisfy
 the guard; the proposed cluster/volume/networks are separate. The hostname is a
 service alias scoped to the new network, not the existing container's hostname.
@@ -86,8 +86,9 @@ Mailpit. Tests do not send mail. Runtime network and recipient behavior is unpro
    AddUsersEmailUnique1791888000000. Migration history must accurately describe
    executed migrations; do not fake rows. The baseline owns eleven tables including
    history. Existing default migration lists omit parts of this fresh bootstrap;
-   they must not be used as a complete bootstrap command. No bootstrap implementation,
-   SQL file, initdb mount or migration command is supplied here.
+   they must not be used as a complete bootstrap command. The source-prepared
+   runPhoneBaselineBootstrap API extends the existing Harness but remains blocked
+   before connection by its unchanged concurrency gate. No automatic CLI/initdb hook.
 3. The seventh migration is AddUserPhoneAndSmsConsent1792195200000. It adds nullable
    users.phone_e164, phone_verified=false, nullable phone_verified_at, E.164 and
    verification-consistency constraints; marketing_preferences gets smsMarketing=false,
@@ -172,8 +173,8 @@ a failed comparison must not be resolved by accepting an observed config blindly
 Backend REGISTRATION_ISOLATED=true activates RegistrationReadiness before any register
 validation, account lookup/write, password hashing or mail. The unchanged default path
 outside isolated mode is preserved. Unknown isolated flag values refuse registration.
-The composed backend has no trusted probe or policy provider, so registration returns
-503. There is no env READY flag and no cached startup approval.
+The composed backend wires the read-only probe and an intentionally absent reviewed
+policy through DI, so registration returns 503 without accessing the probe target. There is no env READY flag and no cached startup approval.
 
 The pure readiness evaluator requires a fresh exact cluster/database OID/version,
 complete seven-row history, independently reviewed full schema fingerprint (including
@@ -186,9 +187,9 @@ objects, sequences, defaults and ownership. A schema hash observed on an unknown
 is not its own approval. The privilege allowlist is deliberately limited to registration,
 verification and owner profile/preferences; other application modules may remain unavailable.
 
-No live probe is implemented or registered in this stage: it would need separately
-approved database/SMTP access and review of exact read-only collection, timeouts,
-identity binding and freshness. No schema, role or privilege is created/changed here.
+The live read-only probe is now implemented and registered, but has NOT been run.
+Its policy remains null until independently approved Harness provenance and target
+resolution exist. Database/SMTP runtime validation still requires separate approval. No schema, role or privilege is created/changed here.
 Default denial is intentional, not proof that the environment is runtime-ready.
 
 The Mailpit/Harness target-name mismatch, missing trusted invocation boundary for
@@ -211,3 +212,19 @@ auth regression tests and 28 selected frontend tests passed across focused runs.
 Backend and frontend no-emit TypeScript passed. Readiness has a three-second deadline
 and provides AbortSignal cancellation to the future trusted collector, with generic
 503 refusal on errors. No live collector, registry verification or runtime was used.
+
+## Registration blocker source follow-up
+
+See [BLOCKER-FIXES.md](BLOCKER-FIXES.md) for request consent, the 3003-only Mailpit
+scenario, trusted probe providers and the source-prepared first-six bootstrap.
+The bootstrap is blocked by the unchanged concurrency gate BEFORE connection;
+the target-name mismatch and runtime admission collector remain unresolved.
+
+## Read-only Docker admission collector
+
+`collector.ts` now implements the trusted read-only collection boundary and invokes
+this existing admission gate. See [COLLECTOR.md](COLLECTOR.md) for the exact commands,
+registry proof, test boundary and failed runtime prerequisites. The current
+`desktop-linux` engine pipe is unavailable: resource inventory/collisions and daemon
+identity remain unknown. No live admission PASS, resource creation or image pull
+was performed. The new collector does not change Harness/readiness/Mailpit contracts.

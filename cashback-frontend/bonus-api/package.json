@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node server.mjs",
-    "test-credit": "node server.mjs --test-credit"
+    "test-credit": "node server.mjs --test-credit",
+    "test": "node --test legacy-ci.test.mjs"
   },
   "dependencies": {
     "express": "^5.1.0"

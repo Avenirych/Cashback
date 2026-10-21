@@ -1,0 +1,11 @@
+{
+  "status": "UNCHANGED",
+  "containers": 18,
+  "containerIdentityImageStartPortsMountsVerified": true,
+  "volumesUnchanged": true,
+  "networksUnchanged": true,
+  "originalImagesPreserved": true,
+  "financeEnabled": false,
+  "activeDatabaseAccessed": false,
+  "checkedAt": "2026-10-21T09:53:19.854Z"
+}

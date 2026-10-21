@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
 import { translations } from "../i18n";
 import type {
@@ -55,6 +56,7 @@ export default function MarketingPreferencesModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
     setIsLoading(true);
     setMessage(null);
 
@@ -101,7 +103,7 @@ export default function MarketingPreferencesModal({
         justifyContent: "center",
         zIndex: 1000,
       }}
-      onClick={onClose}
+      onClick={() => { if (!isLoading) onClose(); }}
     >
       <div
         style={{
@@ -136,6 +138,7 @@ export default function MarketingPreferencesModal({
           {t.marketingPreferencesDescription}
         </p>
 
+        <p><Link to="/privacy#privacySection12">{t.footerPrivacy}</Link>{" · "}<Link to="/cookies">{t.footerCookies}</Link></p>
         <form onSubmit={handleSubmit}>
           <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             {/* Account Updates - Mandatory */}
@@ -259,6 +262,8 @@ export default function MarketingPreferencesModal({
               >
                 <input
                   type="checkbox"
+                  disabled={isLoading}
+                  aria-label={t.specialOffers}
                   checked={specialOffers}
                   onChange={(e) => setSpecialOffers(e.target.checked)}
                   style={{
@@ -341,6 +346,8 @@ export default function MarketingPreferencesModal({
               >
                 <input
                   type="checkbox"
+                  disabled={isLoading}
+                  aria-label={t.partnerRecommendations}
                   checked={partnerRecommendations}
                   onChange={(e) =>
                     setPartnerRecommendations(e.target.checked)

@@ -95,7 +95,7 @@ export default function PrivacyPolicy({
             const text = textKey ? (t[textKey] as string) : undefined;
 
             return (
-              <section key={section.key}>
+              <section key={section.key} id={section.key}>
                 <h2
                   style={{
                     fontSize: "20px",

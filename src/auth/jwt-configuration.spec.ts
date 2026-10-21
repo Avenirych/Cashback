@@ -1,3 +1,5 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
+import { requiredJwtSecret } from '../local-configuration';
 import { UsersService } from '../users/users.service';
 import { Controller, Get, Req, UseGuards, INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -22,11 +24,14 @@ class ProbeController {
 const syntheticSecret = 'synthetic-jwt-regression-key-not-a-deployment-secret';
 const configured = (value: unknown) => ({ get: jest.fn().mockReturnValue(value) });
 
+const previousSecret = process.env.JWT_SECRET;
+afterAll(() => { if (previousSecret === undefined) delete process.env.JWT_SECRET; else process.env.JWT_SECRET = previousSecret; });
 async function testModule(value: unknown) {
+  process.env.JWT_SECRET = typeof value === "string" && value.trim() ? value : syntheticSecret;
   return Test.createTestingModule({
     imports: [JwtConfigurationModule, JwtModule.registerAsync(jwtRegistrationOptions), PassportModule],
     controllers: [ProbeController],
-    providers: [JwtStrategy, { provide: UsersService, useValue: { getById: jest.fn().mockResolvedValue({ id: 42, email_verified: false }) } }],
+    providers: [JwtStrategy, { provide: UsersService, useValue: { getById: jest.fn().mockResolvedValue({ id: 42, email: "synthetic@example.test", email_verified: false }) } }],
   }).overrideProvider(ConfigService).useValue(configured(value)).compile();
 }
 
@@ -65,7 +70,7 @@ describe('Shared JWT configuration', () => {
       const module = await testModule(syntheticSecret);
       jwt = module.get(JwtService);
       app = module.createNestApplication();
-      await app.init();
+      await startGuardedHttpTestApp(app);
     });
     afterAll(async () => { await app.close(); });
 
@@ -102,3 +107,10 @@ describe('Shared JWT configuration', () => {
 });
 
 
+
+test.each([undefined, '', '   ', '\t', '\r\n'])('canonical signer/strategy helper rejects blank secret %p', value => {
+  expect(() => requiredJwtSecret({ JWT_SECRET: value })).toThrow('HISTORICAL_CONFIG_REQUIRED_JWT_SECRET');
+});
+test('canonical secret validation does not trim a legitimate key', () => {
+  const key=' '+syntheticSecret+' '; expect(requiredJwtSecret({JWT_SECRET:key})).toBe(key);
+});

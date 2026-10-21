@@ -1,0 +1,175 @@
+{
+  "status": "EXTENDED_REGISTRATION_READY",
+  "reference": "d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f",
+  "changedFiles": [
+    "src/users/user.entity.ts",
+    "src/users/users.service.ts",
+    "src/users/phone-normalization.ts",
+    "src/auth/auth.controller.ts",
+    "src/auth/auth.service.ts",
+    "src/auth/extended-registration.spec.ts",
+    "src/auth/email-flow.spec.ts",
+    "src/local-schema.spec.ts",
+    "cashback-frontend/src/components/PhoneInput.tsx",
+    "cashback-frontend/src/components/ExtendedRegistration.test.tsx",
+    "cashback-frontend/src/utils/phone.ts",
+    "cashback-frontend/src/utils/registrationDraft.ts",
+    "cashback-frontend/src/context/AuthContext.tsx",
+    "cashback-frontend/src/pages/Register.tsx",
+    "cashback-frontend/src/pages/Profile.tsx",
+    "cashback-frontend/src/pages/ForumRegister.tsx",
+    "cashback-frontend/src/pages/Forum.test.tsx",
+    "cashback-frontend/src/pages/EmailFlow.test.tsx",
+    "cashback-frontend/public/flags/ (247 recovered assets)",
+    "package.json",
+    "package-lock.json",
+    "cashback-frontend/package.json",
+    "cashback-frontend/package-lock.json",
+    "docker/historical/migrations/20261020-extended-registration.sql",
+    "docker/historical/run-offline.cjs"
+  ],
+  "backupDirectory": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-extended-1792506502143",
+  "backup": {
+    "status": "IDENTITY_AND_BACKUP_VERIFIED",
+    "cluster": "7698666936429441062",
+    "database": "cashback_historical_03573b7",
+    "oid": 16384,
+    "users": 2,
+    "columns": [
+      "id",
+      "email",
+      "name",
+      "avatar_url",
+      "password",
+      "balance",
+      "email_verified",
+      "email_token",
+      "email_token_expires_at",
+      "created_at"
+    ],
+    "backupBytes": 33083,
+    "sha256": "726ada307969fd1854de2bb63c96c677356b447c9bde1a7cbbf46f06531d8fec",
+    "fullArchiveScan": true,
+    "trialDatabaseRestore": false,
+    "dpapiCurrentUser": true
+  },
+  "migration": {
+    "status": "COMMITTED_ONCE",
+    "sha256": "4aee47133eeb9919b9a67dd5048e9dfd406bd191c25b779807afbfc62d21fef7",
+    "existingUsersUnchanged": true,
+    "newNullableColumns": 3,
+    "additionalGrants": 0
+  },
+  "deployment": {
+    "status": "EXTENDED_APPLICATION_STARTED",
+    "services": [
+      {
+        "name": "cashback-historical-03573b7-local-backend-1",
+        "id": "a2e7be7774399a55d0fb517df5ea3e4a59dcb9c374dc6769cdde538b66a179d5",
+        "image": "sha256:cf4e1acebac0b9cf44a649416e1b2add9c6964cc669071a3a6c6d379a020594a",
+        "status": "running",
+        "ports": {
+          "3006/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "3006"
+            }
+          ]
+        }
+      },
+      {
+        "name": "cashback-historical-03573b7-local-frontend-1",
+        "id": "75affb0d7d9660ffceb5c57895c7bd6f99cc736692821a2edb83a986310f75f7",
+        "image": "sha256:8be16d599c41d0635056e3dc660be705be318020ff6d6a2eb6695e732fe976f0",
+        "status": "running",
+        "ports": {
+          "3000/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "3004"
+            }
+          ]
+        }
+      }
+    ],
+    "otherContainersUnchanged": true,
+    "existingSecretsReused": true
+  },
+  "runtime": {
+    "status": "EXTENDED_RUNTIME_PASS",
+    "stage": "COMPLETE",
+    "passwordsLogged": false,
+    "checks": {
+      "serverValidation": true,
+      "separateFieldsPersisted": true,
+      "emailDeliveredLocally": true,
+      "emailSingleUse": true,
+      "login": true,
+      "ownProfile": true,
+      "separateForumMembership": true,
+      "duplicateDenied": true,
+      "privatePhoneNotPublic": true
+    },
+    "cleanup": {
+      "testAccountRemoved": true,
+      "testMembershipRemoved": true,
+      "testMailRemoved": true,
+      "existingUsersUnchanged": true,
+      "existingForumUnchanged": true,
+      "originalUserCount": 2
+    }
+  },
+  "routes": {
+    "/register": {
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    "/profile": {
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    "/forum/register": {
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    "/forum": {
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    "/privacy": {
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    "/faq": {
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    "/search?q=retention": {
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    "/bonuses/ads": {
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    "/flags/gb.svg": {
+      "status": 200,
+      "type": "image/svg+xml"
+    }
+  },
+  "tests": {
+    "frontend": 98,
+    "backend": 117,
+    "typeScript": "PASS",
+    "productionBuilds": "PASS",
+    "browserVisual": "OWNER_MANUAL"
+  },
+  "rules": {
+    "password": "8 characters minimum; uppercase/lowercase Latin, digit, special character; matches reference",
+    "phone": "mandatory E164, no SMS or verified flag",
+    "oldAccounts": "nullable new fields; no name splitting/backfill, existing login unchanged",
+    "draft": "allowlist of names/email/phone/country only; no passwords; removed after successful registration",
+    "profile": "existing authenticated profile, read-only personal fields",
+    "forum": "readonly authenticated identity; separate membership retained; no public phone"
+  }
+}

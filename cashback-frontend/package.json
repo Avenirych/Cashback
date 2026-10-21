@@ -20,17 +20,17 @@
     "react-dom": "^19.3.0",
     "react-router-dom": "^6.30.6",
     "react-scripts": "5.0.1",
-    "typescript": "4.9.5",
+    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "search:index": "node scripts/build-search-index.mjs",
-    "start": "node ../scripts/start-frontend.cjs",
-    "prebuild": "node scripts/build-search-index.mjs",
+    "start": "react-scripts start",
     "build": "react-scripts build",
-    "typecheck": "tsc --noEmit --incremental false",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prebuild": "node scripts/build-search-index.mjs",
+    "prestart": "node scripts/build-search-index.mjs",
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "eslintConfig": {
     "extends": [

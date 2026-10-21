@@ -18,6 +18,7 @@ interface ForumTopic {
 }
 
 interface TopicsPageProps {
+  
   lang: string;
   onLangChange?: (lang: string) => void;
 }
@@ -190,32 +191,31 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
             </button>
           ))}
 
-        {/* Обмен бонусами: свёрнутый трей */}
-        <details
-          style={{
-            marginTop: 16,
-            border: "1px solid #d5e2dc",
-            borderRadius: 12,
-            background: "rgba(255, 255, 255, 0.94)",
-          }}
-        >
-          <summary
+        {/* Обмен бонусами: компактный трей, изначально закрыт */}
+        {canWrite && (
+          <details
             style={{
-              padding: "12px 16px",
-              cursor: "pointer",
-              color: "#173a33",
-              fontSize: 15,
-              fontWeight: 700,
-              overflowWrap: "anywhere",
-              userSelect: "none",
+              marginTop: 16,
+              border: "1px solid #d5e2dc",
+              borderRadius: 12,
+              background: "rgba(255, 255, 255, 0.94)",
             }}
           >
-            {isRu
-              ? "Обмен бонусами между участниками"
-              : "Bonus exchange between members"}
-          </summary>
+            <summary
+              style={{
+                padding: "12px 16px",
+                cursor: "pointer",
+                color: "#173a33",
+                fontSize: 15,
+                fontWeight: 700,
+                overflowWrap: "anywhere",
+              }}
+            >
+              {isRu
+                ? "Обмен бонусами между участниками"
+                : "Bonus exchange between members"}
+            </summary>
 
-          {canWrite ? (
             <div
               style={{
                 padding: "0 12px 12px",
@@ -225,39 +225,8 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
             >
               <ForumBonusExchangePanel lang={lang} />
             </div>
-          ) : (
-            <div
-              style={{
-                padding: "0 12px 12px",
-              }}
-            >
-              <p>
-                {isRu
-                  ? "Для обмена бонусами нужны подтверждённая почта, регистрация в форуме и активная сессия форума. Для заблокированных участников обмен недоступен."
-                  : "Bonus exchange requires a verified email, forum registration and an active forum session. Banned members cannot exchange bonuses."}
-              </p>
-
-              {!forumUser && (
-                <Link to="/forum/register">
-                  {isRu
-                    ? "Зарегистрироваться в форуме"
-                    : "Register for the forum"}
-                </Link>
-              )}
-
-              {forumUser &&
-                !forumSessionActive &&
-                !forumUser.banned &&
-                !forumBanned && (
-                  <p>
-                    {isRu
-                      ? "Войдите в форум с помощью кнопки в шапке форума."
-                      : "Enter the forum using the button in the forum header."}
-                  </p>
-                )}
-            </div>
-          )}
-        </details>
+          </details>
+        )}
 
         {error && <p role="alert">{error}</p>}
 

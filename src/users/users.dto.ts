@@ -1,6 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
 import type { User } from './user.entity';
-import { normalizePhone } from './phone-normalization';
 
 export interface SafeUserDto {
   id: number;
@@ -21,16 +20,7 @@ export function safeUserDto(user: User): SafeUserDto {
   };
 }
 
-export function ownProfileDto(user: User) {
-  return {
-    ...safeUserDto(user),
-    phone_e164: user.phone_e164 ?? null,
-    phone_verified: user.phone_verified ?? false,
-    phone_verified_at: user.phone_verified_at ?? null,
-  };
-}
-
-export interface UpdateOwnUserDto { name?: string; phone_e164?: string }
+export interface UpdateOwnUserDto { name: string }
 
 /** Explicit runtime allowlist; TypeScript types alone do not validate JSON. */
 export function parseOwnUserPatch(body: unknown): UpdateOwnUserDto {
@@ -38,19 +28,15 @@ export function parseOwnUserPatch(body: unknown): UpdateOwnUserDto {
     throw new BadRequestException('Expected a profile object');
   }
   const fields = Reflect.ownKeys(body);
-  if (!fields.length || fields.some(key => key !== 'name' && key !== 'phone_e164') ||
-      ![Object.prototype, null].includes(Object.getPrototypeOf(body))) {
-    throw new BadRequestException('Only name and phone_e164 may be updated');
+  if (![Object.prototype, null].includes(Object.getPrototypeOf(body)) ||
+      fields.length !== 1 || fields[0] !== 'name') {
+    throw new BadRequestException('Only name may be updated');
   }
-  const data = body as Record<string, unknown>;
-  const parsed: UpdateOwnUserDto = {};
-  if (fields.includes('name')) {
-    const name = data.name;
-    if (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100) {
-      throw new BadRequestException('Name must contain 2 to 100 characters');
-    }
-    parsed.name = name.trim();
+  // Reject accessors rather than executing attacker-controlled property getters.
+  const descriptor = Object.getOwnPropertyDescriptor(body, 'name');
+  const name: unknown = descriptor && 'value' in descriptor ? descriptor.value : undefined;
+  if (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100) {
+    throw new BadRequestException('Name must contain 2 to 100 characters');
   }
-  if (fields.includes('phone_e164')) parsed.phone_e164 = normalizePhone(data.phone_e164);
-  return parsed;
+  return { name: name.trim() };
 }

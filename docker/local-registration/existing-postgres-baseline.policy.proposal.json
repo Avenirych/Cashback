@@ -1,0 +1,47 @@
+{
+  "status": "PROPOSAL_NOT_APPROVED",
+  "ownerApprovalRequired": true,
+  "scope": "Docker-only existing PostgreSQL baseline; no SQL, helper creation, service admission or migration authority",
+  "policyProposal": {
+    "context": "desktop-linux",
+    "daemonId": "ec3d6303-4d66-4410-8317-b739cebc046c",
+    "postgresImage": "postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+    "platform": "linux/amd64",
+    "existingPostgresBaseline": {
+      "containerId": "e0818fd64b0149f50ed975d8a519ffc4b615dcff9544a403f224fd82a2291d88",
+      "networkId": null,
+      "templateSha256": "8b758bc66bf69c82da23c9d230a7c537fb1c4e319be51051b1661c10241a5443",
+      "effectiveComposeSha256": null,
+      "postgresSha256": null,
+      "networkSha256": null,
+      "volumeSha256": null
+    }
+  },
+  "provenance": {
+    "containerId": "User-confirmed; fresh local inspection and independent review still required",
+    "templateSha256": "Computed from current local JSON with admission.configDigest; matches admission.TEMPLATE_SHA256",
+    "remainingFields": "Unavailable from restricted Codex Docker environment; obtain using EXISTING-POSTGRES-POLICY-PROPOSAL.md; never guess or auto-approve",
+    "platform": "Expected contract value; verify against daemon and local pinned image",
+    "inventory": "User reports 9 containers, 4 volumes, 9 networks; historical context only, not fresh evidence"
+  },
+  "expectedResources": {
+    "project": "cashback-registration-20261016-4f8c2a96b17d",
+    "container": "cashback-registration-20261016-4f8c2a96b17d-postgres-test-1",
+    "volume": "cashback-registration-20261016-4f8c2a96b17d-pg17-data",
+    "network": "cashback-registration-20261016-4f8c2a96b17d-database",
+    "service": "postgres-test",
+    "peers": "Only the exact PostgreSQL container",
+    "hostPorts": []
+  },
+  "approvalRequirements": [
+    "Independent owner review of all seven existingPostgresBaseline fields and their exact hash definitions",
+    "Independent review of effective Compose in no-interpolation mode and its complete source configurations",
+    "Independent review of actual container security settings, labels, mounts, network identity and membership, and local image manifest/platform",
+    "Explicit separately authorized owner-policy update through the existing protected-file approval process; this proposal never edits it"
+  ],
+  "SERVICE_ADMITTED": false,
+  "APPLY_ELIGIBLE": false,
+  "PHONE_APPLY_CONCURRENCY_VERIFIED": false,
+  "creation": "CREATION_AUTHORITY_NOT_PROVISIONED",
+  "note": "Not CLI input. Null is missing evidence, not a wildcard. No signature, approval or receipt has been issued."
+}

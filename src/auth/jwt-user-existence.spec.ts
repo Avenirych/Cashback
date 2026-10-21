@@ -1,10 +1,11 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { INestApplication, ForbiddenException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import request from 'supertest';
 import { JwtStrategy } from './jwt.strategy';
-import { JWT_CONFIGURATION } from './jwt-configuration';
+
 import { UsersService } from '../users/users.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -33,15 +34,16 @@ describe('JWT current user identity gate', () => {
   const paths = ['/auth/profile', '/users/42', '/forum/status', '/forum/topics', '/api/bonus/snapshot', '/user/marketing-preferences'];
   const own = jwt.sign({ sub: 42, email: fixture.email, name: fixture.name });
   beforeAll(async () => {
+    process.env.JWT_SECRET = secret;
     const module = await Test.createTestingModule({
       imports: [PassportModule],
       controllers: [AuthController, UsersController, ForumController, BonusController, MarketingPreferencesController],
-      providers: [JwtStrategy, { provide: JWT_CONFIGURATION, useValue: { secret } },
+      providers: [JwtStrategy,
         { provide: UsersService, useValue: users }, { provide: AuthService, useValue: auth },
         { provide: ForumUserService, useValue: forumUsers }, { provide: ForumService, useValue: forum },
         { provide: BonusService, useValue: bonus }, { provide: MarketingPreferencesService, useValue: marketing }],
     }).compile();
-    strategy = module.get(JwtStrategy); app = module.createNestApplication(); await app.init();
+    strategy = module.get(JwtStrategy); app = module.createNestApplication(); await startGuardedHttpTestApp(app);
   });
   afterAll(async () => { await app.close(); });
   beforeEach(() => {
@@ -89,7 +91,7 @@ describe('JWT current user identity gate', () => {
   it('database failure blocks access with sanitized 503, not deletion 401', async () => {
     users.getById.mockRejectedValue(new Error('synthetic-sensitive-database-details'));
     const response = await request(app.getHttpServer()).get('/auth/profile').set('Authorization', `Bearer ${own}`).expect(503);
-    expect(response.body.message).toBe('Authentication service unavailable');
+    expect(response.body.message).toBe('Authentication temporarily unavailable');
     expect(JSON.stringify(response.body)).not.toContain('synthetic-sensitive-database-details'); noDownstream();
   });
   it('old token survives email confirmation and each request queries current user', async () => {

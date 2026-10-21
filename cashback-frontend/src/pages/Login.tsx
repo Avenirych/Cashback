@@ -55,7 +55,7 @@ export default function Login({
 
     try {
       await login(form);
-      navigate("/profile", { replace: true });
+      navigate("/", { replace: true });
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : t.loginRegister;
@@ -170,7 +170,6 @@ export default function Login({
               <div>
                 <input
                   id="email"
-                    aria-label={t.email}
                   name="email"
                   type="email"
                   placeholder={t.email}
@@ -216,7 +215,6 @@ export default function Login({
 
               <input
                 id="password"
-                  aria-label={t.password}
                 name="password"
                 type="password"
                 placeholder={t.password}

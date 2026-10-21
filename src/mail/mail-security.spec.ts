@@ -75,7 +75,7 @@ describe('Mail diagnostic capability isolation', () => {
     const service = new MailService();
     await expect(service.sendVerificationEmail(markers[0], markers[5], 'Synthetic')).rejects.toThrow(/^Mail delivery failed$/);
     await expect(service.sendResendVerificationEmail(markers[0], markers[5], 'Synthetic')).rejects.toThrow(/^Mail delivery failed$/);
-    expect(spies[1]).toHaveBeenCalledWith('Failed to initialize mail transporter');
+    expect(spies[1]).toHaveBeenCalledWith('Mail transport initialization failed');
     expect(spies[1]).toHaveBeenCalledWith('Mail delivery failed (verification)');
     expect(spies[1]).toHaveBeenCalledWith('Mail delivery failed (resend-verification)');
     expect(sendMail).not.toHaveBeenCalled();

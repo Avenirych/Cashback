@@ -1,12 +1,13 @@
 import { Controller, Query } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 
-// Legacy HTTP handlers are unregistered pending an approved authorization model.
 @Controller('analytics')
 export class AnalyticsController {
   constructor(
     private readonly analyticsService: AnalyticsService,
   ) {}
+
+  // Internal service functionality remains; no unapproved public analytics route.
   async getEvents(
     @Query('userId') userId?: number,
     @Query('type') type?: string,

@@ -1,4 +1,4 @@
-/** Shared browser-to-Nest address; bonus-api remains a separate service. */
+/** Shared historical backend origin; configuration only. */
 export const BACKEND_URL = (process.env.REACT_APP_API_BASE || 'http://localhost:3001').replace(/\/+$/, '');
 
 export async function backendFetch(url: string, init: RequestInit = {}): Promise<Response> {

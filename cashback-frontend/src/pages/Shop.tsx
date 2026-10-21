@@ -146,6 +146,7 @@ function buildSeedProducts(count = 100): ProductItem[] {
 }
 
 function buildBonusPool(): BonusPosition[] {
+  // Демо-данные: не являются реальным балансом аккаунта.
   return [
     {
       id: "AD-1001",
@@ -246,7 +247,7 @@ export default function Shop({ lang }: ShopProps) {
         ? "Правило применения бонусов"
         : "Bonus usage rule",
       spendInfoText: isRu
-        ? "Покупатель может добавить такое количество бонусов, чтобы их количество вместе с кэшбэком не превышала цену товара."
+        ? "Покупатель может добавить такое количество бонусов, чтобы их количество вместе с кэшбэком не превышало стоимость товара."
         : "A buyer can apply only such bonus amount that together with cashback does not exceed product price.",
       categories: isRu ? "Категории" : "Categories",
       allCategories: isRu ? "Все категории" : "All categories",
@@ -305,6 +306,8 @@ export default function Shop({ lang }: ShopProps) {
       return;
     }
 
+    // Сохраняем прежнее поведение магазина.
+    // Эта страница пока не создаёт заказ и не списывает бонусы.
     navigate("/partner-not-connected");
   };
 
@@ -362,6 +365,7 @@ export default function Shop({ lang }: ShopProps) {
         discounted * (p.cashbackPercent / 100)
       );
 
+      // Сохраняем существующий расчёт магазина.
       const maxBonusAllowedByRule = Math.max(
         0,
         Math.floor(discounted - cashbackAmount)

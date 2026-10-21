@@ -1,43 +1,32 @@
-# Host dependencies and generated output
 **/node_modules
-**/dist
+.git
 **/build
-**/coverage
-**/.cache
-**/*.tsbuildinfo
+**/dist
+**/.env*
+.historical.env
+**/*.log
+work
 
-# Secrets and local environment files
-.env
-.env.*
-**/.env
-**/.env.*
+# Reviewed merge hardening: exclude secrets/data, retain required SQL fixtures.
 **/*.env
 **/*.env.*
-!docker/compose.env.example
 **/.npmrc
 **/*.pem
 **/*.key
 **/*.p12
 **/*.pfx
-
-# Existing databases, user data and backups
-**/data
+**/*.dpapi
 **/*.sqlite
 **/*.sqlite-*
 **/*.db
 **/*.db-*
-**/*.dump
-**/*.sql
-public/avatars
+**/data
 **/config-backups
-**/work
-**/outputs
-
-# Source control, editor state and logs
-.git
-.gitignore
 **/.vscode
 **/.idea
-**/*.log
+**/coverage
+**/*.tsbuildinfo
 **/*logs.txt
-**/test-results.txt
+docker/legacy-remote/source
+!docker/compose.env.example
+!docker/historical/env.example

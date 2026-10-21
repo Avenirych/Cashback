@@ -1,0 +1,15 @@
+{
+  "status": "FOOTER_POLICY_FAQ_READY",
+  "frontendId": "97f1f64badf3aefeda8d98bd9852e5d2eb8a22e37b87d326566f5b6c5cd91ba3",
+  "routes": {
+    "/": 200,
+    "/privacy": 200,
+    "/faq": 200,
+    "/cookies": 200,
+    "/terms": 200
+  },
+  "otherContainersUnchanged": true,
+  "tests": 72,
+  "browserVisualCheck": false,
+  "backup": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-footer-1792493897627"
+}

@@ -1,0 +1,32 @@
+# syntax=docker/dockerfile:1
+# Build from the repository root, only after separate build/pull authorization.
+# The Node digest is deliberately unresolved; a floating tag is not a valid input.
+ARG REGISTRATION_NODE_IMAGE
+ARG REGISTRATION_POSTGRES_IMAGE=postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df
+FROM --platform=linux/amd64 ${REGISTRATION_NODE_IMAGE} AS harness-build
+ARG REGISTRATION_NODE_IMAGE
+ARG REGISTRATION_POSTGRES_IMAGE
+WORKDIR /build
+RUN node -e 'const [n,p]=process.argv.slice(1);if(!/^node:24\.21\.0-bookworm@sha256:[a-f0-9]{64}$/.test(n)||p!=="postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df")process.exit(1)' "$REGISTRATION_NODE_IMAGE" "$REGISTRATION_POSTGRES_IMAGE"
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund
+COPY tsconfig.json ./
+COPY src/docker-phone-*.ts ./src/
+COPY src/migrations/ ./src/migrations/
+COPY docker/local-registration/helpers/tsconfig.executor.json ./docker/local-registration/helpers/tsconfig.executor.json
+RUN node node_modules/typescript/bin/tsc --project docker/local-registration/helpers/tsconfig.executor.json && npm prune --omit=dev --ignore-scripts --no-audit --no-fund
+
+# Copy the pinned psql filesystem, NOT postgres image metadata. Directly inheriting
+# that image would also inherit its VOLUME and create an unwanted anonymous volume.
+FROM --platform=linux/amd64 ${REGISTRATION_POSTGRES_IMAGE} AS postgres-client
+FROM scratch
+COPY --from=postgres-client / /
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+WORKDIR /opt/cashback
+COPY --from=harness-build /usr/local/bin/node /usr/local/bin/node
+COPY --from=harness-build /build/dist/ ./dist/
+COPY --from=harness-build /build/node_modules/ ./node_modules/
+COPY docker/local-registration/helpers/helper-entrypoint.cjs ./helpers/helper-entrypoint.cjs
+USER 999:999
+ENTRYPOINT ["/usr/local/bin/node"]
+CMD ["/opt/cashback/helpers/helper-entrypoint.cjs", "migration-executor"]

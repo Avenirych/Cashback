@@ -1,3 +1,4 @@
+import {MemoryRouter} from "react-router-dom";
 import React from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import MarketingPreferencesPanel from "./MarketingPreferencesPanel";
@@ -18,7 +19,7 @@ afterEach(() => {jest.clearAllTimers();jest.useRealTimers();jest.resetAllMocks()
 test.each([false,true])("separate SMS preference can be explicitly granted/withdrawn: initially %s", async smsMarketing => {
   (fetch as jest.Mock).mockResolvedValueOnce({ok:true,json:async () => ({...initial,smsMarketing})})
     .mockResolvedValueOnce({ok:true,json:async () => ({...initial,smsMarketing:!smsMarketing})});
-  render(<MarketingPreferencesPanel lang="EN" hasPhone />);
+  render(<MemoryRouter><MarketingPreferencesPanel lang="EN" hasPhone /></MemoryRouter>);
   fireEvent.click(await screen.findByRole("button",{name:"Edit"}));
   const sms=screen.getByRole("checkbox",{name:translations.EN.smsMarketing});
   expect(sms).not.toBeRequired();
@@ -36,15 +37,15 @@ test.each([false,true])("separate SMS preference can be explicitly granted/withd
 });
 
 test("missing phone prevents a new SMS grant without changing other preferences", async () => {
-  render(<MarketingPreferencesPanel lang="RU" />);
-  fireEvent.click(await screen.findByRole("button",{name:"Edit"}));
+  render(<MemoryRouter><MarketingPreferencesPanel lang="RU" /></MemoryRouter>);
+  fireEvent.click(await screen.findByRole("button",{name:"Изменить"}));
   expect(screen.getByRole("checkbox",{name:translations.RU.smsMarketing})).toBeDisabled();
   expect(screen.getByRole("checkbox",{name:translations.RU.smsMarketing})).not.toBeChecked();
 });
 
 test("saving unrelated flags does not replay an existing SMS consent", async () => {
   (fetch as jest.Mock).mockResolvedValue({ok:true,json:async () => ({...initial,smsMarketing:true})});
-  render(<MarketingPreferencesPanel lang="EN" hasPhone />);
+  render(<MemoryRouter><MarketingPreferencesPanel lang="EN" hasPhone /></MemoryRouter>);
   fireEvent.click(await screen.findByRole("button",{name:"Edit"}));
   await act(async () => {
     fireEvent.click(screen.getByRole("button",{name:translations.EN.savePreferences}));
@@ -54,4 +55,29 @@ test("saving unrelated flags does not replay an existing SMS consent", async () 
   const body=JSON.parse((fetch as jest.Mock).mock.calls[1][1].body);
   expect(body).toEqual({specialOffers:true,partnerRecommendations:false});
   expect(body).not.toHaveProperty("smsMarketing");
+});
+
+test('all marketing choices start off and failed save preserves independent selections',async()=>{
+ const empty={...initial,specialOffers:false,partnerRecommendations:false,smsMarketing:false};
+ (fetch as jest.Mock).mockResolvedValueOnce({ok:true,json:async()=>empty}).mockResolvedValueOnce({ok:false,status:503});
+ render(<MemoryRouter><MarketingPreferencesPanel lang="EN" hasPhone/></MemoryRouter>);
+ fireEvent.click(await screen.findByRole('button',{name:'Edit'}));
+ for(const name of [translations.EN.specialOffers,translations.EN.partnerRecommendations,translations.EN.smsMarketing])expect(screen.getByRole('checkbox',{name})).not.toBeChecked();
+ fireEvent.click(screen.getByRole('checkbox',{name:translations.EN.specialOffers}));
+ fireEvent.click(screen.getByRole('checkbox',{name:translations.EN.smsMarketing}));
+ await act(async()=>{fireEvent.click(screen.getByRole('button',{name:translations.EN.savePreferences}));});
+ expect(await screen.findByText(translations.EN.preferencesError)).toBeInTheDocument();
+ expect(screen.getByRole('checkbox',{name:translations.EN.specialOffers})).toBeChecked();
+ expect(screen.getByRole('checkbox',{name:translations.EN.partnerRecommendations})).not.toBeChecked();
+ expect(screen.getByRole('checkbox',{name:translations.EN.smsMarketing})).toBeChecked();
+ expect(screen.queryByText(translations.EN.preferencesSaved)).not.toBeInTheDocument();
+ expect(screen.getAllByRole('link').some(a=>a.getAttribute('href')==='/privacy#privacySection12')).toBe(true);
+ expect(JSON.parse((fetch as jest.Mock).mock.calls[1][1].body)).toEqual({specialOffers:true,partnerRecommendations:false,smsMarketing:true});
+});
+
+test('new mount reloads server choices and unauthenticated visitor makes no preference request',async()=>{
+ const v=render(<MemoryRouter><MarketingPreferencesPanel lang="EN" hasPhone/></MemoryRouter>);
+ fireEvent.click(await screen.findByRole('button',{name:'Edit'}));expect(screen.getByRole('checkbox',{name:translations.EN.specialOffers})).toBeChecked();v.unmount();
+ (useAuth as jest.Mock).mockReturnValue({user:null,token:null});(fetch as jest.Mock).mockClear();
+ render(<MemoryRouter><MarketingPreferencesPanel lang="EN"/></MemoryRouter>);expect(fetch).not.toHaveBeenCalled();expect(screen.queryByRole('button',{name:'Edit'})).not.toBeInTheDocument();
 });

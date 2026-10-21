@@ -3,6 +3,7 @@ import { DatabaseSync } from "node:sqlite";
 import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const PORT = Number(process.env.PORT ?? 3002);
 const HOST = process.env.HOST ?? "127.0.0.1";
@@ -104,7 +105,7 @@ async function authenticate(req, res, next) {
 
 class BonusService {
   constructor(databasePath) {
-    mkdirSync(dirname(databasePath), { recursive: true });
+    if (databasePath !== ":memory:") throw new Error("LEGACY_CI_MEMORY_DATABASE_REQUIRED");
 
     this.db = new DatabaseSync(databasePath);
 
@@ -485,6 +486,7 @@ class BonusService {
   }
 }
 
+function legacyHttpReferenceNotActivated() {
 const service = new BonusService(DATABASE_PATH);
 
 if (process.argv[2] === "--test-credit") {
@@ -679,4 +681,11 @@ if (process.argv[2] === "--test-credit") {
 
   process.once("SIGINT", shutdown);
   process.once("SIGTERM", shutdown);
+}
+}
+
+// There is deliberately no exported HTTP server factory and no live start command.
+export { BonusService };
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  throw new Error("LEGACY_BONUS_API_INACTIVE_CI_ONLY");
 }

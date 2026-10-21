@@ -1,0 +1,318 @@
+{
+  "status": "CASHBACK_UNIFICATION_APPROVAL_REQUIRED",
+  "createdAt": "2026-10-20T08:25:45.928Z",
+  "canonicalPath": "C:/Users/serge/cashback+",
+  "currentCanonicalHead": "d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f",
+  "targetCommit": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "historicalWorktree": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/historical-03573b7f47ba",
+  "originalBackup": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project",
+  "preparedBackup": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/unification-prepared-20261020-5f628ca58e3d4c829f8f6e8bbdd764c9",
+  "gitBundle": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/unification-prepared-20261020-5f628ca58e3d4c829f8f6e8bbdd764c9/repository.bundle",
+  "databaseBackups": "NOT PERFORMED; no database is affected by the completed operations. Existing database data is not approved for reuse/removal.",
+  "items": [
+    {
+      "classification": "KEEP",
+      "path": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project",
+      "reason": "Verified complete original backup including ignored configuration; never treat as cleanup cache",
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/verification.json"
+    },
+    {
+      "classification": "KEEP",
+      "path": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/unification-prepared-20261020-5f628ca58e3d4c829f8f6e8bbdd764c9",
+      "reason": "Verified prepared historical source/config plus complete Git bundle and removed artifact backups"
+    },
+    {
+      "classification": "CONSOLIDATE",
+      "path": "C:/Users/serge/cashback+/src",
+      "target": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/historical-03573b7f47ba/src",
+      "reason": "Canonical backend must use historical baseline plus reviewed environment-only adaptations",
+      "approvalRequired": true,
+      "proposedAction": "Archive current application source with fresh verification, then replace only approved source scope; preserve unrelated finance material separately",
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project/src"
+    },
+    {
+      "classification": "CONSOLIDATE",
+      "path": "C:/Users/serge/cashback+/cashback-frontend",
+      "target": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/historical-03573b7f47ba/cashback-frontend",
+      "reason": "One historical React tree; no first/last-name or phone additions",
+      "approvalRequired": true,
+      "proposedAction": "Archive current frontend and promote reviewed historical frontend; dependency junctions are not to be copied as canonical dependencies",
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project/cashback-frontend"
+    },
+    {
+      "classification": "CONSOLIDATE",
+      "paths": [
+        "C:/Users/serge/cashback+/package.json",
+        "C:/Users/serge/cashback+/package-lock.json",
+        "C:/Users/serge/cashback+/tsconfig.json",
+        "C:/Users/serge/cashback+/tsconfig.build.json",
+        "C:/Users/serge/cashback+/nest-cli.json",
+        "C:/Users/serge/cashback+/.gitignore"
+      ],
+      "reason": "Use historical dependency/build baseline with minimum reviewed technical configuration",
+      "approvalRequired": true,
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project"
+    },
+    {
+      "classification": "CONSOLIDATE",
+      "path": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/historical-03573b7f47ba",
+      "reason": "Prepared historical worktree is promotion source, not a second running application; retirement requires later explicit worktree approval",
+      "approvalRequired": true,
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/unification-prepared-20261020-5f628ca58e3d4c829f8f6e8bbdd764c9"
+    },
+    {
+      "classification": "KEEP",
+      "path": "C:/Users/serge/cashback+/docker/mailpit-ui.nginx.conf",
+      "containerId": "869f63d81b32dd2354b07cbe77e2e6a50107d255fa12a46159d1c170464ef1fb",
+      "reason": "Active read-only bind dependency; whole-directory rename or blanket cleanup would invalidate it",
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project/docker/mailpit-ui.nginx.conf"
+    },
+    {
+      "classification": "UNKNOWN",
+      "paths": [
+        "C:/Users/serge/cashback+/test/registration-local",
+        "C:/Users/serge/cashback+/test/registration-e2e",
+        "C:/Users/serge/cashback+/docker/local-registration",
+        "C:/Users/serge/cashback+/infra/finance-security-test",
+        "C:/Users/serge/cashback+/src/finance",
+        "C:/Users/serge/cashback+/scripts/start-frontend.cjs",
+        "C:/Users/serge/cashback+/work"
+      ],
+      "reason": "Later harnesses/configuration and financial materials must be separately reviewed/archived before removal; not all are obsolete merely because snapshot predates them",
+      "approvalRequired": true,
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project"
+    },
+    {
+      "classification": "CONSOLIDATE",
+      "id": "c9b40faedba2ea07a1a523cdb32f785d49b5be612a427d7c5f55d50beab5ef22",
+      "name": "cashback-docker-test-backend-1",
+      "state": "running",
+      "ports": [
+        "127.0.0.1:3001"
+      ],
+      "reason": "Existing active application backend; must stop before any canonical replacement backend to avoid two active implementations",
+      "proposedAction": "STOP ONLY after separate approval; do not remove container or avatar volume",
+      "approvalRequired": true,
+      "rollback": "Restart same unchanged container/image with existing avatars volume; database unchanged"
+    },
+    {
+      "classification": "CONSOLIDATE",
+      "id": "3eb73efb43dc91eefeaba4ca7930631b7d0bcd94da2e9c7e11fce19df5fea146",
+      "name": "cashback-docker-test-frontend-1",
+      "state": "running",
+      "ports": [
+        "127.0.0.1:3000"
+      ],
+      "reason": "Existing active application frontend",
+      "proposedAction": "STOP ONLY after separate approval; retain unchanged container/image for rollback",
+      "approvalRequired": true,
+      "rollback": "Restart same unchanged container/image"
+    },
+    {
+      "classification": "KEEP",
+      "id": "869f63d81b32dd2354b07cbe77e2e6a50107d255fa12a46159d1c170464ef1fb",
+      "name": "cashback-docker-test-mailpit-ui-1",
+      "state": "running",
+      "ports": [
+        "127.0.0.1:8025"
+      ],
+      "reason": "Uses canonical-path bind mount. Stop/removal requires separate scope and Mailpit data review; preserve nginx file in place"
+    },
+    {
+      "classification": "UNKNOWN",
+      "id": "d8fdf65ebce02b6cb940b75a803151e0064c459ec67c406ab0c1e629c9976480",
+      "name": "cashback-docker-test-mailpit-1",
+      "state": "running",
+      "reason": "Captured email persistence/backup not established; no stop/removal approved"
+    },
+    {
+      "classification": "KEEP",
+      "id": "02cabe6180fc651b16c87afc8dbd29b7209157d71d89545e51f6005c1f01aed4",
+      "name": "cashback-docker-test-postgres-test-1",
+      "state": "running",
+      "reason": "Exact Docker/database identity and core schema presence verified read-only. Data backup and full historical/runtime-role compatibility are not established; preserve, do not reuse/downgrade/stop/delete."
+    },
+    {
+      "classification": "KEEP",
+      "id": "e0818fd64b0149f50ed975d8a519ffc4b615dcff9544a403f224fd82a2291d88",
+      "name": "cashback-registration-20261016-4f8c2a96b17d-postgres-test-1",
+      "state": "running",
+      "reason": "Protected registration database outside restored application scope"
+    },
+    {
+      "classification": "KEEP",
+      "id": "c532c93dc021a9812a70eafa5f381079882ceaa9873ceff188037b3308348a3e",
+      "name": "cashback-finance-security-9f-pg-1",
+      "state": "running",
+      "reason": "Separate protected financial-security infrastructure; never merge/delete as application duplicate"
+    },
+    {
+      "classification": "UNKNOWN",
+      "id": "0d520ea1e635fdea0150aa3ba5fe9d606297f1c0b152e360a37a9e70a04a51d5",
+      "name": "cashback-e2e-2740dce3a683487b9420c9315cc9c864-worker-1",
+      "state": "exited",
+      "reason": "Failed previous E2E worker; requires separate identity/diagnostic reconciliation before removal"
+    },
+    {
+      "classification": "UNKNOWN",
+      "id": "0e48a7f9dbe6b81e7ea970a4c74066ceb7d46a50771a542821207b196e4fff73",
+      "name": "cashback-e2e-2740dce3a683487b9420c9315cc9c864-mailpit-1",
+      "state": "running",
+      "reason": "Previous disposable mail capture; no current data backup or cleanup approval"
+    },
+    {
+      "classification": "UNKNOWN",
+      "id": "07dc8c31dd4042bd6deb8a59e8d9d77107a208645cf01ddf01f7fba42434b5db",
+      "name": "cashback-e2e-2740dce3a683487b9420c9315cc9c864-postgres-test-1",
+      "state": "running",
+      "reason": "Previous tmpfs PostgreSQL; stopping could lose data, current SQL outcome/schema not reconciled"
+    },
+    {
+      "classification": "UNKNOWN",
+      "id": "63ef64ad6a34a378af8168862e812505103a5672f358d70c8ce48e3a3239989d",
+      "name": "cashback-manual-email-unique-1df74ad631f3",
+      "state": "exited",
+      "reason": "Manual migration runner still references original source through bind mounts; archive diagnostics/ownership before separately approved removal"
+    },
+    {
+      "classification": "UNKNOWN",
+      "id": "4d0e444ff67be177aebfb15efd9e4bc3535af601575849e6a4d129ab1768dbe5",
+      "name": "cashback-email-unique-it-d74c73299b0d",
+      "state": "exited",
+      "reason": "Old integration container with original-source binds; no separate removal/diagnostics backup approved"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "e4cc5d75e824013d910c6740efc69815448f99585648a490861e7813a486dba9",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "2351cab9bb7ca011143676f45e4c7b7d7e2f378ab501c1b78aeefde1f8f3c283",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "c01dcdc8bad759b6bfda473a87c9a54b8f8036e1d0056dce170be3f482969807",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "3443626f6e8fa753e667cf6505073c8a04d60b5a56e857ee87f27c9b1d2b4ae3",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "ec92b8dc8bf82702303ffa6736f308eff460dd49ee4e1ac7148abbf373075c98",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "beeac6d46204ae9138347ab8ea419f5a98c687199724fab0af96d4433d99fda8",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "8d164c40dd4b88ee1ca0d6421f4d67f999d7bb54fb6d7b48522a40beb065e51c",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "6217313e0c31c0681c1fe16d891fbbca9c12334e59d944612c0a530dcfd5548f",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "85c608b290d5944cf8839507943ca46d9bbe4af068095e670b7169fc59a051d5",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "network",
+      "id": "5b919ffab27b32dde52b9efc8b3fa2de8487d96870b63c7894dd76c2a7e85468",
+      "reason": "Existing network; removal blocked by attached services and separate ownership/data review"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "volume",
+      "name": "cashback-docker-test_backend-avatars",
+      "reason": "Existing persistent data; no verified database/avatars backup or removal approval"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "volume",
+      "name": "cashback-docker-test_postgres-test-data",
+      "reason": "Existing persistent data; no verified database/avatars backup or removal approval"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "volume",
+      "name": "cashback-finance-security-9f_pgdata",
+      "reason": "Existing persistent data; no verified database/avatars backup or removal approval"
+    },
+    {
+      "classification": "KEEP",
+      "kind": "volume",
+      "name": "cashback-registration-20261016-4f8c2a96b17d-pg17-data",
+      "reason": "Existing persistent data; no verified database/avatars backup or removal approval"
+    },
+    {
+      "classification": "REMOVE",
+      "path": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15\\historical-03573b7f47ba\\cashback-frontend\\.historical-build-cache",
+      "reason": "Generated by the verified historical offline build; no historical container/process active and no Docker mount uses this worktree",
+      "dependencies": "Recreated by docker/historical/build-frontend-offline.cjs; no runtime database dependency",
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/unification-prepared-20261020-5f628ca58e3d4c829f8f6e8bbdd764c9/recreatable-artifacts/cashback-frontend/.historical-build-cache",
+      "files": 1,
+      "result": "REMOVED_AFTER_VERIFIED_ARTIFACT_BACKUP"
+    },
+    {
+      "classification": "REMOVE",
+      "path": "C:\\Users\\serge\\AppData\\Local\\Temp\\cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15\\historical-03573b7f47ba\\cashback-frontend\\build",
+      "reason": "Generated by the verified historical offline build; no historical container/process active and no Docker mount uses this worktree",
+      "dependencies": "Recreated by docker/historical/build-frontend-offline.cjs; no runtime database dependency",
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/unification-prepared-20261020-5f628ca58e3d4c829f8f6e8bbdd764c9/recreatable-artifacts/cashback-frontend/build",
+      "files": 21,
+      "result": "REMOVED_AFTER_VERIFIED_ARTIFACT_BACKUP"
+    },
+    {
+      "classification": "CONSOLIDATE",
+      "path": "C:/Users/serge/cashback+/test",
+      "target": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/historical-03573b7f47ba/test",
+      "reason": "Canonical backend tests must not accidentally compile/import later registration/native implementations; archive original tests before promoting historical tests and reviewed offline safety tests",
+      "approvalRequired": true,
+      "dependencies": "Preserve financial/test tooling with separate dependency review; do not delete it",
+      "rollback": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project/test"
+    }
+  ],
+  "activation": "NOT RUN: canonical source replacement and stopping the existing active application require separate explicit approval. New database initialization also requires explicit approval.",
+  "tests": "Previously verified preparation: 76 offline tests, frontend/backend typechecks/builds PASS; no application code changed in this assessment.",
+  "sourcePromotionConstraints": [
+    "No whole-directory rename while nginx uses docker/mailpit-ui.nginx.conf",
+    "Preserve .git refs/worktree linkage or repair explicitly as a reviewed transaction",
+    "Archive and verify every replaced tracked/untracked source/config; keep backups outside canonical directory",
+    "Promote historical baseline plus approved configuration only; do not copy modern auth/registration/harness source",
+    "Stop approved old application backend before starting new backend",
+    "Do not attach an existing PostgreSQL volume or execute migration downgrade",
+    "Do not remove any source/config/worktree/container/network/volume/database under the generated-artifact authorization"
+  ],
+  "existingDatabase": {
+    "containerId": "02cabe6180fc651b16c87afc8dbd29b7209157d71d89545e51f6005c1f01aed4",
+    "database": "cashback_docker_test",
+    "oid": "16384",
+    "version": "17.11",
+    "cluster": "7695793866029359141",
+    "inspection": "Two explicit READ ONLY transactions; metadata only; no account records/password hashes/tokens read",
+    "coreTablesPresent": true,
+    "reuseApproval": "NOT_GRANTED: full constraints/defaults/runtime privileges and verified data backup still required",
+    "observation": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/historical-03573b7f47ba/docker/historical/existing-schema-observation.json"
+  }
+}

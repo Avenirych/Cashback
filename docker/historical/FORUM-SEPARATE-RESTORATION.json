@@ -1,0 +1,93 @@
+{
+  "status": "FORUM_REGISTRATION_SCHEMA_APPROVAL_REQUIRED",
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "reference": "d14f76e9d8cd52de3aeffb3c6dc78c6639e1b28f",
+  "recovered": {
+    "forumEntityServiceController": "Canonical source matches reference; separate explicit registration already implemented",
+    "membership": "forum_users.user_id unique -> users.id; username unique; rules/timestamp/avatar/ban fields present",
+    "authors": "ForumService resolves users.id to ForumUser username/avatar, never buyer name/email",
+    "noAutomaticRegistration": "Auth registration has no ForumUser registration call"
+  },
+  "sourceChanges": [
+    "cashback-frontend/src/pages/ForumRegister.tsx",
+    "cashback-frontend/src/pages/Forum.test.tsx",
+    "src/local-forum-bonus-plan.spec.ts",
+    "docker/historical/run-offline.cjs",
+    "docker/historical/migrations/20261020-forum-bonus-additive.sql"
+  ],
+  "formPrepared": [
+    "Readonly buyer name/email",
+    "Required editable username and existing validation/availability",
+    "Avatar FileReader preview and existing size/type validation",
+    "Exact separate Russian rules consent",
+    "Explicit success screen and Continue to forum link; no timer",
+    "Explicit login and verified-email explanation"
+  ],
+  "database": {
+    "name": "cashback_historical_03573b7",
+    "cluster": "7698666936429441062",
+    "container": "48dca500f37c30e2787c9510e8b9111917c19136ea970d036ff43ca4570bec84",
+    "forumSchema": "COMPATIBLE",
+    "memberships": 0,
+    "missingTables": [
+      "bonus_items",
+      "bonus_transfers"
+    ],
+    "missingTypes": [
+      "bonus_items_source_enum",
+      "bonus_items_status_enum"
+    ],
+    "caseInsensitiveNameCollisions": false,
+    "nativeUuid": true,
+    "oid": 16384
+  },
+  "bonus": {
+    "current": "Local demo USERS alice/bob/charlie/diana, selectable activeUser; original BonusModule is not active and source lacks real exchange entities",
+    "reference": "Authenticated api/bonus/snapshot and api/bonus/transfer; recipients resolved via LOWER(forum_users.username), then linked user_id",
+    "runtimeIdentity": "NOT_VERIFIED_NOT_RESTORED"
+  },
+  "migration": {
+    "path": "docker/historical/migrations/20261020-forum-bonus-additive.sql",
+    "sha256": "cd1b14a5e1b82f6a91feaec0399604825af95cbccbea2c9aef5e874c49f9bbe8",
+    "executed": false,
+    "objects": "2 enum types, 2 tables, 3 reference indexes, 1 case-insensitive forum username unique index",
+    "runtimeGrants": "SELECT/INSERT/UPDATE bonus_items; SELECT/INSERT bonus_transfers; no DDL, DELETE, ownership or role privileges",
+    "safety": "Explicit manual approval; exact database/cluster/owner/baseline guards; reject preexisting/partial schema, case collisions and unsafe runtime role; bounded transactional DDL; no account mutations, extensions or destructive down"
+  },
+  "tests": {
+    "backendSuites": 6,
+    "backendTests": 42,
+    "frontendSuites": 4,
+    "frontendTests": 64,
+    "typescript": "PASS backend/frontend",
+    "backendCompile": "PASS guarded tsc",
+    "frontendCompile": "PASS network-disabled Docker build from unchanged already-installed lockfile dependencies",
+    "offlineGuard": "PRESERVED: host webpack build blocked on child-process guard; initial network-disabled npm-ci build canceled; neither run started services",
+    "frontendImage": "cashback-historical-03573b7-local-frontend:forum-prepared",
+    "imageId": "sha256:ef0343efc58d8a32c9b25373142a1561ed485af15ae4418f2ff85abe85e58c4a",
+    "diffCheck": "PASS"
+  },
+  "runtime": {
+    "activated": false,
+    "restarts": false,
+    "schemaWrites": false,
+    "liveForumTest": "NOT_RUN_AUTO_REVIEW_REJECTED_BEFORE_EXECUTION",
+    "testRecordsCreated": 0,
+    "browser": "Not used; visual test pending",
+    "existingRoutes": "HTTP 200 frontend /forum/register and backend /forum/rules"
+  },
+  "approvalReview": {
+    "rejectedAction": "Disposable account+forum membership, topic/post creation and SQL DELETE cleanup integration test",
+    "statedReason": "Visible authorization considered insufficient for specific forum data mutations; no bypass or retry performed"
+  },
+  "remaining": [
+    "Separate explicit approval to apply exact additive migration to pinned historical database",
+    "Restore/review reference BonusItem/BonusTransfer entities, authenticated BonusService/controller/module and real BonusesContext/panel; preserve current auth, mail and historical one-name fields",
+    "Use same case-insensitive forum identity lookup as reviewed unique index; never use selectable demo activeUser for real exchange",
+    "Activation only after schema/permissions/module validation; no automatic migrations",
+    "Explicit approval for exact disposable membership/topic/post test and its scoped cleanup; no unrelated records or live financial transfer",
+    "Verify real bonus identity and author attribution before claiming full restoration"
+  ],
+  "backup": "C:/Users/serge/AppData/Local/Temp/cashback-forum-schema-review-639de224bb35b5c2abba9e2a",
+  "manualUrl": "http://localhost:3004/forum/register"
+}

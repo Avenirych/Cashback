@@ -1,0 +1,27 @@
+{
+  "status": "SOURCE_PACKAGE_ONLY_OWNER_RESTART_APPROVAL_REQUIRED",
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "files": [
+    {
+      "path": "src/users/users.controller.ts",
+      "sha256": "47ca9a6b8416ea0af26cce568f172fdc2dd21c46cede5b479ce766cf45c8a412"
+    },
+    {
+      "path": "src/users/users.dto.ts",
+      "sha256": "03ba1221c21a4b9e6e5061f40a1eec4c46b5520ac1ac1d26c06ebe093019a86b"
+    },
+    {
+      "path": "src/topics.controller.ts",
+      "sha256": "15bd1b382aeaf6c7d963711c665048cad2c0f3ae722e9ce0214081e658abf20c"
+    },
+    {
+      "path": "src/posts.controller.ts",
+      "sha256": "d932b672ab6d346d7718f2b60e4db94c2f41e13067b3026f4255b1b5c0b6c189"
+    }
+  ],
+  "financeModuleRequired": false,
+  "financialMigrationsRequired": false,
+  "databaseChanges": [],
+  "testResult": "work/business-reconciliation-2abd7aa84ab24428968b82d004e9050d/security-http-result.json",
+  "patchCaveat": "Apply only to independently verified matching source; current worktree already contains these fixes. Rebuild/test before release; do not auto-apply to a running container."
+}

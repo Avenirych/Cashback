@@ -1,4 +1,4 @@
-import { UserSettingsService } from './user-settings.service';
+import { scaffoldDependencyMock } from '../../test/scaffold-mocks';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserSettingsController } from './user-settings.controller';
 
@@ -8,8 +8,7 @@ describe('UserSettingsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserSettingsController],
-      providers: [{ provide: UserSettingsService, useValue: {} }],
-    }).compile();
+    }).useMocker(scaffoldDependencyMock).compile();
 
     controller = module.get<UserSettingsController>(UserSettingsController);
   });

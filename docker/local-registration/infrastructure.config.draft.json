@@ -1,0 +1,80 @@
+{
+  "format": "registration-infrastructure/v1",
+  "status": "DRAFT",
+  "target": {
+    "context": "desktop-linux",
+    "daemonId": "ec3d6303-4d66-4410-8317-b739cebc046c",
+    "project": "cashback-registration-20261016-4f8c2a96b17d",
+    "container": "cashback-registration-20261016-4f8c2a96b17d-postgres-test-1",
+    "containerId": "e0818fd64b0149f50ed975d8a519ffc4b615dcff9544a403f224fd82a2291d88",
+    "image": "postgres:17-bookworm@sha256:66aafa11cf15800a3c94763f7e11d1e7b2e37e5e84bc4ce027cb6e1e4bfaf4df",
+    "platform": "linux/amd64",
+    "database": "cashback_docker_test",
+    "oid": "16384",
+    "systemIdentifier": "7697703338450784294",
+    "serverVersionNum": "170011",
+    "owner": "registration_bootstrap",
+    "volume": "cashback-registration-20261016-4f8c2a96b17d-pg17-data",
+    "network": "cashback-registration-20261016-4f8c2a96b17d-database"
+  },
+  "nodeVersion": "24.21.0",
+  "authorities": [
+    {
+      "purpose": "fingerprints",
+      "principal": "registration-fingerprints-authority",
+      "ledgerDirectory": "C:\\approved-registration-infrastructure\\ledger",
+      "privateKeyFile": "C:\\approved-registration-infrastructure\\fingerprints\\fingerprints-v1.private.pem",
+      "publicAnchorFile": "C:\\approved-registration-infrastructure\\public\\fingerprints.json",
+      "port": 8443
+    },
+    {
+      "purpose": "receipts",
+      "principal": "registration-receipts-authority",
+      "ledgerDirectory": "C:\\approved-registration-infrastructure\\ledger",
+      "privateKeyFile": "C:\\approved-registration-infrastructure\\receipts\\receipts-v1.private.pem",
+      "publicAnchorFile": "C:\\approved-registration-infrastructure\\public\\receipts.json",
+      "port": 8444
+    },
+    {
+      "purpose": "enrollment",
+      "principal": "registration-enrollment-authority",
+      "ledgerDirectory": "C:\\approved-registration-infrastructure\\ledger",
+      "privateKeyFile": "C:\\approved-registration-infrastructure\\enrollment\\enrollment-v1.private.pem",
+      "publicAnchorFile": "C:\\approved-registration-infrastructure\\public\\enrollment.json",
+      "port": 8445
+    }
+  ],
+  "peers": [
+    {
+      "service": "migration-executor",
+      "image": null,
+      "containerId": null,
+      "configurationSha256": null,
+      "networks": [
+        "cashback-registration-20261016-4f8c2a96b17d-database",
+        "cashback-registration-20261016-4f8c2a96b17d-authority"
+      ],
+      "ports": []
+    },
+    {
+      "service": "observer",
+      "image": null,
+      "containerId": null,
+      "configurationSha256": null,
+      "networks": [
+        "cashback-registration-20261016-4f8c2a96b17d-database",
+        "cashback-registration-20261016-4f8c2a96b17d-authority"
+      ],
+      "ports": []
+    }
+  ],
+  "externalHostControl": {
+    "provider": null,
+    "publicAnchorFile": null
+  },
+  "controlNetwork": {
+    "name": "cashback-registration-20261016-4f8c2a96b17d-authority",
+    "id": null,
+    "configurationSha256": null
+  }
+}

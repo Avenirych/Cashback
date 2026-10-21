@@ -29,7 +29,7 @@ build/
 *.tsbuildinfo
 
 # IDE / Editor
-.vscode/*
+.vscode/
 .idea/
 *.swp
 
@@ -100,9 +100,42 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-# Dedicated Docker test credentials and local configuration backups
-/docker/compose.test.env
-/config-backups/
+# Isolated historical local credentials (never commit)
+.historical.env
 
-# Isolated migration preparation dependencies and verification output
-/work/
+docker/historical/*.log
+
+# Worktree-only compiler cache
+cashback-frontend/.historical-build-cache/
+
+# Canonical baseline: local secrets and generated machine artifacts
+*.env
+*.env.local
+*.env.production
+*.dpapi
+*.pfx
+*.p12
+*.tsbuildinfo
+backend-logs.txt
+/config-backups/
+**/__pycache__/
+**/obj/
+**/bin/Debug/
+**/bin/Release/
+
+# Preserve reviewed policy/design records; never publish local execution archives.
+/work/*
+!/work/*.md
+!/work/policy-2026-10-20-backup-2026-10-20T21-01-35-805Z/
+/work/policy-2026-10-20-backup-2026-10-20T21-01-35-805Z/*
+!/work/policy-2026-10-20-backup-2026-10-20T21-01-35-805Z/OWNER-APPROVED-POLICY.txt
+!/work/policy-2026-10-21-backup-2026-10-21T08-05-28-613Z/
+/work/policy-2026-10-21-backup-2026-10-21T08-05-28-613Z/*
+!/work/policy-2026-10-21-backup-2026-10-21T08-05-28-613Z/OWNER-APPROVED-POLICY.txt
+
+# Inactive legacy CI component: never version runtime SQLite data.
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+/cashback-frontend/bonus-api/data/

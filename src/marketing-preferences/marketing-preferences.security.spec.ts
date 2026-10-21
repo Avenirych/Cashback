@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -8,7 +9,6 @@ import request from 'supertest';
 import { User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 import { JwtStrategy } from '../auth/jwt.strategy';
-import { JWT_CONFIGURATION } from '../auth/jwt-configuration';
 import { MarketingPreferencesController } from './marketing-preferences.controller';
 import { MarketingPreferencesService } from './marketing-preferences.service';
 import { MarketingPreferences } from './marketing-preferences.entity';
@@ -30,10 +30,11 @@ describe('Marketing HTTP contract with real JWT and mocked transaction manager',
   const manager = { getRepository: jest.fn(type => type === User ? lockedUsers : write) };
   const source = { transaction: jest.fn() };
   beforeAll(async () => {
+    process.env.JWT_SECRET=secret;
     const module = await Test.createTestingModule({ imports: [PassportModule], controllers: [MarketingPreferencesController], providers: [MarketingPreferencesService, JwtStrategy,
-      { provide: JWT_CONFIGURATION, useValue: { secret } }, { provide: UsersService, useValue: users },
+      { provide: UsersService, useValue: users },
       { provide: getRepositoryToken(MarketingPreferences), useValue: read }, { provide: DataSource, useValue: source }],
-    }).compile(); app = module.createNestApplication(); await app.init();
+    }).compile(); app = module.createNestApplication(); await startGuardedHttpTestApp(app);
   });
   afterAll(async () => { await app.close(); });
   beforeEach(() => {
@@ -157,16 +158,16 @@ describe('Marketing controlled interleaving model', () => {
     const lock = async () => { const previous = tail; let release!: () => void; tail = new Promise<void>(r => { release = r; }); await previous; return release; };
     const source = { transaction: async (_level: string, fn: (m: EntityManager) => Promise<unknown>) => {
       let release: (() => void) | undefined;
-      const users = { findOne: async options => {
+      const users = { findOne: async (options: {lock?: {mode:string}}) => {
         if (honorRequestedLocks && options.lock?.mode === 'pessimistic_write') release = await lock();
         return alive ? { id: 42 } : null;
       } };
       const preferences = {
         find: async () => { const snapshot = rows.map(row => ({ ...row })); await new Promise<void>(r => setImmediate(r)); return snapshot; },
-        create: data => ({ ...data }),
-        save: async data => { const saved = { ...data, id: data.id ?? rows.length + 1, createdAt: data.createdAt ?? new Date() }; const index = rows.findIndex(r => r.id === saved.id); if (index < 0) rows.push(saved); else rows[index] = saved; return saved; },
+        create: (data: Partial<MarketingPreferences>) => ({ ...data }),
+        save: async (data: MarketingPreferences) => { const saved = { ...data, id: data.id ?? rows.length + 1, createdAt: data.createdAt ?? new Date() }; const index = rows.findIndex(r => r.id === saved.id); if (index < 0) rows.push(saved); else rows[index] = saved; return saved; },
       };
-      const manager = { getRepository: type => type === User ? users : preferences };
+      const manager = { getRepository: (type: unknown) => type === User ? users : preferences };
       try { return await fn(manager as unknown as EntityManager); } finally { release?.(); }
     } };
     const service = new MarketingPreferencesService({} as Repository<MarketingPreferences>, source as unknown as DataSource);
@@ -187,5 +188,3 @@ describe('Marketing controlled interleaving model', () => {
     await new Promise<void>(r => setImmediate(r)); expect(finished).toBe(false); m.remove(); release(); await write; expect(m.rows).toHaveLength(0);
   });
 });
-
-

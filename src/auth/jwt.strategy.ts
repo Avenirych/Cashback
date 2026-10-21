@@ -1,20 +1,16 @@
-import { Inject, Injectable, ServiceUnavailableException, UnauthorizedException } from '@nestjs/common';
+import { requiredJwtSecret } from '../local-configuration';
+import { Injectable, UnauthorizedException, ServiceUnavailableException } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UsersService } from '../users/users.service';
-import { JWT_CONFIGURATION } from './jwt-configuration';
-import type { JwtConfiguration } from './jwt-configuration';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    @Inject(JWT_CONFIGURATION) config: JwtConfiguration,
-    private readonly usersService: UsersService,
-  ) {
+  constructor(private readonly users: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: config.secret,
+      secretOrKey: requiredJwtSecret(),
     });
   }
 
@@ -22,21 +18,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
       throw new UnauthorizedException('Invalid authenticated identity');
     }
-    const claims = payload as { sub?: unknown; email?: unknown };
-    const id = claims.sub;
-    // users.id is a positive PostgreSQL integer, not a coercible string.
-    if (typeof id !== 'number' || !Number.isSafeInteger(id) || id <= 0 || id > 2147483647) {
+    const sub = (payload as { sub?: unknown }).sub;
+    if (typeof sub !== 'number' || !Number.isSafeInteger(sub) || sub <= 0 || sub > 2147483647) {
       throw new UnauthorizedException('Invalid authenticated identity');
     }
     let user;
-    try {
-      user = await this.usersService.getById(id);
-    } catch {
-      // A failed lookup is not proof of deletion. Do not expose DB details.
-      throw new ServiceUnavailableException('Authentication service unavailable');
-    }
-    if (!user) throw new UnauthorizedException('Invalid authenticated identity');
-    // Preserve the existing principal and allow unverified existing accounts.
-    return { id, email: claims.email };
+    try { user = await this.users.getById(sub); }
+    catch { throw new ServiceUnavailableException('Authentication temporarily unavailable'); }
+    if (!user || user.id !== sub) throw new UnauthorizedException('Account unavailable');
+    // There is no disabled/status column in the current schema. Do not confuse
+    // unverified email or a forum-only ban with a disabled application account.
+    return { id: user.id, email: user.email };
   }
 }

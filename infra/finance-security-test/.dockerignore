@@ -1,0 +1,47 @@
+*
+
+# Exact build/runtime inputs only.
+!Dockerfile
+!requirements.lock
+!common.py
+!inventory.py
+!provision.py
+!runner_control.py
+!test_security.py
+!test_admission_faults.py
+
+# Reopen the parent, exclude all children, then admit exact SQL inputs.
+!sql/
+sql/**
+!sql/00_roles.sql
+!sql/10_boundary.sql
+
+!wheelhouse/
+wheelhouse/**
+!wheelhouse/psycopg-3.2.10-py3-none-any.whl
+!wheelhouse/psycopg_binary-3.2.10-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
+
+# Final deny rules take precedence over earlier exceptions.
+**/compose.env.local
+**/compose.env.*
+**/.env
+**/.env.*
+**/.git
+**/.git/**
+**/secrets
+**/secrets/**
+**/bootstrap
+**/installer
+**/runtime
+**/authority
+**/operator
+**/*pycache*
+**/*pycache*/**
+**/*.pyc
+**/*.pyo
+**/*.tmp
+**/*.temp
+**/*.swp
+**/*.swo
+**/*.bak
+**/*~

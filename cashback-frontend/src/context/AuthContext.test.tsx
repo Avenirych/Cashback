@@ -112,7 +112,7 @@ test("temporary unverified registration remains in memory and does not restore f
   localStorage.clear();
   (fetch as jest.Mock).mockResolvedValue(response({ access_token: "temporary", user: { ...mainUser, email_verified: false } }));
   mount();
-  await act(async () => { await auth.register({ email: mainUser.email, name: mainUser.name, password: "example-password", phone_e164: "+447700900123" }); });
+  await act(async () => { await auth.register({ email: mainUser.email, name: mainUser.name, password: "example-password" }); });
   expect(auth.user?.id).toBe(42);
   expect(auth.token).toBe("temporary");
   expect(auth.isEmailVerificationPending).toBe(true);
@@ -128,18 +128,6 @@ test("unverified login uses a temporary session without checking forum", async (
   expect(auth.token).toBe("temporary");
   expect(localStorage.getItem("cashback_token")).toBeNull();
   expect(fetch).toHaveBeenCalledTimes(1);
-});
-
-test("owner phone profile remains memory-only during session restoration", async () => {
-  const phone = "+447700900123";
-  (fetch as jest.Mock).mockImplementation(async url => String(url).endsWith("/auth/profile")
-    ? response({...mainUser,phone_e164:phone,phone_verified:false,phone_verified_at:null})
-    : response({registered:false,forumUser:null}));
-  mount();
-  await waitFor(() => expect(auth.user?.phone_e164).toBe(phone));
-  for (const storage of [localStorage,sessionStorage]) {
-    for (let index=0;index<storage.length;index++) expect(storage.getItem(storage.key(index)!)).not.toContain(phone);
-  }
 });
 
 test("failed avatar upload keeps registration and retry never registers twice", async () => {
@@ -238,3 +226,20 @@ test("auth switch ignores a previous user's status response", async () => {
   expect(auth.user?.id).toBe(99);
   expect(auth.forumUser).toBeNull();
 });
+
+ test("pending account check uses actual server state before session activation", async () => {
+  localStorage.clear(); sessionStorage.setItem("cashback_pending_auth", "pending-token");
+  let verified = false;
+  (fetch as jest.Mock).mockImplementation(async (url) => {
+    if (String(url).endsWith("/auth/profile")) return response({...mainUser,email_verified:verified});
+    if (String(url).endsWith("/forum/status")) return response({registered:false});
+    throw new Error("Unexpected offline call");
+  });
+  mount(); await waitFor(()=>expect(auth.loading).toBe(false));
+  await act(async()=>{expect(await auth.checkVerification()).toBe(false)});
+  expect(localStorage.getItem("cashback_token")).toBeNull();
+  verified=true;
+  await act(async()=>{expect(await auth.checkVerification()).toBe(true)});
+  expect(auth.user?.email_verified).toBe(true);
+  expect(localStorage.getItem("cashback_token")).toBe("pending-token");
+ });

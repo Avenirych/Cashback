@@ -29,8 +29,8 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
 
-      - name: Run allowlisted backend unit tests
-        run: npm test -- --runInBand --no-cache --runTestsByPath src/app.controller.spec.ts src/migration-registration.spec.ts src/forum/forum-migration.spec.ts
+      - name: Run complete guarded backend source suite
+        run: npm test -- --config docker/historical/jest.finance-full.json --runInBand --no-cache --detectOpenHandles
 
   frontend:
     runs-on: ubuntu-24.04
@@ -53,8 +53,8 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
 
-      - name: Run allowlisted frontend unit test
-        run: npm test -- --watchAll=false --runInBand --no-cache --runTestsByPath src/components/SiteSearch.test.tsx
+      - name: Run complete frontend suite with handle detection
+        run: npm test -- --watchAll=false --runInBand --no-cache --detectOpenHandles
 
   bonus-api:
     runs-on: ubuntu-24.04
@@ -73,6 +73,7 @@ jobs:
           cache-dependency-path: cashback-frontend/bonus-api/package-lock.json
       - run: npm ci --no-audit --no-fund
       - run: node --check server.mjs
+      - run: npm test
 
   compose-config:
     runs-on: ubuntu-24.04

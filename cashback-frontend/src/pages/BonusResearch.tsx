@@ -2,10 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
-import {
-  readOnboarding,
-  validUserId,
-} from "../onboarding";
+import { useOnboarding } from "../onboarding";
 
 type ResearchCard = {
   id: number;
@@ -341,31 +338,29 @@ function getLocale(lang: string) {
 export default function BonusResearch() {
   const navigate = useNavigate();
   const { user, token, loading } = useAuth();
+  const { eligible } = useOnboarding();
   const { lang } = useLang();
   const t = getLocale(lang);
 
   const onParticipate = (cardId: number) => {
-    if (loading) {
-      return;
-    }
+    if (loading) return;
 
     const direction = directionPaths[cardId];
-
-    if (!direction) {
-      return;
-    }
+    if (!direction) return;
 
     const next = `/bonuses/research/${direction}`;
 
+    // Регистрация / подтверждение почты —
+    // только после нажатия «Участвовать».
     if (!user || !token || !user.email_verified) {
-      navigate(`/register?next=${encodeURIComponent(next)}`);
+      navigate(
+        `/register?next=${encodeURIComponent(next)}`
+      );
       return;
     }
 
-    if (
-      !validUserId(user.id) ||
-      !readOnboarding(user.id).eligible
-    ) {
+    // Сохраняем обязательное подключение к программе.
+    if (!eligible) {
       navigate("/profile", {
         state: {
           bonusOnboardingRequired: true,

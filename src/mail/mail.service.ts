@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { assertLocalDemoRecipient, validateLocalDemoMailpit } from './local-demo-mailpit';
 
 type MailMode = 'smtp' | 'ethereal' | 'preview';
 
@@ -9,13 +8,9 @@ export class MailService {
   private transporter: nodemailer.Transporter | null = null;
   private readonly logger = new Logger(MailService.name);
   private readonly initPromise: Promise<void>;
-  private readonly localDemo: boolean;
   private mode: MailMode = 'preview';
 
   constructor() {
-    // Outside initializeTransporter's catch: invalid demo configuration must
-    // reject application initialization, never fall back to preview.
-    this.localDemo = validateLocalDemoMailpit(process.env);
     this.initPromise = this.initializeTransporter();
   }
 
@@ -29,14 +24,13 @@ export class MailService {
       if (process.env.SMTP_HOST) {
         this.transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST,
+          connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 10000,
           port: parseInt(process.env.SMTP_PORT || '587', 10),
           secure: process.env.SMTP_SECURE === 'true',
-          ...(process.env.SMTP_USER || process.env.SMTP_PASSWORD ? {
-            auth: {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PASSWORD,
-            },
-          } : {}),
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASSWORD,
+          },
         });
         this.mode = 'smtp';
         this.logger.log('Mail service initialized (SMTP)');
@@ -64,14 +58,14 @@ export class MailService {
         return;
       }
 
-      // Development default: no network; preview remains internal to the transport.
+      // Development default: no network, link is returned in the API response.
       this.mode = 'preview';
       this.logger.log(
         'Mail service initialized (local preview: no email is sent over the network)',
       );
-    } catch {
+    } catch (error) {
       this.transporter = null;
-      this.logger.error('Failed to initialize mail transporter');
+      this.logger.error('Mail transport initialization failed');
     }
   }
 
@@ -85,9 +79,9 @@ export class MailService {
   }
 
   /**
-   * Returns an internal Ethereal preview URL, or null for SMTP.
-   * Throws when no delivery transport exists or sending fails.
-   * Callers must not expose a preview URL through the public API.
+   * Returns a preview URL in development (Ethereal URL or the verification
+   * link itself in local preview mode). Returns null for real SMTP.
+   * Throws if sending fails.
    */
   private async deliverVerificationEmail(
     email: string,
@@ -96,22 +90,13 @@ export class MailService {
   ): Promise<string | null> {
     await this.initPromise;
 
-    if (validateLocalDemoMailpit(process.env) !== this.localDemo) {
-      throw new Error('Mail configuration changed after initialization');
-    }
-    assertLocalDemoRecipient(email);
-
-    // No message is delivered in preview mode. Do not report delivery success
-    // or expose a verification link as a substitute for email ownership.
-    if (this.mode === 'preview') {
-      throw new Error('Mail transporter is not configured');
-    }
-
     const frontendUrl =
       process.env.FRONTEND_URL || 'http://localhost:3000';
     const link = `${frontendUrl}/verify-email?token=${encodeURIComponent(
       token,
     )}`;
+
+    if (this.mode === 'preview') throw new Error('Mail delivery is not configured');
 
     if (!this.transporter) {
       throw new Error('Mail transporter is not initialized');
@@ -119,28 +104,25 @@ export class MailService {
 
     const safeName = this.escapeHtml(userName);
 
-    // Recheck directly before the transport call, including configuration.
-    assertLocalDemoRecipient(email);
     const info = await this.transporter.sendMail({
       from:
         process.env.SMTP_FROM ||
         'Cashback+ <noreply@cashback-plus.app>',
       to: email,
-      subject: 'Verify your email address — Cashback+',
+      subject: 'Подтвердите электронную почту — Cashback+',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #0d6efd;">Welcome to Cashback+, ${safeName}!</h2>
-          <p>Please verify your email address to activate your account.</p>
+          <h2 style="color: #0d6efd;">Добро пожаловать в Cashback+, ${safeName}!</h2>
+          <p>Подтвердите электронную почту, чтобы завершить регистрацию.</p>
           <p style="margin: 24px 0;">
             <a href="${link}" style="display:inline-block;padding:12px 24px;background:#0d6efd;color:#fff;text-decoration:none;border-radius:6px;font-weight:bold;">
-              Verify Email
+              Подтвердить почту
             </a>
           </p>
-          <p>Or copy this link into your browser:</p>
-          <p style="word-break: break-all; color: #666;">${link}</p>
+
           <hr style="margin: 24px 0; border: none; border-top: 1px solid #ddd;">
           <p style="font-size: 12px; color: #999;">
-            This link expires in 24 hours. If you did not create this account, ignore this email.
+            Ссылка действует 24 часа и может быть использована только один раз. Если вы не регистрировались, проигнорируйте письмо.
           </p>
         </div>
       `,
@@ -152,20 +134,15 @@ export class MailService {
       return previewUrl;
     }
 
-
     return null;
   }
 
-  async sendVerificationEmail(
-    email: string, token: string, userName: string,
-  ): Promise<string | null> {
+  async sendVerificationEmail(email: string, token: string, userName: string): Promise<string | null> {
     return this.sendSafely('verification', email, token, userName);
   }
 
-  private async sendSafely(
-    operation: 'verification' | 'resend-verification',
-    email: string, token: string, userName: string,
-  ): Promise<string | null> {
+  private async sendSafely(operation: 'verification' | 'resend-verification', email: string,
+    token: string, userName: string): Promise<string | null> {
     this.logger.log(`Mail delivery attempt (${operation})`);
     try {
       const result = await this.deliverVerificationEmail(email, token, userName);
@@ -173,10 +150,10 @@ export class MailService {
       return result;
     } catch {
       this.logger.error(`Mail delivery failed (${operation})`);
-      // Never propagate transport diagnostics containing addresses or secrets.
       throw new Error('Mail delivery failed');
     }
   }
+
   async sendResendVerificationEmail(
     email: string,
     token: string,

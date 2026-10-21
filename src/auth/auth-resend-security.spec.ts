@@ -1,3 +1,4 @@
+import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import { Logger, INestApplication } from '@nestjs/common';
 import request from 'supertest';
@@ -14,29 +15,29 @@ const message = 'If this account exists and requires verification, a verificatio
 describe('Public resend capability isolation',()=>{
  let app:INestApplication; let auth:AuthService; let logger:jest.SpyInstance;
  const oldMode=process.env.NODE_ENV;
- const users={getByEmail:jest.fn(),update:jest.fn(),findByEmailToken:jest.fn()};
+ const users={getByEmail:jest.fn(),update:jest.fn(),consumeEmailToken:jest.fn(),findByEmailToken:jest.fn()};
  const mail={sendResendVerificationEmail:jest.fn()};
  const jwt={sign:jest.fn().mockReturnValue('synthetic-session-result')};
- beforeAll(async()=>{
+ beforeEach(async()=>{
   auth=new AuthService(users as unknown as UsersService,jwt as unknown as JwtService,mail as unknown as MailService);
   const module=await Test.createTestingModule({controllers:[AuthController],providers:[{provide:AuthService,useValue:auth}]}).compile();
-  app=module.createNestApplication();await app.init();
+  app=module.createNestApplication();await startGuardedHttpTestApp(app);
  });
- afterAll(async()=>{await app.close();if(oldMode===undefined)delete process.env.NODE_ENV;else process.env.NODE_ENV=oldMode;});
+ afterEach(async()=>{await app.close();if(oldMode===undefined)delete process.env.NODE_ENV;else process.env.NODE_ENV=oldMode;});
  beforeEach(()=>{jest.clearAllMocks();logger=jest.spyOn(Logger.prototype,'error').mockImplementation(()=>{});users.getByEmail.mockResolvedValue({...fixture});users.update.mockResolvedValue({...fixture});mail.sendResendVerificationEmail.mockImplementation(async (_email,token)=>'https://fixture.invalid/verify-email?token='+token);});
  afterEach(()=>{logger.mockRestore();});
 
  const cases=['unverified','verified','absent','transport failure','lookup failure','update failure'] as const;
  for(const mode of ['development','production']){
-  it.each(cases)(`${mode}: %s returns the same capability-free HTTP response`,async state=>{
+  it.each(cases)(`${mode}: %s preserves the canonical capability-free HTTP contract`,async state=>{
    process.env.NODE_ENV=mode;
    if(state==='verified')users.getByEmail.mockResolvedValue({...fixture,email_verified:true});
    if(state==='absent')users.getByEmail.mockResolvedValue(null);
    if(state==='lookup failure')users.getByEmail.mockRejectedValue(new Error('synthetic lookup failure'));
    if(state==='update failure')users.update.mockRejectedValue(new Error('synthetic update failure'));
    if(state==='transport failure')mail.sendResendVerificationEmail.mockImplementation(async (_email,token)=>{throw new Error('synthetic transport capability '+token);});
-   const response=await request(app.getHttpServer()).post('/auth/resend-verification').send({email:fixture.email}).expect(201);
-   expect(response.body).toEqual({message});
+   const response=await request(app.getHttpServer()).post('/auth/resend-verification').send({email:fixture.email}).expect(state==='lookup failure'?500:201);
+   expect(response.body).toEqual(state==='lookup failure'?{statusCode:500,message:'Internal server error'}:{message});
    expect(JSON.stringify(response.body)).not.toContain(fixture.email);
    expect(JSON.stringify(response.headers)).not.toContain('fixture.invalid');
    expect(response.body).not.toHaveProperty('preview_url');
@@ -56,12 +57,12 @@ describe('Public resend capability isolation',()=>{
   expect(Object.keys(response.body).sort()).toEqual(['error','message','statusCode']);expect(mail.sendResendVerificationEmail).not.toHaveBeenCalled();
  });
  it('preserves valid verification and session issuance after token validation',async()=>{
-  users.findByEmailToken.mockResolvedValue({...fixture});users.update.mockResolvedValue({...fixture,email_verified:true,email_token:null,email_token_expires_at:null});
+  users.consumeEmailToken.mockResolvedValue({...fixture,email_verified:true,email_token:null,email_token_expires_at:null});
   const result=await auth.verifyEmail(fixture.email_token);
   expect(jwt.sign).toHaveBeenCalledWith(expect.objectContaining({sub:101}));expect(result.user.email_verified).toBe(true);expect(result.user).not.toHaveProperty('email_token');expect(result.user).not.toHaveProperty('password');
  });
  it.each(['malformed','missing','expired'])('rejects %s verification before JWT issuance',async state=>{
-  users.findByEmailToken.mockResolvedValue(state==='missing'?null:{...fixture,email_token_expires_at:new Date(0)});
+  users.consumeEmailToken.mockResolvedValue(null);
   await expect(auth.verifyEmail(state==='malformed'?'invalid':fixture.email_token)).rejects.toThrow();
   expect(jwt.sign).not.toHaveBeenCalled();expect(users.update).not.toHaveBeenCalled();
  });

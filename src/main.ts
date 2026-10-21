@@ -1,9 +1,11 @@
+import { localConfiguration } from './local-configuration';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'node:path';
 
 async function bootstrap() {
+  const config = localConfiguration();
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useStaticAssets(join(process.cwd(), 'public', 'avatars'), {
@@ -15,11 +17,11 @@ async function bootstrap() {
     },
   });
 
-  app.enableCors();
+  app.enableCors({origin:config.origin,methods:['GET','POST','PATCH','DELETE','OPTIONS'],allowedHeaders:['Content-Type','Authorization','Idempotency-Key']});
 
-  await app.listen(3001);
+  await app.listen(config.port, config.host);
 
-  console.log('Backend running at http://localhost:3001');
+  console.log('Historical backend ready on configured local port');
 }
 
 void bootstrap();

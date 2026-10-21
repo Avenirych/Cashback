@@ -1,46 +1,47 @@
-import { BACKEND_URL, backendFetch } from "../backend";
+import { BACKEND_URL } from "../backend";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
-
-import Footer from "../components/Footer";
-import MarketingPreferencesPanel from "../components/MarketingPreferencesPanel";
-import OwnPhonePanel from "../components/OwnPhonePanel";
-
 import {
-  emptyWiseForm,
-  enrollInProgram,
-  getOnboardingMessages,
-  saveCredentials,
-  useOnboarding,
-  validUserId,
+  WiseForm,
   validateWiseForm,
+  useOnboarding,
+  saveCredentials,
+  enrollInProgram,
+  validUserId,
+  getOnboardingMessages,
 } from "../onboarding";
+import MarketingPreferencesPanel from "../components/MarketingPreferencesPanel";
+import WiseAccountNotice from "../components/WiseAccountNotice";
+import { validateEmail } from "../utils/emailValidator";
+import "./Profile.css";
 
-import type { WiseForm } from "../onboarding";
+const PROFILE_URL = `${BACKEND_URL}/auth/profile`;
+
+type ProfileLang = "en" | "ru" | "de" | "fr";
 
 interface ProfileMessages {
   title: string;
   loading: string;
   guestTitle: string;
-  guestDescription: string;
+  guestText: string;
   login: string;
   register: string;
-  home: string;
-  shop: string;
   name: string;
   email: string;
   balance: string;
-  notSet: string;
+  notSpecified: string;
   demoNotice: string;
+  home: string;
+  shop: string;
+  avatarAlt: string;
   wiseCredentials: string;
   fullName: string;
-  wiseEmail: string;
   currency: string;
   accountType: string;
-  choose: string;
+  wiseEmail: string;
+  selectOption: string;
   personal: string;
   business: string;
   saveCredentials: string;
@@ -51,828 +52,542 @@ interface ProfileMessages {
   required: string;
   invalidEmail: string;
   storageError: string;
-  invalidIdentity: string;
   wiseNotice: string;
-  marketing: string;
-  privacy: string;
-  terms: string;
 }
 
-export const messages: Record<
-  "en" | "ru" | "de" | "fr",
-  ProfileMessages
-> = {
+export const messages: Record<ProfileLang, ProfileMessages> = {
   en: {
     title: "Profile",
-    loading: "Loading...",
-    guestTitle: "Your account",
-    guestDescription: "Log in or register to view your profile.",
-    login: "Login",
+    loading: "Loading profile...",
+    guestTitle: "You are not logged in",
+    guestText: "Log in or register to see your profile.",
+    login: "Log in",
     register: "Register",
-    home: "Home",
-    shop: "Go shopping",
     name: "Name",
     email: "Email",
     balance: "Balance",
-    notSet: "Not set",
+    notSpecified: "Not specified",
     demoNotice:
-      "Demo: the Wise form and program enrollment are stored only in this browser. They do not open a Wise account, authorise a payment or confirm enrollment with an external provider.",
-    wiseCredentials: "Wise details and program enrollment",
-    fullName: "Full name",
-    wiseEmail: "Wise email",
+      "Demo mode: the balance is shown for development and testing only. No real payments or partner payouts are made.",
+    home: "Home",
+    shop: "Shop",
+    avatarAlt: "User avatar",
+    wiseCredentials: "Wise Business credentials",
+    fullName: "Full Name",
     currency: "Currency",
-    accountType: "Account type",
-    choose: "Select an option",
+    accountType: "Account Type",
+    wiseEmail: "Wise Account Email",
+    selectOption: "Select an option",
     personal: "Personal",
     business: "Business",
-    saveCredentials: "Save details",
-    enroll: "Join the program",
-    credentialsSaved: "Details saved.",
-    enrolled: "You have joined the demo program.",
+    saveCredentials: "Save Credentials",
+    enroll: "Enroll in Program",
+    credentialsSaved: "Credentials saved",
+    enrolled: "You are enrolled",
     enrollmentDate: "Enrollment date",
-    required: "This field is required.",
-    invalidEmail: "Enter a valid email address.",
-    storageError:
-      "Unable to save changes in this browser. Please try again.",
-    invalidIdentity:
-      "Unable to verify your account identity. Sign in again.",
+    required: "All fields required",
+    invalidEmail: "Invalid email format",
+    storageError: "Unable to save in this browser. Please try again.",
     wiseNotice:
-      "Do not enter passwords, card numbers or bank account credentials. These details are a browser-only demo and are not sent to Wise.",
-    marketing: "Email and marketing preferences",
-    privacy: "Privacy & Data Protection Policy",
-    terms: "Terms of Use",
+      "Development mode: partner services and real payments are not connected. Wise credentials are stored only in this browser and are not sent to any service.",
   },
-
   ru: {
     title: "Профиль",
-    loading: "Загрузка...",
-    guestTitle: "Ваш аккаунт",
-    guestDescription:
-      "Войдите или зарегистрируйтесь, чтобы открыть профиль.",
-    login: "Вход",
-    register: "Регистрация",
-    home: "На главную",
-    shop: "Перейти к покупкам",
+    loading: "Загрузка профиля...",
+    guestTitle: "Вы не вошли в систему",
+    guestText: "Войдите или зарегистрируйтесь, чтобы увидеть свой профиль.",
+    login: "Войти",
+    register: "Зарегистрироваться",
     name: "Имя",
     email: "Email",
     balance: "Баланс",
-    notSet: "Не указано",
+    notSpecified: "Не указано",
     demoNotice:
-      "Демо: анкета Wise и участие в программе сохраняются только в этом браузере. Они не открывают аккаунт Wise, не разрешают выплату и не подтверждают участие у внешнего провайдера.",
-    wiseCredentials: "Данные Wise и участие в программе",
-    fullName: "Полное имя",
-    wiseEmail: "Email аккаунта Wise",
+      "Демо-режим: баланс показан только для разработки и тестирования. Реальные платежи и выплаты партнёров не выполняются.",
+    home: "Главная",
+    shop: "Магазин",
+    avatarAlt: "Аватар пользователя",
+    wiseCredentials: "Реквизиты Wise Business",
+    fullName: "ФИО",
     currency: "Валюта",
     accountType: "Тип аккаунта",
-    choose: "Выберите вариант",
+    wiseEmail: "Email аккаунта Wise",
+    selectOption: "Выберите вариант",
     personal: "Личный",
     business: "Бизнес",
-    saveCredentials: "Сохранить данные",
+    saveCredentials: "Сохранить реквизиты",
     enroll: "Присоединиться к программе",
-    credentialsSaved: "Данные сохранены.",
-    enrolled: "Вы присоединились к демонстрационной программе.",
-    enrollmentDate: "Дата подключения",
-    required: "Обязательное поле.",
-    invalidEmail: "Введите корректный email.",
-    storageError:
-      "Не удалось сохранить изменения в браузере. Попробуйте снова.",
-    invalidIdentity:
-      "Не удалось проверить идентификатор аккаунта. Войдите повторно.",
+    credentialsSaved: "Реквизиты сохранены",
+    enrolled: "Вы участник программы",
+    enrollmentDate: "Дата присоединения",
+    required: "Все поля обязательны",
+    invalidEmail: "Неверный формат email",
+    storageError: "Не удалось сохранить данные в браузере. Попробуйте ещё раз.",
     wiseNotice:
-      "Не вводите пароли, номера карт или банковские реквизиты доступа. Это демонстрационная анкета в браузере; данные не отправляются в Wise.",
-    marketing: "Предпочтения email и маркетинга",
-    privacy: "Политика конфиденциальности и защиты данных",
-    terms: "Условия использования",
+      "Режим разработки: партнёрские сервисы и реальные платежи не подключены. Реквизиты Wise хранятся только в этом браузере и не отправляются ни в один сервис.",
   },
-
   de: {
     title: "Profil",
-    loading: "Wird geladen...",
-    guestTitle: "Ihr Konto",
-    guestDescription:
-      "Melden Sie sich an oder registrieren Sie sich, um Ihr Profil zu öffnen.",
+    loading: "Profil wird geladen...",
+    guestTitle: "Sie sind nicht angemeldet",
+    guestText: "Melden Sie sich an oder registrieren Sie sich, um Ihr Profil zu sehen.",
     login: "Anmelden",
     register: "Registrieren",
-    home: "Startseite",
-    shop: "Einkaufen",
     name: "Name",
     email: "E-Mail",
     balance: "Guthaben",
-    notSet: "Nicht angegeben",
+    notSpecified: "Nicht angegeben",
     demoNotice:
-      "Demo: Das Wise-Formular und die Programmteilnahme werden nur in diesem Browser gespeichert. Dadurch wird kein Wise-Konto eröffnet, keine Zahlung autorisiert und keine Teilnahme bei einem externen Anbieter bestätigt.",
-    wiseCredentials: "Wise-Angaben und Programmteilnahme",
+      "Demo-Modus: Das Guthaben wird nur zu Entwicklungs- und Testzwecken angezeigt. Es erfolgen keine echten Zahlungen oder Partnerauszahlungen.",
+    home: "Startseite",
+    shop: "Shop",
+    avatarAlt: "Benutzeravatar",
+    wiseCredentials: "Wise-Business-Kontodaten",
     fullName: "Vollständiger Name",
-    wiseEmail: "Wise-E-Mail",
     currency: "Währung",
     accountType: "Kontotyp",
-    choose: "Bitte auswählen",
+    wiseEmail: "E-Mail des Wise-Kontos",
+    selectOption: "Option auswählen",
     personal: "Privat",
     business: "Geschäftlich",
-    saveCredentials: "Angaben speichern",
+    saveCredentials: "Kontodaten speichern",
     enroll: "Am Programm teilnehmen",
-    credentialsSaved: "Angaben gespeichert.",
-    enrolled: "Sie nehmen am Demoprogramm teil.",
+    credentialsSaved: "Kontodaten gespeichert",
+    enrolled: "Sie nehmen am Programm teil",
     enrollmentDate: "Teilnahmedatum",
-    required: "Dieses Feld ist erforderlich.",
-    invalidEmail: "Geben Sie eine gültige E-Mail-Adresse ein.",
+    required: "Alle Felder sind erforderlich",
+    invalidEmail: "Ungültiges E-Mail-Format",
     storageError:
-      "Änderungen konnten nicht im Browser gespeichert werden. Versuchen Sie es erneut.",
-    invalidIdentity:
-      "Ihre Kontoidentität konnte nicht überprüft werden. Melden Sie sich erneut an.",
+      "Speichern im Browser nicht möglich. Bitte versuchen Sie es erneut.",
     wiseNotice:
-      "Geben Sie keine Passwörter, Kartennummern oder Bankzugangsdaten ein. Dieses Demoformular bleibt im Browser; die Angaben werden nicht an Wise gesendet.",
-    marketing: "E-Mail- und Marketing-Einstellungen",
-    privacy: "Datenschutzrichtlinie",
-    terms: "Nutzungsbedingungen",
+      "Entwicklungsmodus: Partnerdienste und echte Zahlungen sind nicht verbunden. Wise-Kontodaten werden nur in diesem Browser gespeichert und an keinen Dienst gesendet.",
   },
-
   fr: {
     title: "Profil",
-    loading: "Chargement...",
-    guestTitle: "Votre compte",
-    guestDescription:
-      "Connectez-vous ou inscrivez-vous pour consulter votre profil.",
-    login: "Connexion",
-    register: "Inscription",
-    home: "Accueil",
-    shop: "Faire du shopping",
+    loading: "Chargement du profil...",
+    guestTitle: "Vous n'êtes pas connecté",
+    guestText: "Connectez-vous ou inscrivez-vous pour voir votre profil.",
+    login: "Se connecter",
+    register: "S'inscrire",
     name: "Nom",
     email: "E-mail",
     balance: "Solde",
-    notSet: "Non renseigné",
+    notSpecified: "Non renseigné",
     demoNotice:
-      "Démo : le formulaire Wise et la participation au programme sont enregistrés uniquement dans ce navigateur. Ils ne créent pas de compte Wise, n’autorisent aucun paiement et ne confirment aucune participation auprès d’un prestataire externe.",
-    wiseCredentials: "Informations Wise et participation au programme",
+      "Mode démo : le solde est affiché uniquement pour le développement et les tests. Aucun paiement réel ni versement de partenaire n'est effectué.",
+    home: "Accueil",
+    shop: "Boutique",
+    avatarAlt: "Avatar de l'utilisateur",
+    wiseCredentials: "Coordonnées Wise Business",
     fullName: "Nom complet",
-    wiseEmail: "E-mail Wise",
     currency: "Devise",
     accountType: "Type de compte",
-    choose: "Sélectionnez une option",
+    wiseEmail: "E-mail du compte Wise",
+    selectOption: "Sélectionnez une option",
     personal: "Personnel",
     business: "Professionnel",
-    saveCredentials: "Enregistrer les informations",
+    saveCredentials: "Enregistrer les coordonnées",
     enroll: "Rejoindre le programme",
-    credentialsSaved: "Informations enregistrées.",
-    enrolled: "Vous avez rejoint le programme de démonstration.",
-    enrollmentDate: "Date d’adhésion",
-    required: "Ce champ est obligatoire.",
-    invalidEmail: "Saisissez une adresse e-mail valide.",
+    credentialsSaved: "Coordonnées enregistrées",
+    enrolled: "Vous êtes inscrit",
+    enrollmentDate: "Date d'inscription",
+    required: "Tous les champs sont obligatoires",
+    invalidEmail: "Format d'e-mail invalide",
     storageError:
-      "Impossible d’enregistrer les modifications dans le navigateur. Réessayez.",
-    invalidIdentity:
-      "Impossible de vérifier votre compte. Reconnectez-vous.",
+      "Impossible d'enregistrer dans ce navigateur. Veuillez réessayer.",
     wiseNotice:
-      "Ne saisissez aucun mot de passe, numéro de carte ou identifiant bancaire. Ce formulaire est une démo locale ; les informations ne sont pas envoyées à Wise.",
-    marketing: "Préférences e-mail et marketing",
-    privacy: "Politique de confidentialité et de protection des données",
-    terms: "Conditions d’utilisation",
+      "Mode développement : les services partenaires et les paiements réels ne sont pas connectés. Les coordonnées Wise sont conservées uniquement dans ce navigateur et ne sont envoyées à aucun service.",
   },
 };
 
-export function getMessages(lang?: string): ProfileMessages {
-  const key = (lang || "en").toLowerCase();
-
-  switch (key) {
-    case "ru":
-      return messages.ru;
-    case "de":
-      return messages.de;
-    case "fr":
-      return messages.fr;
-    default:
-      return messages.en;
-  }
+export function getMessages(lang: string | undefined): ProfileMessages {
+  const key = (lang || "en").toLowerCase() as ProfileLang;
+  return messages[key] || messages.en;
 }
 
 export function formatBalance(value: unknown): string {
-  if (typeof value !== "number" && typeof value !== "string") {
-    return "0.00";
-  }
+  const num =
+    typeof value === "number"
+      ? value
+      : typeof value === "string" && value.trim() !== ""
+      ? Number(value)
+      : 0;
 
-  const number = Number(value);
-
-  return Number.isFinite(number) ? number.toFixed(2) : "0.00";
+  return (Number.isFinite(num) ? num : 0).toFixed(2);
 }
 
-interface DisplayProfile {
-  id: number;
-  name?: string | null;
-  email?: string | null;
-  balance?: unknown;
+interface ProfileData {
+  email?: string;
+  name?: string;
+  firstName?: string | null;
+  lastName?: string | null;
   phone_e164?: string | null;
-  phone_verified?: boolean;
-  phone_verified_at?: string | null;
+  avatar_url?: string | null;
+  balance?: unknown;
 }
 
-function parseProfile(
-  value: unknown,
-  expectedUserId: number,
-): DisplayProfile | null {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    return null;
-  }
+type WiseErrors = Partial<
+  Record<keyof WiseForm, "required" | "invalidEmail">
+>;
 
-  const data = value as Record<string, unknown>;
+function getWiseErrors(form: WiseForm): WiseErrors {
+  const errors: WiseErrors = { ...validateWiseForm(form) };
 
-  if (data.id !== expectedUserId) {
-    return null;
-  }
-
-  return {
-    id: expectedUserId,
-    name: typeof data.name === "string" ? data.name : undefined,
-    email: typeof data.email === "string" ? data.email : undefined,
-    balance: data.balance,
-    phone_e164: typeof data.phone_e164 === "string" ? data.phone_e164 : null,
-    phone_verified: data.phone_verified === true,
-    phone_verified_at: typeof data.phone_verified_at === "string" ? data.phone_verified_at : null,
-  };
-}
-
-const fields: Array<keyof WiseForm> = [
-  "fullName",
-  "email",
-  "wiseEmail",
-  "currency",
-  "accountType",
-];
-
-const cardStyle: React.CSSProperties = {
-  padding: "24px",
-  background: "#fff",
-  border: "1px solid #ddd",
-  borderRadius: "12px",
-  marginBottom: "24px",
-};
-
-const inputStyle: React.CSSProperties = {
-  display: "block",
-  width: "100%",
-  boxSizing: "border-box",
-  padding: "12px",
-  marginTop: "6px",
-  border: "1px solid #aaa",
-  borderRadius: "6px",
-  fontFamily: "inherit",
-  fontSize: "16px",
-};
-
-const buttonStyle: React.CSSProperties = {
-  padding: "12px 20px",
-  border: "none",
-  borderRadius: "8px",
-  background: "#0078ff",
-  color: "#fff",
-  fontSize: "16px",
-  fontFamily: "inherit",
-  cursor: "pointer",
-};
-
-export default function Profile() {
-  const { lang } = useLang();
-  const { user, token, loading } = useAuth();
-
-  const language = (lang || "en").toLowerCase();
-  const t = getMessages(language);
-  const onboardingText = getOnboardingMessages(language);
-
-  const onboarding = useOnboarding();
-  const userId = user?.id;
-
-  const [freshProfile, setFreshProfile] =
-    useState<DisplayProfile | null>(null);
-
-  const [form, setForm] = useState<WiseForm>({
-    ...emptyWiseForm,
-  });
-
-  const [showValidation, setShowValidation] = useState(false);
-  const [storageError, setStorageError] = useState(false);
-  const [marketingOpen, setMarketingOpen] = useState(false);
-  const [phoneRevision, setPhoneRevision] = useState(0);
-
-  // Стабильная строка позволяет реагировать на изменения данных,
-  // не сбрасывая набранную форму при каждом рендере.
-  const storedForm = JSON.stringify(onboarding.form);
-
-  useEffect(() => {
-    setForm(JSON.parse(storedForm) as WiseForm);
-    setShowValidation(false);
-    setStorageError(false);
-  }, [userId, storedForm, onboarding.credentialsSaved]);
-
-  useEffect(() => {
-    setMarketingOpen(false);
-  }, [userId, token]);
-
-  useEffect(() => {
-    setFreshProfile(null);
-
-    if (loading || !validUserId(userId) || !token) {
-      return;
+  for (const field of ["email", "wiseEmail"] as const) {
+    if (!form[field].trim()) {
+      errors[field] = "required";
+    } else if (!validateEmail(form[field]).valid) {
+      errors[field] = "invalidEmail";
     }
+  }
 
-    let cancelled = false;
+  return errors;
+}
 
-    const fetchProfile = async () => {
-      try {
-        const response = await backendFetch(
-          `${BACKEND_URL}/auth/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+function WiseEnrollment({
+  userId,
+  lang,
+}: {
+  userId: number;
+  lang: string;
+}) {
+  const t = getMessages(lang);
+  const {
+    form,
+    credentialsSaved: isFormFilled,
+    enrolledAt,
+  } = useOnboarding();
 
-        if (!response.ok) {
-          return;
-        }
+  const savedForm = JSON.stringify(form);
+  const [formData, setFormData] = useState<WiseForm>(form);
+  const [showErrors, setShowErrors] = useState(false);
+  const [storageFailed, setStorageFailed] = useState(false);
 
-        const data: unknown = await response.json();
-        const parsed = parseProfile(data, userId);
+  useEffect(() => {
+    setFormData(JSON.parse(savedForm) as WiseForm);
+    setShowErrors(false);
+    setStorageFailed(false);
+  }, [savedForm]);
 
-        if (!cancelled && parsed) {
-          setFreshProfile(parsed);
-        }
-      } catch {
-        // При ошибке сохраняем данные из AuthContext.
-      }
-    };
+  const errors = getWiseErrors(formData);
+  const isFormValid = Object.keys(errors).length === 0;
+  const readonly = isFormFilled;
 
-    void fetchProfile();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [userId, token, loading]);
-
-  const errors = validateWiseForm(form);
-  const validIdentity = validUserId(userId);
-  const validForm = Object.keys(errors).length === 0;
-  const readonly = onboarding.credentialsSaved;
-
-  const changeField = (field: keyof WiseForm, value: string) => {
-    setForm((previous) => ({
-      ...previous,
-      [field]: value,
-    }));
-
-    setShowValidation(true);
-    setStorageError(false);
-  };
-
-  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+  function handleSaveCredentials(event: React.FormEvent) {
     event.preventDefault();
+    setShowErrors(true);
 
-    setShowValidation(true);
-    setStorageError(false);
+    const currentErrors = getWiseErrors(formData);
 
     if (
-      !validIdentity ||
-      !validForm ||
-      readonly
+      readonly ||
+      !validUserId(userId) ||
+      Object.keys(currentErrors).length > 0
     ) {
       return;
     }
 
     try {
-      saveCredentials(userId, form);
+      saveCredentials(userId, formData);
+      setStorageFailed(false);
     } catch {
-      setStorageError(true);
+      setStorageFailed(true);
     }
-  };
+  }
 
-  const handleEnroll = () => {
-    setStorageError(false);
+  function handleEnroll() {
+    const savedErrors = getWiseErrors(form);
 
-    if (!validIdentity) {
+    if (
+      !validUserId(userId) ||
+      !isFormFilled ||
+      Object.keys(savedErrors).length > 0 ||
+      enrolledAt
+    ) {
       return;
     }
 
     try {
-      // Helper повторно проверяет сохранённые данные.
       enrollInProgram(userId);
+      setStorageFailed(false);
     } catch {
-      setStorageError(true);
+      setStorageFailed(true);
     }
-  };
-
-  if (loading) {
-    return (
-      <main style={{ padding: "40px 20px", textAlign: "center" }}>
-        <p role="status">{t.loading}</p>
-      </main>
-    );
   }
 
-  if (!user) {
-    return (
-      <div
-        style={{
-          minHeight: "calc(100vh - 72px)",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <main style={{ flex: 1, padding: "40px 20px" }}>
-          <h1>{t.guestTitle}</h1>
-          <p>{t.guestDescription}</p>
-
-          <nav
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "20px",
-            }}
-          >
-            <Link to="/login">{t.login}</Link>
-            <Link to="/register">{t.register}</Link>
-          </nav>
-        </main>
-
-        <Footer lang={language} />
-      </div>
-    );
+  function updateField(field: keyof WiseForm, value: string) {
+    setFormData((previous) => ({
+      ...previous,
+      [field]: value,
+    }));
+    setShowErrors(true);
+    setStorageFailed(false);
   }
 
-  const contextProfile = user as unknown as DisplayProfile;
+  function fieldError(field: keyof WiseForm) {
+    const error = showErrors && !readonly ? errors[field] : undefined;
 
-  const displayedProfile =
-    freshProfile?.id === userId
-      ? freshProfile
-      : contextProfile;
-
-  const fieldError = (field: keyof WiseForm) => {
-    if (!showValidation || readonly) {
-      return undefined;
-    }
-
-    return errors[field];
-  };
-
-  const renderError = (field: keyof WiseForm) => {
-    const error = fieldError(field);
-
-    if (!error) {
-      return null;
-    }
+    if (!error) return null;
 
     return (
       <p
         id={`wise-${field}-error`}
         role="alert"
         style={{
-          margin: "6px 0 0",
-          color: "#b71c1c",
-          fontSize: "14px",
+          color: "#b42318",
+          fontSize: "13px",
+          margin: "6px 0 12px",
         }}
       >
         {t[error]}
       </p>
     );
-  };
+  }
 
-  const renderField = (field: keyof WiseForm) => {
-    const id = `wise-${field}`;
-    const error = fieldError(field);
-
-    const accessibility = {
-      id,
-      "aria-invalid": error ? true : undefined,
-      "aria-describedby": error
-        ? `${id}-error`
-        : undefined,
-    };
-
-    return (
-      <div key={field}>
-        <label htmlFor={id}>{t[field]}</label>
-
-        {field === "currency" ? (
-          <select
-            {...accessibility}
-            value={form.currency}
-            disabled={readonly}
-            onBlur={() => setShowValidation(true)}
-            onChange={(event) =>
-              changeField(field, event.target.value)
-            }
-            style={inputStyle}
-          >
-            <option value="">{t.choose}</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-            <option value="USD">USD</option>
-          </select>
-        ) : field === "accountType" ? (
-          <select
-            {...accessibility}
-            value={form.accountType}
-            disabled={readonly}
-            onBlur={() => setShowValidation(true)}
-            onChange={(event) =>
-              changeField(field, event.target.value)
-            }
-            style={inputStyle}
-          >
-            <option value="">{t.choose}</option>
-            <option value="Personal">{t.personal}</option>
-            <option value="Business">{t.business}</option>
-          </select>
-        ) : (
-          <input
-            {...accessibility}
-            type={
-              field === "email" || field === "wiseEmail"
-                ? "email"
-                : "text"
-            }
-            value={form[field]}
-            readOnly={readonly}
-            autoComplete={field === "fullName" ? "name" : "email"}
-            onBlur={() => setShowValidation(true)}
-            onChange={(event) =>
-              changeField(field, event.target.value)
-            }
-            style={inputStyle}
-          />
-        )}
-
-        {renderError(field)}
-      </div>
+  function fieldProps(field: keyof WiseForm) {
+    const invalid: boolean = Boolean(
+      showErrors && !readonly && errors[field]
     );
+
+    return {
+      id: `wise-${field}`,
+      name: field,
+      value: formData[field],
+      required: true,
+      "aria-invalid": invalid,
+      "aria-describedby": invalid
+        ? `wise-${field}-error`
+        : undefined,
+      onBlur: () => setShowErrors(true),
+      onChange: (
+        event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      ) => updateField(field, event.target.value),
+    };
+  }
+
+  const canEnroll =
+    validUserId(userId) &&
+    isFormFilled &&
+    Object.keys(getWiseErrors(form)).length === 0;
+
+  return (
+    <section aria-label={t.wiseCredentials}>
+      <form onSubmit={handleSaveCredentials} noValidate>
+        <fieldset>
+          <legend>{t.wiseCredentials}</legend>
+
+          {(["fullName", "email", "wiseEmail"] as const).map((field) => (
+            <div key={field}>
+              <label htmlFor={`wise-${field}`}>{t[field]}</label>
+
+              <input
+                {...fieldProps(field)}
+                type={field === "fullName" ? "text" : "email"}
+                readOnly={readonly}
+              />
+
+              {fieldError(field)}
+            </div>
+          ))}
+
+          <div>
+            <label htmlFor="wise-currency">{t.currency}</label>
+
+            <select {...fieldProps("currency")} disabled={readonly}>
+              <option value="">{t.selectOption}</option>
+
+              {["EUR", "GBP", "USD"].map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
+            </select>
+
+            {fieldError("currency")}
+          </div>
+
+          <div>
+            <label htmlFor="wise-accountType">{t.accountType}</label>
+
+            <select {...fieldProps("accountType")} disabled={readonly}>
+              <option value="">{t.selectOption}</option>
+              <option value="Personal">{t.personal}</option>
+              <option value="Business">{t.business}</option>
+            </select>
+
+            {fieldError("accountType")}
+          </div>
+        </fieldset>
+
+        {!readonly && (
+          <button
+            type="submit"
+            disabled={!isFormValid || !validUserId(userId)}
+          >
+            {t.saveCredentials}
+          </button>
+        )}
+      </form>
+
+      {storageFailed && <p role="alert">{t.storageError}</p>}
+
+      {enrolledAt ? (
+        <p role="status">
+          {t.enrolled}. {t.enrollmentDate}:{" "}
+          <time dateTime={enrolledAt}>
+            {new Date(enrolledAt).toLocaleDateString(
+              getMessages(lang) === messages.en ? "en" : lang
+            )}
+          </time>
+        </p>
+      ) : (
+        <>
+          {isFormFilled && (
+            <p role="status">{t.credentialsSaved}</p>
+          )}
+
+          <button
+            type="button"
+            onClick={handleEnroll}
+            disabled={!canEnroll}
+          >
+            {t.enroll}
+          </button>
+        </>
+      )}
+
+      <p>{t.wiseNotice}</p>
+    </section>
+  );
+}
+
+export default function Profile() {
+  const { user, loading, token } = useAuth();
+  const { lang } = useLang();
+  const t = getMessages(lang);
+
+  const [freshProfile, setFreshProfile] =
+    useState<ProfileData | null>(null);
+
+  useEffect(() => {
+    setFreshProfile(null);
+
+    if (!token) return;
+
+    const controller = new AbortController();
+
+    fetch(PROFILE_URL, {
+      headers: { Authorization: "Bearer " + token },
+      signal: controller.signal,
+    })
+      .then((response) => (
+        response.ok ? response.json() : null
+      ))
+      .then((data) => {
+        if (!controller.signal.aborted && data) {
+          setFreshProfile(data);
+        }
+      })
+      .catch(() => {
+        // При ошибке остаются данные из контекста авторизации.
+      });
+
+    return () => controller.abort();
+  }, [token]);
+
+  if (loading) {
+    return (
+      <main className="profile-container">
+        <p role="status" aria-live="polite">
+          {t.loading}
+        </p>
+      </main>
+    );
+  }
+
+  if (!user) {
+    return (
+      <main
+        className="profile-container"
+        aria-labelledby="profile-guest-title"
+      >
+        <h1 id="profile-guest-title">{t.guestTitle}</h1>
+        <p>{t.guestText}</p>
+
+        <nav className="profile-links" aria-label={t.title}>
+          <Link to="/login">{t.login}</Link>
+          <Link to="/register">{t.register}</Link>
+        </nav>
+      </main>
+    );
+  }
+
+  const profile: ProfileData = {
+    ...user,
+    ...(freshProfile || {}),
   };
 
   return (
-    <div
-      style={{
-        minHeight: "calc(100vh - 72px)",
-        display: "flex",
-        flexDirection: "column",
-        background: "#f7f7f7",
-      }}
+    <main
+      className="profile-container"
+      aria-labelledby="profile-title"
     >
-      <main
-        style={{
-          flex: 1,
-          width: "100%",
-          maxWidth: "900px",
-          boxSizing: "border-box",
-          margin: "0 auto",
-          padding: "32px 20px",
-        }}
-      >
-        <h1>{t.title}</h1>
+      <h1 id="profile-title">{t.title}</h1>
+      <p>{getOnboardingMessages(lang).explanation}</p>
 
-        <nav
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "20px",
-            marginBottom: "24px",
-          }}
-        >
-          <Link to="/">{t.home}</Link>
-          <Link to="/shop">{t.shop}</Link>
-        </nav>
-
-        <section style={cardStyle}>
-          <dl style={{ margin: 0 }}>
-            <dt style={{ fontWeight: 600 }}>{t.name}</dt>
-            <dd
-              data-testid="profile-name"
-              style={{ margin: "6px 0 18px" }}
-            >
-              {displayedProfile.name || t.notSet}
-            </dd>
-
-            <dt style={{ fontWeight: 600 }}>{t.email}</dt>
-            <dd
-              data-testid="profile-email"
-              style={{
-                margin: "6px 0 18px",
-                overflowWrap: "anywhere",
-              }}
-            >
-              {displayedProfile.email || t.notSet}
-            </dd>
-
-            <dt style={{ fontWeight: 600 }}>{t.balance}</dt>
-            <dd
-              data-testid="profile-balance"
-              style={{ margin: "6px 0 0" }}
-            >
-              {formatBalance(displayedProfile.balance)}
-            </dd>
-          </dl>
-        </section>
-
-        {token && validIdentity && userId && <div style={cardStyle}>
-          <OwnPhonePanel key={`${userId}:${token}`} userId={userId} token={token} lang={language}
-            ready={freshProfile?.id === userId}
-            phone={displayedProfile.phone_e164 ?? null} verified={displayedProfile.phone_verified === true}
-            onSaved={phone => {
-              setFreshProfile(previous => previous?.id === userId ? {...previous,...phone} : previous);
-              setPhoneRevision(revision => revision + 1);
-            }} />
-        </div>}
-
-        <p
-          role="note"
-          style={{
-            padding: "16px",
-            background: "#fff3cd",
-            borderRadius: "8px",
-            lineHeight: 1.6,
-          }}
-        >
-          {t.demoNotice}
-        </p>
-
-        <p style={{ lineHeight: 1.6 }}>
-          {onboardingText.explanation}
-        </p>
-
-        <form onSubmit={handleSave} noValidate>
-          <fieldset
-            style={{
-              ...cardStyle,
-              minWidth: 0,
-            }}
-          >
-            <legend
-              style={{
-                padding: "0 8px",
-                fontSize: "20px",
-                fontWeight: 600,
-              }}
-            >
-              {t.wiseCredentials}
-            </legend>
-
-            <p style={{ lineHeight: 1.6 }}>
-              {t.wiseNotice}
-            </p>
-
-            {!validIdentity && (
-              <p role="alert" style={{ color: "#b71c1c" }}>
-                {t.invalidIdentity}
-              </p>
-            )}
-
-            <div
-              style={{
-                display: "grid",
-                gap: "18px",
-              }}
-            >
-              {fields.map(renderField)}
-            </div>
-
-            {storageError && (
-              <p role="alert" style={{ color: "#b71c1c" }}>
-                {t.storageError}
-              </p>
-            )}
-
-            {onboarding.credentialsSaved && (
-              <div
-                role="status"
-                style={{
-                  marginTop: "20px",
-                  padding: "14px",
-                  background: "#e8f5e9",
-                  borderRadius: "8px",
-                  lineHeight: 1.6,
-                }}
-              >
-                {onboarding.enrolledAt ? (
-                  <>
-                    <p style={{ margin: "0 0 6px" }}>
-                      {t.enrolled}
-                    </p>
-
-                    <p style={{ margin: 0 }}>
-                      {t.enrollmentDate}:{" "}
-                      <time dateTime={onboarding.enrolledAt}>
-                        {new Date(
-                          onboarding.enrolledAt,
-                        ).toLocaleDateString(
-                          ["en", "ru", "de", "fr"].includes(language)
-                            ? language
-                            : "en",
-                        )}
-                      </time>
-                    </p>
-                  </>
-                ) : (
-                  t.credentialsSaved
-                )}
-              </div>
-            )}
-
-            {!onboarding.eligible && (
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "12px",
-                  marginTop: "20px",
-                }}
-              >
-                {!readonly && (
-                  <button
-                    type="submit"
-                    disabled={!validIdentity || !validForm}
-                    style={{
-                      ...buttonStyle,
-                      opacity:
-                        validIdentity && validForm ? 1 : 0.5,
-                      cursor:
-                        validIdentity && validForm
-                          ? "pointer"
-                          : "not-allowed",
-                    }}
-                  >
-                    {t.saveCredentials}
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={handleEnroll}
-                  disabled={
-                    !validIdentity ||
-                    !onboarding.credentialsSaved
-                  }
-                  style={{
-                    ...buttonStyle,
-                    background: "#287d3c",
-                    opacity:
-                      validIdentity &&
-                      onboarding.credentialsSaved
-                        ? 1
-                        : 0.5,
-                    cursor:
-                      validIdentity &&
-                      onboarding.credentialsSaved
-                        ? "pointer"
-                        : "not-allowed",
-                  }}
-                >
-                  {t.enroll}
-                </button>
-              </div>
-            )}
-          </fieldset>
-        </form>
-
-        {validIdentity && token && (
-          <details
-            key={`${userId}:${token}`}
-            open={marketingOpen}
-            onToggle={(event) => {
-              setMarketingOpen(event.currentTarget.open);
-            }}
-            style={cardStyle}
-          >
-            <summary
-              style={{
-                cursor: "pointer",
-                fontSize: "18px",
-                fontWeight: 600,
-              }}
-            >
-              {t.marketing}
-            </summary>
-
-            {marketingOpen && (
-              <div style={{ marginTop: "20px" }}>
-                <MarketingPreferencesPanel
-                  key={`${userId}:${phoneRevision}`}
-                  lang={language.toUpperCase()}
-                  hasPhone={Boolean(freshProfile?.phone_e164)}
-                />
-              </div>
-            )}
-          </details>
+      <section className="profile-card">
+        {profile.avatar_url && (
+          <img
+            className="profile-avatar"
+            src={profile.avatar_url}
+            alt={t.avatarAlt}
+          />
         )}
 
-        <nav
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "16px",
-          }}
-        >
-          <Link to="/privacy">{t.privacy}</Link>
-          <Link to="/terms">{t.terms}</Link>
-        </nav>
-      </main>
+        <dl className="profile-details">
+          <div className="profile-row">
+            <dt>{t.name}</dt>
+            <dd data-testid="profile-name">
+              {profile.firstName || profile.name || t.notSpecified}
+            </dd>
+          </div>
 
-      <Footer lang={language} />
-    </div>
+          <div className="profile-row"><dt>{lang === "ru" ? "Фамилия" : "Last name"}</dt><dd>{profile.lastName || t.notSpecified}</dd></div>
+          <div className="profile-row"><dt>{lang === "ru" ? "Телефон" : "Phone"}</dt><dd>{profile.phone_e164 || t.notSpecified}</dd></div>
+          <div className="profile-row">
+            <dt>{t.email}</dt>
+            <dd data-testid="profile-email">
+              {profile.email || t.notSpecified}
+            </dd>
+          </div>
+
+          <div className="profile-row">
+            <dt>{t.balance}</dt>
+            <dd data-testid="profile-balance">
+              {formatBalance(profile.balance)}
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <MarketingPreferencesPanel key={user.id} lang={lang} hasPhone={Boolean(freshProfile?.phone_e164 || user.phone_e164)} />
+
+      <WiseAccountNotice lang={lang} />
+
+      <WiseEnrollment
+        key={user.id}
+        userId={user.id}
+        lang={lang}
+      />
+
+      <p className="profile-demo-notice" role="note">
+        {t.demoNotice}
+      </p>
+
+      <nav className="profile-links" aria-label={t.title}>
+        <Link to="/">{t.home}</Link>
+        <Link to="/shop">{t.shop}</Link>
+      </nav>
+    </main>
   );
 }

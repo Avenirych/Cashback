@@ -1,0 +1,4 @@
+const {verifyInventory,verifyPorts}=require('../docker/historical/preflight.cjs');
+const baseline={context:'desktop-linux',daemon:'approved',containers:['a'],networks:['b'],volumes:['c']};
+test('read-only inventory comparison rejects any changed protected ID',()=>{expect(()=>verifyInventory(baseline,baseline)).not.toThrow();expect(()=>verifyInventory(baseline,{...baseline,containers:['x']})).toThrow();expect(()=>verifyInventory(baseline,{...baseline,daemon:'wrong'})).toThrow();});
+test('port inspection uses no bind and rejects wildcard or loopback conflicts',()=>{expect(()=>verifyPorts(' TCP 127.0.0.1:3006 0.0.0.0:0 LISTENING 1')).toThrow();expect(()=>verifyPorts(' TCP [::]:3004 [::]:0 LISTENING 2')).toThrow();expect(()=>verifyPorts(' TCP 127.0.0.1:8035 0.0.0.0:0 LISTENING 3')).not.toThrow();});

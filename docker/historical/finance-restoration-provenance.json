@@ -1,0 +1,226 @@
+{
+  "baseline": "03573b7f47ba3c04dc50312bc71e0a7b904c0ce7",
+  "sourceDirectory": "C:/Users/serge/AppData/Local/Temp/cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15/project/src/finance",
+  "sourceFiles": [
+    {
+      "path": "bank-evidence-verifier.ts",
+      "sha256": "a115fc277df825dc5f596da6dfa0cb86131d2b229b628489c2394c4cb19cffdc",
+      "restoredSha256": "a115fc277df825dc5f596da6dfa0cb86131d2b229b628489c2394c4cb19cffdc"
+    },
+    {
+      "path": "bank-receipt.entities.ts",
+      "sha256": "bbfb89f283e3f49e4c7ef6e4ac48dee0c0951f7c5b07f027f6d9498cf7d018c0",
+      "restoredSha256": "bbfb89f283e3f49e4c7ef6e4ac48dee0c0951f7c5b07f027f6d9498cf7d018c0"
+    },
+    {
+      "path": "bank-receipts.service.ts",
+      "sha256": "437b53060a45f85a09283737f8824f0db9c96e8fa1aecef8f7276b2b122a4876",
+      "restoredSha256": "437b53060a45f85a09283737f8824f0db9c96e8fa1aecef8f7276b2b122a4876"
+    },
+    {
+      "path": "bank-receipts.spec.ts",
+      "sha256": "d44f73ecbdaedb06f95de0a04a6ae26543683468b1c2b17fcdd47941ee795515",
+      "restoredSha256": "d44f73ecbdaedb06f95de0a04a6ae26543683468b1c2b17fcdd47941ee795515"
+    },
+    {
+      "path": "classification-authority.ts",
+      "sha256": "2bbd4660adb987c3011e30868b044b6367d0d43cd8bd4db4e7063544eb53542b",
+      "restoredSha256": "2bbd4660adb987c3011e30868b044b6367d0d43cd8bd4db4e7063544eb53542b"
+    },
+    {
+      "path": "classification-candidates.service.ts",
+      "sha256": "89951402899babe047da54502ad0d7672dee3998c6a2b2e4c79bc0332b2f1a4a",
+      "restoredSha256": "89951402899babe047da54502ad0d7672dee3998c6a2b2e4c79bc0332b2f1a4a"
+    },
+    {
+      "path": "classification-candidates.spec.ts",
+      "sha256": "ed12963d4c9e7b5f633a8be46c01c0a1307f3e12e2d27e591ed67ec8985c3e6c",
+      "restoredSha256": "ed12963d4c9e7b5f633a8be46c01c0a1307f3e12e2d27e591ed67ec8985c3e6c"
+    },
+    {
+      "path": "classification-corrections.service.ts",
+      "sha256": "25ce8a49585a8d8bde548e20cc7fa341ac05f19fb0df643e8c2d028a848c3818",
+      "restoredSha256": "25ce8a49585a8d8bde548e20cc7fa341ac05f19fb0df643e8c2d028a848c3818"
+    },
+    {
+      "path": "classification-corrections.spec.ts",
+      "sha256": "95c7d4f9a22e298d797bae152e2d597553735f8a12bd58a6c1c69acf1489cd9c",
+      "restoredSha256": "95c7d4f9a22e298d797bae152e2d597553735f8a12bd58a6c1c69acf1489cd9c"
+    },
+    {
+      "path": "classification.entities.ts",
+      "sha256": "6913582d7e9cd9584d497a0ec929bf3ec18875951773cbce9af4df91ee06352b",
+      "restoredSha256": "6913582d7e9cd9584d497a0ec929bf3ec18875951773cbce9af4df91ee06352b"
+    },
+    {
+      "path": "classification.service.ts",
+      "sha256": "e95eba2ebe4c311c1b4fcc6e931c90ae660dd3a90bae750c47827f1a8563ab3b",
+      "restoredSha256": "e95eba2ebe4c311c1b4fcc6e931c90ae660dd3a90bae750c47827f1a8563ab3b"
+    },
+    {
+      "path": "classification.spec.ts",
+      "sha256": "a9e94729d7d5ac8ea4efad66c71018142d9c61991bdfbf55d67647a1ade1baba",
+      "restoredSha256": "a9e94729d7d5ac8ea4efad66c71018142d9c61991bdfbf55d67647a1ade1baba"
+    },
+    {
+      "path": "correction-authority.ts",
+      "sha256": "9734d2f891266a45f1068c45c6182ced3a4c08fa162b93b69f17923d88eac8d3",
+      "restoredSha256": "9734d2f891266a45f1068c45c6182ced3a4c08fa162b93b69f17923d88eac8d3"
+    },
+    {
+      "path": "coverage-mandate.ts",
+      "sha256": "951fc97d2bb357c5535f22e1598efdfc8a07e7c8cc22c549c052c4c38b65db48",
+      "restoredSha256": "951fc97d2bb357c5535f22e1598efdfc8a07e7c8cc22c549c052c4c38b65db48"
+    },
+    {
+      "path": "coverage.entities.ts",
+      "sha256": "e0673d0fece4eb6e9e518f0a7d99ad82a6d381eaf35b9be2d535addaafeff5ee",
+      "restoredSha256": "e0673d0fece4eb6e9e518f0a7d99ad82a6d381eaf35b9be2d535addaafeff5ee"
+    },
+    {
+      "path": "coverage.service.ts",
+      "sha256": "410620ce6914919d8a44d3ead0dde0926f127ca82fe6a44bac236ed97e4e27d7",
+      "restoredSha256": "410620ce6914919d8a44d3ead0dde0926f127ca82fe6a44bac236ed97e4e27d7"
+    },
+    {
+      "path": "coverage.spec.ts",
+      "sha256": "2bab97285fa9a74b8ea877b62c3f03fd5dee679db8b666dda6a5aad07eec8cd2",
+      "restoredSha256": "2bab97285fa9a74b8ea877b62c3f03fd5dee679db8b666dda6a5aad07eec8cd2"
+    },
+    {
+      "path": "evidence-authority.ts",
+      "sha256": "fa71d70622258ab9af50d0ffea357e9b5adb3413bd290bcf5b68b881d27d6cd2",
+      "restoredSha256": "fa71d70622258ab9af50d0ffea357e9b5adb3413bd290bcf5b68b881d27d6cd2"
+    },
+    {
+      "path": "evidence-locks.ts",
+      "sha256": "49f8aa80a46a48a8189b74994696bee5b43e182727627fb06705c7f7384f0127",
+      "restoredSha256": "49f8aa80a46a48a8189b74994696bee5b43e182727627fb06705c7f7384f0127"
+    },
+    {
+      "path": "evidence.entities.ts",
+      "sha256": "7d3664d72eb46a41f8610b2d957a04a10c51d77a95b1938eab0cbb7fef3a7fcf",
+      "restoredSha256": "7d3664d72eb46a41f8610b2d957a04a10c51d77a95b1938eab0cbb7fef3a7fcf"
+    },
+    {
+      "path": "evidence.service.ts",
+      "sha256": "dc664025f645b39707236817f0f18a5afbaaacf58f9ea5edc1d18efdfa4f06c3",
+      "restoredSha256": "dc664025f645b39707236817f0f18a5afbaaacf58f9ea5edc1d18efdfa4f06c3"
+    },
+    {
+      "path": "evidence.spec.ts",
+      "sha256": "e2823c0950b32b0cc25bd3bda188bd3a60ff638267b3958bf91a6441b4edf5a5",
+      "restoredSha256": "e2823c0950b32b0cc25bd3bda188bd3a60ff638267b3958bf91a6441b4edf5a5"
+    },
+    {
+      "path": "finance-event.ts",
+      "sha256": "6ff19b3708c9c8926a6499de2a216b02a0041e05f29e58fb8cee5611eeec754e",
+      "restoredSha256": "6ff19b3708c9c8926a6499de2a216b02a0041e05f29e58fb8cee5611eeec754e"
+    },
+    {
+      "path": "finance-events.service.ts",
+      "sha256": "5aadc64a9345d7b66fbfe4016d20f093f920ddbf1be147fe5dfd3e8c95321977",
+      "restoredSha256": "5aadc64a9345d7b66fbfe4016d20f093f920ddbf1be147fe5dfd3e8c95321977"
+    },
+    {
+      "path": "finance-events.spec.ts",
+      "sha256": "1b98df7c43789533e58694037d988cbde0597c5f186d399506095b291c12461a",
+      "restoredSha256": "1b98df7c43789533e58694037d988cbde0597c5f186d399506095b291c12461a"
+    },
+    {
+      "path": "finance-outbox.entity.ts",
+      "sha256": "8c8e2dbb2ec8084780ae991470593c8b73f13cb205a13a5fe6a8bcf502a66860",
+      "restoredSha256": "8c8e2dbb2ec8084780ae991470593c8b73f13cb205a13a5fe6a8bcf502a66860"
+    },
+    {
+      "path": "finance-transaction.spec.ts",
+      "sha256": "c11a7f80dfebb1dc840fd3f74474c4eeb4b5a6740220325c8a61666715ee5406",
+      "restoredSha256": "c11a7f80dfebb1dc840fd3f74474c4eeb4b5a6740220325c8a61666715ee5406"
+    },
+    {
+      "path": "finance.entities.ts",
+      "sha256": "f3625b47d3217addf36f15fa427bbb59947670fb3ce67a69722db651af7d4f5f",
+      "restoredSha256": "f3625b47d3217addf36f15fa427bbb59947670fb3ce67a69722db651af7d4f5f"
+    },
+    {
+      "path": "finance.module.ts",
+      "sha256": "9d7697ed2d08e7a1de428e4b9dab0f3ec7a90585125bc8eae71a2a3710c0d7e5",
+      "restoredSha256": "9d7697ed2d08e7a1de428e4b9dab0f3ec7a90585125bc8eae71a2a3710c0d7e5"
+    },
+    {
+      "path": "finance.service.ts",
+      "sha256": "5881beb021529e61b41ac319a5beb364544279cb248d3764fd422facd81c14f3",
+      "restoredSha256": "5881beb021529e61b41ac319a5beb364544279cb248d3764fd422facd81c14f3"
+    },
+    {
+      "path": "finance.spec.ts",
+      "sha256": "cea91b6828b7f51ae871ded1956dbb7afe2c3b3e864c8eb4a1aa8f599d665ee4",
+      "restoredSha256": "cea91b6828b7f51ae871ded1956dbb7afe2c3b3e864c8eb4a1aa8f599d665ee4"
+    },
+    {
+      "path": "ledger.ts",
+      "sha256": "1b3623e472317bc76075e8068a3effa9a90afb12be6f5b7c92e34c15757a71ea",
+      "restoredSha256": "1b3623e472317bc76075e8068a3effa9a90afb12be6f5b7c92e34c15757a71ea"
+    },
+    {
+      "path": "migrations/1791890000000-CreateFinanceCore.ts",
+      "sha256": "f06c18b217495c4343141c55cc38e6d42413d60a25e179ab5687fca89e9b0f0c",
+      "restoredSha256": "f06c18b217495c4343141c55cc38e6d42413d60a25e179ab5687fca89e9b0f0c"
+    },
+    {
+      "path": "migrations/1791891000000-AddFinanceOutbox.ts",
+      "sha256": "50063c817d45e9e921b2b56decc2c0ed64c1684b261f17900961fdfc8c90d53a",
+      "restoredSha256": "50063c817d45e9e921b2b56decc2c0ed64c1684b261f17900961fdfc8c90d53a"
+    },
+    {
+      "path": "migrations/1791892000000-AddBankReceipts.ts",
+      "sha256": "2fb167e55d655c12b10071a6aa7604a3cee549d600c4ff010b52b29099a5c469",
+      "restoredSha256": "2fb167e55d655c12b10071a6aa7604a3cee549d600c4ff010b52b29099a5c469"
+    },
+    {
+      "path": "migrations/1791893000000-AddEvidenceControl.ts",
+      "sha256": "a8190d1e8f52ecb3537d1c56b1200e7483bbaf711fce8f3a768c80229d57f499",
+      "restoredSha256": "a8190d1e8f52ecb3537d1c56b1200e7483bbaf711fce8f3a768c80229d57f499"
+    },
+    {
+      "path": "migrations/1791894000000-AddSyntheticCoverage.ts",
+      "sha256": "f74b4a75166fbdce1efd48883dfa60ae1c096f0de60b3e318480cece94543f2b",
+      "restoredSha256": "f74b4a75166fbdce1efd48883dfa60ae1c096f0de60b3e318480cece94543f2b"
+    },
+    {
+      "path": "migrations/1791895000000-AddReceiptClassification.ts",
+      "sha256": "ddda44f752cfde606b4b9d45a63a5d460d16529f876b8ce3bf4254b13af2a828",
+      "restoredSha256": "ddda44f752cfde606b4b9d45a63a5d460d16529f876b8ce3bf4254b13af2a828"
+    },
+    {
+      "path": "migrations/1791895100000-FixClassificationCompleteness.ts",
+      "sha256": "71abca8d6976a7260688ea737a012bbd32b70ec87eea42715b4734146b4bcefb",
+      "restoredSha256": "71abca8d6976a7260688ea737a012bbd32b70ec87eea42715b4734146b4bcefb"
+    },
+    {
+      "path": "migrations/1791896000000-AddCorrectionReview.ts",
+      "sha256": "44ab37a7a396cdabd11fdf79be104a7659e23d09bdccea607c377130201e721d",
+      "restoredSha256": "44ab37a7a396cdabd11fdf79be104a7659e23d09bdccea607c377130201e721d"
+    },
+    {
+      "path": "migrations/1791897000000-AddCorrectionCandidates.ts",
+      "sha256": "0c81ba0925057955bec7a2c8894c75475a2cf8b9055c350303b9913b78691862",
+      "restoredSha256": "0c81ba0925057955bec7a2c8894c75475a2cf8b9055c350303b9913b78691862"
+    },
+    {
+      "path": "money.ts",
+      "sha256": "c6fd847ff61efbc1116f5c02dabb03ba89d29b28267448edffe87d1df0600aed",
+      "restoredSha256": "c6fd847ff61efbc1116f5c02dabb03ba89d29b28267448edffe87d1df0600aed"
+    },
+    {
+      "path": "README.md",
+      "sha256": "e09ed1788a04c41a552bc4a351c15207c677c016a71966d0500d2f1cc70f978f",
+      "restoredSha256": "e09ed1788a04c41a552bc4a351c15207c677c016a71966d0500d2f1cc70f978f"
+    }
+  ],
+  "securitySource": "92c8532",
+  "replacedFileBackup": "work/business-restoration-fdedbde6ba69473c9b6b84f86a318ee8",
+  "appModuleChanged": false,
+  "financeActivated": false,
+  "migrationsApplied": []
+}

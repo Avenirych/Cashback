@@ -140,3 +140,39 @@ src roots, exact test path and work/config-backups/infra exclusions. No other te
 PostgreSQL connections, migrations, Docker, application or production build were run.
 These results do not validate PostgreSQL catalog SQL or open the concurrency gate.
 B/C remain NOT GRANTED; PHONE_APPLY_CONCURRENCY_VERIFIED remains false.
+
+## Source-prepared first-six bootstrap extension
+
+The original runPhoneMigration preflight/apply, B/C receipt and seventh-only
+contracts are unchanged. runPhoneBaselineBootstrap is a distinct source-prepared
+operation inside the same Harness module, not a parallel migration framework.
+It requires a separately reviewed phone-baseline-six-only/BASELINE receipt, exact
+unchanged PhoneTarget and an independently approved after-six catalog hash.
+It lists exactly the six baseline migration classes and never calls the seventh
+or generic CLI. PHONE_APPLY_CONCURRENCY_VERIFIED=false refuses BEFORE connection,
+so no bootstrap SQL has run or is currently enabled. Its dormant tail needs
+separate concurrency/exclusivity design approval and isolated integration validation.
+No existing main-test datasource or historical email-unique operation was extended.
+See local-registration/BLOCKER-FIXES.md for the unresolved Mailpit target-name
+mismatch, policy provenance and first-new-cluster admission prerequisites.
+
+## Isolated registration target integration (source only)
+
+The legacy random-name target remains unchanged. The separate cashback_docker_test
+branch now requires fresh opaque Docker + read-only SQL evidence bound to the exact
+registration cluster/container, plus independently reviewed role/ACL fingerprints.
+See local-registration/PHONE-HARNESS-INTEGRATION.md for the target boundary, role
+transition plan and unresolved concurrency protocol. No migration/SQL/Docker operation
+was executed. PHONE_APPLY_CONCURRENCY_VERIFIED remains false; BASELINE and B/C receipt
+requirements remain in force. This source integration supersedes the earlier statement
+that the target-name mismatch has no prepared solution; it does not grant runtime use.
+
+## Source-only concurrency state/evidence protocol
+
+Registration mutation boundaries now require the session-bound verifier described in
+local-registration/PHONE-CONCURRENCY-PROTOCOL.md. PREPARED and externally attested
+VERIFIED have mock coverage; APPLY_ELIGIBLE remains unreachable. This is not an
+advisory-lock-based exclusion or a parallel migration runner. No real authority,
+B/C receipts, role/ACL changes or concurrency trials were created/executed.
+PHONE_APPLY_CONCURRENCY_VERIFIED remains false; all earlier legacy-target protections,
+baseline order and seventh history/schema gates remain in force.

@@ -1,5 +1,4 @@
-import { Click } from './click.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { scaffoldDependencyMock } from '../../test/scaffold-mocks';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClicksService } from './clicks.service';
 
@@ -8,10 +7,8 @@ describe('ClicksService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ClicksService,
-        { provide: getRepositoryToken(Click), useValue: { find: jest.fn(), findOne: jest.fn(), create: jest.fn(), save: jest.fn(), update: jest.fn() } }
-      ],
-    }).compile();
+      providers: [ClicksService],
+    }).useMocker(scaffoldDependencyMock).compile();
 
     service = module.get<ClicksService>(ClicksService);
   });
