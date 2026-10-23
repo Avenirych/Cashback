@@ -1,3 +1,5 @@
+import {labels,locale,words} from '../content/siteContent';
+import {directions,getDirectionText} from '../researchData';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -330,9 +332,8 @@ const content = {
 };
 
 function getLocale(lang: string) {
-  return lang.toUpperCase() === "RU"
-    ? content.RU
-    : content.EN;
+ const l=locale(lang),base=l==='ru'?content.RU:content.EN;
+ return {...base,pageTitle:words('Research','Исследования','Studien','Études')[l],pageSubtitle:labels.description[l],participate:words('Explore category','Посмотреть направление','Kategorie ansehen','Découvrir la catégorie')[l],waiting:words('Please wait','Подождите','Bitte warten','Veuillez patienter')[l],cards:base.cards.map(card=>({...card,...getDirectionText(directions.find(d=>d.id===directionPaths[card.id])!,l),earnings:labels.money[l]}))};
 }
 
 export default function BonusResearch() {
@@ -492,7 +493,7 @@ export default function BonusResearch() {
                   color: "#0f4f42",
                 }}
               >
-                {card.earnings}
+                {labels.money[locale(lang)]}
               </p>
 
               <button

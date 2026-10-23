@@ -1,3 +1,4 @@
+import {labels,locale} from '../content/siteContent';
 import React from "react";
 
 type NoticeLang = "en" | "ru" | "de" | "fr";
@@ -92,7 +93,7 @@ export default function WiseAccountNotice({ lang }: { lang: string }) {
         {t.title}
       </summary>
 
-      <p style={{ margin: "0 0 12px" }}>{t.recommendation}</p>
+      <p style={{ margin: "0 0 12px" }}>{labels.preparation[locale(lang)]}</p>
       <p style={{ margin: "0 0 12px" }}>{t.accountType}</p>
       <p style={{ margin: "0 0 16px" }}>{t.fees}</p>
 

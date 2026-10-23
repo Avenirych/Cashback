@@ -75,7 +75,7 @@ test.each(['/bonuses','/bonuses/ads','/bonuses/research'])('eligible owner may r
  view.unmount();render(wrapper(<AppRoutes/>,path));expect(screen.getByTestId('location')).toHaveTextContent(path);expect(readOnboarding(user.id).eligible).toBe(true);
 });
 test('public shopping and bonus links do not bypass the participation gate',()=>{
- const view=render(wrapper(<Welcome lang="en"/>));fireEvent.click(screen.getByRole('button',{name:'Go shopping'}));expect(screen.getByTestId('location')).toHaveTextContent('/shop');
+ const view=render(wrapper(<Welcome lang="en"/>));fireEvent.click(screen.getByRole('button',{name:'Explore the catalogue'}));expect(screen.getByTestId('location')).toHaveTextContent('/shop');
  view.unmount();render(wrapper(gate(),'/participate'));expect(screen.getByTestId('location')).toHaveTextContent('/profile');
 });
 test('storage revoked before a protected route render cannot grant access',()=>{

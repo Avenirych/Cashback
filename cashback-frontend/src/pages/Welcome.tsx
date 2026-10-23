@@ -1,3 +1,4 @@
+import {labels,locale} from '../content/siteContent';
 import React from "react";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
@@ -66,6 +67,7 @@ export default function Welcome({ lang }: WelcomeProps) {
             {t.description ?? "Enjoy your visit!"}
           </p>
 
+          <aside className="feature-notice"><strong>{labels.status[locale(lang)]}</strong><p>{labels.demo[locale(lang)]}</p></aside>
           <div className="welcome-actions" style={{ display: "flex", gap: "20px" }}>
             <button
               type="button"
@@ -106,7 +108,7 @@ export default function Welcome({ lang }: WelcomeProps) {
         <div className="welcome-art">
           <img
             src="/assets/Oduvanchiki.jpeg"
-            alt="Oduvanchiki"
+            alt={labels.decorative[locale(lang)]}
             style={{
               width: "100%",
               borderRadius: "20px",

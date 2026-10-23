@@ -1,3 +1,5 @@
+import {words,locale} from '../content/siteContent';
+import {localizeCommerce} from '../content/commerceCopy';
 import React, { useMemo, useState } from "react";
 import "./Dashboard.css";
 
@@ -247,7 +249,7 @@ function generatePurchaseAndPayoutModel() {
 export default function Dashboard({ lang }: DashboardProps) {
   const isRu = lang?.toUpperCase() === "RU";
 
-  const t = {
+  const t = localizeCommerce({
     title: "Dashboard",
     currency: "GBP",
 
@@ -311,7 +313,7 @@ export default function Dashboard({ lang }: DashboardProps) {
 
     noData: isRu ? "Нет данных" : "No data",
     dash: "—",
-  };
+  },lang);
 
   const adRows = useMemo(() => generateAdHistory(20), []);
   const researchRows = useMemo(() => generateResearchHistory(14), []);
@@ -359,35 +361,35 @@ export default function Dashboard({ lang }: DashboardProps) {
             <div className="sum-card">
               <p>{t.adConfirmed}</p>
               <strong>
-                {adConfirmedSum} {t.currency}
+                {"—"} {t.currency}
               </strong>
             </div>
 
             <div className="sum-card">
               <p>{t.researchConfirmed}</p>
               <strong>
-                {researchConfirmedSum} {t.currency}
+                {"—"} {t.currency}
               </strong>
             </div>
 
             <div className="sum-card">
               <p>{t.totalConfirmed}</p>
               <strong>
-                {totalConfirmed} {t.currency}
+                {"—"} {t.currency}
               </strong>
             </div>
 
             <div className="sum-card">
               <p>{t.preparedPool}</p>
               <strong>
-                {preparedPool} {t.currency}
+                {"—"} {t.currency}
               </strong>
             </div>
 
             <div className="sum-card">
               <p>{t.paidOut}</p>
               <strong>
-                {paidOutSum} {t.currency}
+                {"—"} {t.currency}
               </strong>
             </div>
           </div>
@@ -422,11 +424,11 @@ export default function Dashboard({ lang }: DashboardProps) {
                     ) : (
                       adConfirmedRows.map((r) => (
                         <tr key={`ad-c-${r.id}`}>
-                          <td>{r.viewDate}</td>
+                          <td>{"—"}</td>
                           <td>
-                            {r.confirmedBonus} {t.currency}
+                            {"—"} {t.currency}
                           </td>
-                          <td>{r.expiresAt}</td>
+                          <td>{"—"}</td>
                         </tr>
                       ))
                     )}
@@ -453,14 +455,14 @@ export default function Dashboard({ lang }: DashboardProps) {
                     ) : (
                       adPendingRows.map((r) => (
                         <tr key={`ad-p-${r.id}`}>
-                          <td>{r.viewDate}</td>
+                          <td>{"—"}</td>
                           <td>
-                            {r.expectedBonus} {t.currency}
+                            {"—"} {t.currency}
                           </td>
                           <td>
-                            {r.confirmedBonus} {t.currency}
+                            {"—"} {t.currency}
                           </td>
-                          <td>{r.expiresAt}</td>
+                          <td>{"—"}</td>
                         </tr>
                       ))
                     )}
@@ -504,12 +506,12 @@ export default function Dashboard({ lang }: DashboardProps) {
                     ) : (
                       researchConfirmedRows.map((r) => (
                         <tr key={`rs-c-${r.id}`}>
-                          <td>{r.startDate}</td>
-                          <td>{r.topic}</td>
+                          <td>{"—"}</td>
+                          <td>{"—"}</td>
                           <td>
-                            {r.confirmedBonus} {t.currency}
+                            {"—"} {t.currency}
                           </td>
-                          <td>{r.expiresAt}</td>
+                          <td>{"—"}</td>
                         </tr>
                       ))
                     )}
@@ -537,15 +539,15 @@ export default function Dashboard({ lang }: DashboardProps) {
                     ) : (
                       researchPendingRows.map((r) => (
                         <tr key={`rs-p-${r.id}`}>
-                          <td>{r.startDate}</td>
-                          <td>{r.topic}</td>
+                          <td>{"—"}</td>
+                          <td>{"—"}</td>
                           <td>
-                            {r.expectedBonus} {t.currency}
+                            {"—"} {t.currency}
                           </td>
                           <td>
-                            {r.confirmedBonus} {t.currency}
+                            {"—"} {t.currency}
                           </td>
-                          <td>{r.expiresAt}</td>
+                          <td>{"—"}</td>
                         </tr>
                       ))
                     )}
@@ -567,7 +569,7 @@ export default function Dashboard({ lang }: DashboardProps) {
 
           {openOps && (
             <>
-              <h4>{isRu ? "Покупки" : "Purchases"}</h4>
+              <h4>{words('Purchases','Покупки','Käufe','Achats')[locale(lang)]}</h4>
               <div className="table-wrap">
                 <table className="dash-table">
                   <thead>
@@ -591,13 +593,13 @@ export default function Dashboard({ lang }: DashboardProps) {
                       model.purchases.map((p) => (
                         <tr key={p.id}>
                           <td>{p.id}</td>
-                          <td>{p.date}</td>
-                          <td>{p.product}</td>
+                          <td>{"—"}</td>
+                          <td>{"—"}</td>
                           <td>
-                            {p.appliedBonus} {t.currency}
+                            {"—"} {t.currency}
                           </td>
                           <td>
-                            {p.cashback} {t.currency}
+                            {"—"} {t.currency}
                           </td>
                           <td>
                             {p.cashbackStatus === "confirmed"
@@ -605,9 +607,9 @@ export default function Dashboard({ lang }: DashboardProps) {
                               : t.pendingStatus}
                           </td>
                           <td>
-                            {p.preparedToPayout} {t.currency}
+                            {"—"} {t.currency}
                           </td>
-                          <td>{p.payoutDate ?? t.dash}</td>
+                          <td>{"—"}</td>
                         </tr>
                       ))
                     )}
@@ -615,7 +617,7 @@ export default function Dashboard({ lang }: DashboardProps) {
                 </table>
               </div>
 
-              <h4>{isRu ? "Автовыплаты" : "Auto payouts"}</h4>
+              <h4>{words('Demonstration payments','Примеры платежей','Beispielzahlungen','Paiements d’exemple')[locale(lang)]}</h4>
               <div className="table-wrap">
                 <table className="dash-table">
                   <thead>
@@ -635,9 +637,9 @@ export default function Dashboard({ lang }: DashboardProps) {
                       model.payouts.map((w) => (
                         <tr key={w.id}>
                           <td>{w.id}</td>
-                          <td>{w.date}</td>
+                          <td>{"—"}</td>
                           <td>
-                            {w.amount} {t.currency}
+                            {"—"} {t.currency}
                           </td>
                           <td>{w.purchaseIds.join(", ")}</td>
                         </tr>

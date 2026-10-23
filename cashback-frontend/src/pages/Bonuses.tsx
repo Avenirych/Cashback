@@ -1,3 +1,4 @@
+import {labels,locale} from '../content/siteContent';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useLang } from "../context/LanguageContext";
@@ -83,7 +84,7 @@ export default function Bonuses() {
             margin: "0 0 20px",
           }}
         >
-          {t.title}
+          {labels.bonuses[locale(lang)]}
         </h1>
 
         <p
@@ -92,7 +93,7 @@ export default function Bonuses() {
             margin: "0 0 30px",
           }}
         >
-          {t.description}
+          {labels.description[locale(lang)]}
         </p>
 
         <div

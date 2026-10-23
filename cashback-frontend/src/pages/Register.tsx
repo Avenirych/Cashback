@@ -1,3 +1,4 @@
+import {labels,locale} from '../content/siteContent';
 import React, { useEffect, useState } from "react";
 import {
   Link,
@@ -525,7 +526,7 @@ export default function Register({
               </div>
             ) : (
               <>
-                <p>{language === "RU" ? "Маркетинговые сообщения необязательны и отключены по умолчанию. После создания аккаунта их можно настроить здесь или в профиле. Сервисные письма и согласие с условиями сайта — отдельно." : "Marketing is optional and off by default. After creating your account you can choose preferences here or in your profile. Service messages and site terms are separate."} <Link to="/privacy#privacySection12">{language === "RU" ? "Подробнее" : "Learn more"}</Link></p>
+                <p>{labels.marketing[locale(language)]} <Link to="/privacy#privacySection12">{labels.privacy[locale(language)]}</Link></p>
                 <form
                   onSubmit={submit}
                   style={{ display: "grid", gap: "12px" }}

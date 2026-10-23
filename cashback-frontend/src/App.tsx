@@ -1,3 +1,4 @@
+import PageContext from './components/PageContext';
 import "./App.css";
 import ActivityRules from './pages/ActivityRules';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -52,6 +53,7 @@ export function AppRoutes() {
     <>
       <Header />
       <CookieConsent />
+      <PageContext />
 
       <Routes>
         <Route path="/activity-limits" element={<ActivityRules/>}/>

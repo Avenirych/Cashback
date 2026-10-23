@@ -1,3 +1,4 @@
+import {directionText,researchMessages} from './content/researchLocalization';
 export interface DirectionText {
   title: string;
   summary: string;
@@ -229,31 +230,7 @@ export function getDirectionText(
   direction: ResearchDirection,
   lang: string
 ): DirectionText {
-  return lang.toUpperCase() === "RU" ? direction.ru : direction.en;
+  return directionText(direction,lang);
 }
 
-export function getResearchMessages(lang: string) {
-  const ru = lang.toUpperCase() === "RU";
-
-  return {
-    title: ru ? "Исследования" : "Research",
-    subtitle: ru
-      ? "Выберите направление и откройте список исследований."
-      : "Choose a category and browse its studies.",
-    demo: ru
-      ? "Демонстрационный каталог. Партнёры пока не подключены. Ожидаемые бонусы не гарантированы и не начисляются."
-      : "Demo catalogue. Partners are not connected yet. Expected bonuses are not guaranteed and are not credited.",
-    goals: ru ? "Цели" : "Goals",
-    participants: ru ? "Участники" : "Participants",
-    conditions: ru ? "Условия" : "Conditions",
-    expected: ru ? "Ожидаемые бонусы" : "Expected bonuses",
-    bonusRange: ru ? "5–50 бонусов за исследование" : "5–50 bonuses per study",
-    studyCount: ru ? "Исследований" : "Studies",
-    start: "Apply / Start",
-    participate: ru ? "Участвовать" : "Participate",
-    back: ru ? "Все направления" : "All categories",
-    notFound: ru ? "Направление не найдено" : "Category not found",
-    empty: ru ? "Нет исследований" : "No studies",
-    studyName: (id: number) => ru ? `Исследование № ${id}` : `Study No. ${id}`,
-  };
-}
+export const getResearchMessages=researchMessages;

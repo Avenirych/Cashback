@@ -1,3 +1,4 @@
+import {labels,locale,words} from '../content/siteContent';
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -103,6 +104,7 @@ const messages = {
   },
 };
 
+for(const key of ['RU','EN','DE','FR'] as const){const l=locale(key);messages[key].brandLine=words('Explore the demonstration','Посмотрите демонстрацию','Demonstration entdecken','Découvrir la démonstration')[l];messages[key].demo=labels.demo[l]+' '+words('This browser-only counter is separate from forum exchange bonuses.','Этот счётчик хранится только в браузере и не связан с бонусами обмена на форуме.','Dieser nur im Browser gespeicherte Zähler ist von Forentausch-Boni getrennt.','Ce compteur local au navigateur est distinct des bonus d’échange du forum.')[l];messages[key].cost=(value:Reward)=>words('Demonstration counter','Демонстрационный счётчик','Demonstrationszähler','Compteur de démonstration')[l]+' '+value;}
 function getMessages(lang: string) {
   switch (lang.toUpperCase()) {
     case "RU":

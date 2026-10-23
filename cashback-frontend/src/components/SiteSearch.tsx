@@ -6,6 +6,7 @@ import "./SiteSearch.css";
 type SearchPage = { path: string; title: string; titleEn: string; text: string };
 
 export const fallbackPages: SearchPage[] = [
+  {path:"/activity-limits",title:"Правила активности",titleEn:"Activity rules",text:"limits UTC FREE PREMIUM лимиты ограничения"},
   { path: "/cookies", title: "Политика Cookies", titleEn: "Cookie Policy", text: "cookies файлы cookie" },
   { path: "/", title: "Главная", titleEn: "Home", text: "cashback welcome главная старт" },
   { path: "/about", title: "О нас", titleEn: "About us", text: "компания проект about" },
@@ -25,6 +26,7 @@ export const fallbackPages: SearchPage[] = [
 
 // Keep the existing DE/FR labels and keywords independently of generated titles.
 const localizedPages: Record<string, { de: string; fr: string; keywords: string }> = {
+ "/activity-limits":{de:"Aktivitätsregeln",fr:"Règles d’activité",keywords:"limits UTC quotas"},
   "/": { de: "Startseite", fr: "Accueil", keywords: "cashback главная welcome home" },
   "/about": { de: "Über uns", fr: "À propos", keywords: "компания проект about company" },
   "/services": { de: "So funktioniert's", fr: "Comment ça marche", keywords: "инструкция помощь cashback how works" },

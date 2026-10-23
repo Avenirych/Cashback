@@ -1,6 +1,9 @@
+import {useLang} from '../context/LanguageContext';
+import {labels,locale} from '../content/siteContent';
 import React from "react";
 
 export default function PartnerNotConnected() {
+ const {lang}=useLang();
   return (
     <main
       style={{
@@ -32,7 +35,7 @@ export default function PartnerNotConnected() {
           {/* Cat image */}
           <img
             src="/assets/cat.png"
-            alt="Partner is not connected yet"
+            alt={labels.preparation[locale(lang)]}
             style={{
               width: "100%",
               height: "auto",
@@ -69,7 +72,7 @@ export default function PartnerNotConnected() {
             color: "#2a2928",
           }}
         >
-          Partner is not connected yet
+          {labels.preparation[locale(lang)]}
         </p>
       </section>
     </main>

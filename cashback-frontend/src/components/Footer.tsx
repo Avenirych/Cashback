@@ -1,3 +1,4 @@
+import {labels,locale} from '../content/siteContent';
 import React from "react";
 import {activityText} from './ActivityLimits';
 import { Link } from "react-router-dom";
@@ -30,9 +31,9 @@ export default function Footer({ lang }: FooterProps) {
       </nav>
       <div style={{ marginBottom: "10px" }}>
         <Link to="/terms" style={{ marginRight: "20px" }}>
-          {t.terms ?? "Terms"}
+          {labels.terms[locale(lang)]}
         </Link>
-        <Link to="/contacts">{t.contacts ?? "Contacts"}</Link>
+        <Link to="/contacts">{labels.contacts[locale(lang)]}</Link>
       </div>
 
       <div style={{ fontSize: "14px", color: "#555" }}>
