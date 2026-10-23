@@ -4,6 +4,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY tsconfig.json tsconfig.build.json nest-cli.json ./
 COPY src ./src
+COPY cashback-frontend/src/content/demoReviews.json ./demo-review-examples.json
 RUN npm run build
 EXPOSE 3006
 CMD ["node", "dist/main.js"]

@@ -52,7 +52,7 @@ describe('Unregistered legacy Topics/Posts/Analytics HTTP handlers', () => {
       providers: [JwtStrategy,
         { provide: getRepositoryToken(Topic), useValue: repo }, { provide: PostsService, useValue: posts }, { provide: AnalyticsService, useValue: analytics },
         { provide: UsersService, useValue: users }, { provide: AuthService, useValue: {} },
-        { provide: ForumService, useValue: {} }, { provide: ForumUserService, useValue: forumUsers },
+        { provide: ForumService, useValue: {getTopics:async()=>[]} }, { provide: ForumUserService, useValue: forumUsers },
         { provide: BonusService, useValue: {} }, { provide: MarketingPreferencesService, useValue: {} }],
     }).compile();
     app = module.createNestApplication(); await startGuardedHttpTestApp(app);
@@ -105,10 +105,11 @@ describe('Unregistered legacy Topics/Posts/Analytics HTTP handlers', () => {
   it.each(['/analytics?userId=1&type=marketing', '/analytics?userId=2', '/analytics/', '/topics/', '/posts/topic/1/'])('query/trailing path %s cannot reveal legacy data', async path => {
     await request(app.getHttpServer()).get(path).set('Authorization', `Bearer ${tokenFor('verified-owner')}`).expect(404); noLegacyAccess();
   });
-  it.each(['/auth/profile', '/users/1', '/forum/status', '/forum/topics', '/api/bonus/snapshot', '/user/marketing-preferences'])('protected active path %s remains registered and denies anonymous requests', async path => {
+  it.each(['/auth/profile', '/users/1', '/forum/status', '/api/bonus/snapshot', '/user/marketing-preferences'])('protected active path %s remains registered and denies anonymous requests', async path => {
     await request(app.getHttpServer()).get(path).expect(401);
   });
   it('preserves public Forum rules/profile handlers', async () => {
+    await request(app.getHttpServer()).get('/forum/topics').expect(200,[]);
     await request(app.getHttpServer()).get('/forum/rules').expect(200);
     await request(app.getHttpServer()).get('/forum/user/Synthetic').expect(200).expect({ username: 'Synthetic' });
     expect(forumUsers.publicProfile).toHaveBeenCalledWith('Synthetic');

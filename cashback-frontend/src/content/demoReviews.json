@@ -1,0 +1,112 @@
+[
+  {
+    "id": "fiction-0",
+    "name": "Mira Example",
+    "text": {
+      "en": "The clear navigation helped me find the information I needed.",
+      "ru": "Понятная навигация помогла найти нужную информацию.",
+      "de": "Die übersichtliche Navigation half mir, die gesuchten Informationen zu finden.",
+      "fr": "La navigation claire m’a aidé à trouver les informations recherchées."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-1",
+    "name": "Leon Sample",
+    "text": {
+      "en": "I liked seeing the programme explained step by step.",
+      "ru": "Понравилось пошаговое объяснение программы.",
+      "de": "Die schrittweise Erklärung des Programms gefiel mir.",
+      "fr": "J’ai apprécié l’explication du programme étape par étape."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-2",
+    "name": "Nora Fiction",
+    "text": {
+      "en": "The account page was easy to understand on my phone.",
+      "ru": "Страница аккаунта оказалась понятной на телефоне.",
+      "de": "Die Kontoseite war auf meinem Telefon leicht verständlich.",
+      "fr": "La page du compte était facile à comprendre sur mon téléphone."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-3",
+    "name": "Theo Example",
+    "text": {
+      "en": "The forum guidelines made participation feel straightforward.",
+      "ru": "Правила форума помогли разобраться с участием.",
+      "de": "Die Forenregeln machten die Teilnahme verständlich.",
+      "fr": "Les règles du forum facilitaient la compréhension de la participation."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-4",
+    "name": "Elena Sample",
+    "text": {
+      "en": "I appreciated the clear distinction between demo bonuses and money.",
+      "ru": "Оценил ясное различие между демобонусами и деньгами.",
+      "de": "Die klare Trennung zwischen Demoboni und Geld fand ich hilfreich.",
+      "fr": "La distinction claire entre bonus de démonstration et argent m’a été utile."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-5",
+    "name": "Arun Fiction",
+    "text": {
+      "en": "The language switcher made the explanations more accessible.",
+      "ru": "Переключение языков сделало пояснения доступнее.",
+      "de": "Der Sprachwechsel machte die Erklärungen zugänglicher.",
+      "fr": "Le choix de langue rendait les explications plus accessibles."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-6",
+    "name": "Lina Example",
+    "text": {
+      "en": "The FAQ answered my initial questions without extra searching.",
+      "ru": "Раздел вопросов и ответов помог разобраться без долгого поиска.",
+      "de": "Die häufigen Fragen beantworteten meine ersten Fragen ohne lange Suche.",
+      "fr": "La FAQ répondait à mes premières questions sans longue recherche."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-7",
+    "name": "Owen Sample",
+    "text": {
+      "en": "The email confirmation screen gave me a clear next step.",
+      "ru": "Экран подтверждения почты ясно показал следующий шаг.",
+      "de": "Die E-Mail-Bestätigung zeigte mir den nächsten Schritt deutlich.",
+      "fr": "La confirmation de l’adresse e-mail indiquait clairement l’étape suivante."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-8",
+    "name": "Sofia Fiction",
+    "text": {
+      "en": "It was useful to review my communication preferences in one place.",
+      "ru": "Удобно видеть настройки коммуникаций в одном месте.",
+      "de": "Die Kommunikationseinstellungen an einem Ort zu sehen war praktisch.",
+      "fr": "Il était pratique de retrouver les préférences de communication au même endroit."
+    },
+    "fictional": true
+  },
+  {
+    "id": "fiction-9",
+    "name": "Felix Example",
+    "text": {
+      "en": "The readable layout made it comfortable to explore the services.",
+      "ru": "Читаемое оформление помогает изучать сервисы без спешки.",
+      "de": "Das gut lesbare Layout erleichterte es, die Angebote kennenzulernen.",
+      "fr": "La présentation lisible permettait de découvrir les services tranquillement."
+    },
+    "fictional": true
+  }
+]

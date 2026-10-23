@@ -121,8 +121,6 @@ describe('ForumUserService with ForumService access enforcement', () => {
     'with space',
     'юзер',
     '../user',
-    '',
-    null,
     123,
     {},
   ])('rejects invalid username %p', async (username) => {
@@ -130,6 +128,7 @@ describe('ForumUserService with ForumService access enforcement', () => {
       BadRequestException,
     );
   });
+  it('allows an explicitly selected account display name with default avatar, never email',async()=>{members.findOne.mockResolvedValue(null);users.getById.mockResolvedValue({id:7,email_verified:true,name:'Тестовый Покупатель',email:'private@example.invalid'});const result=await service.register(7,'',true);expect(result.username).toBe('Тестовый Покупатель');expect(result.avatar_url).toBeNull();expect(result).not.toHaveProperty('email');users.getById.mockResolvedValue({id:7,email_verified:true,name:'private@example.invalid'});expect((await service.register(7,null,true)).username).toBe('Member_7');});
 
   it.each([false, 'true', 1, undefined, null])(
     'rejects non-boolean consent %p',

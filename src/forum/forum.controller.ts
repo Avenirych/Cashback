@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseIntPipe,
+  Headers,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ForumService } from './forum.service';
@@ -77,16 +78,14 @@ export class ForumController {
   }
 
   @Get('topics')
-  @UseGuards(JwtAuthGuard)
-  async getTopics(@Req() req: ForumRequest) {
-    await this.forumUserService.assertVerifiedUser(req.user.id);
+  async getTopics() {
     return this.forumService.getTopics();
   }
 
   @Post('topic')
   @UseGuards(JwtAuthGuard)
-  createTopic(@Req() req: ForumRequest, @Body('title') title: unknown) {
-    return this.forumService.createTopic(req.user.id, title);
+  createTopic(@Req() req: ForumRequest, @Body('title') title: unknown, @Headers('idempotency-key') key?: string) {
+    return key ? this.forumService.createTopic(req.user.id, title, key) : this.forumService.createTopic(req.user.id, title);
   }
 
   @Post('post')
@@ -95,27 +94,22 @@ export class ForumController {
     @Req() req: ForumRequest,
     @Body('topicId', ParseIntPipe) topicId: number,
     @Body('content') content: unknown,
+    @Headers('idempotency-key') key?: string,
   ) {
-    return this.forumService.createPost(req.user.id, topicId, content);
+    return key ? this.forumService.createPost(req.user.id, topicId, content, key) : this.forumService.createPost(req.user.id, topicId, content);
   }
 
   @Get('topic/:id')
-  @UseGuards(JwtAuthGuard)
   async getTopic(
-    @Req() req: ForumRequest,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    await this.forumUserService.assertVerifiedUser(req.user.id);
     return this.forumService.getTopic(id);
   }
 
   @Get('posts/:topicId')
-  @UseGuards(JwtAuthGuard)
   async getPosts(
-    @Req() req: ForumRequest,
     @Param('topicId', ParseIntPipe) topicId: number,
   ) {
-    await this.forumUserService.assertVerifiedUser(req.user.id);
     return this.forumService.getPosts(topicId);
   }
 

@@ -2,12 +2,16 @@ import {
   Injectable,
   BadRequestException,
   ForbiddenException,
+  Optional,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ForumTopic } from './forum-topic.entity';
 import { ForumPost } from './forum-post.entity';
 import { ForumUserService } from './forum-user.service';
+import { ContentModerationService } from './content-moderation.service';
+import { contentModerationEnabled } from './moderation-policy';
 
 @Injectable()
 export class ForumService {
@@ -17,6 +21,7 @@ export class ForumService {
     @InjectRepository(ForumPost)
     private readonly postRepo: Repository<ForumPost>,
     private readonly forumUserService: ForumUserService,
+    @Optional() private readonly moderation?: ContentModerationService,
   ) {}
 
   private validateId(id: number) {
@@ -51,7 +56,16 @@ export class ForumService {
     });
   }
 
-  async createTopic(userId: number, title: unknown) {
+  private moderated() {
+    if (!this.moderation) throw new ServiceUnavailableException('Moderation service required');
+    return this.moderation;
+  }
+  private async usesModeration() {
+    return contentModerationEnabled() || (!!this.moderation && await this.moderation.installed());
+  }
+
+  async createTopic(userId: number, title: unknown, requestKey?: string) {
+    if (await this.usesModeration()) return this.moderated().submit(userId,'topic',{title},requestKey);
     await this.forumUserService.activeMember(userId);
     if (
       typeof title !== 'string' ||
@@ -69,7 +83,8 @@ export class ForumService {
     return (await this.sanitizeAuthors([topic]))[0];
   }
 
-  async createPost(userId: number, topicId: number, content: unknown) {
+  async createPost(userId: number, topicId: number, content: unknown, requestKey?: string) {
+    if (await this.usesModeration()) return this.moderated().submit(userId,'post',{topicId,body:content},requestKey);
     await this.forumUserService.activeMember(userId);
     this.validateId(topicId);
     if (typeof content !== 'string' || !content.trim())
@@ -87,6 +102,7 @@ export class ForumService {
   }
 
   async getTopics() {
+    if (await this.usesModeration()) return this.moderated().read('topics');
     return this.sanitizeAuthors(
       await this.topicRepo.find({
         relations: { author: true },
@@ -96,6 +112,7 @@ export class ForumService {
   }
 
   async getTopic(id: number) {
+    if (await this.usesModeration()) return (await this.moderated().read('topics',id))[0] ?? null;
     this.validateId(id);
     const topic = await this.topicRepo.findOne({
       where: { id },
@@ -105,6 +122,7 @@ export class ForumService {
   }
 
   async getPosts(topicId: number) {
+    if (await this.usesModeration()) return this.moderated().read('posts',topicId);
     this.validateId(topicId);
     return this.sanitizeAuthors(
       await this.postRepo.find({

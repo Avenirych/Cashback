@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ForumHeader from "../components/ForumHeader";
 import ForumAuthor from "../components/ForumAuthor";
+import ContentReport from "../components/ContentReport";
+import { reviewCopy } from "../components/ReviewsCarousel";
 import { FORUM_API_URL } from "../forum";
 import type { ForumAuthor as Author } from "../forum";
 import { translations } from "../i18n";
@@ -12,6 +14,7 @@ import ForumBonusExchangePanel from "./ForumBonusExchangePanel";
 
 interface ForumTopic {
   id: number;
+  caseId?: number;
   title: string;
   created_at: string;
   author: Author;
@@ -46,6 +49,7 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
   const [title, setTitle] = useState("");
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState("");
+  const [pendingNotice,setPendingNotice] = useState("");
 
   const isRu = lang.toUpperCase() === "RU";
 
@@ -126,7 +130,8 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
 
       const topic: ForumTopic = await response.json();
 
-      setTopics((previous) => [topic, ...previous]);
+      if ((topic as unknown as {status?:string}).status === "pending") setPendingNotice(reviewCopy(lang)?.pending || "");
+      else setTopics((previous) => [topic, ...previous]);
       setTitle("");
       setShowCreateForm(false);
     } catch (err: unknown) {
@@ -147,7 +152,7 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
           padding: 24,
         }}
       >
-        <Link to="/">{t.backToHome}</Link>
+        <Link to="/forum/moderation">{reviewCopy(lang)?.manage}</Link> · <Link to="/">{t.backToHome}</Link>
 
         <ForumHeader lang={lang} />
 
@@ -228,6 +233,7 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
           </details>
         )}
 
+        {pendingNotice && <p role="status">{pendingNotice}</p>}
         {error && <p role="alert">{error}</p>}
 
         {/* Существующий список настоящих тем из API */}
@@ -247,7 +253,7 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
                     padding: 16,
                   }}
                 >
-                  <ForumAuthor author={topic.author} lang={lang} />
+                  <ContentReport caseId={topic.caseId}/><ForumAuthor author={topic.author} lang={lang} />
 
                   <h2>
                     <Link to={`/forum/topics/${topic.id}`}>

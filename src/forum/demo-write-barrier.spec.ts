@@ -1,0 +1,8 @@
+import {forumWriteBarrier} from './moderation-schema-gate';
+describe('demo release closes registration/moderation independently of UI',()=>{
+ const demo=process.env.CASHBACK_DEMO_ONLY,readOnly=process.env.CASHBACK_FORUM_READ_ONLY;
+ test('trailing slash registration cannot bypass demo barrier',()=>{process.env.CASHBACK_DEMO_ONLY='true';const res:any={status:jest.fn().mockReturnThis(),json:jest.fn()},next=jest.fn();forumWriteBarrier({method:'POST',path:'/AUTH/REGISTER/'} as any,res,next);expect(res.status).toHaveBeenCalledWith(503);expect(next).not.toHaveBeenCalled();});
+ afterEach(()=>{if(demo===undefined)delete process.env.CASHBACK_DEMO_ONLY;else process.env.CASHBACK_DEMO_ONLY=demo;if(readOnly===undefined)delete process.env.CASHBACK_FORUM_READ_ONLY;else process.env.CASHBACK_FORUM_READ_ONLY=readOnly;});
+ test.each([['POST','/auth/register'],['GET','/forum/moderation/queue'],['POST','/forum/moderation/1/decision'],['POST','/forum/reviews'],['POST','/forum/topic'],['POST','/forum/post'],['POST','/forum/register'],['POST','/forum/rules/accept']])('blocks %s %s before handler', (method,path)=>{process.env.CASHBACK_DEMO_ONLY='true';process.env.CASHBACK_FORUM_READ_ONLY='true';const res:any={status:jest.fn().mockReturnThis(),json:jest.fn()},next=jest.fn();forumWriteBarrier({method,path} as any,res,next);expect(res.status).toHaveBeenCalledWith(503);expect(next).not.toHaveBeenCalled();});
+ test.each([['GET','/forum/rules'],['GET','/forum/topics'],['GET','/forum/reviews/config'],['GET','/auth/profile']])('retains %s %s',(method,path)=>{process.env.CASHBACK_DEMO_ONLY='true';process.env.CASHBACK_FORUM_READ_ONLY='true';const next=jest.fn();forumWriteBarrier({method,path} as any,{} as any,next);expect(next).toHaveBeenCalledTimes(1);});
+});

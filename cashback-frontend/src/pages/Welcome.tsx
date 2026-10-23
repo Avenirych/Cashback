@@ -2,6 +2,8 @@ import React from "react";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { translations } from "../i18n";
+import ReviewsCarousel, {reviewDisplayMode} from "../components/ReviewsCarousel";
+import './WelcomeHero.css';
 
 interface WelcomeProps {
   lang: string;
@@ -38,16 +40,12 @@ export default function Welcome({ lang }: WelcomeProps) {
       }}
     >
       <main
+        className="welcome-hero"
         style={{
           flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          padding: "20px 40px",
-          gap: "80px",
         }}
       >
-        <div style={{ maxWidth: "520px" }}>
+        <div className="welcome-copy">
           <h1
             style={{
               fontSize: "40px",
@@ -68,7 +66,7 @@ export default function Welcome({ lang }: WelcomeProps) {
             {t.description ?? "Enjoy your visit!"}
           </p>
 
-          <div style={{ display: "flex", gap: "20px" }}>
+          <div className="welcome-actions" style={{ display: "flex", gap: "20px" }}>
             <button
               type="button"
               onClick={goToShopping}
@@ -105,7 +103,7 @@ export default function Welcome({ lang }: WelcomeProps) {
           </div>
         </div>
 
-        <div style={{ maxWidth: "420px", position: "relative" }}>
+        <div className="welcome-art">
           <img
             src="/assets/Oduvanchiki.jpeg"
             alt="Oduvanchiki"
@@ -133,6 +131,7 @@ export default function Welcome({ lang }: WelcomeProps) {
         </div>
       </main>
 
+      <ReviewsCarousel mode={reviewDisplayMode(process.env.REACT_APP_REVIEWS_MODE)} />
       <Footer lang={lang} />
     </div>
   );

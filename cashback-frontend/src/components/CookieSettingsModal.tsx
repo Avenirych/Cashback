@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "./CookieConsent.css";
+import {useLang} from '../context/LanguageContext';
+import {cookieMessages} from '../content/cookieMessages';
 
 const STORAGE_KEY_SETTINGS = "cashback_cookie_settings";
 
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export default function CookieSettingsModal({ onClose }: Props) {
+  const {lang}=useLang(),t=cookieMessages[lang as keyof typeof cookieMessages];
   const [settings, setSettings] = useState({
     necessary: true,
     analytics: false,
@@ -28,21 +31,20 @@ export default function CookieSettingsModal({ onClose }: Props) {
     localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(newSettings));
   };
 
+  if(!t)return null;
   return (
     <div className="cookie-modal-backdrop">
-      <div className="cookie-modal">
-        <h2>Cookie Settings</h2>
+      <div className="cookie-modal" lang={lang} role="dialog" aria-modal="true" aria-label={t.settings}>
+        <h2>{t.settings}</h2>
 
         <p className="cookie-modal-text">
-          You can choose which categories of cookies are allowed. Your
-          preferences are saved in your browser and used to improve Cashback+
-          analytics.
+          {t.settingsDescription}
         </p>
 
         <div className="cookie-setting">
           <label>
             <input type="checkbox" checked={settings.necessary} disabled />
-            Strictly necessary — required for Cashback+ to work.
+            {t.necessary}
           </label>
         </div>
 
@@ -53,7 +55,7 @@ export default function CookieSettingsModal({ onClose }: Props) {
               checked={settings.analytics}
               onChange={(e) => update("analytics", e.target.checked)}
             />
-            Analytics — help improve the service.
+            {t.analytics}
           </label>
         </div>
 
@@ -64,7 +66,7 @@ export default function CookieSettingsModal({ onClose }: Props) {
               checked={settings.functional}
               onChange={(e) => update("functional", e.target.checked)}
             />
-            Functional — save your interface preferences.
+            {t.functional}
           </label>
         </div>
 
@@ -75,12 +77,12 @@ export default function CookieSettingsModal({ onClose }: Props) {
               checked={settings.marketing}
               onChange={(e) => update("marketing", e.target.checked)}
             />
-            Marketing — personalized offers.
+            {t.marketing}
           </label>
         </div>
 
         <button className="cookie-modal-close" onClick={onClose}>
-          Close
+          {t.close}
         </button>
       </div>
     </div>

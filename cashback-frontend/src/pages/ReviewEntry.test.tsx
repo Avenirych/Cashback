@@ -1,0 +1,13 @@
+import React from 'react';
+import {render,screen,fireEvent} from '@testing-library/react';
+import {MemoryRouter,Routes,Route} from 'react-router-dom';
+import ReviewEntry from './ReviewEntry';
+import {useAuth} from '../context/AuthContext';
+import messages from '../content/reviewMessages.json';
+jest.mock('../context/AuthContext',()=>({useAuth:jest.fn()}));
+jest.mock('../context/LanguageContext',()=>({useLang:()=>({lang:'en'})}));
+beforeEach(()=>{global.fetch=jest.fn().mockResolvedValue({ok:true,json:async()=>({enabled:true})});(useAuth as jest.Mock).mockReturnValue({user:{id:1,email_verified:true},token:'fixture',forumUser:{banned:false},forumSessionActive:true});Object.defineProperty(globalThis,'crypto',{configurable:true,value:{randomUUID:()=> 'disposable-request-key'}});});
+function mount(){return render(<MemoryRouter initialEntries={['/forum/reviews/new']}><Routes><Route path='/forum/reviews/new' element={<ReviewEntry/>}/><Route path='/login' element={<p>Login destination</p>}/><Route path='/forum/register' element={<p>Forum destination</p>}/></Routes></MemoryRouter>);}
+test('anonymous account must sign in rather than submit public review',async()=>{(useAuth as jest.Mock).mockReturnValue({user:null});mount();expect(await screen.findByText('Login destination')).toBeVisible();});
+test('main account still requires forum membership',async()=>{(useAuth as jest.Mock).mockReturnValue({user:{id:1,email_verified:true},token:'fixture'});mount();expect(await screen.findByText('Forum destination')).toBeVisible();});
+test('genuine experience and separate explicit current rules agreement are required; submission is pending',async()=>{mount();const submit=await screen.findByRole('button',{name:messages.en.submit});expect(submit).toBeDisabled();fireEvent.change(screen.getByLabelText(messages.en.reviewTitle),{target:{value:'Lawful negative experience'}});fireEvent.change(screen.getByLabelText(messages.en.body),{target:{value:'This is my actual experience, and I was disappointed.'}});fireEvent.click(screen.getByLabelText(messages.en.genuine));expect(submit).toBeDisabled();fireEvent.click(screen.getByLabelText(messages.en.rules));fireEvent.click(submit);expect(await screen.findByText(messages.en.pending)).toBeVisible();const calls=(fetch as jest.Mock).mock.calls;expect(calls.some(([url,options])=>url.endsWith('/forum/rules/accept')&&JSON.parse(options.body).agreedToRules===true)).toBe(true);const call=calls.find(([url,options])=>url.endsWith('/forum/reviews')&&options.method==='POST');expect(JSON.parse(call[1].body).experienceConfirmed).toBe(true);expect(call[1].headers['Idempotency-Key']).toBe('disposable-request-key');});

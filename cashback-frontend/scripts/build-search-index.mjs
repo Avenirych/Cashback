@@ -69,6 +69,7 @@ const index = routes.map(([url, filename]) => {
     ts.forEachChild(node,visit);
   }
   visit(tree);
+  if (url === '/forum/rules') fragments.push(...strings(JSON.parse(read(path.join(src, 'content/forumRules.json'))).rules));
   const keys=new Set(Array.from(code.matchAll(/\bt\.([A-Za-z0-9_]+)/g),m=>m[1]));
   for(const dict of Object.values(scope.translations)) for(const [key,value] of Object.entries(dict)) {
     if(keys.has(key)||(url==='/privacy'&&key.startsWith('privacy'))||(url==='/faq'&&key.startsWith('faq'))) fragments.push(...strings(value));

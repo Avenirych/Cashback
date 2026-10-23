@@ -1,0 +1,9 @@
+.welcome-hero{display:flex;justify-content:center;align-items:flex-start;flex-wrap:wrap;padding:20px 40px;gap:80px}
+.welcome-copy{max-width:520px;min-width:0;flex:1 1 360px}
+.welcome-art{max-width:420px;min-width:0;flex:1 1 300px;position:relative}
+.welcome-art img{display:block}
+.welcome-actions{flex-wrap:wrap}
+@media(max-width:700px){
+ .welcome-hero{flex-direction:column;gap:24px;padding:20px 24px}
+ .welcome-copy,.welcome-art{flex:none;width:100%;max-width:100%}
+}

@@ -1,0 +1,15 @@
+import React from 'react';
+import {render,screen,fireEvent,waitFor} from '@testing-library/react';
+import {MemoryRouter} from 'react-router-dom';
+import {LanguageProvider} from '../context/LanguageContext';
+import ReviewsCarousel, {reviewDisplayMode} from './ReviewsCarousel';
+import messages from '../content/reviewMessages.json';
+jest.mock('../context/AuthContext',()=>({useAuth:()=>({token:null})}));
+const sample=(id:number,rating:number,status='published',demo=false)=>({id,caseId:id,title:'Review '+id,body:'Real experience '+id,rating,status,demo,author:{username:'Public alias '+id}});
+beforeEach(()=>{localStorage.clear();global.fetch=jest.fn().mockResolvedValue({ok:true,json:async()=>[]});});
+function mount(lang='en',mode:'demo'|'public'='public'){localStorage.setItem('lang',lang);return render(<LanguageProvider><MemoryRouter><ReviewsCarousel mode={mode}/></MemoryRouter></LanguageProvider>);}
+test.each([undefined,'demo','true','PUBLIC','invalid'])('homepage mode %s is demo unless public is explicitly selected',value=>{expect(reviewDisplayMode(value)).toBe('demo');expect(reviewDisplayMode('public')).toBe('public');});
+test.each(['ru','en','de','fr'] as const)('%s demo has exactly ten explicitly fictional examples and no public submission link',lang=>{const v=mount(lang,'demo');expect(v.container.querySelectorAll('article')).toHaveLength(10);expect(screen.getAllByText(messages[lang].demo)).toHaveLength(11);expect(fetch).not.toHaveBeenCalled();expect(screen.queryByRole('link',{name:messages[lang].leave})).toBeNull();});
+test('public mode includes negative reviews but never pending or demo material',async()=>{(fetch as jest.Mock).mockResolvedValue({ok:true,json:async()=>[sample(1,1),sample(2,5),sample(3,5,'pending'),sample(4,5,'published',true)]});const v=mount();await screen.findByText('Real experience 1');expect(v.container.querySelectorAll('article')).toHaveLength(2);expect(screen.getByText('Real experience 2')).toBeVisible();expect(screen.queryByText('Real experience 3')).toBeNull();expect(screen.queryByText('Real experience 4')).toBeNull();expect(screen.queryByText(messages.en.demo)).toBeNull();});
+test('empty or failed public requests never fall back to fictional examples',async()=>{(fetch as jest.Mock).mockRejectedValue(Error('network'));const v=mount();await screen.findByText(messages.en.failed);expect(v.container.querySelectorAll('article')).toHaveLength(0);expect(screen.queryByText(messages.en.demo)).toBeNull();});
+test('keyboard and buttons scroll the accessible track',async()=>{mount();await screen.findByText(messages.en.empty);const track=screen.getAllByRole('region').find(x=>x.classList.contains('reviews-track'))!;track.scrollBy=jest.fn();track.scrollTo=jest.fn();fireEvent.keyDown(track,{key:'ArrowRight'});expect(track.scrollBy).toHaveBeenCalledTimes(1);fireEvent.click(screen.getByRole('button',{name:messages.en.previous}));expect(track.scrollBy).toHaveBeenCalledTimes(2);fireEvent.keyDown(track,{key:'Home'});expect(track.scrollTo).toHaveBeenCalledWith({left:0,behavior:'auto'});});

@@ -1,0 +1,20 @@
+import {Test} from '@nestjs/testing';
+import {INestApplication,UnauthorizedException} from '@nestjs/common';
+import request from 'supertest';
+import {DemoReviewsController} from './demo-reviews.controller';
+import {DemoReviewsService} from './demo-reviews.service';
+import {ForumController} from './forum.controller';
+import {ForumService} from './forum.service';
+import {ForumUserService} from './forum-user.service';
+import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+import {forumWriteBarrier} from './moderation-schema-gate';
+import {startGuardedHttpTestApp} from '../../test/guarded-http-app';
+describe('anonymous forum reads and authenticated isolated demo writes',()=>{
+ let app:INestApplication;const prior=process.env.CASHBACK_FORUM_READ_ONLY;
+ const submit=jest.fn().mockResolvedValue({demo:true}),remove=jest.fn().mockResolvedValue({removed:1}),realWrite=jest.fn();
+ beforeAll(async()=>{process.env.CASHBACK_FORUM_READ_ONLY='true';const m=await Test.createTestingModule({controllers:[DemoReviewsController,ForumController],providers:[{provide:DemoReviewsService,useValue:{configuration:()=>({enabled:true,demo:true}),list:()=>({items:[],demo:true}),submit,removeOwn:remove}},{provide:ForumService,useValue:{getTopics:()=>[],getTopic:()=>({title:'Public topic',author:{username:'Alias'}}),getPosts:()=>[],createTopic:realWrite}},{provide:ForumUserService,useValue:{}}]}).overrideGuard(JwtAuthGuard).useValue({canActivate(c:any){const r=c.switchToHttp().getRequest();if(r.headers.authorization!=='test-session')throw new UnauthorizedException();r.user={id:42};return true;}}).compile();app=m.createNestApplication();app.use(forumWriteBarrier);await startGuardedHttpTestApp(app);});
+ afterAll(async()=>{await app.close();if(prior===undefined)delete process.env.CASHBACK_FORUM_READ_ONLY;else process.env.CASHBACK_FORUM_READ_ONLY=prior;});
+ test.each(['/forum/topics','/forum/topic/1','/forum/posts/1','/forum/rules'])('public GET %s does not require an account',async p=>{await request(app.getHttpServer()).get(p).expect(200);});
+ test('anonymous/invalid JWT cannot publish demo; authenticated body cannot choose identity',async()=>{await request(app.getHttpServer()).post('/demo-reviews').send({}).expect(401);await request(app.getHttpServer()).post('/demo-reviews').set('Authorization','invalid').send({}).expect(401);const body={body:'Demo review',authorId:99};await request(app.getHttpServer()).post('/demo-reviews').set('Authorization','test-session').set('Idempotency-Key','test-key').send(body).expect(201);expect(submit).toHaveBeenLastCalledWith(42,body,'test-key');await request(app.getHttpServer()).delete('/demo-reviews/mine').set('Authorization','test-session').send({authorId:99}).expect(200);expect(remove).toHaveBeenLastCalledWith(42);});
+ test('real forum publications remain globally closed',async()=>{await request(app.getHttpServer()).post('/forum/topic').set('Authorization','test-session').send({title:'Not permitted'}).expect(503);expect(realWrite).not.toHaveBeenCalled();});
+});

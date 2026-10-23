@@ -1,3 +1,4 @@
+import {forumWriteBarrier} from './forum/moderation-schema-gate';
 import { localConfiguration } from './local-configuration';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -8,6 +9,7 @@ async function bootstrap() {
   const config = localConfiguration();
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.use(forumWriteBarrier);
   app.useStaticAssets(join(process.cwd(), 'public', 'avatars'), {
     prefix: '/avatars/',
     dotfiles: 'deny',

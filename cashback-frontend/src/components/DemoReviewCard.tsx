@@ -1,0 +1,5 @@
+import {useLang} from '../context/LanguageContext';
+import {forumAvatarUrl} from '../forum';
+import {demoReviewMessages} from '../content/demoReviewMessages';
+export interface DemoReviewData{id:string;author:{username:string;avatar_url:string|null};body:string|Record<string,string>;title:string;publishedAt:string;demo:true}
+export function DemoReviewCard({review:r}:{review:DemoReviewData}){const {lang}=useLang(),t=demoReviewMessages[lang as keyof typeof demoReviewMessages];if(!t||r.demo!==true)return null;const avatar=forumAvatarUrl(r.author.avatar_url);return <article className="review-card" data-demo-review-id={r.id}><div style={{display:'flex',alignItems:'center',gap:12}}>{avatar?<img src={avatar} alt="" width={40} height={40}/>:<span aria-hidden="true">👤</span>}<strong>{r.author.username}</strong></div>{r.title&&<h3>{r.title}</h3>}<p>{typeof r.body==='string'?r.body:r.body[lang]}</p><small>{t.label}</small><time style={{display:'block'}} dateTime={r.publishedAt}>{new Date(r.publishedAt).toLocaleDateString(lang)}</time></article>;}

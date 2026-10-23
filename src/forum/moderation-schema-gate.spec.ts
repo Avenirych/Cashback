@@ -1,0 +1,9 @@
+import {ModerationSchemaGate,forumWriteBarrier} from './moderation-schema-gate';
+describe('schema-safe rollback',()=>{
+ const original={...process.env};afterEach(()=>{process.env={...original};});
+ test.each([1,2,4])('refuses incompatible schema %s before listen',async version=>{const db={query:jest.fn().mockResolvedValueOnce([{installed:true}]).mockResolvedValueOnce([{version}])};await expect(new ModerationSchemaGate(db as any).onApplicationBootstrap()).rejects.toThrow('startup refused');});
+ test('accepts only the supported installed schema',async()=>{const db={query:jest.fn().mockResolvedValueOnce([{installed:true}]).mockResolvedValueOnce([{version:3}])};await expect(new ModerationSchemaGate(db as any).onApplicationBootstrap()).resolves.toBeUndefined();});
+ test('fails closed on DB failure or missing required schema',async()=>{process.env.CASHBACK_CONTENT_MODERATION='true';for(const db of [{query:jest.fn().mockRejectedValue(Error('private'))},{query:jest.fn().mockResolvedValue([{installed:false}])}])await expect(new ModerationSchemaGate(db as any).onApplicationBootstrap()).rejects.toThrow('startup refused');});
+ test.each(['/forum/reviews','/forum/topic','/forum/post','/forum/moderation/1/decision','/forum/moderation/1/appeal','/forum/moderation/1/resolve-appeal','/forum/profile','/forum/avatar','/forum/register'])('blocks write route %s in rollback mode',path=>{process.env.CASHBACK_FORUM_READ_ONLY='true';const next=jest.fn(),res={status:jest.fn().mockReturnThis(),json:jest.fn()};forumWriteBarrier({path,method:'POST'} as any,res as any,next);expect(res.status).toHaveBeenCalledWith(503);expect(next).not.toHaveBeenCalled();});
+ test.each([['GET','/forum/reviews'],['GET','/forum/topics'],['POST','/bonus/transfer'],['POST','/auth/login']])('preserves %s %s', (method,path)=>{process.env.CASHBACK_FORUM_READ_ONLY='true';const next=jest.fn();forumWriteBarrier({path,method} as any,{} as any,next);expect(next).toHaveBeenCalled();});
+});

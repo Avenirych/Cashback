@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import {reviewIntent} from '../reviewReturn';
+import {reviewCopy} from '../components/ReviewsCarousel';
 
 export default function VerifyEmail({ lang }: { lang: string }) {
   const { verifyEmail, checkVerification, resendVerification, user, loading } = useAuth();
@@ -12,6 +14,7 @@ export default function VerifyEmail({ lang }: { lang: string }) {
   const [notice, setNotice] = useState("");
   const attempt = useRef<Promise<void> | null>(null);
   const ru = lang.toLowerCase() === "ru";
+  const [continueReview]=useState(reviewIntent);
   useEffect(() => {
     if (!token) return;
     // Remove the secret from browser history before any further navigation.
@@ -49,6 +52,7 @@ export default function VerifyEmail({ lang }: { lang: string }) {
         <h1>{ru ? "Электронная почта подтверждена!" : "Email verified!"}</h1>
         <p>{ru ? "Перейдите в профиль и завершите регистрацию." : "Continue to your profile to complete registration."}</p>
         <Link style={button} to="/profile">{ru ? "Перейти в профиль" : "Continue to profile"}</Link>
+        {continueReview&&<p><Link style={button} to={continueReview}>{reviewCopy(lang)?.leave}</Link></p>}
       </>}
       {status === "error" && !loading && !success && <>
         <h1>{ru ? "Подтверждение почты" : "Email confirmation"}</h1>

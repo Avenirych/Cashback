@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import { FORUM_API_URL, validateForumAvatar } from "../forum";
-import { forumRules, usePublishedForumRules } from "./ForumRules";
+import { ForumRulesSections, rulesLanguage, rulesLabels } from "./ForumRules";
 import "./ForumRegister.css";
+import messages from "../content/forumRegistration.json";
+import {demoReviewMessages} from '../content/demoReviewMessages';
 
 export default function ForumRegister() {
   const { user, forumUser, forumLoading, registerForum, checkForumStatus, forumRegistered, forumBanned } = useAuth();
-  const ru = useLang().lang.toLowerCase() === "ru";
+  const language = rulesLanguage(useLang().lang);
+  const demoCopy=language?demoReviewMessages[language]:null;
+  const [useAccountName,setUseAccountName]=useState(false);
+  const text = (key: keyof typeof messages.en) => language ? messages[language][key] : "";
   const navigate = useNavigate();
+  const location = useLocation();
+  const reviewNext = new URLSearchParams(location.search).get('next') === '/forum/reviews/new' ? '/forum/reviews/new' : null;
   const [username, setUsername] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [avatar, setAvatar] = useState<File>();
@@ -20,10 +27,10 @@ export default function ForumRegister() {
   const [success, setSuccess] = useState(false);
   const validUsername = /^[A-Za-z0-9_]{3,30}$/.test(username);
   const registered = forumRegistered || !!forumUser;
-  const publishedRules = usePublishedForumRules();
+
 
   useEffect(() => {
-    if (!validUsername || registered) { setAvailability("idle"); return; }
+    if (useAccountName||!validUsername || registered) { setAvailability("idle"); return; }
     let cancelled = false;
     const controller = new AbortController();
     setAvailability("checking");
@@ -34,7 +41,7 @@ export default function ForumRegister() {
       } catch { if (!cancelled) setAvailability("error"); }
     }, 300);
     return () => { cancelled = true; controller.abort(); window.clearTimeout(timer); };
-  }, [username, validUsername, registered]);
+  }, [username, validUsername, registered,useAccountName]);
 
   useEffect(() => {
     setPreview("");
@@ -46,71 +53,72 @@ export default function ForumRegister() {
     return () => { active = false; if (reader.readyState === 1) reader.abort(); };
   }, [avatar]);
 
-  if (!user) return <p>{ru ? "Для регистрации на форуме войдите в Cashback+." : "Log in to Cashback+ to register for the forum."} <Link to="/login?next=%2Fforum%2Fregister">{ru ? "Войти" : "Log in"}</Link></p>;
-  if (!user.email_verified) return <p>{ru ? "Сначала подтвердите электронную почту Cashback+." : "Verify your Cashback+ email first."} <Link to="/verify-email">{ru ? "Подтвердить почту" : "Verify email"}</Link></p>;
-  if (forumLoading && !busy) return <p role="status">{ru ? "Загрузка…" : "Loading…"}</p>;
-  if (forumBanned || forumUser?.banned) return <p role="alert">{ru ? "Аккаунт форума заблокирован." : "Your forum account is banned."} <Link to="/forum">{ru ? "Читать форум" : "Read forum"}</Link></p>;
-  if (success) return <main className="forum-register-container"><h1 role="status">{ru ? "Регистрация на форуме завершена" : "Success! Forum registration completed"}</h1><Link to="/forum" style={{display: "inline-block", padding: "14px 24px", background: "#0d6efd", color: "white", borderRadius: 8, textDecoration: "none", fontWeight: 700}}>{ru ? "Перейти на форум" : "Continue to forum"}</Link></main>;
+  if (!user) return <p>{text("text0")} <Link to={reviewNext ? "/login?next="+encodeURIComponent(reviewNext) : "/login?next=%2Fforum%2Fregister"}>{text("text1")}</Link></p>;
+  if (!user.email_verified) return <p>{text("text2")} <Link to={reviewNext ? "/register?next="+encodeURIComponent(reviewNext) : "/verify-email"}>{text("text3")}</Link></p>;
+  if (forumLoading && !busy) return <p role="status">{text("text4")}</p>;
+  if (forumBanned || forumUser?.banned) return <p role="alert">{text("text5")} <Link to="/forum">{text("text6")}</Link></p>;
+  if (success) return <main className="forum-register-container"><h1 role="status">{text("text7")}</h1><Link to={reviewNext || "/forum"} style={{display: "inline-block", padding: "14px 24px", background: "#0d6efd", color: "white", borderRadius: 8, textDecoration: "none", fontWeight: 700}}>{text("text8")}</Link></main>;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (busy || !agreed || !validateForumAvatar(avatar) || (!registered && (!validUsername || availability !== "available"))) return;
+    if (busy || !agreed || !validateForumAvatar(avatar) || (!registered && !useAccountName&&(!validUsername || availability !== "available"))) return;
     setError(""); setBusy(true);
     try {
-      await registerForum(forumUser?.username || username, agreed, avatar);
-      setSuccess(true);
+      await registerForum(forumUser?.username || (useAccountName?'':username), agreed, avatar);
+      if(reviewNext)navigate(reviewNext,{replace:true});else setSuccess(true);
     } catch (err) {
-      setError((ru ? "Не удалось завершить. " : "Could not complete. ") + (err instanceof Error ? err.message : ""));
+      setError((text("text9")) + (err instanceof Error ? err.message : ""));
     } finally { setBusy(false); }
   };
   const reenter = async () => {
     setBusy(true); setError("");
-    try { await checkForumStatus(true); navigate("/forum", { replace: true }); }
-    catch { setError(ru ? "Не удалось войти. Попробуйте снова." : "Could not enter. Please try again."); }
+    try { await checkForumStatus(true); navigate(reviewNext || "/forum", { replace: true }); }
+    catch { setError(text("text10")); }
     finally { setBusy(false); }
   };
 
   return <main className="forum-register-container" style={{ padding: 24, maxWidth: 650, margin: "auto", fontSize: 16 }}>
-    <h1>{ru ? "Регистрация на форуме" : "Forum registration"}</h1>
+    <h1>{text("text11")}</h1>
     <form onSubmit={submit} style={{ display: "grid", gap: 12 }}>
-      <label>{ru ? "Имя" : "Name"}<input value={user.firstName || user.name} readOnly style={{ background: "#eee", color: "#666" }} /></label>
-      <label>{ru ? "Фамилия" : "Last name"}<input value={user.lastName || ""} readOnly style={{ background: "#eee", color: "#666" }} /></label>
-      <label>{ru ? "Электронная почта" : "Email"}<input value={user.email} readOnly style={{ background: "#eee", color: "#666" }} /></label>
+      <label>{text("text12")}<input value={user.firstName || user.name} readOnly style={{ background: "#eee", color: "#666" }} /></label>
+      <label>{text("text13")}<input value={user.lastName || ""} readOnly style={{ background: "#eee", color: "#666" }} /></label>
+      <label>{text("text14")}<input value={user.email} readOnly style={{ background: "#eee", color: "#666" }} /></label>
       {registered ? <section>
-        <p>{ru ? "Аккаунт уже зарегистрирован" : "Account already registered"}{forumUser && `: ${forumUser.username}`}</p>
-        <p>{ru ? "Если аватар не загрузился, повторите загрузку ниже или войдите без него. Повторная регистрация не нужна." : "If the avatar upload failed, retry below or enter without it. No duplicate registration is needed."}</p>
-        <button type="button" disabled={busy} onClick={reenter}>{ru ? "Войти в форум без загрузки аватара" : "Enter forum without uploading an avatar"}</button>
+        <p>{text("text15")}{forumUser && `: ${forumUser.username}`}</p>
+        <p>{text("text16")}</p>
+        <button type="button" disabled={busy} onClick={reenter}>{text("text17")}</button>
       </section> : <>
-        <label>{ru ? "Имя пользователя на форуме" : "Username"}<input value={username} onChange={e => { setUsername(e.target.value); setAvailability("idle"); }} required pattern="[A-Za-z0-9_]{3,30}" minLength={3} maxLength={30} disabled={busy} /></label>
-        <p>{ru ? "3–30 символов: латинские буквы, цифры и _." : "3–30 characters: Latin letters, digits and _."}</p>
+        <label><input type="checkbox" checked={useAccountName} onChange={e=>setUseAccountName(e.target.checked)} disabled={busy}/>{demoCopy?.defaultName}</label>
+        <p>{demoCopy?.defaultHint}</p>
+        {!useAccountName&&<label>{text("text18")}<input value={username} onChange={e => { setUsername(e.target.value); setAvailability("idle"); }} required pattern="[A-Za-z0-9_]{3,30}" minLength={3} maxLength={30} disabled={busy} /></label>}
+        <p>{text("text19")}</p>
         {validUsername && <p role="status">{({
-          idle: "", checking: ru ? "Проверка…" : "Checking…",
-          available: ru ? "Псевдоним доступен" : "Username available",
-          taken: ru ? "Псевдоним занят" : "Username taken",
-          error: ru ? "Не удалось проверить. Измените псевдоним, чтобы повторить." : "Could not check availability. Edit the username to retry.",
+          idle: "", checking: text("text20"),
+          available: text("text21"),
+          taken: text("text22"),
+          error: text("text23"),
         })[availability]}</p>}
       </>}
-      <label>{ru ? "Аватар (необязательно)" : "Avatar (optional)"}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={e => {
+      <label>{text("text24")}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={e => {
         const file = e.target.files?.[0];
         setAvatar(file);
-        setError(validateForumAvatar(file) ? "" : ru ? "Только JPG, PNG или WebP, максимум 500 КБ." : "Only JPG, PNG or WebP, maximum 500 KB.");
+        setError(validateForumAvatar(file) ? "" : text("text25"));
       }} /></label>
       <p>JPG / PNG / WebP · 500 KB</p>
-      {preview && <img src={preview} alt={ru ? "Предпросмотр аватара" : "Avatar preview"} style={{width: 96, height: 96, objectFit: "cover", borderRadius: "50%"}} />}
-      <section aria-label={ru ? "Краткие правила" : "Rules preview"}>
-        <h2>{ru ? "Правила форума" : "Rules"}</h2>
-        {publishedRules && <p style={{ whiteSpace: "pre-wrap" }}>{publishedRules[ru ? "ru" : "en"]}</p>}
-        {forumRules[ru ? "ru" : "en"].map(([heading, text]) => <p key={heading}><strong>{heading}: </strong>{text}</p>)}
-        <Link to="/forum/rules" target="_blank" rel="noreferrer">{ru ? "Полные правила" : "Full rules"}</Link>
-      </section>
+      {preview && <img src={preview} alt={text("text26")} style={{width: 96, height: 96, objectFit: "cover", borderRadius: "50%"}} />}
+      {language && <section aria-label={rulesLabels[language].preview} lang={language}>
+        <h2>{rulesLabels[language].title}</h2>
+        <ForumRulesSections language={language} />
+        <Link to="/forum/rules" target="_blank" rel="noreferrer">{rulesLabels[language].full}</Link>
+      </section>}
       <label><input type="checkbox" required checked={agreed} disabled={busy} onChange={e => setAgreed(e.target.checked)} />
-        {ru ? "Я ознакомился(-ась) с правилами форума и согласен(-на) их соблюдать" : "I agree to the rules. Posts and topics may be deleted. Rule violations may result in deletion of your forum account or a ban."}
+        {language && rulesLabels[language].agree}
       </label>
       {error && <p role="alert">{error}</p>}
-      <button type="submit" disabled={busy || forumLoading || !agreed || !validateForumAvatar(avatar) || (!registered && (!validUsername || availability !== "available"))}>
-        {busy ? (ru ? "Сохранение…" : "Saving…") : registered ? (ru ? "Повторить загрузку и войти" : "Retry upload and enter") : (ru ? "Зарегистрироваться на форуме" : "Register for forum")}
+      <button type="submit" disabled={busy || forumLoading || !agreed || !validateForumAvatar(avatar) || (!registered && !useAccountName&&(!validUsername || availability !== "available"))}>
+        {busy ? (text("text27")) : registered ? (text("text28")) : (text("text29"))}
       </button>
-      <Link to="/forum">{ru ? "Только чтение" : "Read only"}</Link>
+      <Link to="/forum">{text("text30")}</Link>
     </form>
   </main>;
 }

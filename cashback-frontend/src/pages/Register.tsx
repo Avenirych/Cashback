@@ -15,6 +15,7 @@ import MoneyTree from "../components/MoneyTree";
 import { translations } from "../i18n";
 import { localTestMailboxEnabled, LOCAL_TEST_MAILBOX_URL } from "../localTestMailbox";
 import { validateEmail } from "../utils/emailValidator";
+import {rememberReviewIntent} from '../reviewReturn';
 
 const PENDING_VERIFICATION_KEY = "cashback_pending_verification";
 const RETURN_PATH_KEY = "cashback_post_auth_next";
@@ -46,6 +47,8 @@ export function safeReturnPath(value: string | null): string | null {
     }
 
     const allowed =
+      url.pathname === "/forum/reviews/new" ||
+      url.pathname === "/forum" ||
       url.pathname === "/shop" ||
       url.pathname === "/bonuses" ||
       url.pathname.startsWith("/bonuses/");
@@ -199,6 +202,7 @@ export default function Register({
 
   useEffect(() => {
     if (!requestedReturnPath) return;
+    if(requestedReturnPath==='/forum/reviews/new')rememberReviewIntent();
 
     try {
       sessionStorage.setItem(

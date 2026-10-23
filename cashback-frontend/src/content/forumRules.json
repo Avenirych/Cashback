@@ -1,0 +1,226 @@
+{
+  "backendDigests": {
+    "en": "643b8d6a2767891cd9d47f0849abeec4e7373f45302a133a6feaf16acb49c0ac",
+    "ru": "bbd10dbd74b4d85d20125df5661ceac4b5ae10f5fa1360c0a66cc73335e8bb28",
+    "de": "bf9dc49ea5a873b3f0804e67d5557b243d4114bd85c716310c85e4c6bc14ac78",
+    "fr": "4abbc4c547142f25fba3f15686d182b8f0567396d31429f3e20d3c3fcc8d57af"
+  },
+  "rules": {
+    "en": [
+      [
+        "General rules",
+        "Be civil and respectful. Report safety concerns to moderators; do not retaliate or impersonate others."
+      ],
+      [
+        "Privacy and identity",
+        "Use your forum username, not another person's identity. Do not publish personal data, credentials or private communications without permission. Your username, avatar and forum joining date are public; your account email and name are not forum author details."
+      ],
+      [
+        "Posting guidelines",
+        "Stay on topic and check information before posting. Disclose commercial interests and respect intellectual property. Share only content you have permission to share."
+      ],
+      [
+        "Prohibited content",
+        "No harassment, hate, threats, abuse, illegal material, exploitation, spam, scams, deceptive promotions or infringing content."
+      ],
+      [
+        "UK context and advice",
+        "Follow applicable UK law and any other laws that apply to you. Discussion is general information, not legal, financial or professional advice. Verify claims independently. These community rules do not assert legal compliance, determine legal rights or replace professional advice."
+      ],
+      [
+        "Moderation",
+        "Moderators may review reports and remove posts and topics. Contact support about moderation decisions; do not evade moderation."
+      ],
+      [
+        "Consequences",
+        "Rule violations may result in deletion of your forum account or a ban. Posts and topics may also be deleted. A ban prevents posting, not reading. Forum access is separate from your Cashback account."
+      ],
+      [
+        "Account deletion",
+        "Rule violations may result in permanent deletion of your forum account. Do not assume a deleted forum account or its content can be recovered. This warning concerns your forum account, which is separate from your main Cashback account."
+      ],
+      [
+        "Permanent topic deletion",
+        "Deleting a topic permanently removes the topic and all its replies. This cannot be undone. Check carefully before confirming deletion."
+      ],
+      [
+        "Reviews and authenticity",
+        "These forum rules also apply to reviews published on Cashback+. Fake reviews, review inflation, concealed advertising, undisclosed incentives and manipulation of ratings are prohibited. Lawful negative reviews, reasoned criticism and polite disagreement are allowed. Positive and negative reviews are reviewed on the same basis. Examples explicitly labelled as fictional are not customer reviews and do not count towards ratings or statistics."
+      ],
+      [
+        "Confirmed violations and restrictions",
+        "Only confirmed violations count; decisions revoked on appeal or by a moderator are excluded. The first violation leads to a warning and removal or hiding of the material. The second restricts publication for one calendar month. The third restricts publication and communication for six calendar months. The fourth imposes an indefinite publication and communication restriction. Temporary restrictions expire automatically. Restrictions do not prevent reading permitted forum content and do not automatically block your main Cashback account or permitted bonus operations; their separate security checks still apply."
+      ],
+      [
+        "Review, notifications and appeals",
+        "New reviews, topics and replies are checked before publication. Automated signals assist human review and are not, by themselves, proof of a violation; ambiguous content is held for manual review. Report suspected violations through the report control. Decisions, reasons and restrictions are recorded and available in the moderation and appeals section. You may appeal a confirmed decision there. An independent authorised moderator reviews appeals and may uphold or revoke a decision; moderators may also correct mistakes manually. Revoked violations are excluded when restrictions are recalculated. Do not evade restrictions or use reports to suppress lawful criticism."
+      ],
+      [
+        "Local demonstration reviews",
+        "Only in local demonstration mode may verified forum members publish isolated test reviews without manual approval. Every such review is labelled as a demonstration, stored separately for 7 days and excluded from real reviews, ratings, bonuses and money. The carousel shows the ten latest entries; older entries remain in history until retention expires. The prohibitions on threats, harassment, personal data and deception still apply. Real publications retain the review queue, sanctions and independent appeals. If you choose your main account display name for your forum profile, that name becomes public; email is not used as a public name. You may choose a separate alias and the default avatar."
+      ]
+    ],
+    "ru": [
+      [
+        "Общие правила",
+        "Будьте вежливы и уважайте других. Сообщайте о проблемах безопасности модераторам; не мстите и не выдавайте себя за других."
+      ],
+      [
+        "Конфиденциальность и личность",
+        "Используйте псевдоним форума, не выдавайте себя за другого человека. Не публикуйте чужие персональные данные, пароли или переписку без разрешения. Псевдоним, аватар и дата вступления в форум публичны; email и имя основного аккаунта не отображаются у авторов."
+      ],
+      [
+        "Правила публикации",
+        "Пишите по теме и проверяйте информацию перед публикацией. Раскрывайте коммерческие интересы, уважайте авторские права и публикуйте только разрешённые материалы."
+      ],
+      [
+        "Запрещённый контент",
+        "Запрещены травля, ненависть, угрозы, оскорбления, незаконные материалы, эксплуатация, спам, мошенничество, вводящая в заблуждение реклама и нарушение авторских прав."
+      ],
+      [
+        "Контекст Великобритании и советы",
+        "Соблюдайте применимое законодательство Великобритании и другие применимые к вам законы. Обсуждения — общая информация, а не юридическая, финансовая или профессиональная консультация. Проверяйте утверждения самостоятельно. Правила не гарантируют соответствие закону, не определяют юридические права и не заменяют консультацию специалиста."
+      ],
+      [
+        "Модерация",
+        "Модераторы могут рассматривать жалобы и удалять сообщения и темы. По вопросам модерации обращайтесь в поддержку; не обходите решения модераторов."
+      ],
+      [
+        "Последствия",
+        "Нарушения могут привести к удалению вашего аккаунта форума или блокировке. Сообщения и темы также могут быть удалены. Блокировка запрещает публикации, но не чтение. Доступ к форуму отделён от аккаунта Cashback."
+      ],
+      [
+        "Удаление аккаунта",
+        "Нарушения правил могут привести к окончательному удалению вашего аккаунта форума. Не рассчитывайте на восстановление удалённого аккаунта форума или его содержимого. Предупреждение касается аккаунта форума, который отделён от основного аккаунта Cashback."
+      ],
+      [
+        "Безвозвратное удаление темы",
+        "Удаление темы навсегда удаляет саму тему и все ответы в ней. Это действие нельзя отменить. Внимательно проверьте своё решение перед подтверждением удаления."
+      ],
+      [
+        "Отзывы и достоверность",
+        "Правила форума распространяются также на отзывы, опубликованные на Cashback+. Запрещены поддельные отзывы, накрутка, скрытая реклама, сокрытие вознаграждения за отзыв и манипулирование оценками. Законные отрицательные отзывы, обоснованная критика и вежливое несогласие разрешены. Положительные и отрицательные отзывы проверяются по одинаковым основаниям. Примеры, явно помеченные как вымышленные, не являются отзывами покупателей и не учитываются в рейтингах и статистике."
+      ],
+      [
+        "Подтверждённые нарушения и ограничения",
+        "Учитываются только подтверждённые нарушения; отменённые по апелляции или модератором решения исключаются. Первое нарушение влечёт предупреждение и удаление или скрытие материала. Второе ограничивает публикации на один календарный месяц. Третье ограничивает публикации и общение на шесть календарных месяцев. Четвёртое влечёт бессрочное ограничение публикаций и общения. Временные ограничения истекают автоматически. Ограничения не запрещают чтение разрешённого содержимого форума и не блокируют автоматически основной аккаунт Cashback или разрешённые бонусные операции; их отдельные проверки безопасности сохраняются."
+      ],
+      [
+        "Проверка, уведомления и обжалование",
+        "Новые отзывы, темы и ответы проходят проверку до публикации. Автоматические признаки помогают ручной проверке и сами по себе не доказывают нарушение; неоднозначные материалы ожидают решения модератора. Сообщайте о предполагаемых нарушениях через кнопку жалобы. Решения, причины и ограничения фиксируются и доступны в разделе модерации и апелляций. Там можно обжаловать подтверждённое решение. Апелляцию рассматривает независимый уполномоченный модератор, который может оставить решение в силе или отменить его; модераторы также могут исправлять ошибки вручную. Отменённые нарушения исключаются при пересчёте ограничений. Не обходите ограничения и не используйте жалобы для подавления законной критики."
+      ],
+      [
+        "Локальные демонстрационные отзывы",
+        "Только в локальном демонстрационном режиме подтверждённые участники форума могут публиковать изолированные тестовые отзывы без ручного одобрения. Каждый такой отзыв отмечен как демонстрационный, хранится отдельно 7 дней и не влияет на реальные отзывы, рейтинги, бонусы или деньги. В карусели показаны десять последних записей; более старые доступны в истории до истечения срока хранения. Запреты на угрозы, травлю, персональные данные и обман сохраняются. Для настоящих публикаций по-прежнему действуют очередь проверки, санкции и независимые апелляции. Если вы выбрали использование отображаемого имени основного аккаунта для профиля форума, это имя будет публичным; email не используется как публичное имя. Можно выбрать отдельный псевдоним и стандартный аватар."
+      ]
+    ],
+    "de": [
+      [
+        "Allgemeine Regeln",
+        "Seien Sie höflich und respektvoll. Melden Sie Sicherheitsbedenken den Moderatoren; üben Sie keine Vergeltung und geben Sie sich nicht als andere Personen aus."
+      ],
+      [
+        "Datenschutz und Identität",
+        "Verwenden Sie Ihren Benutzernamen im Forum, nicht die Identität einer anderen Person. Veröffentlichen Sie ohne Erlaubnis keine personenbezogenen Daten, Zugangsdaten oder privaten Mitteilungen. Ihr Benutzername, Ihr Avatar und Ihr Beitrittsdatum zum Forum sind öffentlich; die E-Mail-Adresse und der Name Ihres Hauptkontos werden nicht als Angaben zum Verfasser angezeigt."
+      ],
+      [
+        "Regeln für Beiträge",
+        "Bleiben Sie beim Thema und prüfen Sie Informationen vor der Veröffentlichung. Legen Sie kommerzielle Interessen offen und achten Sie das geistige Eigentum anderer. Teilen Sie nur Inhalte, zu deren Weitergabe Sie berechtigt sind."
+      ],
+      [
+        "Verbotene Inhalte",
+        "Belästigung, Hass, Drohungen, Beleidigungen, rechtswidrige Inhalte, Ausbeutung, Spam, Betrug, irreführende Werbung und Inhalte, die Rechte anderer verletzen, sind verboten."
+      ],
+      [
+        "Britischer Rechtsrahmen und Beratung",
+        "Beachten Sie das anwendbare Recht des Vereinigten Königreichs und alle weiteren für Sie geltenden Gesetze. Diskussionen dienen der allgemeinen Information und sind keine Rechts-, Finanz- oder sonstige Fachberatung. Überprüfen Sie Behauptungen unabhängig. Diese Gemeinschaftsregeln garantieren keine Rechtskonformität, bestimmen keine rechtlichen Ansprüche und ersetzen keine fachkundige Beratung."
+      ],
+      [
+        "Moderation",
+        "Moderatoren dürfen Meldungen prüfen sowie Beiträge und Themen entfernen. Wenden Sie sich bei Fragen zu Moderationsentscheidungen an den Support; umgehen Sie weder Moderationsentscheidungen noch Sperren."
+      ],
+      [
+        "Folgen von Verstößen",
+        "Regelverstöße können zur Löschung Ihres Forumkontos oder zu einer Sperre führen. Beiträge und Themen können ebenfalls gelöscht werden. Eine Sperre verhindert das Veröffentlichen, nicht das Lesen. Der Zugang zum Forum ist von Ihrem Cashback-Konto getrennt."
+      ],
+      [
+        "Löschung des Forumkontos",
+        "Regelverstöße können zur endgültigen Löschung Ihres Forumkontos führen. Gehen Sie nicht davon aus, dass ein gelöschtes Forumkonto oder seine Inhalte wiederhergestellt werden können. Dieser Hinweis betrifft Ihr Forumkonto, das von Ihrem Hauptkonto bei Cashback getrennt ist."
+      ],
+      [
+        "Endgültige Löschung eines Themas",
+        "Beim Löschen eines Themas werden das Thema und alle zugehörigen Antworten dauerhaft entfernt. Dies kann nicht rückgängig gemacht werden. Prüfen Sie Ihre Entscheidung sorgfältig, bevor Sie die Löschung bestätigen."
+      ],
+      [
+        "Bewertungen und Echtheit",
+        "Diese Forenregeln gelten auch für auf Cashback+ veröffentlichte Bewertungen. Gefälschte Bewertungen, künstlich erhöhte Bewertungszahlen, versteckte Werbung, verschwiegene Gegenleistungen und die Manipulation von Bewertungen sind verboten. Rechtmäßige negative Bewertungen, begründete Kritik und höflicher Widerspruch sind erlaubt. Positive und negative Bewertungen werden nach denselben Maßstäben geprüft. Ausdrücklich als erfunden gekennzeichnete Beispiele sind keine Kundenbewertungen und fließen nicht in Bewertungen oder Statistiken ein."
+      ],
+      [
+        "Bestätigte Verstöße und Beschränkungen",
+        "Es zählen nur bestätigte Verstöße; nach einem Einspruch oder durch Moderatoren aufgehobene Entscheidungen werden nicht mitgezählt. Der erste Verstoß führt zu einer Verwarnung und zur Entfernung oder Ausblendung des Inhalts. Der zweite beschränkt Veröffentlichungen für einen Kalendermonat. Der dritte beschränkt Veröffentlichungen und Kommunikation für sechs Kalendermonate. Der vierte führt zu einer unbefristeten Beschränkung von Veröffentlichungen und Kommunikation. Befristete Beschränkungen enden automatisch. Das Lesen zulässiger Foreninhalte bleibt möglich. Das Hauptkonto bei Cashback und zulässige Bonusvorgänge werden nicht automatisch gesperrt; ihre gesonderten Sicherheitsprüfungen gelten weiterhin."
+      ],
+      [
+        "Prüfung, Mitteilungen und Einsprüche",
+        "Neue Bewertungen, Themen und Antworten werden vor der Veröffentlichung geprüft. Automatische Hinweise unterstützen die menschliche Prüfung und beweisen für sich allein keinen Verstoß; unklare Inhalte warten auf eine manuelle Entscheidung. Melden Sie vermutete Verstöße über die Meldefunktion. Entscheidungen, Gründe und Beschränkungen werden protokolliert und im Bereich für Moderation und Einsprüche bereitgestellt. Dort können Sie gegen eine bestätigte Entscheidung Einspruch einlegen. Ein unabhängiger befugter Moderator kann die Entscheidung bestätigen oder aufheben; Moderatoren können Fehler auch manuell korrigieren. Aufgehobene Verstöße werden bei der Neuberechnung der Beschränkungen nicht berücksichtigt. Umgehen Sie keine Beschränkungen und missbrauchen Sie Meldungen nicht, um rechtmäßige Kritik zu unterdrücken."
+      ],
+      [
+        "Lokale Demonstrationsbewertungen",
+        "Nur im lokalen Demonstrationsmodus dürfen bestätigte Forumsmitglieder getrennte Testbewertungen ohne manuelle Freigabe veröffentlichen. Jede solche Bewertung ist als Demonstration gekennzeichnet, wird 7 Tage separat gespeichert und zählt nicht für echte Bewertungen, Statistiken, Boni oder Geld. Das Karussell zeigt die zehn neuesten Einträge; ältere bleiben bis zum Ablauf der Speicherfrist im Verlauf verfügbar. Verbote von Drohungen, Belästigung, personenbezogenen Daten und Täuschung gelten weiterhin. Für echte Veröffentlichungen bleiben Prüfwarteschlange, Sanktionen und unabhängige Einsprüche bestehen. Wenn Sie den Anzeigenamen Ihres Hauptkontos für Ihr Forumprofil wählen, wird dieser Name öffentlich; die E-Mail-Adresse wird nicht als öffentlicher Name verwendet. Sie können einen eigenen Alias und den Standardavatar wählen."
+      ]
+    ],
+    "fr": [
+      [
+        "Règles générales",
+        "Soyez courtois et respectueux. Signalez les problèmes de sécurité aux modérateurs ; ne vous vengez pas et ne vous faites pas passer pour une autre personne."
+      ],
+      [
+        "Confidentialité et identité",
+        "Utilisez votre pseudonyme sur le forum, sans usurper l’identité d’une autre personne. Ne publiez pas de données personnelles, d’identifiants ou de communications privées sans autorisation. Votre pseudonyme, votre avatar et votre date d’inscription au forum sont publics ; l’adresse e-mail et le nom de votre compte principal ne sont pas affichés comme informations sur l’auteur."
+      ],
+      [
+        "Règles de publication",
+        "Restez dans le sujet et vérifiez les informations avant de les publier. Déclarez vos intérêts commerciaux et respectez la propriété intellectuelle. Ne partagez que les contenus que vous êtes autorisé à diffuser."
+      ],
+      [
+        "Contenus interdits",
+        "Le harcèlement, la haine, les menaces, les insultes, les contenus illégaux, l’exploitation, le spam, les escroqueries, les promotions trompeuses et les contenus portant atteinte aux droits d’autrui sont interdits."
+      ],
+      [
+        "Cadre britannique et conseils",
+        "Respectez le droit applicable au Royaume-Uni ainsi que toute autre loi qui vous est applicable. Les discussions fournissent des informations générales et ne constituent pas des conseils juridiques, financiers ou professionnels. Vérifiez les affirmations de manière indépendante. Ces règles communautaires ne garantissent pas la conformité à la loi, ne déterminent pas les droits juridiques et ne remplacent pas les conseils d’un professionnel."
+      ],
+      [
+        "Modération",
+        "Les modérateurs peuvent examiner les signalements et supprimer des messages et des sujets. Contactez l’assistance au sujet des décisions de modération ; ne contournez ni ces décisions ni les blocages."
+      ],
+      [
+        "Conséquences des infractions",
+        "Une infraction aux règles peut entraîner la suppression de votre compte de forum ou son blocage. Les messages et les sujets peuvent également être supprimés. Un blocage empêche de publier, mais pas de lire. L’accès au forum est distinct de votre compte Cashback."
+      ],
+      [
+        "Suppression du compte de forum",
+        "Les infractions aux règles peuvent entraîner la suppression définitive de votre compte de forum. Ne supposez pas qu’un compte de forum supprimé ou son contenu puisse être récupéré. Cet avertissement concerne votre compte de forum, qui est distinct de votre compte principal Cashback."
+      ],
+      [
+        "Suppression définitive d’un sujet",
+        "La suppression d’un sujet efface définitivement ce sujet et toutes ses réponses. Cette action est irréversible. Vérifiez soigneusement votre décision avant de confirmer la suppression."
+      ],
+      [
+        "Avis et authenticité",
+        "Ces règles du forum s’appliquent aussi aux avis publiés sur Cashback+. Les faux avis, le gonflement artificiel des avis, la publicité dissimulée, les contreparties non déclarées et la manipulation des notes sont interdits. Les avis négatifs licites, les critiques fondées et les désaccords courtois sont autorisés. Les avis positifs et négatifs sont examinés selon les mêmes critères. Les exemples explicitement signalés comme fictifs ne sont pas des avis de clients et sont exclus des notes et des statistiques."
+      ],
+      [
+        "Infractions confirmées et restrictions",
+        "Seules les infractions confirmées sont comptées ; les décisions annulées après recours ou par un modérateur sont exclues. La première infraction entraîne un avertissement et la suppression ou le masquage du contenu. La deuxième limite les publications pendant un mois civil. La troisième limite les publications et les communications pendant six mois civils. La quatrième entraîne une restriction sans durée déterminée des publications et des communications. Les restrictions temporaires expirent automatiquement. La lecture des contenus autorisés du forum reste possible. Le compte principal Cashback et les opérations de bonus autorisées ne sont pas automatiquement bloqués ; leurs contrôles de sécurité distincts restent applicables."
+      ],
+      [
+        "Examen, notifications et recours",
+        "Les nouveaux avis, sujets et réponses sont examinés avant publication. Les signaux automatiques aident l’examen humain mais ne prouvent pas à eux seuls une infraction ; les contenus ambigus attendent une décision manuelle. Signalez les infractions présumées à l’aide du bouton de signalement. Les décisions, motifs et restrictions sont consignés et accessibles dans la section de modération et de recours. Vous pouvez y contester une décision confirmée. Un modérateur indépendant et habilité peut maintenir ou annuler la décision ; les modérateurs peuvent également corriger manuellement les erreurs. Les infractions annulées sont exclues du recalcul des restrictions. Ne contournez pas les restrictions et n’utilisez pas les signalements pour faire taire les critiques licites."
+      ],
+      [
+        "Avis de démonstration locaux",
+        "Uniquement en mode démonstration local, les membres du forum dont l’email est confirmé peuvent publier des avis de test isolés sans approbation manuelle. Chaque avis est identifié comme une démonstration, conservé séparément pendant 7 jours et exclu des vrais avis, notes, bonus et opérations monétaires. Le carrousel affiche les dix entrées les plus récentes ; les précédentes restent dans l’historique jusqu’à expiration. Les interdictions de menaces, harcèlement, données personnelles et tromperie restent applicables. Les vraies publications conservent la file de vérification, les sanctions et les appels indépendants. Si vous choisissez le nom affiché de votre compte principal pour votre profil du forum, ce nom devient public ; l’email n’est pas utilisé comme nom public. Vous pouvez choisir un pseudonyme distinct et l’avatar standard."
+      ]
+    ]
+  }
+}

@@ -35,6 +35,10 @@ import Topic from "./pages/Topic";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
+import ReviewEntry from "./pages/ReviewEntry";
+import ModerationCenter from "./pages/ModerationCenter";
+import DemoClosed from "./components/DemoClosed";
+import ReviewHistory from './pages/ReviewHistory';
 import Shop from "./pages/Shop";
 import PartnerNotConnected from "./pages/PartnerNotConnected";
 import Dashboard from "./pages/Dashboard";
@@ -49,6 +53,9 @@ export function AppRoutes() {
       <CookieConsent />
 
       <Routes>
+        <Route path="/forum/reviews/new" element={process.env.REACT_APP_DEMO_ONLY==='true'&&process.env.REACT_APP_LOCAL_DEMO_REVIEWS!=='true'?<DemoClosed/>:<ReviewEntry />} />
+        <Route path="/forum/reviews/history" element={<ReviewHistory/>}/>
+        <Route path="/forum/moderation" element={process.env.REACT_APP_DEMO_ONLY==='true'?<DemoClosed/>:<ModerationCenter />} />
         <Route path="/" element={<Welcome lang={L} />} />
         <Route path="/welcome" element={<Welcome lang={L} />} />
         <Route path="/product-offers" element={<ProductOffers />} />
@@ -69,7 +76,7 @@ export function AppRoutes() {
         />
         <Route
           path="/register"
-          element={<Register lang={L} onLangChange={setLang} />}
+          element={process.env.REACT_APP_DEMO_ONLY==='true'&&process.env.REACT_APP_LOCAL_DEMO_REVIEWS!=='true'?<DemoClosed/>:<Register lang={L} onLangChange={setLang} />}
         />
         <Route
           path="/verify-email"
@@ -100,7 +107,7 @@ export function AppRoutes() {
           <Route path="/profile" element={<Profile />} />
           <Route
             path="/forum/register"
-            element={<ForumRegister />}
+            element={process.env.REACT_APP_DEMO_ONLY==='true'&&process.env.REACT_APP_LOCAL_DEMO_REVIEWS!=='true'?<DemoClosed/>:<ForumRegister />}
           />
           <Route
             path="/dashboard"

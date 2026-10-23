@@ -4,6 +4,8 @@ import {
   ConflictException,
   ForbiddenException,
   NotFoundException,
+  Optional,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Repository } from 'typeorm';
@@ -11,6 +13,8 @@ import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { ForumUser } from './forum-user.entity';
 import { UsersService } from '../users/users.service';
+import { ContentModerationService } from './content-moderation.service';
+import { contentModerationEnabled } from './moderation-policy';
 
 export const AVATAR_MAX_SIZE = 500 * 1024;
 export interface AvatarUpload {
@@ -28,6 +32,7 @@ export class ForumUserService {
     private readonly usersService: UsersService,
     @InjectRepository(ForumUser)
     private readonly forumUserRepo: Repository<ForumUser>,
+    @Optional() private readonly moderation?: ContentModerationService,
   ) {}
 
   private validateId(id: number) {
@@ -96,24 +101,31 @@ export class ForumUserService {
   }
 
   async register(userId: number, username: unknown, agreedToRules: unknown) {
-    this.validateUsername(username);
+    const useAccountName=username===undefined||username===null||username==='';
+    if(!useAccountName)this.validateUsername(username);
     if (agreedToRules !== true) {
       throw new BadRequestException(
         'Accept the forum rules / Примите правила форума',
       );
     }
-    await this.verifiedUser(userId);
+    const user=await this.verifiedUser(userId);
+    if(useAccountName){
+      const name=String(user.name||'').normalize('NFKC').trim().replace(/\s+/g,' ');
+      username=/^[\p{L}\p{M}\p{N} '\u2019_-]{2,30}$/u.test(name)&&!name.includes('@')?name:'Member_'+userId;
+    }
     if (await this.getByUserId(userId)) {
       throw new ConflictException(
         'Already registered / Вы уже зарегистрированы',
       );
     }
     if (await this.getByUsername(username)) {
-      throw new ConflictException('Username is taken / Имя уже занято');
+      if(!useAccountName)throw new ConflictException('Username is taken / Имя уже занято');
+      username=String(username).slice(0,18)+'_'+userId;
+      if(await this.getByUsername(username))throw new ConflictException('Username is taken / Имя уже занято');
     }
     const member = this.forumUserRepo.create({
       user_id: userId,
-      username,
+      username:username as string,
       agreed_to_rules: true,
       agreed_to_rules_at: new Date(),
       avatar_url: null,
@@ -121,7 +133,12 @@ export class ForumUserService {
       ban_reason: null,
     });
     try {
-      return this.safeProfile(await this.forumUserRepo.save(member), true);
+      const saved = await this.forumUserRepo.save(member);
+      if(contentModerationEnabled()) {
+        if(!this.moderation)throw new ServiceUnavailableException('Moderation service required');
+        await this.moderation.acceptRules(userId,true);
+      }
+      return this.safeProfile(saved, true);
     } catch (error) {
       this.uniqueConflict(error);
     }
@@ -133,7 +150,7 @@ export class ForumUserService {
   }
 
   getByUsername(username: unknown): Promise<ForumUser | null> {
-    this.validateUsername(username);
+    if(typeof username!=='string'||!(/^[\p{L}\p{M}\p{N} '\u2019_-]{2,30}$/u.test(username)))throw new BadRequestException('Invalid public username');
     return this.forumUserRepo.createQueryBuilder('forum').where('LOWER(forum.username) = LOWER(:username)', { username }).getOne();
   }
 
@@ -172,8 +189,24 @@ export class ForumUserService {
     return this.safeProfile(member);
   }
 
-  async updateProfile(userId: number, data: unknown) {
-    const member = await this.activeMember(userId);
+  async updateProfile(userId:number,data:unknown) {
+    return this.profileMutation(userId,(repo,commit,rollback)=>this.updateProfileLocked(userId,data,repo,commit,rollback));
+  }
+  private async profileMutation<T>(userId:number,work:(repo:Repository<ForumUser>,commit:Array<()=>Promise<void>>,rollback:Array<()=>Promise<void>>)=>Promise<T>):Promise<T>{
+    const commit:Array<()=>Promise<void>>=[],rollback:Array<()=>Promise<void>>=[];
+    let result:T;
+    try {
+      if(contentModerationEnabled() || (this.moderation && await this.moderation.installed())) {
+        if(!this.moderation)throw new ServiceUnavailableException('Moderation service required');
+        result=await this.moderation.withCommunication(userId,m=>work(m.getRepository(ForumUser),commit,rollback));
+      } else result=await work(this.forumUserRepo,commit,rollback);
+    } catch(e){for(const cleanup of rollback)await cleanup();throw e;}
+    for(const cleanup of commit)await cleanup();
+    return result;
+  }
+  private async updateProfileLocked(userId:number,data:unknown,repo:Repository<ForumUser>,commit:Array<()=>Promise<void>>,rollback:Array<()=>Promise<void>>) {
+    const member = repo===this.forumUserRepo ? await this.activeMember(userId) : await repo.findOne({where:{user_id:userId}});
+    if(!member || member.banned)throw new ForbiddenException('Active forum membership required');
     if (
       !data ||
       typeof data !== 'object' ||
@@ -206,7 +239,7 @@ export class ForumUserService {
     const changes: Partial<ForumUser> = {};
     if ('username' in data) {
       this.validateUsername(data.username);
-      const existing = await this.getByUsername(data.username);
+      const existing = await repo.createQueryBuilder('forum').where('LOWER(forum.username) = LOWER(:username)',{username:data.username}).getOne();
       if (existing && existing.user_id !== userId) {
         throw new ConflictException('Username is taken / Имя уже занято');
       }
@@ -224,7 +257,7 @@ export class ForumUserService {
                   member.avatar_url === null ? IsNull() : member.avatar_url,
               }
             : { id: member.id };
-        const result = await this.forumUserRepo.update(criteria, changes);
+        const result = await repo.update(criteria, changes);
         if (result.affected !== 1)
           throw new ConflictException(
             'Profile changed; retry / Профиль изменился; повторите попытку',
@@ -232,11 +265,10 @@ export class ForumUserService {
       } catch (error) {
         this.uniqueConflict(error);
       }
-      if ('avatar_url' in data)
-        await this.removeAvatar(member.avatar_url, userId);
+      if ('avatar_url' in data) {const oldUrl=member.avatar_url;commit.push(()=>this.removeAvatar(oldUrl,userId));}
       Object.assign(member, changes);
     }
-    if ('avatarFile' in data) return this.uploadAvatar(userId, avatarFile);
+    if ('avatarFile' in data) return repo===this.forumUserRepo ? this.uploadAvatar(userId,avatarFile) : this.uploadAvatarLocked(userId,avatarFile,repo,commit,rollback);
     return this.safeProfile(member, true);
   }
 
@@ -293,9 +325,13 @@ export class ForumUserService {
     ).catch(() => undefined);
   }
 
-  async uploadAvatar(userId: number, file: AvatarUpload | undefined) {
+  async uploadAvatar(userId:number,file:AvatarUpload|undefined){
+    return this.profileMutation(userId,(repo,commit,rollback)=>this.uploadAvatarLocked(userId,file,repo,commit,rollback));
+  }
+  private async uploadAvatarLocked(userId:number,file:AvatarUpload|undefined,repo:Repository<ForumUser>,commit:Array<()=>Promise<void>>,rollback:Array<()=>Promise<void>>) {
     const extension = this.avatarExtension(file);
-    const member = await this.activeMember(userId);
+    const member = repo===this.forumUserRepo ? await this.activeMember(userId) : await repo.findOne({where:{user_id:userId}});
+    if(!member || member.banned)throw new ForbiddenException('Active forum membership required');
     await mkdir(this.avatarDirectory, { recursive: true });
     let url: string;
     for (;;) {
@@ -325,9 +361,10 @@ export class ForumUserService {
         throw error;
       }
     }
+    rollback.push(()=>this.removeAvatar(url,userId));
     const updatedAt = new Date();
     try {
-      const result = await this.forumUserRepo.update(
+      const result = await repo.update(
         {
           id: member.id,
           avatar_url: member.avatar_url === null ? IsNull() : member.avatar_url,
@@ -339,10 +376,9 @@ export class ForumUserService {
           'Avatar changed; retry / Аватар изменился; повторите попытку',
         );
     } catch (error) {
-      await this.removeAvatar(url, userId);
       throw error;
     }
-    await this.removeAvatar(member.avatar_url, userId);
+    const oldUrl=member.avatar_url;commit.push(()=>this.removeAvatar(oldUrl,userId));
     member.avatar_url = url;
     member.updated_at = updatedAt;
     return this.safeProfile(member, true);

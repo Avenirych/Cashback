@@ -1,0 +1,6 @@
+import {render,screen,fireEvent} from '@testing-library/react';
+import {LanguageProvider} from '../context/LanguageContext';
+import CookieConsent from './CookieConsent';
+import {cookieMessages} from '../content/cookieMessages';
+beforeEach(()=>localStorage.clear());
+test.each(['ru','en','de','fr'] as const)('%s cookie banner/settings use current language and preserve optional defaults',lang=>{localStorage.setItem('lang',lang);render(<LanguageProvider><CookieConsent/></LanguageProvider>);const t=cookieMessages[lang];expect(screen.getByRole('heading',{name:t.title})).toBeVisible();expect(screen.getByRole('button',{name:t.accept})).toBeVisible();fireEvent.click(screen.getByRole('button',{name:t.manage}));expect(screen.getByRole('dialog',{name:t.settings})).toBeVisible();expect(screen.getByLabelText(t.necessary)).toBeChecked();for(const label of [t.analytics,t.functional,t.marketing])expect(screen.getByLabelText(label)).not.toBeChecked();fireEvent.click(screen.getByRole('button',{name:t.close}));fireEvent.click(screen.getByRole('button',{name:t.necessaryOnly}));expect(localStorage.getItem('cookiesAccepted')).toBe('necessary');expect(screen.queryByRole('heading',{name:t.title})).toBeNull();});

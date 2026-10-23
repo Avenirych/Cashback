@@ -1,0 +1,9 @@
+.reviews-carousel{margin:24px auto;padding:24px;max-width:1100px;width:calc(100% - 48px);box-sizing:border-box;border-radius:20px;background:#f5e8d3;color:var(--text,#2c251d);font-family:Segoe UI,system-ui,sans-serif}
+.reviews-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.reviews-controls button,.review-cta{padding:12px 18px;border:1px solid #b8a78e;border-radius:12px;background:white;color:#183d68;text-decoration:none;cursor:pointer}
+.reviews-track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 32px)/3);gap:16px;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-x:contain;padding:4px 0 12px}
+.review-card{scroll-snap-align:start;min-width:0;overflow-wrap:anywhere;padding:20px;border-radius:16px;background:white;box-shadow:0 4px 16px #38251012;line-height:1.6;box-sizing:border-box}
+.reviews-carousel :focus-visible{outline:3px solid #005fcc;outline-offset:3px}
+@media(max-width:900px){.reviews-track{grid-auto-columns:calc((100% - 16px)/2)}}
+@media(max-width:600px){.reviews-track{grid-auto-columns:100%}.reviews-carousel{width:calc(100% - 24px);padding:16px}}
+@media(prefers-reduced-motion:reduce){.reviews-track{scroll-behavior:auto}}

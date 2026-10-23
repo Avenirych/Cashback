@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import ForumLogo from "../components/ForumLogo";
 import MoneyTree from "../components/MoneyTree";
 import { translations } from "../i18n";
@@ -15,6 +15,9 @@ export default function Login({
 }) {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const nextValue=new URLSearchParams(location.search).get('next');
+  const reviewNext = nextValue==='/forum/reviews/new'||nextValue==='/forum'?nextValue:null;
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -55,7 +58,7 @@ export default function Login({
 
     try {
       await login(form);
-      navigate("/", { replace: true });
+      navigate(reviewNext || "/", { replace: true });
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : t.loginRegister;
@@ -268,7 +271,7 @@ export default function Login({
             >
               {t.noAccount}{" "}
               <Link
-                to="/register"
+                to={reviewNext ? "/register?next="+encodeURIComponent(reviewNext) : "/register"}
                 style={{
                   color: "#0d6efd",
                   textDecoration: "none",

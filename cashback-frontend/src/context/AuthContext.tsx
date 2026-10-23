@@ -1,4 +1,5 @@
 import { BACKEND_URL } from "../backend";
+import {clearReviewIntent} from '../reviewReturn';
 import React, {
   createContext,
   useContext,
@@ -341,7 +342,7 @@ export const AuthProvider = ({
 
       if (
         (!forumProfile.current &&
-          !/^[A-Za-z0-9_]{3,30}$/.test(username)) ||
+          username!==''&&!/^[A-Za-z0-9_]{3,30}$/.test(username)) ||
         !agreedToRules
       ) {
         throw new Error(
@@ -757,6 +758,7 @@ export const AuthProvider = ({
   };
 
   const logout = () => {
+    clearReviewIntent();
     authRevision.current++;
     session.current = { token: null, user: null };
     resetForum();

@@ -42,7 +42,8 @@ function guard(readOnly = false) {
   </Routes></MemoryRouter>);
 }
 test("strict guard requires main authentication", () => { auth.user = null; guard(); expect(screen.getByText("Main registration")).toBeInTheDocument(); });
-test("read-only guard still requires verified email", () => { auth.user = { ...mainUser, email_verified: false }; guard(true); expect(screen.getByText("Verify email")).toBeInTheDocument(); });
+test("public read-only guard permits unverified visitors while strict participation still requires verification", () => { auth.user = { ...mainUser, email_verified: false }; const view=guard(true);expect(screen.getByText("Forum content")).toBeInTheDocument();view.unmount();guard();expect(screen.getByText("Verify email")).toBeInTheDocument(); });
+test("anonymous visitors can read the forum",()=>{auth.user=null;guard(true);expect(screen.getByText('Forum content')).toBeInTheDocument();});
 test("strict guard redirects inactive membership to forum registration", () => { auth.forumUser = profile; guard(); expect(screen.getByText("Forum registration")).toBeInTheDocument(); });
 test("strict guard allows active nonbanned membership", () => { auth.forumUser = profile; auth.forumSessionActive = true; guard(); expect(screen.getByText("Forum content")).toBeInTheDocument(); });
 test("strict guard blocks banned members", () => { auth.forumUser = { ...profile, banned: true }; auth.forumSessionActive = true; guard(); expect(screen.getByRole("alert")).toHaveTextContent("banned"); expect(screen.queryByText("Forum content")).not.toBeInTheDocument(); });
@@ -72,8 +73,8 @@ test("registration has readonly account fields, availability and mandatory agree
   expect(screen.getByLabelText("Email")).toHaveStyle({ background: "#eee", color: "#666" });
   expect(screen.getByLabelText("Name")).toHaveStyle({ background: "#eee", color: "#666" });
   expect(screen.getByLabelText("Username")).toHaveAttribute("minlength", "3");
-  expect(screen.getByRole("checkbox")).toBeRequired();
-  expect(screen.getByRole("checkbox")).toHaveAccessibleName(/Rule violations may result in deletion of your forum account or a ban/);
+  expect(screen.getByRole("checkbox", {name: /I agree to the rules/})).toBeRequired();
+  expect(screen.getByRole("checkbox", {name: /I agree to the rules/})).toHaveAccessibleName(/Rule violations may result in deletion of your forum account or a ban/);
   const submit = screen.getByRole("button", { name: "Register for forum" });
   expect(submit).toBeDisabled();
   fireEvent.change(screen.getByLabelText("Username"), { target: { value: "a!" } });
@@ -81,7 +82,7 @@ test("registration has readonly account fields, availability and mandatory agree
   fireEvent.change(screen.getByLabelText("Username"), { target: { value: "Good_user" } });
   await screen.findByText("Username available");
   expect(submit).toBeDisabled();
-  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("checkbox", {name: /I agree to the rules/}));
   expect(submit).toBeEnabled();
   fireEvent.click(submit);
   await screen.findByText(/Success!/);
@@ -92,7 +93,7 @@ test.each([200, 500, 403])("availability fails closed for HTTP %s", async status
   (fetch as jest.Mock).mockResolvedValue({ ok: status === 200, status });
   registration();
   fireEvent.change(screen.getByLabelText("Username"), { target: { value: "Good_user" } });
-  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("checkbox", {name: /I agree to the rules/}));
   await waitFor(() => expect(fetch).toHaveBeenCalled());
   await screen.findByText(status === 200 ? "Username taken" : /Could not check availability/);
   expect(screen.getByRole("button", { name: "Register for forum" })).toBeDisabled();
@@ -102,7 +103,7 @@ test("network availability failures do not enable registration", async () => {
   (fetch as jest.Mock).mockRejectedValue(new Error("Network down"));
   registration();
   fireEvent.change(screen.getByLabelText("Username"), { target: { value: "Good_user" } });
-  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("checkbox", {name: /I agree to the rules/}));
   await screen.findByText(/Could not check availability/);
   expect(screen.getByRole("button", { name: "Register for forum" })).toBeDisabled();
 });
@@ -140,7 +141,7 @@ test("avatar failure after registration shows recovery rather than success or du
   registration();
   fireEvent.change(screen.getByLabelText("Username"), { target: { value: "ForumUser" } });
   await screen.findByText("Username available");
-  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("checkbox", {name: /I agree to the rules/}));
   fireEvent.change(screen.getByLabelText("Avatar (optional)"), { target: { files: [new File(["avatar"], "avatar.png", { type: "image/png" })] } });
   fireEvent.click(screen.getByRole("button", { name: "Register for forum" }));
   await screen.findByText(/No duplicate registration is needed/);
@@ -153,7 +154,7 @@ test("avatar failure after registration shows recovery rather than success or du
 });
 
 test("success waits for explicit continue-to-forum instead of a timer", async () => {
- auth.forumUser=profile;registration();fireEvent.click(screen.getByRole("checkbox"));
+ auth.forumUser=profile;registration();fireEvent.click(screen.getByRole("checkbox", {name: /I agree to the rules/}));
  fireEvent.click(screen.getByRole("button",{name:"Retry upload and enter"}));
  await screen.findByText(/Success!/);
  expect(screen.queryByText("Redirected forum")).not.toBeInTheDocument();
@@ -161,34 +162,34 @@ test("success waits for explicit continue-to-forum instead of a timer", async ()
  expect(screen.getByText("Redirected forum")).toBeInTheDocument();
 });
 
-test("public rules include both languages and no legal compliance promise", () => {
+test("public rules show the selected English document without duplicated languages or a legal compliance promise", () => {
   render(<MemoryRouter><ForumRules /></MemoryRouter>);
-  expect(screen.getByText("English")).toBeInTheDocument();
-  expect(screen.getByText("Русский")).toBeInTheDocument();
+  expect(screen.queryByText("English")).not.toBeInTheDocument();
+  expect(screen.queryByText("Русский")).not.toBeInTheDocument();
   expect(screen.getByText(/do not assert legal compliance/)).toBeInTheDocument();
   expect(screen.getByText(/Rule violations may result in deletion of your forum account or a ban/)).toBeInTheDocument();
-  expect(screen.getByText(/Нарушения могут привести к удалению вашего аккаунта форума или блокировке/)).toBeInTheDocument();
+  expect(screen.queryByText(/Нарушения могут привести/)).not.toBeInTheDocument();
   for (const heading of ["General rules", "Posting guidelines", "Prohibited content", "Moderation", "Consequences", "Account deletion"]) {
-    expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
+    expect(screen.getByText(heading).tagName).toBe("SUMMARY");
   }
   expect(screen.getByText(/permanent deletion of your forum account/)).toBeInTheDocument();
-  expect(screen.getByText(/окончательному удалению вашего аккаунта форума/)).toBeInTheDocument();
+  expect(screen.getByText(/Deleting a topic permanently removes/)).toBeInTheDocument();
 });
 
-test("rules fetch published bilingual rules without authentication", async () => {
+test("public rules use reconciled complete document without appending a second API document", () => {
   (fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({ en: "Published English rules", ru: "Опубликованные правила" }) });
   render(<MemoryRouter><ForumRules /></MemoryRouter>);
-  await screen.findByText("Published English rules");
-  expect(screen.getByText("Опубликованные правила")).toBeInTheDocument();
-  expect(fetch).toHaveBeenCalledWith("http://localhost:3001/forum/rules", expect.objectContaining({ signal: expect.anything() }));
+  expect(screen.getAllByText(/Deleting a topic permanently removes/)).toHaveLength(1);
+  expect(screen.queryByText("Published English rules")).not.toBeInTheDocument();
+  expect((fetch as jest.Mock).mock.calls.some(([url]) => /\/forum\/rules$/.test(String(url)))).toBe(false);
 });
 
 test("lower-case language context renders Russian registration and deletion/ban warnings", () => {
   localStorage.setItem("lang", "RU");
   render(<LanguageProvider><MemoryRouter><ForumRegister /></MemoryRouter></LanguageProvider>);
   expect(screen.getByText("Регистрация на форуме")).toBeInTheDocument();
-  expect(screen.getByRole("checkbox")).toHaveAccessibleName("Я ознакомился(-ась) с правилами форума и согласен(-на) их соблюдать");
-  expect(screen.getByRole("checkbox")).toBeRequired();
+  expect(screen.getByRole("checkbox", {name: /Я ознакомился/})).toHaveAccessibleName("Я ознакомился(-ась) с правилами форума и согласен(-на) их соблюдать");
+  expect(screen.getByRole("checkbox", {name: /Я ознакомился/})).toBeRequired();
 });
 test("authors display only forum username, avatar and joining date", () => {
   render(<ForumAuthor lang="en" author={{ ...profile, name: mainUser.name, email: mainUser.email } as any} />);
