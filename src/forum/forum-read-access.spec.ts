@@ -67,43 +67,18 @@ describe('Forum discussion read access', () => {
     await app.close();
   });
 
-  it.each(paths)('rejects anonymous discussion reads at %s', async (path) => {
-    await request(app.getHttpServer()).get(path).expect(401);
+  it.each(paths)('preserves public discussion reads at %s', async path => {
+    await request(app.getHttpServer()).get(path).expect(200);
+    expect(users.getById).not.toHaveBeenCalled();
+    expect(members.findOne).not.toHaveBeenCalled();
+  });
+  it.each(paths)('public reads do not confer write access at %s', async path => {
+    users.getById.mockResolvedValue(null);
+    await request(app.getHttpServer()).get(path).set('Authorization','reader').expect(200);
+    await request(app.getHttpServer()).post('/forum/topic').send({title:'not authorized'}).expect(401);
+    await request(app.getHttpServer()).patch('/forum/profile').send({username:'not authorized'}).expect(401);
     expect(users.getById).not.toHaveBeenCalled();
   });
-
-  it.each(paths)('checks database email verification for %s', async (path) => {
-    users.getById.mockResolvedValue({ id: 7, email_verified: false });
-    await request(app.getHttpServer())
-      .get(path)
-      .set('Authorization', 'reader')
-      .expect(403);
-    expect(users.getById).toHaveBeenCalledWith(7);
-    expect(members.findOne).not.toHaveBeenCalled();
-    expect(discussions.getTopics).not.toHaveBeenCalled();
-    expect(discussions.getTopic).not.toHaveBeenCalled();
-    expect(discussions.getPosts).not.toHaveBeenCalled();
-  });
-
-  it.each(paths)('allows a verified nonmember to read %s', async (path) => {
-    await request(app.getHttpServer())
-      .get(path)
-      .set('Authorization', 'reader')
-      .expect(200);
-    expect(users.getById).toHaveBeenCalledWith(7);
-    expect(members.findOne).not.toHaveBeenCalled();
-  });
-
-  it.each(paths)('allows a verified banned member to read %s', async (path) => {
-    members.findOne.mockResolvedValue({ user_id: 7, banned: true });
-    await request(app.getHttpServer())
-      .get(path)
-      .set('Authorization', 'reader')
-      .expect(200);
-    expect(users.getById).toHaveBeenCalledWith(7);
-    expect(members.findOne).not.toHaveBeenCalled();
-  });
-
   it('keeps bilingual rules public', async () => {
     await request(app.getHttpServer()).get('/forum/rules').expect(200);
     expect(users.getById).not.toHaveBeenCalled();

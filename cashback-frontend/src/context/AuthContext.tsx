@@ -1,3 +1,4 @@
+import {activityText} from '../components/ActivityLimits';
 import { BACKEND_URL } from "../backend";
 import {clearReviewIntent} from '../reviewReturn';
 import React, {
@@ -148,9 +149,10 @@ const markExited = (id: number, value: boolean) => {
   }
 };
 
-function parseError(text: string, fallback: string): string {
+function parseError(text: string, fallback: string, lang = "en"): string {
   try {
     const parsed = JSON.parse(text);
+    if (parsed?.code === "ACTIVITY_LIMIT") return activityText(lang).limitReached;
     const message = parsed?.message;
 
     if (Array.isArray(message)) return message.join(", ");
@@ -637,7 +639,7 @@ export const AuthProvider = ({
     const text = await response.text();
 
     if (!response.ok) {
-      throw new Error(parseError(text, "Login failed"));
+      throw new Error(parseError(text, "Login failed", language.current));
     }
 
     const result = JSON.parse(text);
@@ -661,7 +663,7 @@ export const AuthProvider = ({
     const text = await response.text();
 
     if (!response.ok) {
-      throw new Error(parseError(text, "Registration failed"));
+      throw new Error(parseError(text, "Registration failed", language.current));
     }
 
     const result = JSON.parse(text);
@@ -730,7 +732,7 @@ export const AuthProvider = ({
 
     if (!response.ok) {
       throw new Error(
-        parseError(text, "Could not resend email")
+        parseError(text, "Could not resend email", language.current)
       );
     }
 

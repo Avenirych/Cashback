@@ -1,3 +1,4 @@
+import {activityText} from '../components/ActivityLimits';
 import {useEffect,useRef,useState} from 'react';
 import {Link,Navigate} from 'react-router-dom';
 import {useAuth} from '../context/AuthContext';
@@ -25,11 +26,11 @@ export default function ReviewEntry(){
     {enabled===false&&<p role="status">{t.failed}</p>}
     {enabled&& !forumBanned&&!forumUser.banned&&<form style={{display:'grid',gap:12}} onSubmit={async e=>{
       e.preventDefault();if(busy||!genuine||!agreed)return;setBusy(true);setNotice('');key.current??=crypto.randomUUID();
-      try{if(!demo){const acceptance=await fetch(FORUM_API_URL+'/forum/rules/accept',{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({agreedToRules:agreed})});if(!acceptance.ok)throw Error();}const r=await fetch(FORUM_API_URL+(demo?'/demo-reviews':'/forum/reviews'),{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json','Idempotency-Key':key.current},body:JSON.stringify({title,body,rating,experienceConfirmed:genuine,demoDeclared:demo&&genuine,agreedToRules:agreed,language:lang})});if(!r.ok)throw Error();setNotice(demo?dt.success:t.pending);setTitle('');setBody('');setGenuine(false);window.dispatchEvent(new Event('cashback-demo-review-published'));}catch{setNotice(t.failed);}finally{setBusy(false);}
+      try{if(!demo){const acceptance=await fetch(FORUM_API_URL+'/forum/rules/accept',{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({agreedToRules:agreed})});if(!acceptance.ok)throw Error();}const r=await fetch(FORUM_API_URL+(demo?'/demo-reviews':'/forum/reviews'),{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json','Idempotency-Key':key.current},body:JSON.stringify({title,body,rating,experienceConfirmed:genuine,demoDeclared:demo&&genuine,agreedToRules:agreed,language:lang})});if(!r.ok){if(r.status===429){setNotice(activityText(lang).limitReached);return;}throw Error();}setNotice(demo?dt.success:t.pending);setTitle('');setBody('');setGenuine(false);window.dispatchEvent(new Event('cashback-demo-review-published'));}catch{setNotice(t.failed);}finally{setBusy(false);}
     }}><label>{t.reviewTitle}<input required minLength={3} maxLength={255} value={title} disabled={busy} onChange={e=>{setTitle(e.target.value);key.current=undefined;}}/></label>
       <label>{t.body}<textarea required minLength={20} maxLength={4000} disabled={busy} value={body} onChange={e=>{setBody(e.target.value);key.current=undefined;}}/></label>
       <label>{t.rating}<select value={rating} disabled={busy} onChange={e=>{setRating(Number(e.target.value));key.current=undefined;}}>{[1,2,3,4,5].map(n=><option key={n}>{n}</option>)}</select></label>
       <label><input type="checkbox" required checked={genuine} disabled={busy} onChange={e=>setGenuine(e.target.checked)}/>{demo?dt.declaration:t.genuine}</label><label><input type="checkbox" required checked={agreed} disabled={busy} onChange={e=>setAgreed(e.target.checked)}/>{t.rules}</label><button disabled={busy||!genuine||!agreed}>{demo?dt.publish:t.submit}</button></form>}
-    {notice&&<p role="status">{notice}</p>}<p><Link to="/forum">{t.read}</Link></p>
+    {notice&&<p role="status">{notice} <Link to="/profile">{activityText(lang).title}</Link></p>}<p><Link to="/forum">{t.read}</Link></p>
   </main>;
 }

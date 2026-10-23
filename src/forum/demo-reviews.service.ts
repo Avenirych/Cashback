@@ -1,4 +1,6 @@
-import {Injectable,ServiceUnavailableException,ForbiddenException,BadRequestException,OnModuleInit,OnModuleDestroy,Logger} from '@nestjs/common';
+import {Injectable,ServiceUnavailableException,ForbiddenException,BadRequestException,OnModuleInit,OnModuleDestroy,Logger,Optional} from '@nestjs/common';
+import {ActivityService} from '../activity/activity.service';
+import {digest} from '../activity/activity-engine';
 import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {ForumUserService} from './forum-user.service';
@@ -10,7 +12,7 @@ export class DemoReviewsService implements OnModuleInit,OnModuleDestroy {
  private timer:NodeJS.Timeout|undefined;
  onModuleInit(){if(!localDemoReviewsEnabled())return;const cleanup=()=>{void this.store.list().catch(()=>new Logger('DemoReviews').warn('Local demo retention cleanup unavailable'));};cleanup();this.timer=setInterval(cleanup,3600000);this.timer.unref();}
  onModuleDestroy(){if(this.timer)clearInterval(this.timer);}
- constructor(private readonly members:ForumUserService){}
+ constructor(private readonly members:ForumUserService,@Optional() private readonly activity?:ActivityService){}
  configuration(){return{enabled:localDemoReviewsEnabled(),demo:true,retentionDays:7};}
  private enabled(){if(!localDemoReviewsEnabled())throw new ServiceUnavailableException('Local demo reviews disabled');}
  private public(row:DemoReview){return{id:row.id,author:row.author,body:row.body,title:row.title,rating:row.rating,language:row.language,publishedAt:row.publishedAt,demo:true,kind:'submitted-demo'};}
@@ -25,7 +27,15 @@ export class DemoReviewsService implements OnModuleInit,OnModuleDestroy {
  async submit(userId:number,input:Parameters<DemoReviewStore['add']>[2],key:unknown){
   this.enabled();const member=await this.members.activeMember(userId);
   if(member.banned)throw new ForbiddenException('Forum access restricted');
-  return this.public(await this.store.add(userId,{username:member.username,avatar_url:member.avatar_url},input,key));
+  const write=()=>this.store.add(userId,{username:member.username,avatar_url:member.avatar_url},input,key);
+  if(process.env.CASHBACK_ACTIVITY_LIMITS==='true'){
+   if(!this.activity)throw new ServiceUnavailableException('Activity protection required');
+   if(typeof key!=='string'||!/^[a-zA-Z0-9_-]{8,100}$/.test(key))throw new BadRequestException('Idempotency key required');
+   const material=JSON.stringify([typeof input.title==='string'?input.title.trim():input.title,typeof input.body==='string'?input.body.trim():input.body,input.rating,input.language]);
+   const result=await this.activity.perform(userId,'review','local-demo','demo',key,material,write,async()=>{try{return !(await this.store.list()).some(r=>r.authorId===userId&&r.keyHash===digest(key));}catch{return false;}});
+   return this.public(result);
+  }
+  return this.public(await write());
  }
  async removeOwn(userId:number){this.enabled();await this.members.assertVerifiedUser(userId);return this.store.removeOwn(userId);}
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import {activityText} from './ActivityLimits';
 import { Link } from "react-router-dom";
 import { translations } from "../i18n";
 
@@ -24,6 +25,7 @@ export default function Footer({ lang }: FooterProps) {
           <Link to="/privacy">{t.footerPrivacy}</Link>
           <Link to="/faq">{t.footerFaq}</Link>
           <Link to="/cookies">{t.footerCookies}</Link>
+          <Link to="/activity-limits">{activityText(lang).rules}</Link>
         </div>
       </nav>
       <div style={{ marginBottom: "10px" }}>

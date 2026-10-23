@@ -1,4 +1,5 @@
-import {BadRequestException, ConflictException, ForbiddenException, HttpException, Injectable, ServiceUnavailableException} from '@nestjs/common';
+import {BadRequestException, ConflictException, ForbiddenException, HttpException, Injectable, ServiceUnavailableException,Optional} from '@nestjs/common';
+import {ActivityService} from '../activity/activity.service';
 import {DataSource, EntityManager} from 'typeorm';
 import {createHash} from 'node:crypto';
 import {contentModerationEnabled, moderationSignals, restriction, CURRENT_FORUM_RULES_VERSION} from './moderation-policy';
@@ -11,7 +12,7 @@ function text(value: unknown, min: number, max: number) {
 }
 @Injectable()
 export class ContentModerationService {
-  constructor(private readonly db: DataSource) {}
+  constructor(private readonly db: DataSource,@Optional() private readonly activity?:ActivityService) {}
   async installed(): Promise<boolean> {
     try {const [row]=await this.db.query("SELECT to_regclass('public.forum_moderation_schema') IS NOT NULL AS installed");return row?.installed===true;}
     catch {throw new ServiceUnavailableException('Cannot establish moderation readiness');}
@@ -111,7 +112,13 @@ export class ContentModerationService {
       const [rate] = await m.query("SELECT count(*)::integer AS n FROM forum_content_cases WHERE author_id=$1 AND created_at>clock_timestamp()-interval '10 minutes'", [userId]);
       if (rate.n >= 20) throw new ForbiddenException('Publication rate limit');
       if (kind === 'review' && (await m.query("SELECT id FROM forum_content_cases WHERE author_id=$1 AND kind='review'",[userId])).length) throw new ConflictException('One review per account; contact moderation to amend it');
-      let target;
+        let activityReservation:any;
+        if(process.env.CASHBACK_ACTIVITY_LIMITS==='true'){
+          if(!this.activity)throw new ServiceUnavailableException('Activity protection required');
+          activityReservation=await this.activity.engine.reserve(m,{subject:this.activity.subject(userId),userId,action:kind,partner:'forum',mode:'real',key,material});
+          if(activityReservation.state!=='reserved')throw new ConflictException('Activity/content replay mismatch');
+        }
+        let target;
       if (kind === 'post') {
         if (!(await m.query("SELECT t.id FROM forum_topics t JOIN forum_content_cases c ON c.target_id=t.id AND c.kind IN ('topic','review') WHERE t.id=$1 AND c.state='published' FOR SHARE OF c",[input.topicId])).length) throw new BadRequestException('Published topic not found');
         [target] = await m.query('INSERT INTO forum_posts(content,"authorId","topicId") VALUES($1,$2,$3) RETURNING id',[body,userId,input.topicId]);
@@ -120,6 +127,7 @@ export class ContentModerationService {
       }
       const [c] = await m.query('INSERT INTO forum_content_cases(kind,target_id,author_id,request_key,request_hash,signals) VALUES($1,$2,$3,$4,$5,$6::jsonb) RETURNING id,author_id',[kind,target.id,userId,key,hash,JSON.stringify(moderationSignals(title+' '+body))]);
       await this.event(m,c,userId,'submitted','Awaiting human moderation');
+        if(activityReservation)await this.activity!.engine.settle(m,activityReservation.id,'confirmed');
       return {id:target.id,caseId:c.id,status:'pending'};
     });
   }

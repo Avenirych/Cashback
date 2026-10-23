@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import { useOnboarding } from "../onboarding";
 import "./BonusAds.css";
+import {BACKEND_URL} from '../backend';
+import {activityText} from '../components/ActivityLimits';
 
 const ASSET_BASE = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
 const BACKGROUND_URL = `${ASSET_BASE}/ads/background.png`;
@@ -19,6 +21,7 @@ interface DailyTotal {
 
 interface AdsViewerProps {
   userId: number | null;
+  token?:string|null;
   authLoading: boolean;
   requireAccess: () => boolean;
 }
@@ -227,6 +230,7 @@ export default function BonusAds() {
     <AdsViewer
       key={viewerKey}
       userId={hasAccess && user ? user.id : null}
+      token={token}
       authLoading={loading}
       requireAccess={requireAccess}
     />
@@ -235,6 +239,7 @@ export default function BonusAds() {
 
 function AdsViewer({
   userId,
+  token,
   authLoading,
   requireAccess,
 }: AdsViewerProps) {
@@ -245,6 +250,9 @@ function AdsViewer({
     () => pickReward()
   );
   const [playing, setPlaying] = useState(false);
+  const [settling,setSettling]=useState(false),[quotaError,setQuotaError]=useState(false);
+  const operationKey=useRef(''),mounted=useRef(true);
+  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
   const [remaining, setRemaining] = useState(5);
   const [sessionTotal, setSessionTotal] = useState(0);
 
@@ -394,7 +402,7 @@ function AdsViewer({
       if (elapsedRef.current >= DURATION_MS) {
         if (!creditedRef.current) {
           creditedRef.current = true;
-
+          const credit=()=>{
           const date = localDay();
           const stored = readDaily(userId, date);
           const memory = dailyRef.current;
@@ -413,6 +421,14 @@ function AdsViewer({
           setDaily(next);
           setStorageError(!writeDaily(userId, next));
           setSessionTotal((total) => total + reward);
+          };
+          if(process.env.REACT_APP_ACTIVITY_LIMITS==='true'){
+            setSettling(true);setQuotaError(false);
+            void fetch(BACKEND_URL+'/activity/demo/video',{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json','Idempotency-Key':operationKey.current},body:'{}'})
+              .then(r=>{if(!r.ok)throw Error();if(mounted.current)credit();})
+              .catch(()=>{if(mounted.current)setQuotaError(true);})
+              .finally(()=>{if(mounted.current)setSettling(false);});
+          }else credit();
         }
 
         setPlaying(false);
@@ -429,15 +445,16 @@ function AdsViewer({
     return () => {
       window.cancelAnimationFrame(frameId);
     };
-  }, [playing, visible, reward, userId]);
+  }, [playing, visible, reward, userId,token]);
 
   const startViewing = () => {
-    if (playing || authLoading) return;
+    if (playing || authLoading || settling) return;
 
     // Регистрация запускается именно по кнопке согласия.
     if (!requireAccess()) return;
 
     if (userId === null || assets !== "ready") return;
+    if(process.env.REACT_APP_ACTIVITY_LIMITS==='true'){operationKey.current=crypto.randomUUID();setQuotaError(false);}
 
     elapsedRef.current = 0;
     creditedRef.current = false;
@@ -533,7 +550,7 @@ function AdsViewer({
                   type="button"
                   onClick={startViewing}
                   disabled={
-                    authLoading ||
+                    authLoading || settling ||
                     (userId !== null && assets !== "ready")
                   }
                 >
@@ -574,6 +591,7 @@ function AdsViewer({
         </section>
 
         <p className="ads-demo-note">{t.demo}</p>
+        {quotaError&&<p role="alert">{activityText(lang).error} <a href="/profile">{activityText(lang).title}</a></p>}
 
         {storageError && (
           <p

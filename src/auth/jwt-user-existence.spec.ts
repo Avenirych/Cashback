@@ -31,7 +31,7 @@ describe('JWT current user identity gate', () => {
   const forum = { getTopics: jest.fn() };
   const bonus = { getSnapshot: jest.fn() };
   const marketing = { getPreferences: jest.fn() };
-  const paths = ['/auth/profile', '/users/42', '/forum/status', '/forum/topics', '/api/bonus/snapshot', '/user/marketing-preferences'];
+  const paths = ['/auth/profile', '/users/42', '/forum/status', '/api/bonus/snapshot', '/user/marketing-preferences'];
   const own = jwt.sign({ sub: 42, email: fixture.email, name: fixture.name });
   beforeAll(async () => {
     process.env.JWT_SECRET = secret;
@@ -112,7 +112,14 @@ describe('JWT current user identity gate', () => {
     expect(users.update).toHaveBeenCalledWith(42, { name: 'Updated' });
     forumUsers.assertVerifiedUser.mockRejectedValue(new ForbiddenException('Verify email'));
     bonus.getSnapshot.mockRejectedValue(new ForbiddenException('Verify email'));
-    for (const path of ['/forum/topics', '/api/bonus/snapshot']) await request(app.getHttpServer()).get(path).set('Authorization', `Bearer ${own}`).expect(403);
+    for (const path of ['/api/bonus/snapshot']) await request(app.getHttpServer()).get(path).set('Authorization', `Bearer ${own}`).expect(403);
+  });
+  it('public discussion reading does not authorize a deleted account for private routes', async () => {
+    users.getById.mockResolvedValue(null);
+    await request(app.getHttpServer()).get('/forum/topics').set('Authorization', `Bearer ${own}`).expect(200);
+    expect(users.getById).not.toHaveBeenCalled();
+    await request(app.getHttpServer()).get('/auth/profile').set('Authorization', `Bearer ${own}`).expect(401);
+    expect(auth.profile).not.toHaveBeenCalled();
   });
   it('public register is not globally JWT guarded', async () => {
     await request(app.getHttpServer()).post('/auth/register').send({ email: fixture.email, password: 'synthetic-only', name: fixture.name }).expect(201);

@@ -12,6 +12,7 @@ import { ForumPost } from './forum-post.entity';
 import { ForumUserService } from './forum-user.service';
 import { ContentModerationService } from './content-moderation.service';
 import { contentModerationEnabled } from './moderation-policy';
+import {ActivityService} from '../activity/activity.service';
 
 @Injectable()
 export class ForumService {
@@ -22,6 +23,7 @@ export class ForumService {
     private readonly postRepo: Repository<ForumPost>,
     private readonly forumUserService: ForumUserService,
     @Optional() private readonly moderation?: ContentModerationService,
+    @Optional() private readonly activity?:ActivityService,
   ) {}
 
   private validateId(id: number) {
@@ -66,6 +68,7 @@ export class ForumService {
 
   async createTopic(userId: number, title: unknown, requestKey?: string) {
     if (await this.usesModeration()) return this.moderated().submit(userId,'topic',{title},requestKey);
+    if(process.env.CASHBACK_ACTIVITY_LIMITS==='true')throw new ServiceUnavailableException('Versioned moderation required for forum writes');
     await this.forumUserService.activeMember(userId);
     if (
       typeof title !== 'string' ||
@@ -85,6 +88,7 @@ export class ForumService {
 
   async createPost(userId: number, topicId: number, content: unknown, requestKey?: string) {
     if (await this.usesModeration()) return this.moderated().submit(userId,'post',{topicId,body:content},requestKey);
+    if(process.env.CASHBACK_ACTIVITY_LIMITS==='true')throw new ServiceUnavailableException('Versioned moderation required for forum writes');
     await this.forumUserService.activeMember(userId);
     this.validateId(topicId);
     if (typeof content !== 'string' || !content.trim())

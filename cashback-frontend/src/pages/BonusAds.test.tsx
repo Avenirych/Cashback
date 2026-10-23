@@ -1,5 +1,5 @@
 import React from 'react';
-import {render,screen,fireEvent,act,within} from '@testing-library/react';
+import {render,screen,fireEvent,act,within,waitFor} from '@testing-library/react';
 import {MemoryRouter,useLocation} from 'react-router-dom';
 import BonusAds from './BonusAds';
 let mockUser:any, mockEligible=true, mockLoading=false;
@@ -22,3 +22,10 @@ test('ending early cancels playback without reward',()=>{view();ready();fireEven
 test('hidden page pauses animation and the time counter',()=>{view();ready();fireEvent.click(screen.getByRole('button',{name:'Согласен смотреть рекламу'}));tick(2000);act(()=>{Object.defineProperty(document,'visibilityState',{configurable:true,value:'hidden'});document.dispatchEvent(new Event('visibilitychange'));});expect(frames.size).toBe(0);expect(document.querySelector('.is-paused')).toBeInTheDocument();expect(amount()).toBe(0);});
 test.each([null,{id:999,email_verified:false}])('anonymous or unverified user cannot start',user=>{mockUser=user;view();ready();fireEvent.click(screen.getByRole('button',{name:'Согласен смотреть рекламу'}));expect(screen.getByTestId('location')).toHaveTextContent('/register?next=%2Fbonuses%2Fads');expect(frames.size).toBe(0);});
 test('incomplete onboarding preserves profile requirement',()=>{mockEligible=false;view();ready();fireEvent.click(screen.getByRole('button',{name:'Согласен смотреть рекламу'}));expect(screen.getByTestId('location')).toHaveTextContent('/profile');expect(frames.size).toBe(0);});
+
+
+test('central demo quota is checked after completion before any browser-only credit; failure gives no credit',async()=>{
+ const old=process.env.REACT_APP_ACTIVITY_LIMITS;process.env.REACT_APP_ACTIVITY_LIMITS='true';Object.defineProperty(global,'crypto',{value:{randomUUID:()=> '00000000-0000-4000-8000-000000000001'},configurable:true});global.fetch=jest.fn().mockResolvedValue({ok:false});
+ try{view();ready();fireEvent.click(screen.getByRole('button',{name:'Согласен смотреть рекламу'}));expect(fetch).not.toHaveBeenCalled();tick(5000);await waitFor(()=>expect(screen.getByRole('alert')).toBeVisible());expect(amount()).toBe(0);expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/activity/demo/video'),expect.objectContaining({headers:expect.objectContaining({'Idempotency-Key':'00000000-0000-4000-8000-000000000001'}),body:'{}'}));}
+ finally{if(old===undefined)delete process.env.REACT_APP_ACTIVITY_LIMITS;else process.env.REACT_APP_ACTIVITY_LIMITS=old;}
+});

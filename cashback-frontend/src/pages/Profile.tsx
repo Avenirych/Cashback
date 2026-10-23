@@ -1,4 +1,5 @@
 import { BACKEND_URL } from "../backend";
+import ActivityLimits from '../components/ActivityLimits';
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -571,6 +572,7 @@ export default function Profile() {
       </section>
 
       <MarketingPreferencesPanel key={user.id} lang={lang} hasPhone={Boolean(freshProfile?.phone_e164 || user.phone_e164)} />
+      {token&&<ActivityLimits token={token} lang={lang}/>}
 
       <WiseAccountNotice lang={lang} />
 

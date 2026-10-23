@@ -87,13 +87,14 @@ describe('ForumController HTTP contract', () => {
     ['post', '/forum/post'],
     ['delete', '/forum/topic/4'],
     ['get', '/forum/status'],
-    ['get', '/forum/topics'],
-    ['get', '/forum/topic/4'],
-    ['get', '/forum/posts/4'],
   ] as const)('requires authentication for %s %s', async (method, path) => {
     await request(app.getHttpServer())[method](path).expect(401);
   });
 
+  it.each(['/forum/topics','/forum/topic/4','/forum/posts/4'])('preserves public discussion reads at %s', async path => {
+    await request(app.getHttpServer()).get(path).expect(200);
+    expect(service.assertVerifiedUser).not.toHaveBeenCalled();
+  });
   it('passes strict registration consent and authenticated ID to the service', async () => {
     service.register.mockResolvedValue({ username: 'Member_7' });
     await request(app.getHttpServer())

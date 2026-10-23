@@ -34,7 +34,7 @@ export class DemoReviewStore {
   const keyHash=digest(key),requestHash=digest(JSON.stringify([body,title,input.rating,input.language]));
   return this.locked(rows=>{
    const old=rows.find(r=>r.authorId===authorId&&r.keyHash===keyHash);if(old){if(old.requestHash!==requestHash)throw new ConflictException('Idempotency key already used');return old;}
-   if(rows.filter(r=>r.authorId===authorId&&Date.parse(r.publishedAt)>Date.now()-3600000).length>=20)throw new HttpException('Demo review rate limit',429);
+   if(process.env.CASHBACK_ACTIVITY_LIMITS!=='true'&&rows.filter(r=>r.authorId===authorId&&Date.parse(r.publishedAt)>Date.now()-3600000).length>=20)throw new HttpException('Demo review rate limit',429);
    if(rows.length>=1000)throw new ServiceUnavailableException('Demo storage capacity reached');
    const time=Math.max(Date.now(),...rows.map(r=>Date.parse(r.publishedAt)+1));
    const row:DemoReview={id:randomUUID(),authorId,author,body,title,rating:Number(input.rating),language:String(input.language),publishedAt:new Date(time).toISOString(),expiresAt:new Date(Date.now()+DEMO_RETENTION_MS).toISOString(),demo:true,keyHash,requestHash};rows.push(row);return row;

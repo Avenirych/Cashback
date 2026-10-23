@@ -9,9 +9,12 @@ import {
   BadRequestException,
   HttpException,
   Header,
+  Optional,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import {ActivityService} from '../activity/activity.service';
 
 interface AuthenticatedRequest {
   user: {
@@ -53,22 +56,28 @@ export class AuthController {
   }
   constructor(
     private readonly authService: AuthService,
+    @Optional() private readonly activity?:ActivityService,
   ) {}
 
+  private limited<T>(action:'registration'|'failed_login'|'resend',email:unknown,req:{socket?:{remoteAddress?:string}},work:()=>Promise<T>){
+    if(process.env.CASHBACK_ACTIVITY_LIMITS==='true'&&!this.activity)throw new ServiceUnavailableException('Activity protection required');
+    return this.activity?this.activity.authAttempt(email,req.socket?.remoteAddress||'unknown',action,work):work();
+  }
+
   @Post('register')
-  async register(@Body() body: RegisterBody) {
+  async register(@Body() body: RegisterBody,@Request() req:{socket?:{remoteAddress?:string}}={}) {
     if (!body) {
       throw new BadRequestException(
         'Registration data is required',
       );
     }
 
-    return this.authService.register(
+    return this.limited('registration',body.email,req,()=>this.authService.register(
       body.email,
       body.password,
       `${body.firstName || ""} ${body.lastName || ""}`.trim(),
       {firstName:body.firstName,lastName:body.lastName,phone_e164:body.phone_e164},
-    );
+    ));
   }
 
   @Get('verify-email')
@@ -86,24 +95,24 @@ export class AuthController {
       throw new BadRequestException('Email is required');
     }
 
-    this.checkResendLimit(req.ip || req.socket?.remoteAddress || 'unknown');
-    return this.authService.resendVerificationEmail(
+    if(!this.activity?.enabled())this.checkResendLimit(req.ip || req.socket?.remoteAddress || 'unknown');
+    return this.limited('resend',body.email,req,()=>this.authService.resendVerificationEmail(
       body.email,
-    );
+    ));
   }
 
   @Post('login')
-  async login(@Body() body: LoginBody) {
+  async login(@Body() body: LoginBody,@Request() req:{socket?:{remoteAddress?:string}}={}) {
     if (!body) {
       throw new BadRequestException(
         'Email and password are required',
       );
     }
 
-    return this.authService.login(
+    return this.limited('failed_login',body.email,req,()=>this.authService.login(
       body.email,
       body.password,
-    );
+    ));
   }
 
   @Get('profile')

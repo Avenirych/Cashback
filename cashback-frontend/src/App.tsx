@@ -1,4 +1,5 @@
 import "./App.css";
+import ActivityRules from './pages/ActivityRules';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProductOffers from "./pages/ProductOffers";
 import { BonusesProvider } from "./context/BonusesContext";
@@ -53,6 +54,7 @@ export function AppRoutes() {
       <CookieConsent />
 
       <Routes>
+        <Route path="/activity-limits" element={<ActivityRules/>}/>
         <Route path="/forum/reviews/new" element={process.env.REACT_APP_DEMO_ONLY==='true'&&process.env.REACT_APP_LOCAL_DEMO_REVIEWS!=='true'?<DemoClosed/>:<ReviewEntry />} />
         <Route path="/forum/reviews/history" element={<ReviewHistory/>}/>
         <Route path="/forum/moderation" element={process.env.REACT_APP_DEMO_ONLY==='true'?<DemoClosed/>:<ModerationCenter />} />
