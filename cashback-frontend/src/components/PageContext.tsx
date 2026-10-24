@@ -11,6 +11,7 @@ export default function PageContext(){
  const info=pathname.startsWith('/forum')?[sections.reviews]:pathname==='/profile'?[sections.plans,sections.payments]:pathname==='/dashboard'?[sections.payments]:feature?[sections.cashback,sections.confirmation,sections.activities]:[];
  useEffect(()=>{document.documentElement.lang=l;document.title=`${routeTitle(pathname)[l]} | Cashback+`;let meta=document.querySelector<HTMLMetaElement>('meta[name="description"]');if(!meta){meta=document.createElement('meta');meta.name='description';document.head.appendChild(meta);}meta.content=labels.seo[l];},[pathname,l]);
  if(!feature&&!info.length)return null;
+ if(l==='ru')return feature==='payments'?<aside className="page-context feature-notice">Выплаты и переводы отключены. Показанные тестовые суммы не являются средствами для вывода. Покупка PREMIUM недоступна.</aside>:null;
  const status=feature?featureAvailability[feature]:null;
  return <section className="page-context" lang={l} aria-label={labels.status[l]}>{status&&<aside className="feature-notice"><strong>{labels.status[l]}</strong><p>{status==='preparing'?labels.preparation[l]:labels.demo[l]}</p></aside>}
  <InformationAccordion items={info} lang={l}/><InformationLinks lang={l}/></section>;

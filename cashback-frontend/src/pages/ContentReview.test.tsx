@@ -5,15 +5,28 @@ import ProductOffers from './ProductOffers';
 import BonusResearch from './BonusResearch';
 import {LanguageProvider} from '../context/LanguageContext';
 import {faqSections,labels,Locale} from '../content/siteContent';
+import {ruFaqGroups} from '../content/russianEditorial';
 jest.mock('../context/AuthContext',()=>({useAuth:()=>({user:null,token:null,loading:false})}));
 jest.mock('../onboarding',()=>({useOnboarding:()=>({eligible:false})}));
+
+test('Russian information gives its main answer without opening panels or repeating navigation',()=>{
+ localStorage.setItem('lang','ru');
+ const view=render(<MemoryRouter><LanguageProvider><InformationPage page="about"/></LanguageProvider></MemoryRouter>);
+ expect(screen.getAllByText(/Cashback\+ объединяет выбор покупок/)).toHaveLength(1);
+ expect(screen.getByText(/Cashback\+ объединяет выбор покупок/)).toBeVisible();
+ expect(view.container.querySelector('main nav')).toBeNull();
+ expect(view.container.querySelector('main [aria-expanded]')).toBeNull();
+});
 
 test.each<Locale>(['en','ru','de','fr'])('FAQ in %s exposes conditions and supports keyboard use',lang=>{
  localStorage.setItem('lang',lang);
  render(<MemoryRouter><LanguageProvider><InformationPage page="faq"/></LanguageProvider></MemoryRouter>);
  expect(screen.getByRole('heading',{level:1})).toHaveTextContent(labels.faq[lang]);
  expect(faqSections.length).toBeGreaterThanOrEqual(30);
- expect(screen.getByText(labels.demo[lang],{selector:'aside p'})).toBeVisible();
+ if(lang==='ru'){
+  expect(screen.queryByText(labels.demo.ru,{selector:'aside p'})).not.toBeInTheDocument();
+  expect(ruFaqGroups.flatMap(group=>group.items)).toHaveLength(16);
+ }else expect(screen.getByText(labels.demo[lang],{selector:'aside p'})).toBeVisible();
  const q=screen.getAllByRole('button',{expanded:false})[0];
  fireEvent.click(q);expect(q).toHaveAttribute('aria-expanded','true');
  const answer=document.getElementById(q.getAttribute('aria-controls')!);
@@ -47,7 +60,8 @@ test.each<Locale>(['en','ru','de','fr'])('comparison screen in %s labels example
 test.each<Locale>(['en','ru','de','fr'])('research catalogue in %s has a localized introduction and no advertised income ranges',lang=>{
  localStorage.setItem('lang',lang);
  const view=render(<MemoryRouter><LanguageProvider><BonusResearch/></LanguageProvider></MemoryRouter>);
- expect(screen.getByText(labels.description[lang])).toBeVisible();
+ if(lang==='ru')expect(screen.getByText(/Выберите формат исследования/)).toBeVisible();
+ else expect(screen.getByText(labels.description[lang])).toBeVisible();
  expect(screen.getAllByText(labels.money[lang]).length).toBe(10);
  expect(view.container.textContent).not.toMatch(/£1000|£2000|Typical earnings|Заработок:/);
 });

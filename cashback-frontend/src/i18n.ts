@@ -373,3 +373,5 @@ export const translations = {
 for (const key of ['EN','RU','DE','FR'] as const) {
  const l=locale(key); Object.assign(translations[key], {title:labels.hero[l],description:labels.description[l],goShopping:labels.shop[l],getBonuses:labels.bonuses[l],terms:labels.terms[l],contacts:labels.contacts[l]});
 }
+translations.RU.title = 'Покупки с cashback и бонусами';
+translations.RU.description = 'Cashback+ помогает выбирать предложения продавцов и понимать условия вознаграждений за покупки. Дополнительно можно участвовать в видео и исследованиях и обсуждать опыт на форуме.';

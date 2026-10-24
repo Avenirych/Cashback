@@ -1,5 +1,7 @@
 .information-page{max-width:980px;margin:0 auto;padding:32px 20px;color:var(--text,#173a33);box-sizing:border-box;line-height:1.7;overflow-wrap:anywhere}
 .information-page h1{font-size:clamp(26px,4vw,40px);line-height:1.25;margin:0 0 24px}
+.information-lead{font-size:clamp(18px,2.3vw,22px);line-height:1.6;max-width:760px;margin:0 0 32px}
+.information-prose{max-width:760px}.information-prose section{padding:20px 0;border-top:1px solid #c8bda9}.information-prose h2,.faq-group>h2{font-size:1.4rem;line-height:1.35;margin:0 0 12px}.information-prose p{margin:0;white-space:pre-line}.faq-group{margin-top:32px}
 .information-accordion{display:grid;gap:14px;margin:22px 0}
 .information-card{background:var(--card-bg,#fffdf7);border:1px solid #c5ccc5;border-radius:12px;overflow:hidden;color:var(--text,#173a33)}
 .information-card h2{font-size:1.05rem;margin:0}

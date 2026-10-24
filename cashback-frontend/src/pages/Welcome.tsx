@@ -1,4 +1,5 @@
 import {labels,locale} from '../content/siteContent';
+import {ruAuthorGreeting} from '../content/russianEditorial';
 import React from "react";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +41,7 @@ export default function Welcome({ lang }: WelcomeProps) {
         fontFamily: "Segoe UI, system-ui, sans-serif",
       }}
     >
+      {locale(lang)==='ru'&&<aside className="home-demo-strip">Cashback+ работает в демонстрационном режиме. Партнёрские предложения, реальные вознаграждения и выплаты недоступны. Тестовые действия и суммы не дают права на выплаты.</aside>}
       <main
         className="welcome-hero"
         style={{
@@ -47,6 +49,7 @@ export default function Welcome({ lang }: WelcomeProps) {
         }}
       >
         <div className="welcome-copy">
+          {locale(lang)==='ru'&&<p className="author-greeting">{ruAuthorGreeting}</p>}
           <h1
             style={{
               fontSize: "40px",
@@ -67,7 +70,8 @@ export default function Welcome({ lang }: WelcomeProps) {
             {t.description ?? "Enjoy your visit!"}
           </p>
 
-          <aside className="feature-notice"><strong>{labels.status[locale(lang)]}</strong><p>{labels.demo[locale(lang)]}</p></aside>
+          {locale(lang)!=='ru'&&<aside className="feature-notice"><strong>{labels.status[locale(lang)]}</strong><p>{labels.demo[locale(lang)]}</p></aside>}
+          {locale(lang)==='ru'&&<ol className="welcome-steps"><li>Выберите предложение и сравните условия покупки.</li><li>Проверьте ставку cashback, исключения и правила подтверждения.</li><li>Перейдите к продавцу для оформления заказа. Вознаграждение зависит от подтверждения покупки.</li></ol>}
           <div className="welcome-actions" style={{ display: "flex", gap: "20px" }}>
             <button
               type="button"

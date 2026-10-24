@@ -914,6 +914,7 @@ export default function Shop({ lang }: ShopProps) {
                       </div>
                     )}
 
+                    {lang.toUpperCase()==='RU'&&<p className="feature-notice">Переход к реальному продавцу пока не подключён. Расчёт показывает пример и не создаёт начислений.</p>}
                     <button
                       type="button"
                       className="shop-buy-btn"

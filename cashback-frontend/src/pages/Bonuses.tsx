@@ -93,9 +93,10 @@ export default function Bonuses() {
             margin: "0 0 30px",
           }}
         >
-          {labels.description[locale(lang)]}
+          {locale(lang)==='ru'?'Выберите видео или исследование. Перед участием проверьте требования, длительность и условия подтверждения. Вознаграждение зависит от выполнения условий задания.':labels.description[locale(lang)]}
         </p>
 
+        {locale(lang)==='ru'&&<p>Сейчас доступны примеры заданий: реальные начисления за участие не подключены.</p>}
         <div
           style={{
             display: "flex",

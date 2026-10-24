@@ -408,14 +408,14 @@ export default function BonusResearch() {
             lineHeight: 1.55,
           }}
         >
-          {t.pageSubtitle}
+          {locale(lang)==='ru'?'Выберите формат исследования: опрос, интервью или оценку продукта. В каждом направлении указаны цель, требования к участникам и условия. Согласие на участие добровольное; вознаграждение зависит от подтверждения по правилам исследования.':t.pageSubtitle}
         </p>
 
         <div
           style={{
             display: "grid",
             gridTemplateColumns:
-              "repeat(auto-fit, minmax(280px, 1fr))",
+              "repeat(auto-fit, minmax(min(100%,280px), 1fr))",
             gap: "16px",
           }}
         >
@@ -496,6 +496,7 @@ export default function BonusResearch() {
                 {labels.money[locale(lang)]}
               </p>
 
+              {locale(lang)==='ru'&&<p>Запись к исследовательской компании пока не подключена. Нажатие не подтверждает участие и не создаёт вознаграждение.</p>}
               <button
                 type="button"
                 onClick={() => onParticipate(card.id)}
