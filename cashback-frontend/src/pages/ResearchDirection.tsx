@@ -87,7 +87,7 @@ export default function ResearchDirection() {
 
               <div className="research-study-bonuses">
                 <span>{t.expected}</span>
-                <strong>—</strong>
+                <strong>{study.expectedBonuses}</strong>
               </div>
 
               <Link

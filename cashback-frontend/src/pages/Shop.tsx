@@ -1,4 +1,3 @@
-import {localizeCommerce,commerceCategory,exampleProduct} from '../content/commerceCopy';
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -236,7 +235,7 @@ export default function Shop({ lang }: ShopProps) {
   const t = useMemo(() => {
     const isRu = lang.toUpperCase() === "RU";
 
-    return localizeCommerce({
+    return {
       title: isRu ? "Магазин (Демо)" : "Shop (Demo)",
       balance: isRu
         ? "На вашем счету бонусов"
@@ -292,7 +291,7 @@ export default function Shop({ lang }: ShopProps) {
         : "No available confirmed bonuses",
       selectedSum: isRu ? "Выбрано бонусов" : "Selected bonus sum",
       close: isRu ? "Закрыть" : "Close",
-    },lang);
+    };
   }, [lang]);
 
   const onBuyClick = (item: ComputedProduct) => {
@@ -349,14 +348,12 @@ export default function Shop({ lang }: ShopProps) {
       const byQuery =
         normalizedQuery.length === 0 ||
         p.title.toLowerCase().includes(normalizedQuery) ||
-        exampleProduct(lang,p.id).toLowerCase().includes(normalizedQuery) ||
-        commerceCategory(p.category,lang).toLowerCase().includes(normalizedQuery) ||
         p.category.toLowerCase().includes(normalizedQuery) ||
         p.seller.toLowerCase().includes(normalizedQuery);
 
       return byCategory && byQuery;
     });
-  }, [products, selectedCategory, query, lang]);
+  }, [products, selectedCategory, query]);
 
   const computed = useMemo<ComputedProduct[]>(() => {
     return filteredBase.map((p) => {
@@ -528,7 +525,7 @@ export default function Shop({ lang }: ShopProps) {
             <h1>{t.title}</h1>
 
             <div className="shop-balance-line">
-              {t.balance}: <strong>{"—"}</strong>
+              {t.balance}: <strong>{USER_BONUS_BALANCE}</strong>
             </div>
           </div>
 
@@ -571,7 +568,7 @@ export default function Shop({ lang }: ShopProps) {
               </option>
 
               {CATEGORY_OPTIONS.map((cat) => (
-                <option key={commerceCategory(cat,lang)} value={cat}>
+                <option key={cat} value={cat}>
                   {cat}
                 </option>
               ))}
@@ -587,7 +584,8 @@ export default function Shop({ lang }: ShopProps) {
               onClick={() => setBonusModalOpen(true)}
               title={t.modalTitle}
             >
-              {"—"}  </button>
+              {selectedBonusSumRaw} GBP
+            </button>
           </div>
 
           <div className="shop-control shop-search">
@@ -661,8 +659,8 @@ export default function Shop({ lang }: ShopProps) {
                                 ? t.ads
                                 : t.research}
                             </td>
-                            <td>{"—"}  </td>
-                            <td>{"—"}</td>
+                            <td>{row.confirmedAmount} GBP</td>
+                            <td>{row.expiresAt}</td>
 
                             <td className="bonus-actions-cell">
                               <button
@@ -698,7 +696,7 @@ export default function Shop({ lang }: ShopProps) {
               <div className="bonus-modal-footer">
                 <div>
                   {t.selectedSum}:{" "}
-                  <strong>{"—"}  </strong>
+                  <strong>{selectedBonusSumRaw} GBP</strong>
                 </div>
 
                 <button
@@ -749,49 +747,49 @@ export default function Shop({ lang }: ShopProps) {
                     <span className="seller-badge">
                       {t.seller} {item.seller}
                     </span>
-                    <img src={item.image} alt={exampleProduct(lang,item.id)} />
+                    <img src={item.image} alt={item.title} />
                   </div>
 
                   <div className="shop-card-main compact">
-                    <h3>{exampleProduct(lang,item.id)}</h3>
-                    <p className="shop-category">{commerceCategory(item.category,lang)}</p>
+                    <h3>{item.title}</h3>
+                    <p className="shop-category">{item.category}</p>
 
                     <div className="shop-stats compact">
                       <div>
                         {t.basePrice}:{" "}
-                        <strong>{"—"}</strong>
+                        <strong>{item.basePrice}</strong>
                       </div>
                       <div>
                         {t.discount}:{" "}
-                        <strong>{"—"}%</strong>
+                        <strong>{item.discountPercent}%</strong>
                       </div>
                       <div>
                         {t.cashback}:{" "}
-                        <strong>{"—"}%</strong>
+                        <strong>{item.cashbackPercent}%</strong>
                       </div>
                     </div>
 
                     <div className="shop-metrics compact">
                       <div className="metric-box">
                         <span>{t.applyBonus}</span>
-                        <strong>{"—"}</strong>
+                        <strong>{item.appliedBonus}</strong>
                       </div>
 
                       <div className="metric-box">
                         <span>{t.actualCashback}</span>
-                        <strong>{"—"}</strong>
+                        <strong>{item.cashbackAmount}</strong>
                       </div>
 
                       <div className="metric-box">
                         <span>{t.finalAfterReturn}</span>
-                        <strong>{"—"}</strong>
+                        <strong>{item.effectivePrice}</strong>
                       </div>
                     </div>
 
                     <div className="selected-bar-row">
                       <div className="selected-bar-title">
                         <span>
-                          {selectedMetricLabel}: {"—"}% (
+                          {selectedMetricLabel}: {selectedValue}% (
                           {t.level})
                         </span>
 
@@ -914,7 +912,6 @@ export default function Shop({ lang }: ShopProps) {
                       </div>
                     )}
 
-                    {lang.toUpperCase()==='RU'&&<p className="feature-notice">Переход к реальному продавцу пока не подключён. Расчёт показывает пример и не создаёт начислений.</p>}
                     <button
                       type="button"
                       className="shop-buy-btn"

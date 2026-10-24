@@ -8,8 +8,8 @@ test('renders Cashback public navigation and restored information links',async()
   localStorage.clear();sessionStorage.clear();window.history.replaceState({},'', '/');
   const view=render(<App/>);
   expect(screen.getByRole('banner')).toBeInTheDocument();
-  expect(screen.getByRole('button',{name:/Explore the catalogue|Посмотреть каталог/})).toBeEnabled();
-  expect(screen.getByRole('button',{name:/Explore activities|Посмотреть задания/})).toBeEnabled();
+  expect(screen.getByRole('button',{name:/Go shopping|В магазин/})).toBeEnabled();
+  expect(screen.getByRole('button',{name:/Get bonuses|Получить бонусы/})).toBeEnabled();
   expect(document.querySelector('a[href="/privacy"]')).toBeInTheDocument();
   expect(document.querySelector('a[href="/faq"]')).toBeInTheDocument();
   await waitFor(()=>expect(fetchIndex).toHaveBeenCalledWith('/search-index.json',expect.objectContaining({cache:'no-cache',signal:expect.any(AbortSignal)})));

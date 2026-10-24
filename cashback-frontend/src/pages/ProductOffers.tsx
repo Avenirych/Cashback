@@ -1,8 +1,4 @@
-import {useLang} from '../context/LanguageContext';
-import {labels,locale} from '../content/siteContent';
 import React, { useMemo } from "react";
-const offerTranslations:Record<string,string[]>={"Образец продукта":["Product comparison example","Produktvergleichsbeispiel","Exemple de comparaison de produits"],"Сводка по продавцам":["Example groups","Beispielgruppen","Groupes d’exemple"],"Продавец":["Group","Gruppe","Groupe"],"Предложений:":["Examples:","Beispiele:","Exemples :"],"Средняя итоговая:":["Illustrative total:","Beispielgesamtwert:","Total illustratif :"],"Изображение":["Image","Bild","Image"],"Товар":["Product","Produkt","Produit"],"Базовая цена":["Base price","Ausgangspreis","Prix initial"],"Скидка %":["Discount %","Rabatt %","Remise %"],"Cashback %":["Cashback %","Cashback %","Cashback %"],"Цена после скидки":["After discount","Nach Rabatt","Après remise"],"Сумма cashback":["Cashback amount","Cashback-Betrag","Montant du cashback"],"Итоговая цена":["Final price","Endpreis","Prix final"],"Образец продукта #":["Product example #","Produktbeispiel #","Exemple de produit n°"]};
-function offerText(text:string,lang:string){const l=locale(lang);return l==='ru'?text:offerTranslations[text]?.[{en:0,de:1,fr:2}[l]]||text;}
 
 type Seller = "A" | "B" | "C" | "D" | "E";
 
@@ -68,7 +64,6 @@ function generateOffers(): Offer[] {
 }
 
 export default function ProductOffers() {
- const {lang}=useLang();
   const offers = useMemo(() => generateOffers(), []);
 
   const sellerStats = useMemo(() => {
@@ -87,7 +82,7 @@ export default function ProductOffers() {
   }, [offers]);
 
   return (
-    <main className="product-offers-page"
+    <main
       style={{
         minHeight: "calc(100vh - 72px)",
         padding: "24px 16px 32px",
@@ -97,15 +92,16 @@ export default function ProductOffers() {
       }}
     >
       <section style={{ maxWidth: 1180, margin: "0 auto" }}>
-        <h1 style={{ margin: "0 0 10px", fontSize: 34 }}>{offerText("Образец продукта",lang)}</h1>
+        <h1 style={{ margin: "0 0 10px", fontSize: 34 }}>Образец продукта</h1>
         <p style={{ margin: "0 0 18px", lineHeight: 1.6 }}>
-          {labels.demo[locale(lang)]}
+          Сгенерировано 100 предложений. Продавцы: A, B, C, D, E. Диапазоны:
+          базовая цена 100–200, cashback 5–15%, скидка 3–20%.
         </p>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,220px),1fr))",
+            gridTemplateColumns: "220px 1fr",
             gap: 18,
             alignItems: "start",
             marginBottom: 20,
@@ -121,7 +117,7 @@ export default function ProductOffers() {
           >
             <img
               src={PRODUCT_IMAGE}
-              alt={offerText("Образец продукта",lang)}
+              alt="Образец продукта"
               style={{
                 width: "100%",
                 maxHeight: 260,
@@ -141,7 +137,9 @@ export default function ProductOffers() {
               boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
             }}
           >
-            <h2 style={{ marginTop: 0, marginBottom: 10, fontSize: 22 }}>{offerText("Сводка по продавцам",lang)}</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 10, fontSize: 22 }}>
+              Сводка по продавцам
+            </h2>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               {sellerStats.map((s) => (
                 <div
@@ -154,9 +152,9 @@ export default function ProductOffers() {
                     padding: "10px 12px",
                   }}
                 >
-                  <strong>{offerText("Продавец",lang)} {s.seller}</strong>
-                  <div>{offerText("Предложений:",lang)} {s.count}</div>
-                  <div>{offerText("Средняя итоговая:",lang)} {"—"}</div>
+                  <strong>Продавец {s.seller}</strong>
+                  <div>Предложений: {s.count}</div>
+                  <div>Средняя итоговая: {s.avgEffective}</div>
                 </div>
               ))}
             </div>
@@ -175,22 +173,22 @@ export default function ProductOffers() {
             style={{
               width: "100%",
               borderCollapse: "collapse",
-              minWidth: 0,
+              minWidth: 980,
               fontSize: 14,
             }}
           >
             <thead>
               <tr style={{ background: "#eef6ff" }}>
                 <th style={thStyle}>#</th>
-                <th style={thStyle}>{offerText("Изображение",lang)}</th>
-                <th style={thStyle}>{offerText("Товар",lang)}</th>
-                <th style={thStyle}>{offerText("Продавец",lang)}</th>
-                <th style={thStyle}>{offerText("Базовая цена",lang)}</th>
-                <th style={thStyle}>{offerText("Скидка %",lang)}</th>
-                <th style={thStyle}>{offerText("Cashback %",lang)}</th>
-                <th style={thStyle}>{offerText("Цена после скидки",lang)}</th>
-                <th style={thStyle}>{offerText("Сумма cashback",lang)}</th>
-                <th style={thStyle}>{offerText("Итоговая цена",lang)}</th>
+                <th style={thStyle}>Изображение</th>
+                <th style={thStyle}>Товар</th>
+                <th style={thStyle}>Продавец</th>
+                <th style={thStyle}>Базовая цена</th>
+                <th style={thStyle}>Скидка %</th>
+                <th style={thStyle}>Cashback %</th>
+                <th style={thStyle}>Цена после скидки</th>
+                <th style={thStyle}>Сумма cashback</th>
+                <th style={thStyle}>Итоговая цена</th>
               </tr>
             </thead>
 
@@ -211,15 +209,15 @@ export default function ProductOffers() {
                       }}
                     />
                   </td>
-                  <td style={tdStyle}>{offerText("Образец продукта #",lang)}{offer.id}</td>
+                  <td style={tdStyle}>Образец продукта #{offer.id}</td>
                   <td style={tdStyle}>Продавец {offer.seller}</td>
-                  <td style={tdStyle}>{"—"}</td>
-                  <td style={tdStyle}>{"—"}%</td>
-                  <td style={tdStyle}>{"—"}%</td>
-                  <td style={tdStyle}>{"—"}</td>
-                  <td style={tdStyle}>{"—"}</td>
+                  <td style={tdStyle}>{offer.basePrice}</td>
+                  <td style={tdStyle}>{offer.discountPercent}%</td>
+                  <td style={tdStyle}>{offer.cashbackPercent}%</td>
+                  <td style={tdStyle}>{offer.priceAfterDiscount}</td>
+                  <td style={tdStyle}>{offer.cashbackAmount}</td>
                   <td style={{ ...tdStyle, fontWeight: 700, color: "#0f4f42" }}>
-                    {"—"}
+                    {offer.effectivePrice}
                   </td>
                 </tr>
               ))}

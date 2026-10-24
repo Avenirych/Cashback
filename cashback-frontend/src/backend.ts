@@ -1,5 +1,3 @@
-import {locale,words} from './content/siteContent';
-function unavailableMessage(){let lang='en';try{lang=localStorage.getItem('lang')||'en';}catch{}return words('The service is temporarily unavailable. Please try again later.','Сервис временно недоступен. Попробуйте позже.','Der Dienst ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.','Le service est temporairement indisponible. Veuillez réessayer plus tard.')[locale(lang)];}
 /** Shared historical backend origin; configuration only. */
 export const BACKEND_URL = (process.env.REACT_APP_API_BASE || 'http://localhost:3001').replace(/\/+$/, '');
 
@@ -12,13 +10,13 @@ export async function backendFetch(url: string, init: RequestInit = {}): Promise
   try {
     const response = await fetch(url, { ...init, signal: controller.signal });
     if (response.status >= 500 && /\/auth\//.test(url)) {
-      throw new Error(unavailableMessage());
+      throw new Error('Backend is unavailable or the approved test database/schema is not ready. / Backend или схема разрешённой тестовой БД не готовы.');
     }
     return response;
   } catch (error) {
     if (init.signal?.aborted) throw error;
     if (error instanceof TypeError || controller.signal.aborted) {
-      throw new Error(unavailableMessage());
+      throw new Error('Cannot reach the backend. Check the approved local backend and test database. / Backend недоступен: проверьте разрешённое локальное окружение.');
     }
     throw error;
   } finally {

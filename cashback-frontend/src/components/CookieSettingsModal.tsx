@@ -21,7 +21,7 @@ export default function CookieSettingsModal({ onClose }: Props) {
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY_SETTINGS);
     if (saved) {
-      try { const value=JSON.parse(saved); if(value && typeof value==='object') setSettings({necessary:true,analytics:value.analytics===true,functional:value.functional===true,marketing:value.marketing===true}); } catch { /* Invalid local storage must not break policy access. */ }
+      setSettings(JSON.parse(saved));
     }
   }, []);
 

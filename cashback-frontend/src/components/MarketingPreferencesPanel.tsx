@@ -1,4 +1,3 @@
-import {labels,locale} from '../content/siteContent';
 import { BACKEND_URL, backendFetch } from "../backend";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
@@ -312,7 +311,7 @@ export default function MarketingPreferencesPanel({
         )}
       </div>
 
-      <p>{labels.marketing[locale(normalizedLang)]} <Link to="/privacy#privacySection12">{labels.privacy[locale(normalizedLang)]}</Link>{" · "}<Link to="/privacy#privacySection11">{labels.privacy[locale(normalizedLang)]}</Link>{" · "}<Link to="/cookies">{labels.cookies[locale(normalizedLang)]}</Link></p>
+      <p>{normalizedLang === "RU" ? "Маркетинговые согласия необязательны. Все три можно выключить и сохранить, чтобы отозвать согласие. Сервисные письма об аккаунте и правила форума — отдельно." : "Marketing choices are optional. Turn all three off and save to withdraw consent. Account service messages and forum rules are separate."} <Link to="/privacy#privacySection12">{normalizedLang === "RU" ? "Политика маркетинговых коммуникаций" : "Marketing privacy information"}</Link>{" · "}<Link to="/privacy#privacySection11">{normalizedLang === "RU" ? "Ваши права и отзыв согласия" : "Your rights and withdrawal"}</Link>{" · "}<Link to="/cookies">{normalizedLang === "RU" ? "Политика Cookies" : "Cookie Policy"}</Link></p>
       {preferences && <p>{t.smsMarketing}: {preferences.smsMarketing ? t.enabled : t.disabled}</p>}
       <MarketingPreferencesModal
         hasPhone={hasPhone}

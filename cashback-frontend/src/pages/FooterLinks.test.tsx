@@ -1,4 +1,3 @@
-import {labels,locale} from '../content/siteContent';
 import React from 'react';
 import {render, screen, fireEvent} from '@testing-library/react';
 import {MemoryRouter} from 'react-router-dom';
@@ -14,8 +13,8 @@ test.each([['RU','Информация','Политика конфиденциа
  expect(screen.getByRole('heading',{name:title})).toBeInTheDocument();
  expect(screen.getByRole('link',{name:privacy})).toHaveAttribute('href','/privacy');
  expect(screen.getByRole('link',{name:faq})).toHaveAttribute('href','/faq');
- expect(screen.getByRole('link',{name:labels.terms[locale(lang)]})).toHaveAttribute('href','/terms');
- expect(screen.getByRole('link',{name:labels.contacts[locale(lang)]})).toHaveAttribute('href','/contacts');
+ expect(screen.getByRole('link',{name:/Terms/})).toHaveAttribute('href','/terms');
+ expect(screen.getByRole('link',{name:'Contacts'})).toHaveAttribute('href','/contacts');
  expect(screen.getByText('© 2026 Cashback+')).toBeInTheDocument();
 });
 test.each(['/privacy','/faq','/cookies'])('direct public route %s renders existing page rather than home',(route)=>{
@@ -25,7 +24,7 @@ test.each(['/privacy','/faq','/cookies'])('direct public route %s renders existi
 });
 test('clicking footer FAQ navigates to the real FAQ and opens an answer',()=>{
  render(<MemoryRouter initialEntries={['/privacy']}><AppRoutes/></MemoryRouter>);
- fireEvent.click(screen.getAllByRole('link',{name:'Часто задаваемые вопросы'})[0]);
+ fireEvent.click(screen.getByRole('link',{name:'Часто задаваемые вопросы'}));
  const question=screen.getAllByRole('button',{expanded:false})[0];
  fireEvent.click(question);
  expect(question).toHaveAttribute('aria-expanded','true');

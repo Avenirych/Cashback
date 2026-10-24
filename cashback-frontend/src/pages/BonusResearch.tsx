@@ -1,5 +1,3 @@
-import {labels,locale,words} from '../content/siteContent';
-import {directions,getDirectionText} from '../researchData';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -332,8 +330,9 @@ const content = {
 };
 
 function getLocale(lang: string) {
- const l=locale(lang),base=l==='ru'?content.RU:content.EN;
- return {...base,pageTitle:words('Research','Исследования','Studien','Études')[l],pageSubtitle:labels.description[l],participate:words('Explore category','Посмотреть направление','Kategorie ansehen','Découvrir la catégorie')[l],waiting:words('Please wait','Подождите','Bitte warten','Veuillez patienter')[l],cards:base.cards.map(card=>({...card,...getDirectionText(directions.find(d=>d.id===directionPaths[card.id])!,l),earnings:labels.money[l]}))};
+  return lang.toUpperCase() === "RU"
+    ? content.RU
+    : content.EN;
 }
 
 export default function BonusResearch() {
@@ -408,14 +407,14 @@ export default function BonusResearch() {
             lineHeight: 1.55,
           }}
         >
-          {locale(lang)==='ru'?'Выберите формат исследования: опрос, интервью или оценку продукта. В каждом направлении указаны цель, требования к участникам и условия. Согласие на участие добровольное; вознаграждение зависит от подтверждения по правилам исследования.':t.pageSubtitle}
+          {t.pageSubtitle}
         </p>
 
         <div
           style={{
             display: "grid",
             gridTemplateColumns:
-              "repeat(auto-fit, minmax(min(100%,280px), 1fr))",
+              "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "16px",
           }}
         >
@@ -493,10 +492,9 @@ export default function BonusResearch() {
                   color: "#0f4f42",
                 }}
               >
-                {labels.money[locale(lang)]}
+                {card.earnings}
               </p>
 
-              {locale(lang)==='ru'&&<p>Запись к исследовательской компании пока не подключена. Нажатие не подтверждает участие и не создаёт вознаграждение.</p>}
               <button
                 type="button"
                 onClick={() => onParticipate(card.id)}

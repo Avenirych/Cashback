@@ -5,7 +5,6 @@
   font-family: Arial, sans-serif;
   line-height: 1.6;
 }
-.forum-guide{background:#fffdf7;border-left:4px solid #967126;padding:20px 24px;margin:24px 0;line-height:1.65;overflow-wrap:anywhere}.forum-guide h2{margin:0 0 10px;font-size:1.4rem}.forum-guide ol{padding-left:22px}.forum-guide li+li{margin-top:8px}@media(max-width:480px){.forum-guide{padding:16px}}
 
 .forum-search {
   width: 100%;

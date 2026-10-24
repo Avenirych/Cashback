@@ -3,9 +3,6 @@
 .welcome-art{max-width:420px;min-width:0;flex:1 1 300px;position:relative}
 .welcome-art img{display:block}
 .welcome-actions{flex-wrap:wrap}
-.author-greeting{font-size:clamp(21px,2.5vw,27px);font-weight:600;line-height:1.5;margin:0 0 24px;padding:0 0 20px;border-bottom:1px solid #c4a15d;color:var(--text,#173a33)}
-.home-demo-strip{width:100%;box-sizing:border-box;background:#fff0ca;color:#493b18;border-bottom:1px solid #c4a15d;padding:10px 24px;font-size:14px;line-height:1.5}
-.welcome-steps{padding-left:22px;line-height:1.7;margin:0 0 24px}
 @media(max-width:700px){
  .welcome-hero{flex-direction:column;gap:24px;padding:20px 24px}
  .welcome-copy,.welcome-art{flex:none;width:100%;max-width:100%}
