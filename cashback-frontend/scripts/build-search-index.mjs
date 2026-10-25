@@ -60,8 +60,9 @@ function extract(code) {
 }
 
 // Parse only reviewed public source files. Never execute a page or inspect APIs.
+const publicPages = JSON.parse(read(path.join(src, "content", "publicPages.json")));
 const scope = {};
-vm.runInNewContext(ts.transpileModule(read(path.join(src,'i18n.ts')), {compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText, {exports:scope});
+vm.runInNewContext(ts.transpileModule(read(path.join(src,'i18n.ts')), {compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText, {exports:scope, require: name => { if (name === "./content/publicPages.json") return {default: publicPages}; throw Error("Unreviewed translation import: " + name); }});
 function strings(value) { return typeof value === 'string' ? [value] : Array.isArray(value) ? value.flatMap(strings) : value && typeof value === 'object' ? Object.values(value).flatMap(strings) : []; }
 const index = routes.map(([url, filename]) => {
   const file = ['.tsx','.jsx','.ts','.js'].map(ext=>path.join(src,'pages',filename+ext)).find(fs.existsSync);
@@ -77,6 +78,8 @@ const index = routes.map(([url, filename]) => {
     ts.forEachChild(node,visit);
   }
   visit(tree);
+  const publicPageKey = { '/about': 'about', '/services': 'services', '/contacts': 'contacts' }[url];
+  if (publicPageKey) fragments.push(...strings(publicPages[publicPageKey]));
   if (publicDocuments[url]) fragments.push(...strings(JSON.parse(read(path.join(src, 'content', publicDocuments[url]))).rules));
   const keys=new Set(Array.from(code.matchAll(/\bt\.([A-Za-z0-9_]+)/g),m=>m[1]));
   for(const dict of Object.values(scope.translations)) for(const [key,value] of Object.entries(dict)) {

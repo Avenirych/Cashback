@@ -1,0 +1,4274 @@
+{
+  "about": {
+    "ru": {
+      "title": "О нас — Cashback+",
+      "sections": [
+        {
+          "title": "Кто мы",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ — это платформа потребительских вознаграждений, которая помогает пользователям получать кэшбэк и дополнительные бонусы за участие в партнёрских программах, рекламных кампаниях и исследованиях."
+            },
+            {
+              "type": "paragraph",
+              "text": "Платформа управляется компанией Cashback Plus Ltd, зарегистрированной в Великобритании."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ не является банком, платёжной системой, инвестиционной платформой, эмитентом электронных денег или поставщиком финансовых услуг. Все вознаграждения предоставляются исключительно в рамках программы лояльности и пользовательской активности."
+            }
+          ]
+        },
+        {
+          "title": "Наша миссия",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Мы стремимся сделать программы вознаграждений более прозрачными, понятными и доступными для широкого круга пользователей."
+            },
+            {
+              "type": "paragraph",
+              "text": "Наша цель состоит в том, чтобы пользователи могли получать дополнительную ценность от своих повседневных покупок и цифровой активности, понимая условия начисления вознаграждений и правила участия в программе."
+            }
+          ]
+        },
+        {
+          "title": "Наши ценности",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Прозрачность"
+            },
+            {
+              "type": "paragraph",
+              "text": "Пользователь получает информацию о размере потенциального вознаграждения и условиях его начисления до участия в программе."
+            },
+            {
+              "type": "paragraph",
+              "text": "Мы стараемся предоставлять понятные правила, доступные описания предложений и своевременно информировать пользователей об изменениях условий."
+            },
+            {
+              "type": "heading",
+              "text": "Честность"
+            },
+            {
+              "type": "paragraph",
+              "text": "Все существенные условия участия, ограничения программы и применимые правила публикуются в соответствующих разделах платформы."
+            },
+            {
+              "type": "paragraph",
+              "text": "Мы не используем скрытые комиссии и стремимся обеспечивать понятную коммуникацию между пользователями, партнёрами и платформой."
+            },
+            {
+              "type": "heading",
+              "text": "Безопасность"
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ не принимает пользовательские депозиты, не предоставляет платёжные услуги и не хранит денежные средства клиентов в качестве финансового учреждения."
+            },
+            {
+              "type": "paragraph",
+              "text": "Вознаграждения и бонусы, доступные на платформе, относятся исключительно к программе лояльности и не являются банковскими, инвестиционными или страховыми продуктами."
+            },
+            {
+              "type": "heading",
+              "text": "Сообщество"
+            },
+            {
+              "type": "paragraph",
+              "text": "Мы развиваем сообщество пользователей, заинтересованных в разумном потреблении, выгодных покупках и совместном использовании возможностей программы."
+            },
+            {
+              "type": "paragraph",
+              "text": "Некоторые бонусы могут передаваться другим пользователям в соответствии с действующими Правилами активности и установленными ограничениями платформы."
+            }
+          ]
+        },
+        {
+          "title": "Как работает Cashback+",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ объединяет несколько видов вознаграждений в рамках единой программы."
+            },
+            {
+              "type": "heading",
+              "text": "Кэшбэк от магазинов"
+            },
+            {
+              "type": "paragraph",
+              "text": "Многие интернет-магазины выплачивают партнёрское вознаграждение за привлечённых покупателей."
+            },
+            {
+              "type": "paragraph",
+              "text": "В рамках отдельных предложений Cashback+ может передавать пользователю часть такого вознаграждения в виде кэшбэка после выполнения условий соответствующего предложения и подтверждения покупки партнёром."
+            },
+            {
+              "type": "paragraph",
+              "text": "Размер кэшбэка зависит от условий конкретного магазина, категории товаров и действующих акций."
+            },
+            {
+              "type": "heading",
+              "text": "Бонусы за просмотр рекламы"
+            },
+            {
+              "type": "paragraph",
+              "text": "Пользователи могут участвовать в рекламных программах, доступных на платформе, и получать бонусные вознаграждения за выполнение предусмотренных условий."
+            },
+            {
+              "type": "paragraph",
+              "text": "Размер доступного бонуса определяется правилами конкретной рекламной кампании, условиями партнёра и правилами программы Cashback+."
+            },
+            {
+              "type": "paragraph",
+              "text": "Участие в рекламных программах является добровольным."
+            },
+            {
+              "type": "heading",
+              "text": "Бонусы за участие в исследованиях"
+            },
+            {
+              "type": "paragraph",
+              "text": "Некоторые партнёры проводят маркетинговые и исследовательские опросы, в которых пользователи могут принимать участие."
+            },
+            {
+              "type": "paragraph",
+              "text": "В случае успешного завершения исследования пользователь может получить предусмотренное вознаграждение в соответствии с условиями конкретного исследования."
+            },
+            {
+              "type": "paragraph",
+              "text": "Размер и доступность таких вознаграждений определяются партнёрами и могут различаться для разных исследований."
+            },
+            {
+              "type": "heading",
+              "text": "Выплаты от внешних партнёров"
+            },
+            {
+              "type": "paragraph",
+              "text": "В отдельных случаях партнёры могут осуществлять выплаты пользователям напрямую."
+            },
+            {
+              "type": "paragraph",
+              "text": "Такие выплаты не проходят через Cashback+ и не отображаются в балансе программы, если иное не указано в условиях соответствующего предложения."
+            },
+            {
+              "type": "paragraph",
+              "text": "За обработку подобных выплат отвечает организация, которая осуществляет выплату пользователю."
+            },
+            {
+              "type": "heading",
+              "text": "Передача бонусов между пользователями"
+            },
+            {
+              "type": "paragraph",
+              "text": "Платформа может предоставлять возможность передачи бонусных единиц между участниками программы."
+            },
+            {
+              "type": "paragraph",
+              "text": "Такая передача осуществляется исключительно внутри программы Cashback+ и не является банковским переводом, денежным переводом, платёжной услугой или финансовой операцией."
+            },
+            {
+              "type": "paragraph",
+              "text": "Платформа вправе устанавливать ограничения, лимиты и дополнительные требования к таким операциям."
+            }
+          ]
+        },
+        {
+          "title": "Почему пользователи выбирают Cashback+",
+          "blocks": [
+            {
+              "type": "list",
+              "items": [
+                "Дополнительная выгода при покупках у партнёров.",
+                "Возможность участвовать в рекламных кампаниях и исследованиях.",
+                "Единая система учёта вознаграждений.",
+                "Понятные правила участия и начисления бонусов.",
+                "Развитие пользовательского сообщества."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Важная информация",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ является программой потребительских вознаграждений."
+            },
+            {
+              "type": "paragraph",
+              "text": "Размер, доступность и сроки начисления вознаграждений зависят от условий партнёрских программ, активности пользователя, результатов проверки транзакций и соблюдения правил платформы."
+            },
+            {
+              "type": "paragraph",
+              "text": "Вознаграждения не являются банковским вкладом, инвестиционным продуктом, электронными деньгами, страховым продуктом или платёжным инструментом."
+            },
+            {
+              "type": "paragraph",
+              "text": "Участие в программе не гарантирует получение определённого размера вознаграждения."
+            }
+          ]
+        }
+      ],
+      "join": "Присоединяйтесь к Cashback+",
+      "joinText": "Присоединяйтесь к Cashback+ и получайте доступ к программам вознаграждений, которые помогут сделать ваши покупки и цифровую активность более выгодными при соблюдении условий платформы."
+    },
+    "en": {
+      "title": "About us — Cashback+",
+      "sections": [
+        {
+          "title": "Who we are",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ is a consumer rewards platform that helps users receive cashback and additional bonuses for participating in partner programmes, advertising campaigns and research."
+            },
+            {
+              "type": "paragraph",
+              "text": "The platform is operated by Cashback Plus Ltd, registered in the United Kingdom."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ is not a bank, payment system, investment platform, electronic money issuer or financial services provider. All rewards are provided exclusively within the loyalty programme and user activity framework."
+            }
+          ]
+        },
+        {
+          "title": "Our mission",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "We aim to make rewards programmes more transparent, understandable and accessible to a wide range of users."
+            },
+            {
+              "type": "paragraph",
+              "text": "Our goal is to enable users to gain additional value from their everyday purchases and digital activity while understanding the conditions for receiving rewards and the rules for participating in the programme."
+            }
+          ]
+        },
+        {
+          "title": "Our values",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Transparency"
+            },
+            {
+              "type": "paragraph",
+              "text": "Users receive information about the amount of potential rewards and the conditions for receiving them before participating in a programme."
+            },
+            {
+              "type": "paragraph",
+              "text": "We endeavour to provide clear rules and accessible descriptions of offers, and to inform users promptly about changes to the conditions."
+            },
+            {
+              "type": "heading",
+              "text": "Honesty"
+            },
+            {
+              "type": "paragraph",
+              "text": "All material participation conditions, programme restrictions and applicable rules are published in the relevant sections of the platform."
+            },
+            {
+              "type": "paragraph",
+              "text": "We do not use hidden fees and strive to ensure clear communication between users, partners and the platform."
+            },
+            {
+              "type": "heading",
+              "text": "Safety"
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ does not accept user deposits, provide payment services or hold customers’ funds as a financial institution."
+            },
+            {
+              "type": "paragraph",
+              "text": "The rewards and bonuses available on the platform relate exclusively to the loyalty programme and are not banking, investment or insurance products."
+            },
+            {
+              "type": "heading",
+              "text": "Community"
+            },
+            {
+              "type": "paragraph",
+              "text": "We are developing a community of users interested in responsible consumption, advantageous purchases and sharing the opportunities offered by the programme."
+            },
+            {
+              "type": "paragraph",
+              "text": "Some bonuses may be transferred to other users in accordance with the current Activity Rules and the platform’s established restrictions."
+            }
+          ]
+        },
+        {
+          "title": "How Cashback+ works",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ brings together several types of rewards within a single programme."
+            },
+            {
+              "type": "heading",
+              "text": "Cashback from shops"
+            },
+            {
+              "type": "paragraph",
+              "text": "Many online shops pay affiliate rewards for referred customers."
+            },
+            {
+              "type": "paragraph",
+              "text": "Under certain offers, Cashback+ may pass part of that reward to the user as cashback after the conditions of the relevant offer have been met and the partner has confirmed the purchase."
+            },
+            {
+              "type": "paragraph",
+              "text": "The cashback amount depends on the conditions of the particular shop, the product category and current promotions."
+            },
+            {
+              "type": "heading",
+              "text": "Bonuses for viewing advertising"
+            },
+            {
+              "type": "paragraph",
+              "text": "Users may participate in advertising programmes available on the platform and receive bonus rewards for meeting the specified conditions."
+            },
+            {
+              "type": "paragraph",
+              "text": "The available bonus amount is determined by the rules of the particular advertising campaign, the partner’s conditions and the Cashback+ programme rules."
+            },
+            {
+              "type": "paragraph",
+              "text": "Participation in advertising programmes is voluntary."
+            },
+            {
+              "type": "heading",
+              "text": "Bonuses for participating in research"
+            },
+            {
+              "type": "paragraph",
+              "text": "Some partners conduct marketing and research surveys in which users may participate."
+            },
+            {
+              "type": "paragraph",
+              "text": "On successfully completing a study, the user may receive the specified reward in accordance with the conditions of that particular study."
+            },
+            {
+              "type": "paragraph",
+              "text": "The amount and availability of these rewards are determined by partners and may differ between studies."
+            },
+            {
+              "type": "heading",
+              "text": "Payments from external partners"
+            },
+            {
+              "type": "paragraph",
+              "text": "In some cases, partners may make payments directly to users."
+            },
+            {
+              "type": "paragraph",
+              "text": "These payments do not pass through Cashback+ and are not reflected in the programme balance unless the conditions of the relevant offer state otherwise."
+            },
+            {
+              "type": "paragraph",
+              "text": "The organisation making the payment to the user is responsible for processing such payments."
+            },
+            {
+              "type": "heading",
+              "text": "Transfers of bonuses between users"
+            },
+            {
+              "type": "paragraph",
+              "text": "The platform may provide the ability to transfer bonus units between programme participants."
+            },
+            {
+              "type": "paragraph",
+              "text": "Such transfers take place exclusively within the Cashback+ programme and are not bank transfers, money transfers, payment services or financial transactions."
+            },
+            {
+              "type": "paragraph",
+              "text": "The platform may establish restrictions, limits and additional requirements for such operations."
+            }
+          ]
+        },
+        {
+          "title": "Why users choose Cashback+",
+          "blocks": [
+            {
+              "type": "list",
+              "items": [
+                "Additional benefits when shopping with partners.",
+                "The opportunity to participate in advertising campaigns and research.",
+                "A unified rewards accounting system.",
+                "Clear rules for participation and the award of bonuses.",
+                "Development of the user community."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Important information",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ is a consumer rewards programme."
+            },
+            {
+              "type": "paragraph",
+              "text": "The amount, availability and timing of rewards depend on partner programme conditions, user activity, transaction verification results and compliance with the platform’s rules."
+            },
+            {
+              "type": "paragraph",
+              "text": "Rewards are not bank deposits, investment products, electronic money, insurance products or payment instruments."
+            },
+            {
+              "type": "paragraph",
+              "text": "Participation in the programme does not guarantee any particular amount of rewards."
+            }
+          ]
+        }
+      ],
+      "join": "Join Cashback+",
+      "joinText": "Join Cashback+ and gain access to rewards programmes that can help make your purchases and digital activity more beneficial, subject to compliance with the platform’s conditions."
+    },
+    "de": {
+      "title": "Über uns — Cashback+",
+      "sections": [
+        {
+          "title": "Wer wir sind",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ ist eine Plattform für Verbraucherprämien, die Nutzern hilft, Cashback und zusätzliche Boni für die Teilnahme an Partnerprogrammen, Werbekampagnen und Studien zu erhalten."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Plattform wird von Cashback Plus Ltd betrieben, die im Vereinigten Königreich registriert ist."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ ist weder eine Bank noch ein Zahlungssystem, eine Anlageplattform, ein E-Geld-Emittent oder ein Finanzdienstleister. Alle Prämien werden ausschließlich im Rahmen des Treueprogramms und der Nutzeraktivität gewährt."
+            }
+          ]
+        },
+        {
+          "title": "Unsere Mission",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Wir möchten Prämienprogramme transparenter, verständlicher und für einen breiten Nutzerkreis zugänglich machen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Unser Ziel ist es, Nutzern einen zusätzlichen Nutzen aus ihren alltäglichen Einkäufen und digitalen Aktivitäten zu ermöglichen, wobei sie die Bedingungen für die Gewährung von Prämien und die Regeln für die Programmteilnahme verstehen."
+            }
+          ]
+        },
+        {
+          "title": "Unsere Werte",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Transparenz"
+            },
+            {
+              "type": "paragraph",
+              "text": "Nutzer erhalten vor der Teilnahme an einem Programm Informationen über die Höhe der möglichen Prämie und die Bedingungen für deren Gewährung."
+            },
+            {
+              "type": "paragraph",
+              "text": "Wir bemühen uns um verständliche Regeln und zugängliche Angebotsbeschreibungen und informieren Nutzer rechtzeitig über Änderungen der Bedingungen."
+            },
+            {
+              "type": "heading",
+              "text": "Ehrlichkeit"
+            },
+            {
+              "type": "paragraph",
+              "text": "Alle wesentlichen Teilnahmebedingungen, Programmbeschränkungen und anwendbaren Regeln werden in den entsprechenden Bereichen der Plattform veröffentlicht."
+            },
+            {
+              "type": "paragraph",
+              "text": "Wir verwenden keine versteckten Gebühren und bemühen uns um eine verständliche Kommunikation zwischen Nutzern, Partnern und der Plattform."
+            },
+            {
+              "type": "heading",
+              "text": "Sicherheit"
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ nimmt keine Nutzereinlagen entgegen, erbringt keine Zahlungsdienste und verwahrt keine Kundengelder als Finanzinstitut."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die auf der Plattform verfügbaren Prämien und Boni gehören ausschließlich zum Treueprogramm und sind keine Bank-, Anlage- oder Versicherungsprodukte."
+            },
+            {
+              "type": "heading",
+              "text": "Gemeinschaft"
+            },
+            {
+              "type": "paragraph",
+              "text": "Wir entwickeln eine Gemeinschaft von Nutzern, die an verantwortungsbewusstem Konsum, vorteilhaften Einkäufen und der gemeinsamen Nutzung der Möglichkeiten des Programms interessiert sind."
+            },
+            {
+              "type": "paragraph",
+              "text": "Bestimmte Boni können gemäß den geltenden Aktivitätsregeln und den festgelegten Beschränkungen der Plattform an andere Nutzer übertragen werden."
+            }
+          ]
+        },
+        {
+          "title": "So funktioniert Cashback+",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ vereint mehrere Arten von Prämien in einem einzigen Programm."
+            },
+            {
+              "type": "heading",
+              "text": "Cashback von Geschäften"
+            },
+            {
+              "type": "paragraph",
+              "text": "Viele Onlineshops zahlen eine Partnervergütung für vermittelte Kunden."
+            },
+            {
+              "type": "paragraph",
+              "text": "Bei bestimmten Angeboten kann Cashback+ einen Teil dieser Vergütung als Cashback an den Nutzer weitergeben, nachdem die Bedingungen des jeweiligen Angebots erfüllt wurden und der Partner den Kauf bestätigt hat."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Höhe des Cashbacks hängt von den Bedingungen des jeweiligen Geschäfts, der Produktkategorie und laufenden Aktionen ab."
+            },
+            {
+              "type": "heading",
+              "text": "Boni für das Ansehen von Werbung"
+            },
+            {
+              "type": "paragraph",
+              "text": "Nutzer können an auf der Plattform verfügbaren Werbeprogrammen teilnehmen und Bonusprämien für die Erfüllung der vorgesehenen Bedingungen erhalten."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Höhe des verfügbaren Bonus richtet sich nach den Regeln der jeweiligen Werbekampagne, den Bedingungen des Partners und den Regeln des Cashback+-Programms."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Teilnahme an Werbeprogrammen ist freiwillig."
+            },
+            {
+              "type": "heading",
+              "text": "Boni für die Teilnahme an Studien"
+            },
+            {
+              "type": "paragraph",
+              "text": "Einige Partner führen Marketing- und Forschungsumfragen durch, an denen Nutzer teilnehmen können."
+            },
+            {
+              "type": "paragraph",
+              "text": "Nach erfolgreichem Abschluss einer Studie kann der Nutzer die vorgesehene Prämie gemäß den Bedingungen der jeweiligen Studie erhalten."
+            },
+            {
+              "type": "paragraph",
+              "text": "Höhe und Verfügbarkeit dieser Prämien werden von den Partnern festgelegt und können je nach Studie unterschiedlich sein."
+            },
+            {
+              "type": "heading",
+              "text": "Zahlungen externer Partner"
+            },
+            {
+              "type": "paragraph",
+              "text": "In bestimmten Fällen können Partner Zahlungen direkt an Nutzer leisten."
+            },
+            {
+              "type": "paragraph",
+              "text": "Diese Zahlungen werden nicht über Cashback+ abgewickelt und nicht im Programmsaldo angezeigt, sofern die Bedingungen des jeweiligen Angebots nichts anderes vorsehen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Für die Bearbeitung solcher Zahlungen ist die Organisation verantwortlich, die die Zahlung an den Nutzer leistet."
+            },
+            {
+              "type": "heading",
+              "text": "Übertragung von Boni zwischen Nutzern"
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Plattform kann die Möglichkeit bieten, Bonuseinheiten zwischen Programmteilnehmern zu übertragen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Eine solche Übertragung erfolgt ausschließlich innerhalb des Cashback+-Programms und stellt weder eine Banküberweisung noch einen Geldtransfer, einen Zahlungsdienst oder eine Finanztransaktion dar."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Plattform ist berechtigt, Beschränkungen, Limits und zusätzliche Anforderungen für solche Vorgänge festzulegen."
+            }
+          ]
+        },
+        {
+          "title": "Warum Nutzer Cashback+ wählen",
+          "blocks": [
+            {
+              "type": "list",
+              "items": [
+                "Zusätzliche Vorteile bei Einkäufen bei Partnern.",
+                "Die Möglichkeit, an Werbekampagnen und Studien teilzunehmen.",
+                "Ein einheitliches System zur Erfassung von Prämien.",
+                "Verständliche Regeln für die Teilnahme und die Gewährung von Boni.",
+                "Die Entwicklung der Nutzergemeinschaft."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Wichtige Informationen",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ ist ein Verbraucherprämienprogramm."
+            },
+            {
+              "type": "paragraph",
+              "text": "Höhe, Verfügbarkeit und Zeitpunkt der Gewährung von Prämien hängen von den Bedingungen der Partnerprogramme, der Nutzeraktivität, den Ergebnissen der Transaktionsprüfung und der Einhaltung der Plattformregeln ab."
+            },
+            {
+              "type": "paragraph",
+              "text": "Prämien sind keine Bankeinlagen, Anlageprodukte, E-Geld, Versicherungsprodukte oder Zahlungsinstrumente."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Teilnahme am Programm garantiert keine bestimmte Prämienhöhe."
+            }
+          ]
+        }
+      ],
+      "join": "Cashback+ beitreten",
+      "joinText": "Treten Sie Cashback+ bei und erhalten Sie Zugang zu Prämienprogrammen, die Ihre Einkäufe und digitalen Aktivitäten unter Einhaltung der Plattformbedingungen vorteilhafter machen können."
+    },
+    "fr": {
+      "title": "À propos de nous — Cashback+",
+      "sections": [
+        {
+          "title": "Qui nous sommes",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ est une plateforme de récompenses destinées aux consommateurs qui aide les utilisateurs à obtenir du cashback et des bonus supplémentaires en participant à des programmes partenaires, à des campagnes publicitaires et à des études."
+            },
+            {
+              "type": "paragraph",
+              "text": "La plateforme est exploitée par Cashback Plus Ltd, immatriculée au Royaume-Uni."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ n’est ni une banque, ni un système de paiement, ni une plateforme d’investissement, ni un émetteur de monnaie électronique, ni un prestataire de services financiers. Toutes les récompenses sont accordées exclusivement dans le cadre du programme de fidélité et de l’activité des utilisateurs."
+            }
+          ]
+        },
+        {
+          "title": "Notre mission",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Nous souhaitons rendre les programmes de récompenses plus transparents, compréhensibles et accessibles à un large éventail d’utilisateurs."
+            },
+            {
+              "type": "paragraph",
+              "text": "Notre objectif est de permettre aux utilisateurs de tirer une valeur supplémentaire de leurs achats quotidiens et de leur activité numérique, tout en comprenant les conditions d’attribution des récompenses et les règles de participation au programme."
+            }
+          ]
+        },
+        {
+          "title": "Nos valeurs",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Transparence"
+            },
+            {
+              "type": "paragraph",
+              "text": "L’utilisateur reçoit des informations sur le montant de la récompense potentielle et sur ses conditions d’attribution avant de participer au programme."
+            },
+            {
+              "type": "paragraph",
+              "text": "Nous nous efforçons de proposer des règles compréhensibles et des descriptions d’offres accessibles, et d’informer les utilisateurs en temps utile des changements de conditions."
+            },
+            {
+              "type": "heading",
+              "text": "Honnêteté"
+            },
+            {
+              "type": "paragraph",
+              "text": "Toutes les conditions essentielles de participation, les restrictions du programme et les règles applicables sont publiées dans les sections correspondantes de la plateforme."
+            },
+            {
+              "type": "paragraph",
+              "text": "Nous n’appliquons pas de frais cachés et nous nous efforçons d’assurer une communication claire entre les utilisateurs, les partenaires et la plateforme."
+            },
+            {
+              "type": "heading",
+              "text": "Sécurité"
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ n’accepte pas de dépôts des utilisateurs, ne fournit pas de services de paiement et ne conserve pas les fonds des clients en tant qu’établissement financier."
+            },
+            {
+              "type": "paragraph",
+              "text": "Les récompenses et les bonus disponibles sur la plateforme relèvent exclusivement du programme de fidélité et ne constituent pas des produits bancaires, d’investissement ou d’assurance."
+            },
+            {
+              "type": "heading",
+              "text": "Communauté"
+            },
+            {
+              "type": "paragraph",
+              "text": "Nous développons une communauté d’utilisateurs intéressés par une consommation responsable, des achats avantageux et le partage des possibilités offertes par le programme."
+            },
+            {
+              "type": "paragraph",
+              "text": "Certains bonus peuvent être transférés à d’autres utilisateurs conformément aux Règles d’activité en vigueur et aux restrictions établies par la plateforme."
+            }
+          ]
+        },
+        {
+          "title": "Comment fonctionne Cashback+",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ réunit plusieurs types de récompenses au sein d’un seul programme."
+            },
+            {
+              "type": "heading",
+              "text": "Cashback des boutiques"
+            },
+            {
+              "type": "paragraph",
+              "text": "De nombreuses boutiques en ligne versent une rémunération d’affiliation pour les clients apportés."
+            },
+            {
+              "type": "paragraph",
+              "text": "Dans le cadre de certaines offres, Cashback+ peut reverser une partie de cette rémunération à l’utilisateur sous forme de cashback après le respect des conditions de l’offre concernée et la confirmation de l’achat par le partenaire."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le montant du cashback dépend des conditions de la boutique concernée, de la catégorie de produits et des promotions en cours."
+            },
+            {
+              "type": "heading",
+              "text": "Bonus pour le visionnage de publicités"
+            },
+            {
+              "type": "paragraph",
+              "text": "Les utilisateurs peuvent participer aux programmes publicitaires disponibles sur la plateforme et recevoir des récompenses sous forme de bonus en remplissant les conditions prévues."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le montant du bonus disponible est déterminé par les règles de la campagne publicitaire concernée, les conditions du partenaire et les règles du programme Cashback+."
+            },
+            {
+              "type": "paragraph",
+              "text": "La participation aux programmes publicitaires est volontaire."
+            },
+            {
+              "type": "heading",
+              "text": "Bonus pour la participation à des études"
+            },
+            {
+              "type": "paragraph",
+              "text": "Certains partenaires organisent des enquêtes marketing et de recherche auxquelles les utilisateurs peuvent participer."
+            },
+            {
+              "type": "paragraph",
+              "text": "Après avoir terminé une étude avec succès, l’utilisateur peut recevoir la récompense prévue conformément aux conditions de cette étude."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le montant et la disponibilité de ces récompenses sont déterminés par les partenaires et peuvent varier d’une étude à l’autre."
+            },
+            {
+              "type": "heading",
+              "text": "Paiements de partenaires externes"
+            },
+            {
+              "type": "paragraph",
+              "text": "Dans certains cas, les partenaires peuvent effectuer des paiements directement aux utilisateurs."
+            },
+            {
+              "type": "paragraph",
+              "text": "Ces paiements ne transitent pas par Cashback+ et ne figurent pas dans le solde du programme, sauf indication contraire dans les conditions de l’offre concernée."
+            },
+            {
+              "type": "paragraph",
+              "text": "L’organisation qui effectue le paiement à l’utilisateur est responsable du traitement de ces paiements."
+            },
+            {
+              "type": "heading",
+              "text": "Transfert de bonus entre utilisateurs"
+            },
+            {
+              "type": "paragraph",
+              "text": "La plateforme peut offrir la possibilité de transférer des unités de bonus entre les participants au programme."
+            },
+            {
+              "type": "paragraph",
+              "text": "Ce transfert s’effectue exclusivement au sein du programme Cashback+ et ne constitue ni un virement bancaire, ni un transfert d’argent, ni un service de paiement, ni une opération financière."
+            },
+            {
+              "type": "paragraph",
+              "text": "La plateforme est en droit de fixer des restrictions, des limites et des exigences supplémentaires pour ces opérations."
+            }
+          ]
+        },
+        {
+          "title": "Pourquoi les utilisateurs choisissent Cashback+",
+          "blocks": [
+            {
+              "type": "list",
+              "items": [
+                "Des avantages supplémentaires lors d’achats auprès des partenaires.",
+                "La possibilité de participer à des campagnes publicitaires et à des études.",
+                "Un système unifié de comptabilisation des récompenses.",
+                "Des règles claires de participation et d’attribution des bonus.",
+                "Le développement de la communauté des utilisateurs."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Informations importantes",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ est un programme de récompenses destinées aux consommateurs."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le montant, la disponibilité et les délais d’attribution des récompenses dépendent des conditions des programmes partenaires, de l’activité de l’utilisateur, des résultats de la vérification des transactions et du respect des règles de la plateforme."
+            },
+            {
+              "type": "paragraph",
+              "text": "Les récompenses ne constituent ni des dépôts bancaires, ni des produits d’investissement, ni de la monnaie électronique, ni des produits d’assurance, ni des instruments de paiement."
+            },
+            {
+              "type": "paragraph",
+              "text": "La participation au programme ne garantit aucun montant déterminé de récompenses."
+            }
+          ]
+        }
+      ],
+      "join": "Rejoignez Cashback+",
+      "joinText": "Rejoignez Cashback+ et accédez à des programmes de récompenses qui peuvent rendre vos achats et votre activité numérique plus avantageux, sous réserve du respect des conditions de la plateforme."
+    }
+  },
+  "services": {
+    "ru": {
+      "title": "Как это работает — Cashback+",
+      "sections": [
+        {
+          "title": "Cashback+ в нескольких словах",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ объединяет программы кэшбэка, бонусные активности и инструменты поиска товаров в единой экосистеме."
+            },
+            {
+              "type": "paragraph",
+              "text": "Пользователи могут получать вознаграждения за покупки у партнёров, участие в рекламных кампаниях и исследованиях, а также использовать инструменты платформы для поиска и сравнения доступных предложений."
+            },
+            {
+              "type": "paragraph",
+              "text": "Размер и доступность вознаграждений зависят от условий конкретных предложений, активности пользователя и правил платформы."
+            }
+          ]
+        },
+        {
+          "title": "Кэшбэк от покупок",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Многие магазины и онлайн-сервисы сотрудничают с партнёрскими платформами и выплачивают вознаграждение за привлечённых покупателей."
+            },
+            {
+              "type": "paragraph",
+              "text": "При совершении покупок через партнёрские предложения Cashback+ пользователь может получить кэшбэк в соответствии с условиями конкретного магазина или акции."
+            },
+            {
+              "type": "paragraph",
+              "text": "Перед переходом к покупке платформа отображает размер потенциального кэшбэка и основные условия предложения."
+            },
+            {
+              "type": "paragraph",
+              "text": "Начисление кэшбэка выполняется после подтверждения покупки партнёром и соблюдения всех требований соответствующего предложения."
+            },
+            {
+              "type": "paragraph",
+              "text": "В отдельных случаях начисление может быть отклонено или скорректировано, например при возврате товара, отмене заказа или нарушении условий партнёра."
+            }
+          ]
+        },
+        {
+          "title": "Бонусы за участие в рекламных программах",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Некоторые партнёры предоставляют пользователям возможность добровольно участвовать в рекламных кампаниях, размещённых на платформе Cashback+."
+            },
+            {
+              "type": "paragraph",
+              "text": "За выполнение условий таких кампаний пользователю могут начисляться бонусные единицы программы."
+            },
+            {
+              "type": "paragraph",
+              "text": "Размер бонусов определяется условиями конкретной рекламной кампании и может различаться в зависимости от предложения."
+            },
+            {
+              "type": "paragraph",
+              "text": "Участие в рекламных программах является полностью добровольным."
+            },
+            {
+              "type": "paragraph",
+              "text": "Получение бонусов не требует совершения покупки, если иное прямо не указано в условиях соответствующей кампании."
+            }
+          ]
+        },
+        {
+          "title": "Бонусы за участие в исследованиях",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Платформа может предоставлять доступ к исследованиям, опросам, тестированию продуктов и другим исследовательским программам, проводимым партнёрами."
+            },
+            {
+              "type": "paragraph",
+              "text": "Если пользователь соответствует критериям исследования и успешно выполняет его условия, ему может быть начислено предусмотренное вознаграждение."
+            },
+            {
+              "type": "paragraph",
+              "text": "Условия участия, доступность исследований и размер вознаграждения устанавливаются организаторами соответствующего исследования."
+            },
+            {
+              "type": "paragraph",
+              "text": "Отдельные исследования могут иметь ограничения по возрасту, месту проживания, интересам или иным параметрам, необходимым для формирования исследовательской выборки."
+            }
+          ]
+        },
+        {
+          "title": "Выплаты от внешних исследовательских компаний",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Некоторые исследовательские организации могут осуществлять выплаты напрямую пользователям."
+            },
+            {
+              "type": "paragraph",
+              "text": "Такие выплаты производятся соответствующей организацией самостоятельно и не обрабатываются платформой Cashback+."
+            },
+            {
+              "type": "paragraph",
+              "text": "Порядок, сроки и способы получения таких выплат определяются исключительно организацией, которая осуществляет выплату."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ не выступает стороной финансовых отношений между пользователем и такой организацией."
+            }
+          ]
+        },
+        {
+          "title": "Передача бонусов между пользователями",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ может предоставлять возможность передачи бонусных единиц между участниками программы."
+            },
+            {
+              "type": "paragraph",
+              "text": "Передача осуществляется исключительно внутри платформы и регулируется действующими Правилами активности."
+            },
+            {
+              "type": "paragraph",
+              "text": "Передаваемые бонусы не являются денежными средствами, банковским переводом, платёжной услугой, электронными деньгами или инвестиционным активом."
+            },
+            {
+              "type": "paragraph",
+              "text": "Платформа вправе устанавливать ограничения на передачу бонусов, включая лимиты, требования к статусу пользователя и иные меры защиты программы."
+            }
+          ]
+        },
+        {
+          "title": "Поиск и сравнение товаров",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ предоставляет инструменты поиска и фильтрации товаров по различным параметрам, включая цену, категорию, характеристики, рейтинг и другие доступные данные."
+            },
+            {
+              "type": "paragraph",
+              "text": "Используя систему фильтрации, пользователь может быстрее находить предложения, соответствующие выбранным критериям."
+            },
+            {
+              "type": "paragraph",
+              "text": "Результаты поиска формируются на основе информации, доступной платформе на момент запроса."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ не гарантирует отображение всех предложений рынка, полной информации обо всех продавцах или наиболее низкой цены на каждый товар."
+            },
+            {
+              "type": "paragraph",
+              "text": "Окончательное решение о покупке пользователь принимает самостоятельно на основании собственных предпочтений и оценки предложений."
+            }
+          ]
+        },
+        {
+          "title": "Единая система вознаграждений",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Различные виды активности на платформе могут приносить пользователю вознаграждения в соответствии с действующими правилами программы."
+            },
+            {
+              "type": "paragraph",
+              "text": "Такие вознаграждения могут включать:"
+            },
+            {
+              "type": "list",
+              "items": [
+                "кэшбэк от покупок;",
+                "бонусы за участие в рекламных кампаниях;",
+                "бонусы за участие в исследованиях;",
+                "иные виды поощрений, предусмотренные правилами платформы."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Условия начисления и использования различных видов вознаграждений могут отличаться."
+            }
+          ]
+        },
+        {
+          "title": "Прозрачность программы",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Мы стремимся к тому, чтобы пользователи понимали:"
+            },
+            {
+              "type": "list",
+              "items": [
+                "за какие действия доступны вознаграждения;",
+                "какие условия необходимо выполнить;",
+                "какие ограничения действуют для конкретного предложения;",
+                "каким образом рассчитываются начисления."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Информация о действующих условиях размещается непосредственно рядом с соответствующими предложениями либо в связанных документах платформы."
+            }
+          ]
+        },
+        {
+          "title": "Почему пользователи выбирают Cashback+",
+          "blocks": [
+            {
+              "type": "list",
+              "items": [
+                "Возможность получать кэшбэк от партнёрских предложений.",
+                "Дополнительные бонусы за участие в доступных программах.",
+                "Инструменты поиска и сравнения товаров.",
+                "Единая система учёта вознаграждений.",
+                "Понятные правила участия.",
+                "Акцент на прозрачности и информированности пользователей."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Важная информация",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ является программой потребительских вознаграждений и информационной платформой."
+            },
+            {
+              "type": "paragraph",
+              "text": "Размер, доступность и сроки начисления вознаграждений зависят от условий партнёров, результатов проверки транзакций, активности пользователя и соблюдения правил программы."
+            },
+            {
+              "type": "paragraph",
+              "text": "Вознаграждения, бонусы и внутренние баллы платформы не являются банковскими вкладами, инвестиционными продуктами, электронными деньгами, платёжными инструментами или страховыми продуктами."
+            },
+            {
+              "type": "paragraph",
+              "text": "Использование платформы не гарантирует получение определённого размера вознаграждения или достижение конкретного уровня экономии."
+            }
+          ]
+        },
+        {
+          "title": "Начните использовать Cashback+",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Изучайте предложения партнёров, участвуйте в доступных программах, получайте вознаграждения и используйте возможности Cashback+ для более осознанного подхода к покупкам и цифровой активности."
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "title": "How it works — Cashback+",
+      "sections": [
+        {
+          "title": "Cashback+ in a few words",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ combines cashback programmes, bonus activities and product search tools within a single ecosystem."
+            },
+            {
+              "type": "paragraph",
+              "text": "Users may receive rewards for purchases from partners, participation in advertising campaigns and research, and use the platform’s tools to find and compare available offers."
+            },
+            {
+              "type": "paragraph",
+              "text": "The amount and availability of rewards depend on the conditions of the particular offers, user activity and the platform’s rules."
+            }
+          ]
+        },
+        {
+          "title": "Cashback on purchases",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Many shops and online services work with affiliate platforms and pay rewards for referred customers."
+            },
+            {
+              "type": "paragraph",
+              "text": "When making purchases through Cashback+ partner offers, users may receive cashback in accordance with the conditions of the particular shop or promotion."
+            },
+            {
+              "type": "paragraph",
+              "text": "Before users proceed to a purchase, the platform displays the potential cashback amount and the main conditions of the offer."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback is credited after the partner confirms the purchase and all requirements of the relevant offer have been met."
+            },
+            {
+              "type": "paragraph",
+              "text": "In some cases, cashback may be declined or adjusted, for example when goods are returned, an order is cancelled or the partner’s conditions are breached."
+            }
+          ]
+        },
+        {
+          "title": "Bonuses for participating in advertising programmes",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Some partners offer users the opportunity to participate voluntarily in advertising campaigns hosted on the Cashback+ platform."
+            },
+            {
+              "type": "paragraph",
+              "text": "Users may be credited with programme bonus units for meeting the conditions of these campaigns."
+            },
+            {
+              "type": "paragraph",
+              "text": "The bonus amount is determined by the conditions of the particular advertising campaign and may vary between offers."
+            },
+            {
+              "type": "paragraph",
+              "text": "Participation in advertising programmes is entirely voluntary."
+            },
+            {
+              "type": "paragraph",
+              "text": "Receiving bonuses does not require a purchase unless the conditions of the relevant campaign expressly state otherwise."
+            }
+          ]
+        },
+        {
+          "title": "Bonuses for participating in research",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "The platform may provide access to studies, surveys, product testing and other research programmes conducted by partners."
+            },
+            {
+              "type": "paragraph",
+              "text": "If a user meets a study’s eligibility criteria and successfully fulfils its conditions, they may be credited with the specified reward."
+            },
+            {
+              "type": "paragraph",
+              "text": "Participation conditions, the availability of studies and reward amounts are set by the organisers of the relevant study."
+            },
+            {
+              "type": "paragraph",
+              "text": "Individual studies may have restrictions relating to age, place of residence, interests or other characteristics needed to establish the research sample."
+            }
+          ]
+        },
+        {
+          "title": "Payments from external research companies",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Some research organisations may make payments directly to users."
+            },
+            {
+              "type": "paragraph",
+              "text": "Such payments are made independently by the relevant organisation and are not processed by the Cashback+ platform."
+            },
+            {
+              "type": "paragraph",
+              "text": "The procedure, timing and methods for receiving such payments are determined exclusively by the organisation making the payment."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ is not a party to the financial relationship between the user and that organisation."
+            }
+          ]
+        },
+        {
+          "title": "Transfers of bonuses between users",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ may provide the ability to transfer bonus units between programme participants."
+            },
+            {
+              "type": "paragraph",
+              "text": "Transfers take place exclusively within the platform and are governed by the current Activity Rules."
+            },
+            {
+              "type": "paragraph",
+              "text": "Transferred bonuses are not money, bank transfers, payment services, electronic money or investment assets."
+            },
+            {
+              "type": "paragraph",
+              "text": "The platform may impose restrictions on bonus transfers, including limits, user status requirements and other measures to protect the programme."
+            }
+          ]
+        },
+        {
+          "title": "Product search and comparison",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ provides tools for searching and filtering products by various parameters, including price, category, specifications, rating and other available data."
+            },
+            {
+              "type": "paragraph",
+              "text": "Using the filtering system, users can find offers that meet their selected criteria more quickly."
+            },
+            {
+              "type": "paragraph",
+              "text": "Search results are generated from information available to the platform at the time of the request."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ does not guarantee that all offers on the market, complete information about every seller or the lowest price for every product will be displayed."
+            },
+            {
+              "type": "paragraph",
+              "text": "Users make their final purchasing decisions independently, based on their own preferences and assessment of offers."
+            }
+          ]
+        },
+        {
+          "title": "A unified rewards system",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Different types of activity on the platform may earn users rewards in accordance with the current programme rules."
+            },
+            {
+              "type": "paragraph",
+              "text": "These rewards may include:"
+            },
+            {
+              "type": "list",
+              "items": [
+                "cashback on purchases;",
+                "bonuses for participating in advertising campaigns;",
+                "bonuses for participating in research;",
+                "other incentives provided for by the platform’s rules."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "The conditions for earning and using different types of rewards may vary."
+            }
+          ]
+        },
+        {
+          "title": "Programme transparency",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "We strive to ensure that users understand:"
+            },
+            {
+              "type": "list",
+              "items": [
+                "which actions qualify for rewards;",
+                "which conditions must be met;",
+                "which restrictions apply to a particular offer;",
+                "how rewards are calculated."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Information about current conditions is provided directly alongside the relevant offers or in related platform documents."
+            }
+          ]
+        },
+        {
+          "title": "Why users choose Cashback+",
+          "blocks": [
+            {
+              "type": "list",
+              "items": [
+                "The opportunity to receive cashback from partner offers.",
+                "Additional bonuses for participating in available programmes.",
+                "Product search and comparison tools.",
+                "A unified rewards accounting system.",
+                "Clear participation rules.",
+                "An emphasis on transparency and informed users."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Important information",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ is a consumer rewards programme and information platform."
+            },
+            {
+              "type": "paragraph",
+              "text": "The amount, availability and timing of rewards depend on partner conditions, transaction verification results, user activity and compliance with the programme rules."
+            },
+            {
+              "type": "paragraph",
+              "text": "Rewards, bonuses and the platform’s internal points are not bank deposits, investment products, electronic money, payment instruments or insurance products."
+            },
+            {
+              "type": "paragraph",
+              "text": "Using the platform does not guarantee any particular amount of rewards or any specific level of savings."
+            }
+          ]
+        },
+        {
+          "title": "Start using Cashback+",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Explore partner offers, participate in available programmes, receive rewards and use Cashback+ features to take a more informed approach to purchases and digital activity."
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "So funktioniert es — Cashback+",
+      "sections": [
+        {
+          "title": "Cashback+ in wenigen Worten",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ vereint Cashback-Programme, Bonusaktivitäten und Werkzeuge zur Produktsuche in einem einzigen Ökosystem."
+            },
+            {
+              "type": "paragraph",
+              "text": "Nutzer können Prämien für Einkäufe bei Partnern sowie für die Teilnahme an Werbekampagnen und Studien erhalten und die Werkzeuge der Plattform nutzen, um verfügbare Angebote zu finden und zu vergleichen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Höhe und Verfügbarkeit der Prämien hängen von den Bedingungen der jeweiligen Angebote, der Nutzeraktivität und den Plattformregeln ab."
+            }
+          ]
+        },
+        {
+          "title": "Cashback auf Einkäufe",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Viele Geschäfte und Onlinedienste arbeiten mit Partnerplattformen zusammen und zahlen eine Vergütung für vermittelte Kunden."
+            },
+            {
+              "type": "paragraph",
+              "text": "Bei Einkäufen über Partnerangebote von Cashback+ kann der Nutzer gemäß den Bedingungen des jeweiligen Geschäfts oder der Aktion Cashback erhalten."
+            },
+            {
+              "type": "paragraph",
+              "text": "Bevor der Nutzer zum Kauf weitergeleitet wird, zeigt die Plattform die mögliche Cashback-Höhe und die wesentlichen Angebotsbedingungen an."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback wird nach der Kaufbestätigung durch den Partner und der Erfüllung aller Anforderungen des jeweiligen Angebots gutgeschrieben."
+            },
+            {
+              "type": "paragraph",
+              "text": "In bestimmten Fällen kann die Gutschrift abgelehnt oder angepasst werden, etwa bei Warenrückgabe, Stornierung einer Bestellung oder Verstoß gegen die Partnerbedingungen."
+            }
+          ]
+        },
+        {
+          "title": "Boni für die Teilnahme an Werbeprogrammen",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Einige Partner bieten Nutzern die Möglichkeit, freiwillig an Werbekampagnen auf der Cashback+-Plattform teilzunehmen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Für die Erfüllung der Bedingungen solcher Kampagnen können dem Nutzer Bonuseinheiten des Programms gutgeschrieben werden."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Höhe der Boni richtet sich nach den Bedingungen der jeweiligen Werbekampagne und kann je nach Angebot unterschiedlich sein."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Teilnahme an Werbeprogrammen ist vollständig freiwillig."
+            },
+            {
+              "type": "paragraph",
+              "text": "Der Erhalt von Boni setzt keinen Kauf voraus, sofern die Bedingungen der jeweiligen Kampagne nicht ausdrücklich etwas anderes vorsehen."
+            }
+          ]
+        },
+        {
+          "title": "Boni für die Teilnahme an Studien",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Die Plattform kann Zugang zu Studien, Umfragen, Produkttests und anderen von Partnern durchgeführten Forschungsprogrammen bereitstellen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Wenn der Nutzer die Kriterien einer Studie erfüllt und deren Bedingungen erfolgreich einhält, kann ihm die vorgesehene Prämie gutgeschrieben werden."
+            },
+            {
+              "type": "paragraph",
+              "text": "Teilnahmebedingungen, Verfügbarkeit von Studien und Prämienhöhe werden von den Veranstaltern der jeweiligen Studie festgelegt."
+            },
+            {
+              "type": "paragraph",
+              "text": "Einzelne Studien können Beschränkungen hinsichtlich Alter, Wohnort, Interessen oder anderer für die Zusammenstellung der Forschungsstichprobe erforderlicher Merkmale haben."
+            }
+          ]
+        },
+        {
+          "title": "Zahlungen externer Forschungsunternehmen",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Einige Forschungsorganisationen können Zahlungen direkt an Nutzer leisten."
+            },
+            {
+              "type": "paragraph",
+              "text": "Solche Zahlungen werden von der jeweiligen Organisation eigenständig vorgenommen und nicht von der Cashback+-Plattform verarbeitet."
+            },
+            {
+              "type": "paragraph",
+              "text": "Verfahren, Fristen und Methoden für den Erhalt solcher Zahlungen werden ausschließlich von der zahlenden Organisation festgelegt."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ ist keine Partei der finanziellen Beziehung zwischen dem Nutzer und dieser Organisation."
+            }
+          ]
+        },
+        {
+          "title": "Übertragung von Boni zwischen Nutzern",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ kann die Möglichkeit bieten, Bonuseinheiten zwischen Programmteilnehmern zu übertragen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Übertragung erfolgt ausschließlich innerhalb der Plattform und unterliegt den geltenden Aktivitätsregeln."
+            },
+            {
+              "type": "paragraph",
+              "text": "Übertragene Boni sind weder Geldmittel noch Banküberweisungen, Zahlungsdienste, E-Geld oder Anlagevermögen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Plattform ist berechtigt, Beschränkungen für die Übertragung von Boni festzulegen, darunter Limits, Anforderungen an den Nutzerstatus und weitere Maßnahmen zum Schutz des Programms."
+            }
+          ]
+        },
+        {
+          "title": "Produktsuche und -vergleich",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ stellt Werkzeuge zur Suche und Filterung von Produkten nach verschiedenen Parametern bereit, darunter Preis, Kategorie, Eigenschaften, Bewertung und weitere verfügbare Daten."
+            },
+            {
+              "type": "paragraph",
+              "text": "Mit dem Filtersystem kann der Nutzer schneller Angebote finden, die den gewählten Kriterien entsprechen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Suchergebnisse werden auf Grundlage der Informationen erstellt, die der Plattform zum Zeitpunkt der Anfrage zur Verfügung stehen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ garantiert weder die Anzeige sämtlicher Marktangebote noch vollständige Informationen über alle Verkäufer oder den niedrigsten Preis für jedes Produkt."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die endgültige Kaufentscheidung trifft der Nutzer selbstständig auf Grundlage seiner eigenen Präferenzen und seiner Bewertung der Angebote."
+            }
+          ]
+        },
+        {
+          "title": "Ein einheitliches Prämiensystem",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Verschiedene Aktivitäten auf der Plattform können dem Nutzer gemäß den geltenden Programmregeln Prämien einbringen."
+            },
+            {
+              "type": "paragraph",
+              "text": "Diese Prämien können Folgendes umfassen:"
+            },
+            {
+              "type": "list",
+              "items": [
+                "Cashback auf Einkäufe;",
+                "Boni für die Teilnahme an Werbekampagnen;",
+                "Boni für die Teilnahme an Studien;",
+                "weitere in den Plattformregeln vorgesehene Vergünstigungen."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Bedingungen für die Gewährung und Nutzung verschiedener Prämienarten können unterschiedlich sein."
+            }
+          ]
+        },
+        {
+          "title": "Transparenz des Programms",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Wir bemühen uns darum, dass Nutzer verstehen:"
+            },
+            {
+              "type": "list",
+              "items": [
+                "für welche Handlungen Prämien verfügbar sind;",
+                "welche Bedingungen erfüllt werden müssen;",
+                "welche Beschränkungen für ein bestimmtes Angebot gelten;",
+                "wie Gutschriften berechnet werden."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Informationen über die geltenden Bedingungen stehen unmittelbar bei den jeweiligen Angeboten oder in den zugehörigen Plattformdokumenten."
+            }
+          ]
+        },
+        {
+          "title": "Warum Nutzer Cashback+ wählen",
+          "blocks": [
+            {
+              "type": "list",
+              "items": [
+                "Die Möglichkeit, Cashback aus Partnerangeboten zu erhalten.",
+                "Zusätzliche Boni für die Teilnahme an verfügbaren Programmen.",
+                "Werkzeuge zur Produktsuche und zum Produktvergleich.",
+                "Ein einheitliches System zur Erfassung von Prämien.",
+                "Verständliche Teilnahmebedingungen.",
+                "Ein Schwerpunkt auf Transparenz und gut informierten Nutzern."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Wichtige Informationen",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ ist ein Verbraucherprämienprogramm und eine Informationsplattform."
+            },
+            {
+              "type": "paragraph",
+              "text": "Höhe, Verfügbarkeit und Zeitpunkt der Gewährung von Prämien hängen von den Partnerbedingungen, den Ergebnissen der Transaktionsprüfung, der Nutzeraktivität und der Einhaltung der Programmregeln ab."
+            },
+            {
+              "type": "paragraph",
+              "text": "Prämien, Boni und interne Punkte der Plattform sind keine Bankeinlagen, Anlageprodukte, E-Geld, Zahlungsinstrumente oder Versicherungsprodukte."
+            },
+            {
+              "type": "paragraph",
+              "text": "Die Nutzung der Plattform garantiert weder eine bestimmte Prämienhöhe noch das Erreichen eines bestimmten Sparniveaus."
+            }
+          ]
+        },
+        {
+          "title": "Beginnen Sie mit Cashback+",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Entdecken Sie Partnerangebote, nehmen Sie an verfügbaren Programmen teil, erhalten Sie Prämien und nutzen Sie die Möglichkeiten von Cashback+ für einen bewussteren Umgang mit Einkäufen und digitalen Aktivitäten."
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Comment ça marche — Cashback+",
+      "sections": [
+        {
+          "title": "Cashback+ en quelques mots",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ réunit des programmes de cashback, des activités donnant droit à des bonus et des outils de recherche de produits au sein d’un même écosystème."
+            },
+            {
+              "type": "paragraph",
+              "text": "Les utilisateurs peuvent recevoir des récompenses pour leurs achats auprès de partenaires et leur participation à des campagnes publicitaires et à des études, et utiliser les outils de la plateforme pour rechercher et comparer les offres disponibles."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le montant et la disponibilité des récompenses dépendent des conditions des offres concernées, de l’activité de l’utilisateur et des règles de la plateforme."
+            }
+          ]
+        },
+        {
+          "title": "Cashback sur les achats",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "De nombreux commerces et services en ligne collaborent avec des plateformes d’affiliation et versent une rémunération pour les clients apportés."
+            },
+            {
+              "type": "paragraph",
+              "text": "Lors d’achats effectués via les offres partenaires de Cashback+, l’utilisateur peut recevoir du cashback conformément aux conditions du commerce ou de la promotion concernés."
+            },
+            {
+              "type": "paragraph",
+              "text": "Avant le passage à l’achat, la plateforme affiche le montant du cashback potentiel et les principales conditions de l’offre."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le cashback est crédité après confirmation de l’achat par le partenaire et respect de toutes les exigences de l’offre concernée."
+            },
+            {
+              "type": "paragraph",
+              "text": "Dans certains cas, le crédit peut être refusé ou ajusté, par exemple en cas de retour du produit, d’annulation de commande ou de non-respect des conditions du partenaire."
+            }
+          ]
+        },
+        {
+          "title": "Bonus pour la participation à des programmes publicitaires",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Certains partenaires offrent aux utilisateurs la possibilité de participer volontairement à des campagnes publicitaires hébergées sur la plateforme Cashback+."
+            },
+            {
+              "type": "paragraph",
+              "text": "Des unités de bonus du programme peuvent être créditées à l’utilisateur s’il remplit les conditions de ces campagnes."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le montant des bonus est déterminé par les conditions de la campagne publicitaire concernée et peut varier selon l’offre."
+            },
+            {
+              "type": "paragraph",
+              "text": "La participation aux programmes publicitaires est entièrement volontaire."
+            },
+            {
+              "type": "paragraph",
+              "text": "L’obtention de bonus ne nécessite pas d’achat, sauf disposition contraire expressément prévue dans les conditions de la campagne concernée."
+            }
+          ]
+        },
+        {
+          "title": "Bonus pour la participation à des études",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "La plateforme peut donner accès à des études, des enquêtes, des tests de produits et d’autres programmes de recherche organisés par des partenaires."
+            },
+            {
+              "type": "paragraph",
+              "text": "Si l’utilisateur répond aux critères de l’étude et remplit ses conditions avec succès, la récompense prévue peut lui être créditée."
+            },
+            {
+              "type": "paragraph",
+              "text": "Les conditions de participation, la disponibilité des études et le montant de la récompense sont fixés par les organisateurs de l’étude concernée."
+            },
+            {
+              "type": "paragraph",
+              "text": "Certaines études peuvent prévoir des restrictions liées à l’âge, au lieu de résidence, aux centres d’intérêt ou à d’autres caractéristiques nécessaires à la constitution de l’échantillon de recherche."
+            }
+          ]
+        },
+        {
+          "title": "Paiements de sociétés d’études externes",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Certaines organisations de recherche peuvent effectuer des paiements directement aux utilisateurs."
+            },
+            {
+              "type": "paragraph",
+              "text": "Ces paiements sont effectués de manière indépendante par l’organisation concernée et ne sont pas traités par la plateforme Cashback+."
+            },
+            {
+              "type": "paragraph",
+              "text": "La procédure, les délais et les modalités de réception de ces paiements sont déterminés exclusivement par l’organisation qui les effectue."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ n’est pas partie à la relation financière entre l’utilisateur et cette organisation."
+            }
+          ]
+        },
+        {
+          "title": "Transfert de bonus entre utilisateurs",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ peut offrir la possibilité de transférer des unités de bonus entre les participants au programme."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le transfert s’effectue exclusivement au sein de la plateforme et est régi par les Règles d’activité en vigueur."
+            },
+            {
+              "type": "paragraph",
+              "text": "Les bonus transférés ne constituent ni des fonds, ni un virement bancaire, ni un service de paiement, ni de la monnaie électronique, ni un actif d’investissement."
+            },
+            {
+              "type": "paragraph",
+              "text": "La plateforme est en droit de fixer des restrictions aux transferts de bonus, notamment des limites, des exigences relatives au statut de l’utilisateur et d’autres mesures de protection du programme."
+            }
+          ]
+        },
+        {
+          "title": "Recherche et comparaison de produits",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ fournit des outils de recherche et de filtrage des produits selon différents paramètres, notamment le prix, la catégorie, les caractéristiques, la note et d’autres données disponibles."
+            },
+            {
+              "type": "paragraph",
+              "text": "Grâce au système de filtrage, l’utilisateur peut trouver plus rapidement des offres correspondant aux critères choisis."
+            },
+            {
+              "type": "paragraph",
+              "text": "Les résultats de recherche sont établis à partir des informations disponibles pour la plateforme au moment de la demande."
+            },
+            {
+              "type": "paragraph",
+              "text": "Cashback+ ne garantit ni l’affichage de toutes les offres du marché, ni des informations complètes sur tous les vendeurs, ni le prix le plus bas pour chaque produit."
+            },
+            {
+              "type": "paragraph",
+              "text": "L’utilisateur prend sa décision d’achat finale de manière indépendante, en fonction de ses préférences et de son appréciation des offres."
+            }
+          ]
+        },
+        {
+          "title": "Un système de récompenses unifié",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Différents types d’activité sur la plateforme peuvent donner droit à des récompenses conformément aux règles du programme en vigueur."
+            },
+            {
+              "type": "paragraph",
+              "text": "Ces récompenses peuvent comprendre :"
+            },
+            {
+              "type": "list",
+              "items": [
+                "du cashback sur les achats ;",
+                "des bonus pour la participation à des campagnes publicitaires ;",
+                "des bonus pour la participation à des études ;",
+                "d’autres avantages prévus par les règles de la plateforme."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Les conditions d’attribution et d’utilisation des différents types de récompenses peuvent varier."
+            }
+          ]
+        },
+        {
+          "title": "Transparence du programme",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Nous nous efforçons de faire en sorte que les utilisateurs comprennent :"
+            },
+            {
+              "type": "list",
+              "items": [
+                "quelles actions donnent droit à des récompenses ;",
+                "quelles conditions doivent être remplies ;",
+                "quelles restrictions s’appliquent à une offre donnée ;",
+                "comment les montants crédités sont calculés."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Les informations sur les conditions en vigueur sont présentées directement à côté des offres concernées ou dans les documents associés de la plateforme."
+            }
+          ]
+        },
+        {
+          "title": "Pourquoi les utilisateurs choisissent Cashback+",
+          "blocks": [
+            {
+              "type": "list",
+              "items": [
+                "La possibilité de recevoir du cashback grâce aux offres partenaires.",
+                "Des bonus supplémentaires pour la participation aux programmes disponibles.",
+                "Des outils de recherche et de comparaison de produits.",
+                "Un système unifié de comptabilisation des récompenses.",
+                "Des règles de participation claires.",
+                "L’accent mis sur la transparence et l’information des utilisateurs."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Informations importantes",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Cashback+ est un programme de récompenses destinées aux consommateurs et une plateforme d’information."
+            },
+            {
+              "type": "paragraph",
+              "text": "Le montant, la disponibilité et les délais d’attribution des récompenses dépendent des conditions des partenaires, des résultats de la vérification des transactions, de l’activité de l’utilisateur et du respect des règles du programme."
+            },
+            {
+              "type": "paragraph",
+              "text": "Les récompenses, les bonus et les points internes de la plateforme ne constituent ni des dépôts bancaires, ni des produits d’investissement, ni de la monnaie électronique, ni des instruments de paiement, ni des produits d’assurance."
+            },
+            {
+              "type": "paragraph",
+              "text": "L’utilisation de la plateforme ne garantit aucun montant déterminé de récompenses ni aucun niveau précis d’économies."
+            }
+          ]
+        },
+        {
+          "title": "Commencez à utiliser Cashback+",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Découvrez les offres partenaires, participez aux programmes disponibles, recevez des récompenses et utilisez les possibilités de Cashback+ pour adopter une approche plus éclairée de vos achats et de votre activité numérique."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "faq": {
+    "ru": [
+      {
+        "question": "Что такое Cashback+?",
+        "answer": "Cashback+ — это сервис сравнения предложений и программа потребительских вознаграждений.\n\nПлатформа помогает пользователям сравнивать предложения различных продавцов, получать кэшбэк от партнёрских покупок и участвовать в дополнительных бонусных программах.\n\nCashback+ не продаёт товары напрямую и не является стороной договора купли-продажи. После выбора предложения пользователь переходит на сайт соответствующего продавца и оформляет покупку непосредственно у него."
+      },
+      {
+        "question": "Нужно ли платить за использование Cashback+?",
+        "answer": "Нет. Использование Cashback+ для покупателей является бесплатным.\n\nОтдельные услуги или предложения партнёров могут регулироваться собственными условиями, которые пользователь принимает непосредственно у соответствующего партнёра."
+      },
+      {
+        "question": "Как работает Cashback+?",
+        "answer": "1. Вы находите интересующий товар или услугу.\n2. Cashback+ отображает доступные предложения партнёров.\n3. Вы сравниваете цены, условия покупки и доступный кэшбэк.\n4. Вы выбираете наиболее подходящее для себя предложение.\n5. При наличии доступных бонусов можете использовать их в соответствии с Правилами активности.\n6. Переходите на сайт продавца и оформляете покупку.\n\nПосле подтверждения покупки партнёром кэшбэк начисляется в соответствии с условиями предложения."
+      },
+      {
+        "question": "Чем отличается Cashback+ от других сервисов?",
+        "answer": "Cashback+ объединяет в одной платформе несколько возможностей:\n\n- сравнение предложений различных продавцов;\n- получение кэшбэка от партнёрских покупок;\n- участие в рекламных программах;\n- участие в исследовательских проектах и опросах;\n- форум для общения пользователей;\n- возможность передачи бонусов между участниками в случаях, предусмотренных правилами платформы.\n\nCashback+ не является работодателем, кадровым агентством или посредником по трудоустройству."
+      },
+      {
+        "question": "Почему цены могут отличаться от цен на сайте продавца?",
+        "answer": "Информация о ценах и скидках регулярно обновляется, однако продавцы могут изменять условия своих предложений без предварительного уведомления.\n\nОкончательная цена, действующие скидки, стоимость доставки и иные условия покупки всегда определяются продавцом и отображаются на его сайте перед оформлением заказа."
+      },
+      {
+        "question": "Когда я получу кэшбэк?",
+        "answer": "Кэшбэк начисляется после подтверждения покупки продавцом или партнёрской сетью.\n\nСрок подтверждения зависит от конкретного магазина и может составлять от нескольких дней до трёх месяцев.\n\nВ отдельных случаях подтверждение может занять больше времени, если продавцу требуется дополнительная проверка заказа."
+      },
+      {
+        "question": "Нужно ли создавать аккаунт?",
+        "answer": "Для просмотра товаров и предложений регистрация не требуется.\n\nДля получения кэшбэка, участия в бонусных программах, отслеживания статуса начислений и доступа к дополнительным функциям платформы потребуется создать учётную запись."
+      },
+      {
+        "question": "Какая часть вознаграждения выплачивается пользователю?",
+        "answer": "Размер кэшбэка, бонусов и иных вознаграждений определяется условиями конкретной программы или предложения.\n\nИнформация о размере доступного вознаграждения отображается пользователю до принятия решения об участии в соответствующей программе.\n\nCashback+ вправе получать часть партнёрского вознаграждения за предоставление платформы, привлечение пользователей и сопровождение партнёрских программ."
+      },
+      {
+        "question": "Как можно использовать бонусы?",
+        "answer": "Бонусы являются частью программы вознаграждений Cashback+ и не считаются денежными средствами, банковским вкладом, электронными деньгами или инвестиционным активом.\n\nИспользование бонусов регулируется Правилами активности платформы.\n\nВ предусмотренных правилами случаях бонусы могут участвовать в расчёте итогового вознаграждения по соответствующей покупке.\n\nУсловия начисления, использования, передачи, ограничения и сроки действия бонусов определяются действующими правилами платформы."
+      },
+      {
+        "question": "С кем работает Cashback+?",
+        "answer": "Cashback+ сотрудничает с магазинами, партнёрскими сетями, рекламными платформами, исследовательскими организациями и другими партнёрами, предлагающими программы вознаграждений для пользователей.\n\nНесмотря на то, что Cashback+ стремится работать с надёжными партнёрами, платформа не может гарантировать точность всей информации, предоставляемой третьими лицами, а также исполнение ими своих обязательств.\n\nЗа содержание предложений, товаров и услуг отвечает соответствующий партнёр."
+      },
+      {
+        "question": "Какие условия участия в исследовательских программах?",
+        "answer": "Условия участия определяются организацией, проводящей исследование.\n\nДля участия пользователь может быть обязан соответствовать определённым критериям, включая возраст, место проживания, профессию, интересы или другие параметры, необходимые для исследования.\n\nНекоторые исследовательские организации могут выплачивать вознаграждение непосредственно участникам.\n\nКроме того, Cashback+ может получать партнёрское вознаграждение за привлечение участников и, в предусмотренных случаях, начислять пользователям дополнительные бонусы в рамках собственной программы вознаграждений."
+      },
+      {
+        "question": "Почему Cashback+ использует платёжного посредника?",
+        "answer": "Для обработки выплат Cashback+ использует услуги специализированного платёжного провайдера.\n\nТакой подход позволяет минимизировать объём платёжной информации, обрабатываемой платформой, и использовать современные механизмы защиты финансовых данных.\n\nПорядок обработки выплат может регулироваться условиями соответствующего платёжного провайдера."
+      },
+      {
+        "question": "Вернутся ли бонусы, если покупка не состоялась?",
+        "answer": "Если покупка была отменена или не была подтверждена продавцом, бонусы, ранее зарезервированные для данной покупки, могут быть возвращены на бонусный баланс пользователя в соответствии с Правилами активности платформы.\n\nСрок возврата зависит от момента получения информации об отмене или отклонении заказа со стороны продавца или партнёра.\n\nВ отдельных случаях обработка такого возврата может занять до трёх месяцев."
+      },
+      {
+        "question": "Можно ли вернуть товар?",
+        "answer": "Да.\n\nВозврат товара осуществляется в соответствии с правилами и политикой возврата продавца, у которого была совершена покупка.\n\nПри отмене заказа или возврате товара продавец либо партнёрская сеть могут отменить начисление кэшбэка по такой покупке."
+      },
+      {
+        "question": "Можно ли пользоваться Cashback+ с мобильного телефона?",
+        "answer": "Да.\n\nПлатформа предназначена для использования на компьютерах, планшетах и мобильных устройствах.\n\nФункциональность отдельных разделов может зависеть от используемого устройства, браузера и технических возможностей партнёров."
+      },
+      {
+        "question": "Что делать, если кэшбэк не появился?",
+        "answer": "Если ожидаемый кэшбэк не отображается в вашем аккаунте в течение разумного срока после покупки, обратитесь в службу поддержки через доступные каналы связи.\n\nДля проверки может потребоваться дополнительная информация о покупке.\n\nCashback+ проверит статус транзакции у партнёра и постарается помочь в разрешении ситуации, однако окончательное решение о подтверждении кэшбэка принимает соответствующий партнёр или продавец."
+      },
+      {
+        "question": "Как связаться с Cashback+?",
+        "answer": "Команда Cashback+ работает удалённо, поэтому личный приём посетителей не осуществляется.\n\nДля связи используйте контактную информацию, указанную на странице «Контакты».\n\nМы постараемся ответить на ваш запрос в разумные сроки в зависимости от характера обращения."
+      },
+      {
+        "question": "Важная информация",
+        "answer": "Cashback+ является информационной платформой и программой потребительских вознаграждений.\n\nCashback+ не является банком, платёжной организацией, инвестиционной платформой, поставщиком финансовых услуг или эмитентом электронных денег.\n\nРазмер, условия и доступность вознаграждений зависят от партнёров платформы, подтверждения транзакций, выполнения условий предложений и действующих правил программы.\n\nУчастие в Cashback+ не гарантирует получение определённого размера кэшбэка, бонусов или экономии."
+      }
+    ],
+    "en": [
+      {
+        "question": "What is Cashback+?",
+        "answer": "Cashback+ is an offer comparison service and a consumer rewards programme.\n\nThe platform helps users compare offers from different sellers, receive cashback on partner purchases and participate in additional bonus programmes.\n\nCashback+ does not sell goods directly and is not a party to the sales contract. After selecting an offer, users go to the relevant seller’s website and purchase directly from that seller."
+      },
+      {
+        "question": "Do I have to pay to use Cashback+?",
+        "answer": "No. Cashback+ is free for shoppers to use.\n\nIndividual partner services or offers may be governed by their own conditions, which users accept directly with the relevant partner."
+      },
+      {
+        "question": "How does Cashback+ work?",
+        "answer": "1. You find a product or service that interests you.\n2. Cashback+ displays available partner offers.\n3. You compare prices, purchase conditions and available cashback.\n4. You choose the offer that best suits you.\n5. If you have available bonuses, you may use them in accordance with the Activity Rules.\n6. You go to the seller’s website and make the purchase.\n\nAfter the partner confirms the purchase, cashback is credited in accordance with the offer’s conditions."
+      },
+      {
+        "question": "How is Cashback+ different from other services?",
+        "answer": "Cashback+ combines several features on one platform:\n\n- comparison of offers from different sellers;\n- cashback on partner purchases;\n- participation in advertising programmes;\n- participation in research projects and surveys;\n- a forum for communication between users;\n- the ability to transfer bonuses between participants where the platform’s rules permit this.\n\nCashback+ is not an employer, recruitment agency or employment intermediary."
+      },
+      {
+        "question": "Why can prices differ from those on the seller’s website?",
+        "answer": "Information about prices and discounts is updated regularly, but sellers may change their offer conditions without prior notice.\n\nThe final price, applicable discounts, delivery charges and other purchase conditions are always determined by the seller and displayed on their website before an order is placed."
+      },
+      {
+        "question": "When will I receive cashback?",
+        "answer": "Cashback is credited after the seller or affiliate network confirms the purchase.\n\nThe confirmation period depends on the particular shop and may range from a few days to three months.\n\nIn some cases, confirmation may take longer if the seller needs to carry out additional checks on the order."
+      },
+      {
+        "question": "Do I need to create an account?",
+        "answer": "You do not need to register to view products and offers.\n\nTo receive cashback, participate in bonus programmes, track the status of rewards and access additional platform features, you will need to create an account."
+      },
+      {
+        "question": "What share of the reward is paid to the user?",
+        "answer": "The amount of cashback, bonuses and other rewards is determined by the conditions of the particular programme or offer.\n\nInformation about the available reward amount is displayed to users before they decide whether to participate in the relevant programme.\n\nCashback+ may receive a share of affiliate rewards for providing the platform, attracting users and supporting partner programmes."
+      },
+      {
+        "question": "How can bonuses be used?",
+        "answer": "Bonuses form part of the Cashback+ rewards programme and are not money, bank deposits, electronic money or investment assets.\n\nThe use of bonuses is governed by the platform’s Activity Rules.\n\nWhere the rules provide for this, bonuses may be included in the calculation of the final reward for the relevant purchase.\n\nThe conditions for earning, using and transferring bonuses, restrictions and validity periods are determined by the platform’s current rules."
+      },
+      {
+        "question": "Who does Cashback+ work with?",
+        "answer": "Cashback+ works with shops, affiliate networks, advertising platforms, research organisations and other partners offering rewards programmes for users.\n\nAlthough Cashback+ strives to work with reliable partners, the platform cannot guarantee the accuracy of all information supplied by third parties or their performance of their obligations.\n\nThe relevant partner is responsible for the content of offers, goods and services."
+      },
+      {
+        "question": "What are the conditions for participating in research programmes?",
+        "answer": "Participation conditions are determined by the organisation conducting the research.\n\nTo participate, users may be required to meet specific criteria, including age, place of residence, occupation, interests or other characteristics needed for the research.\n\nSome research organisations may pay rewards directly to participants.\n\nIn addition, Cashback+ may receive affiliate rewards for referring participants and, where provided for, credit users with additional bonuses within its own rewards programme."
+      },
+      {
+        "question": "Why does Cashback+ use a payment intermediary?",
+        "answer": "Cashback+ uses a specialist payment provider to process payments.\n\nThis approach helps minimise the amount of payment information processed by the platform and makes use of modern mechanisms for protecting financial data.\n\nPayment processing procedures may be governed by the relevant payment provider’s conditions."
+      },
+      {
+        "question": "Will bonuses be returned if a purchase does not go ahead?",
+        "answer": "If a purchase is cancelled or not confirmed by the seller, bonuses previously reserved for that purchase may be returned to the user’s bonus balance in accordance with the platform’s Activity Rules.\n\nThe return period depends on when information about cancellation or rejection of the order is received from the seller or partner.\n\nIn some cases, processing such a return may take up to three months."
+      },
+      {
+        "question": "Can I return a product?",
+        "answer": "Yes.\n\nProducts are returned in accordance with the rules and returns policy of the seller from whom the purchase was made.\n\nIf an order is cancelled or a product is returned, the seller or affiliate network may cancel the cashback awarded for that purchase."
+      },
+      {
+        "question": "Can I use Cashback+ on a mobile phone?",
+        "answer": "Yes.\n\nThe platform is designed for use on computers, tablets and mobile devices.\n\nThe functionality of individual sections may depend on the device, browser and partners’ technical capabilities."
+      },
+      {
+        "question": "What should I do if cashback has not appeared?",
+        "answer": "If expected cashback is not displayed in your account within a reasonable time after a purchase, contact support through the available communication channels.\n\nAdditional information about the purchase may be needed for verification.\n\nCashback+ will check the transaction status with the partner and endeavour to help resolve the situation, but the relevant partner or seller makes the final decision on cashback confirmation."
+      },
+      {
+        "question": "How can I contact Cashback+?",
+        "answer": "The Cashback+ team works remotely, so visitors are not received in person.\n\nPlease use the contact information provided on the Contacts page.\n\nWe will endeavour to respond to your enquiry within a reasonable time, depending on its nature."
+      },
+      {
+        "question": "Important information",
+        "answer": "Cashback+ is an information platform and a consumer rewards programme.\n\nCashback+ is not a bank, payment institution, investment platform, financial services provider or electronic money issuer.\n\nThe amount, conditions and availability of rewards depend on the platform’s partners, transaction confirmation, fulfilment of offer conditions and the programme’s current rules.\n\nParticipation in Cashback+ does not guarantee any particular amount of cashback, bonuses or savings."
+      }
+    ],
+    "de": [
+      {
+        "question": "Was ist Cashback+?",
+        "answer": "Cashback+ ist ein Dienst zum Vergleich von Angeboten und ein Verbraucherprämienprogramm.\n\nDie Plattform hilft Nutzern, Angebote verschiedener Verkäufer zu vergleichen, Cashback für Einkäufe bei Partnern zu erhalten und an zusätzlichen Bonusprogrammen teilzunehmen.\n\nCashback+ verkauft keine Waren direkt und ist keine Partei des Kaufvertrags. Nach der Auswahl eines Angebots wechselt der Nutzer zur Website des jeweiligen Verkäufers und tätigt den Kauf unmittelbar dort."
+      },
+      {
+        "question": "Muss ich für die Nutzung von Cashback+ bezahlen?",
+        "answer": "Nein. Die Nutzung von Cashback+ ist für Käufer kostenlos.\n\nFür einzelne Dienstleistungen oder Angebote von Partnern können eigene Bedingungen gelten, die der Nutzer unmittelbar beim jeweiligen Partner akzeptiert."
+      },
+      {
+        "question": "Wie funktioniert Cashback+?",
+        "answer": "1. Sie finden ein Produkt oder eine Dienstleistung, die Sie interessiert.\n2. Cashback+ zeigt verfügbare Partnerangebote an.\n3. Sie vergleichen Preise, Kaufbedingungen und verfügbares Cashback.\n4. Sie wählen das für Sie am besten geeignete Angebot.\n5. Wenn Boni verfügbar sind, können Sie diese gemäß den Aktivitätsregeln nutzen.\n6. Sie wechseln zur Website des Verkäufers und tätigen den Kauf.\n\nNachdem der Partner den Kauf bestätigt hat, wird Cashback gemäß den Angebotsbedingungen gutgeschrieben."
+      },
+      {
+        "question": "Was unterscheidet Cashback+ von anderen Diensten?",
+        "answer": "Cashback+ vereint mehrere Möglichkeiten auf einer Plattform:\n\n- Vergleich von Angeboten verschiedener Verkäufer;\n- Cashback für Einkäufe bei Partnern;\n- Teilnahme an Werbeprogrammen;\n- Teilnahme an Forschungsprojekten und Umfragen;\n- ein Forum für den Austausch zwischen Nutzern;\n- die Möglichkeit, Boni zwischen Teilnehmern zu übertragen, soweit dies in den Plattformregeln vorgesehen ist.\n\nCashback+ ist weder Arbeitgeber noch Personalagentur oder Arbeitsvermittler."
+      },
+      {
+        "question": "Warum können die Preise von denen auf der Website des Verkäufers abweichen?",
+        "answer": "Informationen zu Preisen und Rabatten werden regelmäßig aktualisiert. Verkäufer können jedoch ihre Angebotsbedingungen ohne vorherige Ankündigung ändern.\n\nDer endgültige Preis, geltende Rabatte, Versandkosten und weitere Kaufbedingungen werden stets vom Verkäufer festgelegt und vor der Bestellung auf seiner Website angezeigt."
+      },
+      {
+        "question": "Wann erhalte ich Cashback?",
+        "answer": "Cashback wird nach der Kaufbestätigung durch den Verkäufer oder das Partnernetzwerk gutgeschrieben.\n\nDie Bestätigungsfrist hängt vom jeweiligen Geschäft ab und kann zwischen wenigen Tagen und drei Monaten liegen.\n\nIn bestimmten Fällen kann die Bestätigung länger dauern, wenn der Verkäufer die Bestellung zusätzlich prüfen muss."
+      },
+      {
+        "question": "Muss ich ein Konto erstellen?",
+        "answer": "Zum Ansehen von Produkten und Angeboten ist keine Registrierung erforderlich.\n\nUm Cashback zu erhalten, an Bonusprogrammen teilzunehmen, den Status von Gutschriften zu verfolgen und zusätzliche Plattformfunktionen zu nutzen, müssen Sie ein Benutzerkonto erstellen."
+      },
+      {
+        "question": "Welcher Anteil der Prämie wird an den Nutzer ausgezahlt?",
+        "answer": "Die Höhe von Cashback, Boni und anderen Prämien richtet sich nach den Bedingungen des jeweiligen Programms oder Angebots.\n\nInformationen über die Höhe der verfügbaren Prämie werden dem Nutzer angezeigt, bevor er sich für die Teilnahme am jeweiligen Programm entscheidet.\n\nCashback+ ist berechtigt, einen Teil der Partnervergütung für die Bereitstellung der Plattform, die Gewinnung von Nutzern und die Betreuung der Partnerprogramme zu erhalten."
+      },
+      {
+        "question": "Wie können Boni verwendet werden?",
+        "answer": "Boni sind Teil des Cashback+-Prämienprogramms und gelten nicht als Geldmittel, Bankeinlagen, E-Geld oder Anlagevermögen.\n\nDie Verwendung von Boni unterliegt den Aktivitätsregeln der Plattform.\n\nIn den von den Regeln vorgesehenen Fällen können Boni in die Berechnung der endgültigen Prämie für den jeweiligen Kauf einfließen.\n\nDie Bedingungen für die Gewährung, Nutzung und Übertragung von Boni, Beschränkungen und Gültigkeitsfristen werden durch die geltenden Plattformregeln bestimmt."
+      },
+      {
+        "question": "Mit wem arbeitet Cashback+ zusammen?",
+        "answer": "Cashback+ arbeitet mit Geschäften, Partnernetzwerken, Werbeplattformen, Forschungsorganisationen und weiteren Partnern zusammen, die Prämienprogramme für Nutzer anbieten.\n\nObwohl Cashback+ bestrebt ist, mit zuverlässigen Partnern zusammenzuarbeiten, kann die Plattform weder die Richtigkeit sämtlicher von Dritten bereitgestellter Informationen noch die Erfüllung ihrer Verpflichtungen garantieren.\n\nFür die Inhalte der Angebote, Waren und Dienstleistungen ist der jeweilige Partner verantwortlich."
+      },
+      {
+        "question": "Welche Bedingungen gelten für die Teilnahme an Forschungsprogrammen?",
+        "answer": "Die Teilnahmebedingungen werden von der Organisation festgelegt, die die Studie durchführt.\n\nFür die Teilnahme muss der Nutzer gegebenenfalls bestimmte Kriterien erfüllen, darunter Alter, Wohnort, Beruf, Interessen oder weitere für die Studie erforderliche Merkmale.\n\nEinige Forschungsorganisationen können Prämien direkt an die Teilnehmer auszahlen.\n\nDarüber hinaus kann Cashback+ eine Partnervergütung für die Vermittlung von Teilnehmern erhalten und Nutzern in den vorgesehenen Fällen zusätzliche Boni im Rahmen des eigenen Prämienprogramms gutschreiben."
+      },
+      {
+        "question": "Warum nutzt Cashback+ einen Zahlungsintermediär?",
+        "answer": "Cashback+ nutzt die Dienste eines spezialisierten Zahlungsdienstleisters zur Abwicklung von Auszahlungen.\n\nDieser Ansatz ermöglicht es, den Umfang der von der Plattform verarbeiteten Zahlungsinformationen zu minimieren und moderne Verfahren zum Schutz von Finanzdaten einzusetzen.\n\nDie Abwicklung von Auszahlungen kann den Bedingungen des jeweiligen Zahlungsdienstleisters unterliegen."
+      },
+      {
+        "question": "Werden Boni zurückgegeben, wenn ein Kauf nicht zustande kommt?",
+        "answer": "Wenn ein Kauf storniert oder vom Verkäufer nicht bestätigt wurde, können zuvor für diesen Kauf reservierte Boni gemäß den Aktivitätsregeln der Plattform auf das Bonusguthaben des Nutzers zurückgebucht werden.\n\nDie Rückbuchungsfrist hängt davon ab, wann die Informationen über die Stornierung oder Ablehnung der Bestellung vom Verkäufer oder Partner eingehen.\n\nIn bestimmten Fällen kann die Bearbeitung einer solchen Rückbuchung bis zu drei Monate dauern."
+      },
+      {
+        "question": "Kann ich ein Produkt zurückgeben?",
+        "answer": "Ja.\n\nDie Rückgabe erfolgt gemäß den Regeln und der Rückgaberichtlinie des Verkäufers, bei dem der Kauf getätigt wurde.\n\nBei Stornierung einer Bestellung oder Rückgabe eines Produkts können der Verkäufer oder das Partnernetzwerk das Cashback für diesen Kauf stornieren."
+      },
+      {
+        "question": "Kann ich Cashback+ auf einem Mobiltelefon nutzen?",
+        "answer": "Ja.\n\nDie Plattform ist für die Nutzung auf Computern, Tablets und Mobilgeräten vorgesehen.\n\nDie Funktionalität einzelner Bereiche kann vom verwendeten Gerät, dem Browser und den technischen Möglichkeiten der Partner abhängen."
+      },
+      {
+        "question": "Was soll ich tun, wenn Cashback nicht angezeigt wird?",
+        "answer": "Wenn das erwartete Cashback nicht innerhalb einer angemessenen Zeit nach dem Kauf in Ihrem Konto erscheint, wenden Sie sich über die verfügbaren Kontaktwege an den Support.\n\nZur Prüfung können zusätzliche Informationen zum Kauf erforderlich sein.\n\nCashback+ prüft den Transaktionsstatus beim Partner und bemüht sich, bei der Klärung zu helfen. Die endgültige Entscheidung über die Cashback-Bestätigung trifft jedoch der jeweilige Partner oder Verkäufer."
+      },
+      {
+        "question": "Wie kann ich Cashback+ kontaktieren?",
+        "answer": "Das Cashback+-Team arbeitet ortsunabhängig; persönliche Besucher werden daher nicht empfangen.\n\nBitte verwenden Sie die auf der Kontaktseite angegebenen Kontaktdaten.\n\nWir bemühen uns, Ihre Anfrage je nach Anliegen innerhalb einer angemessenen Frist zu beantworten."
+      },
+      {
+        "question": "Wichtige Informationen",
+        "answer": "Cashback+ ist eine Informationsplattform und ein Verbraucherprämienprogramm.\n\nCashback+ ist weder eine Bank noch ein Zahlungsinstitut, eine Anlageplattform, ein Finanzdienstleister oder ein E-Geld-Emittent.\n\nHöhe, Bedingungen und Verfügbarkeit von Prämien hängen von den Plattformpartnern, der Transaktionsbestätigung, der Erfüllung der Angebotsbedingungen und den geltenden Programmregeln ab.\n\nDie Teilnahme an Cashback+ garantiert keinen bestimmten Betrag an Cashback, Boni oder Einsparungen."
+      }
+    ],
+    "fr": [
+      {
+        "question": "Qu’est-ce que Cashback+ ?",
+        "answer": "Cashback+ est un service de comparaison d’offres et un programme de récompenses destinées aux consommateurs.\n\nLa plateforme aide les utilisateurs à comparer les offres de différents vendeurs, à recevoir du cashback sur leurs achats auprès de partenaires et à participer à des programmes de bonus supplémentaires.\n\nCashback+ ne vend pas de produits directement et n’est pas partie au contrat de vente. Après avoir choisi une offre, l’utilisateur se rend sur le site du vendeur concerné et effectue son achat directement auprès de celui-ci."
+      },
+      {
+        "question": "Faut-il payer pour utiliser Cashback+ ?",
+        "answer": "Non. L’utilisation de Cashback+ est gratuite pour les acheteurs.\n\nCertains services ou offres de partenaires peuvent être soumis à leurs propres conditions, que l’utilisateur accepte directement auprès du partenaire concerné."
+      },
+      {
+        "question": "Comment fonctionne Cashback+ ?",
+        "answer": "1. Vous trouvez un produit ou un service qui vous intéresse.\n2. Cashback+ affiche les offres partenaires disponibles.\n3. Vous comparez les prix, les conditions d’achat et le cashback disponible.\n4. Vous choisissez l’offre qui vous convient le mieux.\n5. Si vous disposez de bonus, vous pouvez les utiliser conformément aux Règles d’activité.\n6. Vous vous rendez sur le site du vendeur et effectuez votre achat.\n\nAprès confirmation de l’achat par le partenaire, le cashback est crédité conformément aux conditions de l’offre."
+      },
+      {
+        "question": "Qu’est-ce qui distingue Cashback+ des autres services ?",
+        "answer": "Cashback+ réunit plusieurs possibilités sur une même plateforme :\n\n- la comparaison d’offres de différents vendeurs ;\n- le cashback sur les achats auprès de partenaires ;\n- la participation à des programmes publicitaires ;\n- la participation à des projets de recherche et à des enquêtes ;\n- un forum permettant aux utilisateurs d’échanger ;\n- la possibilité de transférer des bonus entre participants dans les cas prévus par les règles de la plateforme.\n\nCashback+ n’est ni un employeur, ni une agence de recrutement, ni un intermédiaire en placement professionnel."
+      },
+      {
+        "question": "Pourquoi les prix peuvent-ils différer de ceux du site du vendeur ?",
+        "answer": "Les informations sur les prix et les réductions sont régulièrement mises à jour, mais les vendeurs peuvent modifier les conditions de leurs offres sans préavis.\n\nLe prix final, les réductions applicables, les frais de livraison et les autres conditions d’achat sont toujours déterminés par le vendeur et affichés sur son site avant la commande."
+      },
+      {
+        "question": "Quand recevrai-je mon cashback ?",
+        "answer": "Le cashback est crédité après confirmation de l’achat par le vendeur ou le réseau d’affiliation.\n\nLe délai de confirmation dépend de la boutique concernée et peut aller de quelques jours à trois mois.\n\nDans certains cas, la confirmation peut prendre davantage de temps si le vendeur doit effectuer des vérifications supplémentaires sur la commande."
+      },
+      {
+        "question": "Dois-je créer un compte ?",
+        "answer": "Il n’est pas nécessaire de s’inscrire pour consulter les produits et les offres.\n\nPour recevoir du cashback, participer aux programmes de bonus, suivre le statut des montants crédités et accéder aux fonctionnalités supplémentaires de la plateforme, vous devrez créer un compte."
+      },
+      {
+        "question": "Quelle part de la récompense est versée à l’utilisateur ?",
+        "answer": "Le montant du cashback, des bonus et des autres récompenses est déterminé par les conditions du programme ou de l’offre concernés.\n\nLes informations sur le montant de la récompense disponible sont présentées à l’utilisateur avant qu’il décide de participer au programme concerné.\n\nCashback+ est en droit de recevoir une part de la rémunération d’affiliation pour la mise à disposition de la plateforme, l’acquisition d’utilisateurs et l’accompagnement des programmes partenaires."
+      },
+      {
+        "question": "Comment utiliser les bonus ?",
+        "answer": "Les bonus font partie du programme de récompenses Cashback+ et ne sont pas considérés comme des fonds, des dépôts bancaires, de la monnaie électronique ou des actifs d’investissement.\n\nL’utilisation des bonus est régie par les Règles d’activité de la plateforme.\n\nDans les cas prévus par les règles, les bonus peuvent entrer dans le calcul de la récompense finale pour l’achat concerné.\n\nLes conditions d’attribution, d’utilisation et de transfert des bonus, leurs restrictions et leurs durées de validité sont déterminées par les règles de la plateforme en vigueur."
+      },
+      {
+        "question": "Avec qui Cashback+ travaille-t-il ?",
+        "answer": "Cashback+ collabore avec des commerces, des réseaux d’affiliation, des plateformes publicitaires, des organisations de recherche et d’autres partenaires proposant des programmes de récompenses aux utilisateurs.\n\nBien que Cashback+ s’efforce de travailler avec des partenaires fiables, la plateforme ne peut garantir ni l’exactitude de toutes les informations fournies par des tiers, ni le respect de leurs obligations.\n\nLe partenaire concerné est responsable du contenu des offres, des produits et des services."
+      },
+      {
+        "question": "Quelles sont les conditions de participation aux programmes de recherche ?",
+        "answer": "Les conditions de participation sont déterminées par l’organisation qui mène l’étude.\n\nPour participer, l’utilisateur peut devoir répondre à certains critères, notamment l’âge, le lieu de résidence, la profession, les centres d’intérêt ou d’autres caractéristiques nécessaires à l’étude.\n\nCertaines organisations de recherche peuvent verser une récompense directement aux participants.\n\nPar ailleurs, Cashback+ peut recevoir une rémunération d’affiliation pour l’apport de participants et, dans les cas prévus, créditer des bonus supplémentaires aux utilisateurs dans le cadre de son propre programme de récompenses."
+      },
+      {
+        "question": "Pourquoi Cashback+ utilise-t-il un intermédiaire de paiement ?",
+        "answer": "Cashback+ fait appel à un prestataire de paiement spécialisé pour le traitement des versements.\n\nCette approche permet de minimiser le volume d’informations de paiement traitées par la plateforme et d’utiliser des mécanismes modernes de protection des données financières.\n\nLe traitement des versements peut être régi par les conditions du prestataire de paiement concerné."
+      },
+      {
+        "question": "Les bonus seront-ils restitués si l’achat n’aboutit pas ?",
+        "answer": "Si un achat a été annulé ou n’a pas été confirmé par le vendeur, les bonus précédemment réservés pour cet achat peuvent être restitués au solde de bonus de l’utilisateur conformément aux Règles d’activité de la plateforme.\n\nLe délai de restitution dépend du moment où les informations d’annulation ou de rejet de la commande sont reçues du vendeur ou du partenaire.\n\nDans certains cas, le traitement de cette restitution peut prendre jusqu’à trois mois."
+      },
+      {
+        "question": "Puis-je retourner un produit ?",
+        "answer": "Oui.\n\nLe retour s’effectue conformément aux règles et à la politique de retour du vendeur auprès duquel l’achat a été effectué.\n\nEn cas d’annulation de commande ou de retour du produit, le vendeur ou le réseau d’affiliation peut annuler le cashback attribué pour cet achat."
+      },
+      {
+        "question": "Puis-je utiliser Cashback+ sur un téléphone mobile ?",
+        "answer": "Oui.\n\nLa plateforme est conçue pour être utilisée sur des ordinateurs, des tablettes et des appareils mobiles.\n\nLes fonctionnalités de certaines sections peuvent dépendre de l’appareil utilisé, du navigateur et des capacités techniques des partenaires."
+      },
+      {
+        "question": "Que faire si le cashback n’apparaît pas ?",
+        "answer": "Si le cashback attendu ne s’affiche pas sur votre compte dans un délai raisonnable après l’achat, contactez l’assistance via les moyens de communication disponibles.\n\nDes informations supplémentaires sur l’achat peuvent être nécessaires à la vérification.\n\nCashback+ vérifiera le statut de la transaction auprès du partenaire et s’efforcera d’aider à résoudre la situation. Toutefois, la décision finale de confirmation du cashback appartient au partenaire ou au vendeur concerné."
+      },
+      {
+        "question": "Comment contacter Cashback+ ?",
+        "answer": "L’équipe Cashback+ travaille à distance et ne reçoit donc pas de visiteurs en personne.\n\nVeuillez utiliser les coordonnées indiquées sur la page Contacts.\n\nNous nous efforcerons de répondre à votre demande dans un délai raisonnable, en fonction de sa nature."
+      },
+      {
+        "question": "Informations importantes",
+        "answer": "Cashback+ est une plateforme d’information et un programme de récompenses destinées aux consommateurs.\n\nCashback+ n’est ni une banque, ni un établissement de paiement, ni une plateforme d’investissement, ni un prestataire de services financiers, ni un émetteur de monnaie électronique.\n\nLe montant, les conditions et la disponibilité des récompenses dépendent des partenaires de la plateforme, de la confirmation des transactions, du respect des conditions des offres et des règles du programme en vigueur.\n\nLa participation à Cashback+ ne garantit aucun montant déterminé de cashback, de bonus ou d’économies."
+      }
+    ]
+  },
+  "contacts": {
+    "ru": {
+      "title": "Связаться с Cashback+",
+      "intro": [
+        {
+          "tag": "p",
+          "props": {},
+          "children": [
+            "Мы будем рады помочь по вопросам использования платформы Cashback+, начисления кэшбэка, бонусных программ, участия в исследованиях, работы учётной записи и другим вопросам, связанным с функционированием сервиса."
+          ]
+        },
+        {
+          "tag": "p",
+          "props": {},
+          "children": [
+            "Команда Cashback+ работает полностью в дистанционном формате. Личный приём посетителей не осуществляется, если иное не согласовано заранее в письменной форме."
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "title": "Служба поддержки пользователей",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "По вопросам использования платформы, начислений, учётной записи, технических проблем и работы сервиса:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:support@cashbackplus.uk"
+                  },
+                  "children": [
+                    "support@cashbackplus.uk"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "При обращении рекомендуется указывать адрес электронной почты, связанный с вашей учётной записью, а также подробное описание возникшей ситуации."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Мы стремимся отвечать на обращения пользователей в разумные сроки с учётом сложности запроса и текущей загрузки службы поддержки."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Конфиденциальность и защита данных",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "По вопросам обработки персональных данных, реализации прав субъекта данных, удаления данных, исправления информации и иным вопросам, связанным с конфиденциальностью:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:privacy@cashbackplus.uk"
+                  },
+                  "children": [
+                    "privacy@cashbackplus.uk"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Запросы, связанные с персональными данными, рассматриваются в соответствии с требованиями законодательства Великобритании о защите данных."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Юридические вопросы",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "По вопросам юридической документации, официальных уведомлений, соблюдения законодательства и иным правовым вопросам:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:legal@cashbackplus.uk"
+                  },
+                  "children": [
+                    "legal@cashbackplus.uk"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Информация о компании",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Наименование компании:"
+                  ]
+                },
+                "Cashback Plus Ltd"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Страна регистрации:"
+                  ]
+                },
+                "Соединённое Королевство"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Юрисдикция:"
+                  ]
+                },
+                "Англия и Уэльс"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Регистрационный номер компании:"
+                  ]
+                },
+                "[Company Number]"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Юридический адрес:"
+                  ]
+                },
+                "[Registered Office Address]"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "После регистрации компании рекомендуется заменить данные в квадратных скобках на фактическую информацию из реестра Companies House."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Обращения по начислениям и вознаграждениям",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Если ваш вопрос связан с кэшбэком, бонусами, исследовательскими программами или подтверждением покупок, пожалуйста, по возможности укажите:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "дату совершения покупки или действия;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "наименование магазина или партнёра;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "номер заказа (если применимо);"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "описание проблемы;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "скриншоты или иные подтверждающие материалы (при наличии)."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Это поможет ускорить рассмотрение обращения."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Безопасность аккаунта",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Если вы считаете, что доступ к вашей учётной записи мог получить кто-либо кроме вас, рекомендуем незамедлительно обратиться в службу поддержки."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Для обеспечения безопасности пользователей Cashback+ никогда не запрашивает пароли, коды подтверждения, полные банковские реквизиты или иную конфиденциальную информацию посредством электронной почты."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Форма обратной связи",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Для удобства пользователей на платформе может использоваться форма обратной связи."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Пожалуйста, не указывайте в сообщениях:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "пароли;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "одноразовые коды подтверждения;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "полные данные банковских карт;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "иную информацию, раскрытие которой не требуется для обработки вашего запроса."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "form",
+              "props": {
+                "className": "contacts-form"
+              },
+              "children": [
+                {
+                  "tag": "input",
+                  "props": {
+                    "type": "text",
+                    "placeholder": "Ваше имя"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "textarea",
+                  "props": {
+                    "placeholder": "Сообщение"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "button",
+                  "props": {
+                    "type": "submit"
+                  },
+                  "children": [
+                    "Отправить"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Жалобы и споры",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Если вы считаете, что ваш вопрос не был решён должным образом через стандартные каналы поддержки, вы можете направить обращение по адресу:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    {
+                      "tag": "a",
+                      "props": {
+                        "href": "mailto:legal@cashbackplus.uk"
+                      },
+                      "children": [
+                        "legal@cashbackplus.uk"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Каждое обращение рассматривается индивидуально в соответствии с внутренними процедурами Cashback+ и применимым законодательством."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Важная информация",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cashback+ является информационной платформой и программой потребительских вознаграждений."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cashback+ не является:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "банком;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "платёжной организацией;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "эмитентом электронных денег;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "инвестиционной платформой;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "страховой организацией;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "поставщиком финансовых услуг."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "По вопросам качества товаров, доставки, возвратов, гарантийного обслуживания и исполнения обязательств по покупке пользователю следует обращаться непосредственно к соответствующему продавцу, который является стороной договора купли-продажи."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Часы обработки обращений",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Обращения пользователей принимаются круглосуточно через электронную почту и доступные формы связи."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Обработка запросов осуществляется в рабочее время службы поддержки. Фактическое время ответа может зависеть от сложности обращения, количества поступающих запросов и необходимости взаимодействия с партнёрами платформы."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "title": "Contact Cashback+",
+      "intro": [
+        {
+          "tag": "p",
+          "props": {},
+          "children": [
+            "We will be happy to help with questions about using the Cashback+ platform, cashback credits, bonus programmes, participation in research, account operation and other matters relating to the service."
+          ]
+        },
+        {
+          "tag": "p",
+          "props": {},
+          "children": [
+            "The Cashback+ team works entirely remotely. Visitors are not received in person unless otherwise agreed in advance in writing."
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "title": "User support",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "For questions about using the platform, rewards, your account, technical issues and operation of the service:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:support@cashbackplus.uk"
+                  },
+                  "children": [
+                    "support@cashbackplus.uk"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "When contacting us, we recommend including the email address associated with your account and a detailed description of the situation."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "We aim to respond to user enquiries within a reasonable time, taking into account the complexity of the request and the support team’s current workload."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Privacy and data protection",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "For questions about personal data processing, exercising data subject rights, deleting data, correcting information and other privacy matters:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:privacy@cashbackplus.uk"
+                  },
+                  "children": [
+                    "privacy@cashbackplus.uk"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Requests relating to personal data are handled in accordance with the requirements of UK data protection law."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Legal matters",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "For questions about legal documentation, official notices, compliance with legislation and other legal matters:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:legal@cashbackplus.uk"
+                  },
+                  "children": [
+                    "legal@cashbackplus.uk"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Company information",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Company name:"
+                  ]
+                },
+                "Cashback Plus Ltd"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Country of registration:"
+                  ]
+                },
+                "United Kingdom"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Jurisdiction:"
+                  ]
+                },
+                "England and Wales"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Company registration number:"
+                  ]
+                },
+                "[Company Number]"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Registered office address:"
+                  ]
+                },
+                "[Registered Office Address]"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "After the company is registered, it is recommended that the details in square brackets be replaced with the actual information from the Companies House register."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Enquiries about credits and rewards",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "If your question concerns cashback, bonuses, research programmes or purchase confirmation, please provide the following where possible:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "the date of the purchase or action;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "the name of the shop or partner;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "the order number (if applicable);"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "a description of the issue;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "screenshots or other supporting materials (if available)."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "This will help us review your enquiry more quickly."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Account security",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "If you believe someone other than you may have gained access to your account, we recommend contacting support immediately."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "To protect users, Cashback+ never requests passwords, verification codes, full bank details or other confidential information by email."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Contact form",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "A contact form may be used on the platform for users’ convenience."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Please do not include the following in messages:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "passwords;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "one-time verification codes;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "full bank card details;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "other information whose disclosure is not necessary to process your request."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "form",
+              "props": {
+                "className": "contacts-form"
+              },
+              "children": [
+                {
+                  "tag": "input",
+                  "props": {
+                    "type": "text",
+                    "placeholder": "Your name"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "textarea",
+                  "props": {
+                    "placeholder": "Message"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "button",
+                  "props": {
+                    "type": "submit"
+                  },
+                  "children": [
+                    "Send"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Complaints and disputes",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "If you believe your issue has not been properly resolved through the standard support channels, you may send an enquiry to:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    {
+                      "tag": "a",
+                      "props": {
+                        "href": "mailto:legal@cashbackplus.uk"
+                      },
+                      "children": [
+                        "legal@cashbackplus.uk"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Each enquiry is considered individually in accordance with Cashback+ internal procedures and applicable law."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Important information",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cashback+ is an information platform and a consumer rewards programme."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cashback+ is not:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "a bank;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "a payment institution;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "an electronic money issuer;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "an investment platform;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "an insurance organisation;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "a financial services provider."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "For matters concerning product quality, delivery, returns, warranty service and fulfilment of purchase obligations, users should contact the relevant seller directly, as the seller is the party to the sales contract."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Enquiry processing hours",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "User enquiries are accepted around the clock by email and through the available contact forms."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Requests are processed during the support team’s working hours. Actual response times may depend on the complexity of the enquiry, the number of incoming requests and the need to liaise with the platform’s partners."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Cashback+ kontaktieren",
+      "intro": [
+        {
+          "tag": "p",
+          "props": {},
+          "children": [
+            "Wir helfen Ihnen gerne bei Fragen zur Nutzung der Cashback+-Plattform, zu Cashback-Gutschriften, Bonusprogrammen, der Teilnahme an Studien, der Nutzung Ihres Kontos und anderen Fragen zum Betrieb des Dienstes."
+          ]
+        },
+        {
+          "tag": "p",
+          "props": {},
+          "children": [
+            "Das Cashback+-Team arbeitet vollständig ortsunabhängig. Persönliche Besucher werden nicht empfangen, sofern nicht im Voraus schriftlich etwas anderes vereinbart wurde."
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "title": "Nutzersupport",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Bei Fragen zur Nutzung der Plattform, zu Gutschriften, Ihrem Konto, technischen Problemen und dem Betrieb des Dienstes:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:support@cashbackplus.uk"
+                  },
+                  "children": [
+                    "support@cashbackplus.uk"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Wir empfehlen, bei Ihrer Anfrage die mit Ihrem Konto verknüpfte E-Mail-Adresse sowie eine ausführliche Beschreibung der Situation anzugeben."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Wir bemühen uns, Nutzeranfragen unter Berücksichtigung ihrer Komplexität und der aktuellen Auslastung des Supports innerhalb einer angemessenen Frist zu beantworten."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Privatsphäre und Datenschutz",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Bei Fragen zur Verarbeitung personenbezogener Daten, zur Ausübung von Betroffenenrechten, zur Löschung von Daten, zur Berichtigung von Informationen und zu weiteren Datenschutzthemen:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:privacy@cashbackplus.uk"
+                  },
+                  "children": [
+                    "privacy@cashbackplus.uk"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Anfragen zu personenbezogenen Daten werden gemäß den Anforderungen des britischen Datenschutzrechts bearbeitet."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Rechtliche Fragen",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Bei Fragen zu rechtlichen Dokumenten, offiziellen Mitteilungen, der Einhaltung gesetzlicher Vorschriften und anderen rechtlichen Angelegenheiten:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:legal@cashbackplus.uk"
+                  },
+                  "children": [
+                    "legal@cashbackplus.uk"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Unternehmensinformationen",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Unternehmensname:"
+                  ]
+                },
+                "Cashback Plus Ltd"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Registrierungsland:"
+                  ]
+                },
+                "Vereinigtes Königreich"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Rechtsordnung:"
+                  ]
+                },
+                "England und Wales"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Unternehmensregisternummer:"
+                  ]
+                },
+                "[Company Number]"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Eingetragene Geschäftsanschrift:"
+                  ]
+                },
+                "[Registered Office Address]"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Nach der Registrierung des Unternehmens wird empfohlen, die Angaben in eckigen Klammern durch die tatsächlichen Informationen aus dem Register von Companies House zu ersetzen."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Anfragen zu Gutschriften und Prämien",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Wenn Ihre Frage Cashback, Boni, Forschungsprogramme oder Kaufbestätigungen betrifft, geben Sie bitte nach Möglichkeit Folgendes an:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "das Datum des Kaufs oder der Handlung;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "den Namen des Geschäfts oder Partners;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "die Bestellnummer (falls zutreffend);"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "eine Beschreibung des Problems;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "Screenshots oder andere Nachweise (falls vorhanden)."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Dies hilft, die Bearbeitung Ihrer Anfrage zu beschleunigen."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Kontosicherheit",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Wenn Sie vermuten, dass jemand anderes Zugriff auf Ihr Konto erlangt haben könnte, empfehlen wir, sich unverzüglich an den Support zu wenden."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Zum Schutz der Nutzer fragt Cashback+ niemals per E-Mail nach Passwörtern, Bestätigungscodes, vollständigen Bankverbindungen oder anderen vertraulichen Informationen."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Kontaktformular",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Zur Erleichterung der Kontaktaufnahme kann auf der Plattform ein Kontaktformular verwendet werden."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Bitte geben Sie in Nachrichten Folgendes nicht an:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "Passwörter;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "Einmal-Bestätigungscodes;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "vollständige Bankkartendaten;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "andere Informationen, deren Offenlegung zur Bearbeitung Ihrer Anfrage nicht erforderlich ist."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "form",
+              "props": {
+                "className": "contacts-form"
+              },
+              "children": [
+                {
+                  "tag": "input",
+                  "props": {
+                    "type": "text",
+                    "placeholder": "Ihr Name"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "textarea",
+                  "props": {
+                    "placeholder": "Nachricht"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "button",
+                  "props": {
+                    "type": "submit"
+                  },
+                  "children": [
+                    "Senden"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Beschwerden und Streitigkeiten",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Wenn Sie der Ansicht sind, dass Ihr Anliegen über die üblichen Supportkanäle nicht ordnungsgemäß gelöst wurde, können Sie Ihre Anfrage an folgende Adresse richten:"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    {
+                      "tag": "a",
+                      "props": {
+                        "href": "mailto:legal@cashbackplus.uk"
+                      },
+                      "children": [
+                        "legal@cashbackplus.uk"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Jede Anfrage wird einzeln gemäß den internen Verfahren von Cashback+ und dem anwendbaren Recht geprüft."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Wichtige Informationen",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cashback+ ist eine Informationsplattform und ein Verbraucherprämienprogramm."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cashback+ ist weder:"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "eine Bank;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "ein Zahlungsinstitut;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "ein E-Geld-Emittent;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "eine Anlageplattform;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "ein Versicherungsunternehmen;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "ein Finanzdienstleister."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Bei Fragen zur Qualität von Waren, Lieferung, Rückgabe, Garantieleistungen und Erfüllung der Kaufverpflichtungen sollten sich Nutzer unmittelbar an den jeweiligen Verkäufer wenden, der die Vertragspartei des Kaufvertrags ist."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Bearbeitungszeiten für Anfragen",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Nutzeranfragen werden rund um die Uhr per E-Mail und über die verfügbaren Kontaktformulare entgegengenommen."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Anfragen werden während der Arbeitszeiten des Supports bearbeitet. Die tatsächliche Antwortzeit kann von der Komplexität des Anliegens, der Anzahl eingehender Anfragen und einer erforderlichen Abstimmung mit den Plattformpartnern abhängen."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Contacter Cashback+",
+      "intro": [
+        {
+          "tag": "p",
+          "props": {},
+          "children": [
+            "Nous serons heureux de vous aider pour toute question concernant l’utilisation de la plateforme Cashback+, le crédit de cashback, les programmes de bonus, la participation à des études, le fonctionnement de votre compte et d’autres sujets liés au service."
+          ]
+        },
+        {
+          "tag": "p",
+          "props": {},
+          "children": [
+            "L’équipe Cashback+ travaille entièrement à distance. Aucun accueil physique des visiteurs n’est assuré, sauf accord écrit préalable contraire."
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "title": "Assistance aux utilisateurs",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Pour les questions concernant l’utilisation de la plateforme, les montants crédités, le compte, les problèmes techniques et le fonctionnement du service :"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:support@cashbackplus.uk"
+                  },
+                  "children": [
+                    "support@cashbackplus.uk"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Lors de votre prise de contact, nous vous recommandons d’indiquer l’adresse e-mail associée à votre compte ainsi qu’une description détaillée de la situation."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Nous nous efforçons de répondre aux demandes des utilisateurs dans un délai raisonnable, en tenant compte de la complexité de la demande et de la charge de travail actuelle de l’assistance."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Confidentialité et protection des données",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Pour les questions relatives au traitement des données personnelles, à l’exercice des droits des personnes concernées, à la suppression de données, à la rectification d’informations et à tout autre sujet de confidentialité :"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:privacy@cashbackplus.uk"
+                  },
+                  "children": [
+                    "privacy@cashbackplus.uk"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Les demandes relatives aux données personnelles sont traitées conformément aux exigences de la législation britannique sur la protection des données."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Questions juridiques",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Pour les questions concernant les documents juridiques, les notifications officielles, le respect de la législation et les autres questions de droit :"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Email:"
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "props": {
+                    "href": "mailto:legal@cashbackplus.uk"
+                  },
+                  "children": [
+                    "legal@cashbackplus.uk"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Informations sur la société",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Dénomination de la société :"
+                  ]
+                },
+                "Cashback Plus Ltd"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Pays d’immatriculation :"
+                  ]
+                },
+                "Royaume-Uni"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Juridiction :"
+                  ]
+                },
+                "Angleterre et Pays de Galles"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Numéro d’immatriculation de la société :"
+                  ]
+                },
+                "[Company Number]"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    "Adresse du siège social :"
+                  ]
+                },
+                "[Registered Office Address]"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Après l’immatriculation de la société, il est recommandé de remplacer les données entre crochets par les informations réelles figurant au registre de Companies House."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Demandes concernant les montants crédités et les récompenses",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Si votre question concerne le cashback, les bonus, les programmes de recherche ou la confirmation d’achats, veuillez, si possible, indiquer :"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "la date de l’achat ou de l’action ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "le nom du commerce ou du partenaire ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "le numéro de commande (le cas échéant) ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "une description du problème ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "des captures d’écran ou d’autres justificatifs (si disponibles)."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cela permettra d’accélérer l’examen de votre demande."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Sécurité du compte",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Si vous pensez qu’une personne autre que vous a pu accéder à votre compte, nous vous recommandons de contacter immédiatement l’assistance."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Pour assurer la sécurité des utilisateurs, Cashback+ ne demande jamais par e-mail de mots de passe, de codes de vérification, de coordonnées bancaires complètes ou d’autres informations confidentielles."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Formulaire de contact",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Un formulaire de contact peut être utilisé sur la plateforme pour faciliter les échanges avec les utilisateurs."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Veuillez ne pas inclure dans vos messages :"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "des mots de passe ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "des codes de vérification à usage unique ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "les données complètes de cartes bancaires ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "d’autres informations dont la divulgation n’est pas nécessaire au traitement de votre demande."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "form",
+              "props": {
+                "className": "contacts-form"
+              },
+              "children": [
+                {
+                  "tag": "input",
+                  "props": {
+                    "type": "text",
+                    "placeholder": "Votre nom"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "textarea",
+                  "props": {
+                    "placeholder": "Message"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "button",
+                  "props": {
+                    "type": "submit"
+                  },
+                  "children": [
+                    "Envoyer"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Réclamations et litiges",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Si vous estimez que votre problème n’a pas été correctement résolu par les canaux habituels d’assistance, vous pouvez adresser votre demande à :"
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                {
+                  "tag": "strong",
+                  "props": {},
+                  "children": [
+                    {
+                      "tag": "a",
+                      "props": {
+                        "href": "mailto:legal@cashbackplus.uk"
+                      },
+                      "children": [
+                        "legal@cashbackplus.uk"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Chaque demande est examinée individuellement conformément aux procédures internes de Cashback+ et au droit applicable."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Informations importantes",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cashback+ est une plateforme d’information et un programme de récompenses destinées aux consommateurs."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Cashback+ n’est pas :"
+              ]
+            },
+            {
+              "tag": "ul",
+              "props": {},
+              "children": [
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "une banque ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "un établissement de paiement ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "un émetteur de monnaie électronique ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "une plateforme d’investissement ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "un organisme d’assurance ;"
+                  ]
+                },
+                {
+                  "tag": "li",
+                  "props": {},
+                  "children": [
+                    "un prestataire de services financiers."
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Pour les questions de qualité des produits, de livraison, de retour, de garantie et d’exécution des obligations liées à l’achat, l’utilisateur doit s’adresser directement au vendeur concerné, qui est partie au contrat de vente."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Horaires de traitement des demandes",
+          "blocks": [
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Les demandes des utilisateurs sont acceptées à toute heure par e-mail et via les formulaires de contact disponibles."
+              ]
+            },
+            {
+              "tag": "p",
+              "props": {},
+              "children": [
+                "Les demandes sont traitées pendant les heures de travail de l’assistance. Le délai de réponse effectif peut dépendre de la complexité de la demande, du nombre de demandes reçues et de la nécessité d’échanger avec les partenaires de la plateforme."
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
