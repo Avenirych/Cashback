@@ -12,6 +12,8 @@ import { readDraft, saveDraft, clearDraft, passwordChecks } from "../utils/regis
 import MarketingPreferencesPanel from "../components/MarketingPreferencesPanel";
 import ForumLogo from "../components/ForumLogo";
 import MoneyTree from "../components/MoneyTree";
+import "./Register.css";
+import registrationUi from "../content/registrationUi.json";
 import { translations } from "../i18n";
 import { localTestMailboxEnabled, LOCAL_TEST_MAILBOX_URL } from "../localTestMailbox";
 import { validateEmail } from "../utils/emailValidator";
@@ -188,6 +190,9 @@ export default function Register({
   useEffect(() => { if (!user && !pending) saveDraft(form); }, [form, user, pending]);
 
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [privacyAcknowledged, setPrivacyAcknowledged] = useState(false);
+  const [marketingRequested, setMarketingRequested] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -198,7 +203,9 @@ export default function Register({
     translations[language as keyof typeof translations] ??
     translations.EN;
 
-  const v = language === "RU" ? verifyText.ru : verifyText.en;
+  const ui = (text:string) => (registrationUi[lang.toLowerCase() as keyof typeof registrationUi] as Record<string,string> | undefined)?.[text] ?? text;
+  const v = language === "RU" ? verifyText.ru : Object.fromEntries(Object.entries(verifyText.en).map(([key,text])=>[key,ui(text)])) as typeof verifyText.en;
+  const legal = t.registrationLegal;
 
   useEffect(() => {
     if (!requestedReturnPath) return;
@@ -242,7 +249,7 @@ export default function Register({
     setForm((previous) => ({ ...previous, email }));
 
     setEmailError(
-      email.trim() ? validateEmail(email).error || "" : ""
+      email.trim() ? ui(validateEmail(email).error || "") : ""
     );
   };
 
@@ -254,6 +261,16 @@ export default function Register({
     setError("");
     setResendMessage("");
 
+    if (!ageConfirmed) {
+      setError(legal.ageError);
+      return;
+    }
+
+    if (!privacyAcknowledged) {
+      setError(legal.privacyError);
+      return;
+    }
+
     if (!termsAccepted) {
       setError(t.mustAcceptTerms);
       return;
@@ -262,11 +279,11 @@ export default function Register({
     const validation = validateEmail(form.email);
 
     if (!validation.valid) {
-      setEmailError(validation.error || "Invalid email");
+      setEmailError(ui(validation.error || "Invalid email"));
       return;
     }
 
-    if (!isFormValid) { setError(language === "RU" ? "Проверьте имя, фамилию, телефон и требования к паролю." : "Check names, phone and password requirements."); return; }
+    if (!isFormValid) { setError(language === "RU" ? "Проверьте имя, фамилию, телефон и требования к паролю." : ui("Check names, phone and password requirements.")); return; }
     setBusy(true);
 
     try {
@@ -307,8 +324,8 @@ export default function Register({
     try {
       if (!await checkVerification()) setResendMessage(language === "RU"
         ? "Почта ещё не подтверждена. Откройте письмо и нажмите ссылку подтверждения."
-        : "Your email is not verified yet. Open the confirmation link in your email.");
-    } catch { setError(language === "RU" ? "Не удалось проверить статус. Попробуйте позже или войдите в аккаунт." : "Could not check verification. Retry later or log in."); }
+        : ui("Your email is not verified yet. Open the confirmation link in your email."));
+    } catch { setError(language === "RU" ? "Не удалось проверить статус. Попробуйте позже или войдите в аккаунт." : ui("Could not check verification. Retry later or log in.")); }
     finally { setBusy(false); }
   };
 
@@ -335,7 +352,7 @@ export default function Register({
       setError(
         err instanceof Error
           ? err.message
-          : "Could not resend verification email"
+          : ui("Could not resend verification email")
       );
     } finally {
       setBusy(false);
@@ -346,7 +363,7 @@ export default function Register({
     form.firstName.trim().length >= 2 && form.lastName.trim().length >= 2 &&
       Boolean(canonicalPhone(form.phone, form.country)) &&
       passwordChecks(form.password).every(Boolean) &&
-      termsAccepted &&
+      ageConfirmed && privacyAcknowledged && termsAccepted &&
       validateEmail(form.email).valid
   );
 
@@ -375,9 +392,9 @@ export default function Register({
 
   if (user?.email_verified) {
     return <section aria-live="polite" style={{maxWidth: 560, margin: "48px auto", padding: 32, background: "white", borderRadius: 12}}>
-      <h1>{language === "RU" ? "Электронная почта подтверждена!" : "Email verified!"}</h1>
-      <p>{language === "RU" ? "Перейдите в профиль и завершите регистрацию." : "Continue to your profile to complete registration."}</p>
-      <Link to="/profile" style={{...buttonStyle, display: "inline-block", textDecoration: "none"}}>{language === "RU" ? "Перейти в профиль" : "Continue to profile"}</Link>
+      <h1>{language === "RU" ? "Электронная почта подтверждена!" : ui("Email verified!")}</h1>
+      <p>{language === "RU" ? "Перейдите в профиль и завершите регистрацию." : ui("Continue to your profile to complete registration.")}</p>
+      <Link to="/profile" style={{...buttonStyle, display: "inline-block", textDecoration: "none"}}>{language === "RU" ? "Перейти в профиль" : ui("Continue to profile")}</Link>
     </section>;
   }
 
@@ -388,26 +405,8 @@ export default function Register({
         background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
       }}
     >
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "40px 24px",
-          display: "flex",
-          justifyContent: "center",
-          gap: "80px",
-          alignItems: "flex-start",
-          flexWrap: "wrap",
-        }}
-      >
-        <div
-          style={{
-            flex: 1,
-            maxWidth: "480px",
-            minWidth: "280px",
-          }}
-        >
-          <Link
+      <div className="register-layout">
+          <Link className="register-back-link"
             to="/"
             style={{
               color: "#0d6efd",
@@ -419,14 +418,9 @@ export default function Register({
             {t.backToHome}
           </Link>
 
-          <div
-            style={{
-              background: "#fff",
-              padding: "32px",
-              borderRadius: "12px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-            }}
-          >
+        <div className="register-form-column">
+
+          <div className="register-card">
             <div
               style={{
                 display: "flex",
@@ -471,20 +465,21 @@ export default function Register({
                 )}
 
                 {localTestMailboxEnabled() && (
-                  <aside aria-label={language === "RU" ? "Локальная тестовая почта" : "Local test mailbox"}
+                  <aside aria-label={language === "RU" ? "Локальная тестовая почта" : ui("Local test mailbox")}
                     style={{padding: 18, border: "2px solid #0d6efd", borderRadius: 10, background: "#eef5ff"}}>
-                    <strong>{language === "RU" ? "Где найти письмо в локальной версии" : "Where to find your local test message"}</strong>
+                    <strong>{language === "RU" ? "Где найти письмо в локальной версии" : ui("Where to find your local test message")}</strong>
                     <p>{language === "RU"
                       ? "Это локальная версия Cashback+. Письма перехватываются тестовой почтой и не приходят в ваш обычный ящик. Откройте письмо для указанного выше адреса и нажмите «Подтвердить почту». Затем вернитесь сюда и нажмите «Проверить почту»."
-                      : "This is local Cashback+. Messages arrive in the test mailbox, not your personal inbox. Open the message addressed to your email and click its confirmation link. Then return here and check the status."}</p>
+                      : ui("This is local Cashback+. Messages arrive in the test mailbox, not your personal inbox. Open the message addressed to your email and click its confirmation link. Then return here and check the status.")}</p>
                     <a href={LOCAL_TEST_MAILBOX_URL} target="_blank" rel="noopener noreferrer"
                       style={{display: "inline-block", padding: "12px 18px", background: "#0d6efd", color: "white", borderRadius: 8, fontWeight: 700, textDecoration: "none"}}>
-                      {language === "RU" ? "Открыть тестовую почту" : "Open test mailbox"}
+                      {language === "RU" ? "Открыть тестовую почту" : ui("Open test mailbox")}
                     </a>
                   </aside>
                 )}
 
                 <p style={{ margin: 0 }}>{v.note}</p>
+                {marketingRequested && <p role="status">{legal.notSaved}</p>}
 
                 {resendMessage && (
                   <p role="status" style={{ margin: 0 }}>
@@ -493,7 +488,7 @@ export default function Register({
                 )}
 
                 <button type="button" onClick={handleCheck} disabled={busy} style={buttonStyle}>
-                  {busy ? v.waiting : language === "RU" ? "Проверить почту" : "Check email"}
+                  {busy ? v.waiting : language === "RU" ? "Проверить почту" : ui("Check email")}
                 </button>
                 <button
                   type="button"
@@ -525,14 +520,15 @@ export default function Register({
               </div>
             ) : (
               <>
-                <p>{language === "RU" ? "Маркетинговые сообщения необязательны и отключены по умолчанию. После создания аккаунта их можно настроить здесь или в профиле. Сервисные письма и согласие с условиями сайта — отдельно." : "Marketing is optional and off by default. After creating your account you can choose preferences here or in your profile. Service messages and site terms are separate."} <Link to="/privacy#privacySection12">{language === "RU" ? "Подробнее" : "Learn more"}</Link></p>
-                <form
-                  onSubmit={submit}
-                  style={{ display: "grid", gap: "12px" }}
-                >
-                  {(["firstName","lastName"] as const).map((field) => <input key={field} id={field} name={field} type="text" aria-label={language === "RU" ? (field === "firstName" ? "Имя" : "Фамилия") : (field === "firstName" ? "First name" : "Last name")} placeholder={language === "RU" ? (field === "firstName" ? "Имя" : "Фамилия") : (field === "firstName" ? "First name" : "Last name")} value={form[field]} onChange={e=>setForm({...form,[field]:e.target.value})} required minLength={2} maxLength={100} autoComplete={field === "firstName" ? "given-name" : "family-name"} disabled={busy} style={inputStyle}/>)}
+                <p>{language === "RU" ? "Маркетинговые сообщения необязательны и отключены по умолчанию. После создания аккаунта их можно настроить здесь или в профиле. Сервисные письма и согласие с условиями сайта — отдельно." : ui("Marketing is optional and off by default. After creating your account you can choose preferences here or in your profile. Service messages and site terms are separate.")} <Link to="/privacy#privacySection5">{language === "RU" ? "Подробнее" : ui("Learn more")}</Link></p>
+                <form className="register-form" onSubmit={submit}>
+                  <div className="register-name-fields">
+                  {(["firstName","lastName"] as const).map((field) => <input key={field} id={field} name={field} type="text" aria-label={language === "RU" ? (field === "firstName" ? "Имя" : "Фамилия") : (field === "firstName" ? ui("First name") : ui("Last name"))} placeholder={language === "RU" ? (field === "firstName" ? "Имя" : "Фамилия") : (field === "firstName" ? ui("First name") : ui("Last name"))} value={form[field]} onChange={e=>setForm({...form,[field]:e.target.value})} required minLength={2} maxLength={100} autoComplete={field === "firstName" ? "given-name" : "family-name"} disabled={busy} style={inputStyle}/>)}
+                  </div>
 
+                  <div className="register-field-row">
                   <div>
+                    <label htmlFor="email">{t.email}</label>
                     <input
                       id="email"
                       name="email"
@@ -565,7 +561,11 @@ export default function Register({
                     )}
                   </div>
 
-                  <PhoneInput id="phone" country={form.country} onCountry={country=>setForm({...form,country})} value={form.phone} onChange={phone=>setForm({...form,phone})} label={language === "RU" ? "Телефон" : "Phone"} countryLabel={language === "RU" ? "Страна" : "Country"} locale={lang} disabled={busy} error={form.phone && !canonicalPhone(form.phone,form.country) ? (language === "RU" ? "Введите корректный номер для выбранной страны" : "Enter a valid number for the selected country") : undefined}/>
+                  <PhoneInput id="phone" country={form.country} onCountry={country=>setForm({...form,country})} value={form.phone} onChange={phone=>setForm({...form,phone})} label={language === "RU" ? "Телефон" : ui("Phone")} countryLabel={language === "RU" ? "Страна" : ui("Country")} locale={lang} disabled={busy} error={form.phone && !canonicalPhone(form.phone,form.country) ? (language === "RU" ? "Введите корректный номер для выбранной страны" : ui("Enter a valid number for the selected country")) : undefined}/>
+                  </div>
+                  <div className="register-field-row">
+                  <div>
+                    <label htmlFor="password">{t.password}</label>
                   <input
                     id="password"
                     name="password"
@@ -583,48 +583,32 @@ export default function Register({
                     style={inputStyle}
                   />
 
-                  <div role="status" aria-live="polite"><strong>{language === "RU" ? "Надёжность пароля" : "Password strength"}: {passwordChecks(form.password).filter(Boolean).length}/5</strong><ul>{(language === "RU" ? ["Не менее 8 символов","Заглавная латинская буква","Строчная латинская буква","Цифра","Специальный символ"] : ["At least 8 characters","Uppercase Latin letter","Lowercase Latin letter","Digit","Special character"]).map((label,i)=><li key={label}>{passwordChecks(form.password)[i] ? "✓" : "○"} {label}</li>)}</ul></div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: "10px",
-                    }}
-                  >
-                    <input
-                      id="terms"
-                      type="checkbox"
-                      checked={termsAccepted}
-                      onChange={(e) =>
-                        setTermsAccepted(e.target.checked)
-                      }
-                      disabled={busy}
-                    />
-
-                    <label
-                      htmlFor="terms"
-                      style={{ fontSize: "13px" }}
-                    >
-                      {t.agreeTerms}{" "}
-                      <Link
-                        to="/terms"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {t.termsAndConditions}
-                      </Link>{" "}
-                      {t.and}{" "}
-                      <Link
-                        to="/contacts"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {t.privacyPolicy}
-                      </Link>
-                    </label>
                   </div>
+                  <div className="register-password-strength" role="status" aria-live="polite"><strong>{language === "RU" ? "Надёжность пароля" : ui("Password strength")}: {passwordChecks(form.password).filter(Boolean).length}/5</strong><ul>{(language === "RU" ? ["Не менее 8 символов","Заглавная латинская буква","Строчная латинская буква","Цифра","Специальный символ"] : [ui("At least 8 characters"),ui("Uppercase Latin letter"),ui("Lowercase Latin letter"),ui("Digit"),ui("Special character")]).map((label,i)=><li key={label}>{passwordChecks(form.password)[i] ? "✓" : "○"} {label}</li>)}</ul></div>
+                  </div>
+                  <fieldset className="register-consent">
+                    <legend>{legal.mandatory}</legend>
+                    <div className="register-confirmations">
+                      <label className="register-consent-option" htmlFor="age-confirmed"><input id="age-confirmed" type="checkbox" required checked={ageConfirmed} onChange={e=>setAgeConfirmed(e.target.checked)} disabled={busy} /> {legal.age}</label>
+                      <div className="register-consent-option">
+                        <input id="terms" type="checkbox" required checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} disabled={busy} />
+                        <label htmlFor="terms"> {legal.termsBefore}<Link to="/terms" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{legal.termsLink}</Link>{legal.termsAfter}</label>
+                      </div>
+                      <div className="register-consent-option">
+                        <input id="privacy-acknowledged" type="checkbox" required checked={privacyAcknowledged} onChange={e=>setPrivacyAcknowledged(e.target.checked)} disabled={busy} />
+                        <label htmlFor="privacy-acknowledged"> {legal.privacyBefore}<Link to="/privacy" target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}>{legal.privacyLink}</Link>{legal.privacyAfter}</label>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <fieldset className="register-consent">
+                    <legend>{legal.optional}</legend>
+                    <label className="register-consent-option" htmlFor="marketing-requested"><input id="marketing-requested" type="checkbox" checked={marketingRequested} onChange={e=>setMarketingRequested(e.target.checked)} disabled={busy} aria-describedby="marketing-withdraw marketing-not-saved" /> {legal.marketing}</label>
+                    <p id="marketing-withdraw">{legal.withdraw}</p>
+                    <p id="marketing-not-saved">{legal.notSaved}</p>
+                  </fieldset>
+                  <p className="register-nature">{legal.nature}</p>
 
-                  <button
+                  <button className="register-submit"
                     type="submit"
                     disabled={busy || !isFormValid}
                     style={{
@@ -634,14 +618,14 @@ export default function Register({
                   >
                     {busy ? t.creating : t.register}
                   </button>
+                  <div className="register-legal-notes">
+                    <p>{legal.dataBefore}<Link to="/privacy" target="_blank" rel="noopener noreferrer">{legal.dataLink}</Link>{legal.dataAfter}</p>
+                    <p>{legal.accuracy}</p>
+                    <p>{legal.rewards}</p>
+                  </div>
                 </form>
 
-                <p
-                  style={{
-                    marginTop: "24px",
-                    textAlign: "center",
-                  }}
-                >
+                <p className="register-login-link">
                   {t.haveAccount}{" "}
                   <Link to={loginPath}>{t.login}</Link>
                 </p>
@@ -650,14 +634,10 @@ export default function Register({
           </div>
         </div>
 
-        <div
-          style={{
-            flex: 1,
-            maxWidth: "420px",
-            minWidth: "280px",
-          }}
-        >
-          <MoneyTree />
+        <div className="register-illustration">
+          <div className="register-illustration-content">
+            <MoneyTree />
+          </div>
         </div>
       </div>
       {user && verification && <MarketingPreferencesPanel key={user.id} lang={lang} hasPhone={Boolean(user.phone_e164)} />}

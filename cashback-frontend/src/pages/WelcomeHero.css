@@ -3,6 +3,7 @@
 .welcome-art{max-width:420px;min-width:0;flex:1 1 300px;position:relative}
 .welcome-art img{display:block}
 .welcome-actions{flex-wrap:wrap}
+.welcome-explanation{margin:16px 0 0;font-size:14px;line-height:1.6;color:var(--text);overflow-wrap:anywhere}
 @media(max-width:700px){
  .welcome-hero{flex-direction:column;gap:24px;padding:20px 24px}
  .welcome-copy,.welcome-art{flex:none;width:100%;max-width:100%}

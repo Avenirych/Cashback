@@ -4,18 +4,21 @@ import { translations } from "../i18n";
 
 interface FAQProps {
   lang: string;
+  items?: { question: string; answer: React.ReactNode }[];
+  title?: string;
+  introduction?: React.ReactNode;
 }
 
-export default function FAQ({ lang }: FAQProps) {
+export default function FAQ({ lang, items: suppliedItems, title, introduction }: FAQProps) {
   const normalizedLang = (lang || "EN").toUpperCase();
   const languageKey = normalizedLang as keyof typeof translations;
 
   const t = translations[languageKey] ?? translations.EN;
 
   const hasTranslatedItems = t.faqItems.length > 0;
-  const faqItems = hasTranslatedItems
+  const faqItems = suppliedItems ?? (hasTranslatedItems
     ? t.faqItems
-    : translations.EN.faqItems;
+    : translations.EN.faqItems);
 
   const answersLanguage = hasTranslatedItems
     ? languageKey.toLowerCase()
@@ -113,8 +116,10 @@ export default function FAQ({ lang }: FAQProps) {
             fontSize: "clamp(28px, 4vw, 42px)",
           }}
         >
-          {t.faqTitle}
+          {title ?? t.faqTitle}
         </h1>
+
+        {introduction}
 
         <div
           lang={answersLanguage}

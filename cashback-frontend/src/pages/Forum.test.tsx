@@ -166,20 +166,20 @@ test("public rules show the selected English document without duplicated languag
   render(<MemoryRouter><ForumRules /></MemoryRouter>);
   expect(screen.queryByText("English")).not.toBeInTheDocument();
   expect(screen.queryByText("Русский")).not.toBeInTheDocument();
-  expect(screen.getByText(/do not assert legal compliance/)).toBeInTheDocument();
-  expect(screen.getByText(/Rule violations may result in deletion of your forum account or a ban/)).toBeInTheDocument();
+  expect(screen.getByText(/Users assess the reliability of information themselves/)).toBeInTheDocument();
+  expect(screen.getByText(/For serious or repeated violations/)).toBeInTheDocument();
   expect(screen.queryByText(/Нарушения могут привести/)).not.toBeInTheDocument();
-  for (const heading of ["General rules", "Posting guidelines", "Prohibited content", "Moderation", "Consequences", "Account deletion"]) {
-    expect(screen.getByText(heading).tagName).toBe("SUMMARY");
+  for (const heading of ["General conduct rules", "Rules for publishing materials", "Prohibited content", "Moderation", "Confirmed violations and sanctions", "Deletion of a forum account"]) {
+    expect(screen.getByRole("button", {name: new RegExp(heading + "$ ".trimEnd())}).tagName).toBe("SUMMARY");
   }
-  expect(screen.getByText(/permanent deletion of your forum account/)).toBeInTheDocument();
-  expect(screen.getByText(/Deleting a topic permanently removes/)).toBeInTheDocument();
+  expect(screen.getByText(/Deleting a forum account does not automatically delete the Cashback/)).toBeInTheDocument();
+  expect(screen.getByText(/Deleting a topic deletes the topic itself/)).toBeInTheDocument();
 });
 
 test("public rules use reconciled complete document without appending a second API document", () => {
   (fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => ({ en: "Published English rules", ru: "Опубликованные правила" }) });
   render(<MemoryRouter><ForumRules /></MemoryRouter>);
-  expect(screen.getAllByText(/Deleting a topic permanently removes/)).toHaveLength(1);
+  expect(screen.getAllByText(/Deleting a topic deletes the topic itself/)).toHaveLength(1);
   expect(screen.queryByText("Published English rules")).not.toBeInTheDocument();
   expect((fetch as jest.Mock).mock.calls.some(([url]) => /\/forum\/rules$/.test(String(url)))).toBe(false);
 });

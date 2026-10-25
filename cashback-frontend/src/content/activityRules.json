@@ -1,0 +1,645 @@
+{
+  "sourceSha256": "133e45a0a5710f64574a4caeae5ac1a4bb3d67fc9f6396b632ddaff33d4f17a5",
+  "rules": {
+    "ru": [
+      {
+        "title": "Назначение правил",
+        "blocks": [
+          "Настоящие Правила активности определяют порядок начисления вознаграждений, использования бонусов, применения лимитов и мер защиты платформы Cashback+.",
+          "Цель Правил активности состоит в обеспечении честной работы программы вознаграждений, защите пользователей и предотвращении злоупотреблений.",
+          "Использование функций Cashback+, связанных с получением вознаграждений, означает согласие пользователя с настоящими Правилами."
+        ]
+      },
+      {
+        "title": "Кэшбэк",
+        "blocks": [
+          "Кэшбэк представляет собой вознаграждение, которое может начисляться пользователю после подтверждения покупки партнёром или партнёрской сетью.",
+          "Размер кэшбэка, отображаемый до подтверждения покупки, является предварительным.",
+          "Начисление кэшбэка зависит от:",
+          [
+            "соблюдения условий предложения;",
+            "подтверждения транзакции партнёром;",
+            "отсутствия отмены заказа;",
+            "отсутствия возврата товара;",
+            "соблюдения пользователем правил платформы."
+          ],
+          "Покупки не ограничиваются общими лимитами Cashback+, однако отдельные партнёры могут устанавливать собственные ограничения и дополнительные требования."
+        ]
+      },
+      {
+        "title": "Бонусы",
+        "blocks": [
+          "Бонусы являются внутренними единицами программы вознаграждений Cashback+.",
+          "Бонусы:",
+          [
+            "не являются денежными средствами;",
+            "не являются электронными деньгами;",
+            "не являются платёжным инструментом;",
+            "не являются инвестиционным активом."
+          ],
+          "Бонусы могут начисляться за участие в рекламных программах, исследованиях и иных активностях платформы.",
+          "Порядок использования бонусов определяется настоящими Правилами, Terms & Conditions и условиями отдельных программ."
+        ]
+      },
+      {
+        "title": "Подтверждение активности",
+        "blocks": [
+          "Просмотр видео, участие в исследованиях и иные действия учитываются только после получения подтверждения от соответствующего партнёра либо завершения необходимой проверки.",
+          "Уведомления браузера, сообщения приложений или промежуточные статусы сами по себе не подтверждают факт начисления вознаграждения."
+        ]
+      },
+      {
+        "title": "Лимиты активности",
+        "blocks": [
+          "Лимиты предназначены для защиты платформы, пользователей и партнёров от злоупотреблений и технических ошибок.",
+          "Применение лимитов не означает обвинение пользователя в мошенничестве или нарушении правил.",
+          "Текущие лимиты платформы:",
+          [
+            "сообщения форума: до 30 в день;",
+            "темы форума: до 5 в день;",
+            "отзывы: до 3 в день;",
+            "исследования: до 5 в день и до 100 в месяц;",
+            "видео: до 50 в день и до 1500 в месяц."
+          ],
+          "Cashback+ вправе изменять лимиты при необходимости развития платформы, предотвращения злоупотреблений или изменения технических требований."
+        ]
+      },
+      {
+        "title": "Повторные действия",
+        "blocks": [
+          "Повторные операции, выполненные исключительно с целью получения дополнительного вознаграждения без фактической активности, не учитываются повторно.",
+          "Попытки искусственного создания активности могут привести к дополнительной проверке."
+        ]
+      },
+      {
+        "title": "Передача бонусов",
+        "blocks": [
+          "Если соответствующая функция доступна на платформе, пользователи могут передавать бонусы друг другу в пределах установленных ограничений.",
+          "Передача бонусов осуществляется исключительно внутри программы Cashback+ и не является денежным переводом, платёжной услугой или финансовой операцией.",
+          "Cashback+ вправе ограничивать передачу бонусов при проведении проверок безопасности."
+        ]
+      },
+      {
+        "title": "Резервирование бонусов",
+        "blocks": [
+          "При использовании бонусов в связи с конкретной покупкой часть бонусов может быть временно зарезервирована до завершения проверки соответствующей покупки.",
+          "Если покупка не подтверждена либо отменена, резервирование может быть отменено, а бонусы возвращены пользователю в соответствии с действующими правилами программы."
+        ]
+      },
+      {
+        "title": "Запрещённая активность",
+        "blocks": [
+          "Пользователям запрещается:",
+          [
+            "создавать фиктивные аккаунты;",
+            "создавать фиктивные отзывы;",
+            "искусственно создавать события или действия;",
+            "обходить установленные ограничения;",
+            "использовать автоматизированные средства без разрешения платформы;",
+            "получать дублирующиеся начисления за одно и то же действие."
+          ]
+        ]
+      },
+      {
+        "title": "Проверка начислений",
+        "blocks": [
+          "В случае подозрения на техническую ошибку, дублирование начислений либо нарушение правил Cashback+ вправе провести дополнительную проверку.",
+          "Во время проверки обработка начислений может быть временно приостановлена.",
+          "Пользователь вправе обратиться в службу поддержки для получения разъяснений."
+        ]
+      },
+      {
+        "title": "Ошибочные начисления",
+        "blocks": [
+          "Если начисление произошло вследствие технической ошибки, сбоя системы или дублирования операции, Cashback+ вправе скорректировать такое начисление после проведения проверки.",
+          "Подтверждённые и правомерно начисленные вознаграждения не подлежат произвольной отмене или конфискации."
+        ]
+      },
+      {
+        "title": "Демонстрационные события",
+        "blocks": [
+          "Демонстрационные, тестовые и учебные события учитываются отдельно от реальной активности.",
+          "По таким событиям реальные деньги, кэшбэк или бонусы не начисляются."
+        ]
+      },
+      {
+        "title": "Журнал безопасности",
+        "blocks": [
+          "Для обеспечения безопасности Cashback+ ведёт служебный журнал событий.",
+          "Журнал безопасности не содержит:",
+          [
+            "паролей;",
+            "токенов доступа;",
+            "текстов запросов пользователей;",
+            "открытых IP-адресов;",
+            "адресов электронной почты в открытом виде."
+          ],
+          "Стандартный срок хранения журналов составляет 30 дней, если более длительное хранение не требуется для рассмотрения обращения пользователя, разрешения спора, обеспечения безопасности либо исполнения требований законодательства.",
+          "Доступ к журналам имеют только уполномоченные лица."
+        ]
+      },
+      {
+        "title": "Уровни доступа",
+        "blocks": [
+          "На платформе может использоваться несколько уровней доступа и функциональности.",
+          "Наличие дополнительных возможностей не отменяет требований безопасности, антифрод-проверок и иных обязательных процедур платформы."
+        ]
+      },
+      {
+        "title": "Изменение правил",
+        "blocks": [
+          "Cashback+ вправе изменять настоящие Правила активности при изменении законодательства, бизнес-модели, технической инфраструктуры или требований партнёров.",
+          "Существенные изменения публикуются на платформе до вступления в силу в разумный срок."
+        ]
+      },
+      {
+        "title": "Важная информация",
+        "blocks": [
+          "Cashback+ является программой потребительских вознаграждений.",
+          "Бонусы и иные вознаграждения платформы не являются банковскими продуктами, электронными деньгами, инвестициями или платёжными инструментами.",
+          "Участие в программе не гарантирует получение определённого размера вознаграждения и зависит от соблюдения условий платформы и требований партнёров."
+        ]
+      }
+    ],
+    "en": [
+      {
+        "title": "Purpose of the rules",
+        "blocks": [
+          "These Activity Rules set out how rewards are credited, bonuses are used, and limits and platform protection measures are applied on Cashback+.",
+          "The purpose of the Activity Rules is to ensure the fair operation of the rewards programme, protect users and prevent abuse.",
+          "Using Cashback+ features related to receiving rewards means that the user agrees to these Rules."
+        ]
+      },
+      {
+        "title": "Cashback",
+        "blocks": [
+          "Cashback is a reward that may be credited to a user after a purchase is confirmed by a partner or affiliate network.",
+          "The cashback amount displayed before purchase confirmation is provisional.",
+          "Cashback being credited depends on:",
+          [
+            "compliance with the offer terms;",
+            "confirmation of the transaction by the partner;",
+            "the order not being cancelled;",
+            "the product not being returned;",
+            "the user complying with the platform rules."
+          ],
+          "Purchases are not subject to general Cashback+ limits, but individual partners may set their own restrictions and additional requirements."
+        ]
+      },
+      {
+        "title": "Bonuses",
+        "blocks": [
+          "Bonuses are internal units of the Cashback+ rewards programme.",
+          "Bonuses:",
+          [
+            "are not money;",
+            "are not electronic money;",
+            "are not a payment instrument;",
+            "are not an investment asset."
+          ],
+          "Bonuses may be credited for participating in advertising programmes, research and other platform activities.",
+          "The use of bonuses is governed by these Rules, the Terms & Conditions and the terms of individual programmes."
+        ]
+      },
+      {
+        "title": "Activity confirmation",
+        "blocks": [
+          "Watching videos, participating in research and other actions are counted only after confirmation from the relevant partner is received or the necessary checks are completed.",
+          "Browser notifications, app messages or intermediate statuses do not, in themselves, confirm that a reward has been credited."
+        ]
+      },
+      {
+        "title": "Activity limits",
+        "blocks": [
+          "Limits are intended to protect the platform, users and partners against abuse and technical errors.",
+          "Applying limits does not mean that the user is accused of fraud or breaking the rules.",
+          "Current platform limits:",
+          [
+            "forum messages: up to 30 per day;",
+            "forum topics: up to 5 per day;",
+            "reviews: up to 3 per day;",
+            "research: up to 5 per day and up to 100 per month;",
+            "videos: up to 50 per day and up to 1500 per month."
+          ],
+          "Cashback+ may change limits where necessary to develop the platform, prevent abuse or reflect changes in technical requirements."
+        ]
+      },
+      {
+        "title": "Repeated actions",
+        "blocks": [
+          "Repeated operations carried out solely to obtain an additional reward without genuine activity are not counted again.",
+          "Attempts to create activity artificially may lead to additional checks."
+        ]
+      },
+      {
+        "title": "Bonus transfers",
+        "blocks": [
+          "If the relevant feature is available on the platform, users may transfer bonuses to each other within the established limits.",
+          "Bonus transfers take place solely within the Cashback+ programme and are not money transfers, payment services or financial transactions.",
+          "Cashback+ may restrict bonus transfers during security checks."
+        ]
+      },
+      {
+        "title": "Bonus reservations",
+        "blocks": [
+          "When bonuses are used in connection with a particular purchase, some bonuses may be temporarily reserved until checks on that purchase are completed.",
+          "If the purchase is not confirmed or is cancelled, the reservation may be cancelled and the bonuses returned to the user in accordance with the programme rules in force."
+        ]
+      },
+      {
+        "title": "Prohibited activity",
+        "blocks": [
+          "Users must not:",
+          [
+            "create fake accounts;",
+            "create fake reviews;",
+            "artificially create events or actions;",
+            "circumvent established restrictions;",
+            "use automated tools without the platform’s permission;",
+            "receive duplicate rewards for the same action."
+          ]
+        ]
+      },
+      {
+        "title": "Checking rewards",
+        "blocks": [
+          "If a technical error, duplicate rewards or a breach of the rules is suspected, Cashback+ may conduct additional checks.",
+          "Reward processing may be temporarily suspended during the checks.",
+          "The user may contact support for clarification."
+        ]
+      },
+      {
+        "title": "Erroneous rewards",
+        "blocks": [
+          "If a reward was credited as a result of a technical error, system failure or duplicate operation, Cashback+ may adjust that reward after conducting checks.",
+          "Confirmed and legitimately credited rewards are not subject to arbitrary cancellation or confiscation."
+        ]
+      },
+      {
+        "title": "Demonstration events",
+        "blocks": [
+          "Demonstration, test and training events are recorded separately from real activity.",
+          "No real money, cashback or bonuses are credited for these events."
+        ]
+      },
+      {
+        "title": "Security log",
+        "blocks": [
+          "To ensure security, Cashback+ maintains an internal event log.",
+          "The security log does not contain:",
+          [
+            "passwords;",
+            "access tokens;",
+            "the text of users’ requests;",
+            "plain IP addresses;",
+            "email addresses in plain form."
+          ],
+          "The standard log retention period is 30 days, unless longer retention is necessary to consider a user’s request, resolve a dispute, ensure security or comply with legal requirements.",
+          "Only authorised persons have access to the logs."
+        ]
+      },
+      {
+        "title": "Access levels",
+        "blocks": [
+          "The platform may use several levels of access and functionality.",
+          "Additional features do not remove security requirements, anti-fraud checks or other mandatory platform procedures."
+        ]
+      },
+      {
+        "title": "Changes to the rules",
+        "blocks": [
+          "Cashback+ may change these Activity Rules if legislation, its business model, technical infrastructure or partner requirements change.",
+          "Material changes are published on the platform a reasonable time before taking effect."
+        ]
+      },
+      {
+        "title": "Important information",
+        "blocks": [
+          "Cashback+ is a consumer rewards programme.",
+          "Bonuses and other platform rewards are not banking products, electronic money, investments or payment instruments.",
+          "Participation in the programme does not guarantee any particular reward amount and depends on compliance with platform terms and partner requirements."
+        ]
+      }
+    ],
+    "de": [
+      {
+        "title": "Zweck der Regeln",
+        "blocks": [
+          "Diese Aktivitätsregeln legen fest, wie Vergütungen gutgeschrieben, Boni verwendet sowie Limits und Schutzmaßnahmen auf der Cashback+ Plattform angewandt werden.",
+          "Ziel der Aktivitätsregeln ist es, den fairen Betrieb des Prämienprogramms sicherzustellen, Nutzer zu schützen und Missbrauch zu verhindern.",
+          "Die Nutzung von Cashback+ Funktionen zum Erhalt von Vergütungen bedeutet, dass der Nutzer diesen Regeln zustimmt."
+        ]
+      },
+      {
+        "title": "Cashback",
+        "blocks": [
+          "Cashback ist eine Vergütung, die einem Nutzer gutgeschrieben werden kann, nachdem ein Partner oder ein Partnernetzwerk den Kauf bestätigt hat.",
+          "Der vor der Kaufbestätigung angezeigte Cashback-Betrag ist vorläufig.",
+          "Die Cashback-Gutschrift hängt davon ab, dass:",
+          [
+            "die Angebotsbedingungen eingehalten werden;",
+            "der Partner die Transaktion bestätigt;",
+            "die Bestellung nicht storniert wurde;",
+            "die Ware nicht zurückgegeben wurde;",
+            "der Nutzer die Plattformregeln einhält."
+          ],
+          "Einkäufe unterliegen keinen allgemeinen Cashback+ Limits; einzelne Partner können jedoch eigene Beschränkungen und zusätzliche Anforderungen festlegen."
+        ]
+      },
+      {
+        "title": "Boni",
+        "blocks": [
+          "Boni sind interne Einheiten des Cashback+ Prämienprogramms.",
+          "Boni:",
+          [
+            "sind kein Geld;",
+            "sind kein elektronisches Geld;",
+            "sind kein Zahlungsmittel;",
+            "sind keine Anlagewerte."
+          ],
+          "Boni können für die Teilnahme an Werbeprogrammen, Studien und anderen Aktivitäten der Plattform gutgeschrieben werden.",
+          "Die Verwendung von Boni richtet sich nach diesen Regeln, den Terms & Conditions und den Bedingungen der einzelnen Programme."
+        ]
+      },
+      {
+        "title": "Bestätigung von Aktivitäten",
+        "blocks": [
+          "Das Ansehen von Videos, die Teilnahme an Studien und andere Handlungen werden erst nach Eingang einer Bestätigung des jeweiligen Partners oder nach Abschluss der erforderlichen Prüfung berücksichtigt.",
+          "Browserbenachrichtigungen, App-Nachrichten oder Zwischenstatus bestätigen für sich genommen keine Gutschrift einer Vergütung."
+        ]
+      },
+      {
+        "title": "Aktivitätslimits",
+        "blocks": [
+          "Limits dienen dem Schutz der Plattform, der Nutzer und der Partner vor Missbrauch und technischen Fehlern.",
+          "Die Anwendung von Limits bedeutet nicht, dass dem Nutzer Betrug oder ein Regelverstoß vorgeworfen wird.",
+          "Aktuelle Limits der Plattform:",
+          [
+            "Forenbeiträge: bis zu 30 pro Tag;",
+            "Forenthemen: bis zu 5 pro Tag;",
+            "Bewertungen: bis zu 3 pro Tag;",
+            "Studien: bis zu 5 pro Tag und bis zu 100 pro Monat;",
+            "Videos: bis zu 50 pro Tag und bis zu 1500 pro Monat."
+          ],
+          "Cashback+ darf Limits ändern, wenn dies für die Weiterentwicklung der Plattform, die Verhinderung von Missbrauch oder aufgrund geänderter technischer Anforderungen erforderlich ist."
+        ]
+      },
+      {
+        "title": "Wiederholte Handlungen",
+        "blocks": [
+          "Wiederholte Vorgänge, die ausschließlich dazu dienen, ohne tatsächliche Aktivität zusätzliche Vergütungen zu erhalten, werden nicht erneut berücksichtigt.",
+          "Versuche, Aktivitäten künstlich zu erzeugen, können zusätzliche Prüfungen nach sich ziehen."
+        ]
+      },
+      {
+        "title": "Übertragung von Boni",
+        "blocks": [
+          "Wenn die entsprechende Funktion auf der Plattform verfügbar ist, können Nutzer innerhalb der festgelegten Grenzen Boni untereinander übertragen.",
+          "Die Übertragung von Boni findet ausschließlich innerhalb des Cashback+ Programms statt und ist weder eine Geldüberweisung noch eine Zahlungsdienstleistung oder eine Finanztransaktion.",
+          "Cashback+ darf die Übertragung von Boni während Sicherheitsprüfungen beschränken."
+        ]
+      },
+      {
+        "title": "Reservierung von Boni",
+        "blocks": [
+          "Bei der Verwendung von Boni im Zusammenhang mit einem bestimmten Kauf kann ein Teil der Boni bis zum Abschluss der Prüfung dieses Kaufs vorübergehend reserviert werden.",
+          "Wird der Kauf nicht bestätigt oder storniert, kann die Reservierung aufgehoben und können die Boni dem Nutzer gemäß den geltenden Programmregeln zurückgegeben werden."
+        ]
+      },
+      {
+        "title": "Verbotene Aktivitäten",
+        "blocks": [
+          "Nutzern ist untersagt:",
+          [
+            "fiktive Konten anzulegen;",
+            "fiktive Bewertungen zu erstellen;",
+            "Ereignisse oder Handlungen künstlich zu erzeugen;",
+            "festgelegte Beschränkungen zu umgehen;",
+            "automatisierte Mittel ohne Erlaubnis der Plattform zu verwenden;",
+            "für dieselbe Handlung doppelte Gutschriften zu erhalten."
+          ]
+        ]
+      },
+      {
+        "title": "Prüfung von Gutschriften",
+        "blocks": [
+          "Bei Verdacht auf einen technischen Fehler, doppelte Gutschriften oder einen Regelverstoß darf Cashback+ zusätzliche Prüfungen durchführen.",
+          "Während der Prüfung kann die Bearbeitung von Gutschriften vorübergehend ausgesetzt werden.",
+          "Nutzer können sich zur Klärung an den Support wenden."
+        ]
+      },
+      {
+        "title": "Fehlerhafte Gutschriften",
+        "blocks": [
+          "Erfolgt eine Gutschrift aufgrund eines technischen Fehlers, einer Systemstörung oder eines doppelten Vorgangs, darf Cashback+ sie nach einer Prüfung berichtigen.",
+          "Bestätigte und rechtmäßig gutgeschriebene Vergütungen dürfen nicht willkürlich aufgehoben oder eingezogen werden."
+        ]
+      },
+      {
+        "title": "Demonstrationsereignisse",
+        "blocks": [
+          "Demonstrations-, Test- und Schulungsereignisse werden getrennt von tatsächlichen Aktivitäten erfasst.",
+          "Für solche Ereignisse werden weder echtes Geld noch Cashback oder Boni gutgeschrieben."
+        ]
+      },
+      {
+        "title": "Sicherheitsprotokoll",
+        "blocks": [
+          "Zur Gewährleistung der Sicherheit führt Cashback+ ein internes Ereignisprotokoll.",
+          "Das Sicherheitsprotokoll enthält keine:",
+          [
+            "Passwörter;",
+            "Zugriffstoken;",
+            "Texte von Nutzeranfragen;",
+            "IP-Adressen im Klartext;",
+            "E-Mail-Adressen im Klartext."
+          ],
+          "Die standardmäßige Aufbewahrungsfrist für Protokolle beträgt 30 Tage, sofern eine längere Speicherung nicht für die Bearbeitung einer Nutzeranfrage, die Beilegung einer Streitigkeit, die Gewährleistung der Sicherheit oder die Erfüllung gesetzlicher Anforderungen erforderlich ist.",
+          "Nur befugte Personen haben Zugriff auf die Protokolle."
+        ]
+      },
+      {
+        "title": "Zugriffsstufen",
+        "blocks": [
+          "Auf der Plattform können mehrere Zugriffs- und Funktionsstufen verwendet werden.",
+          "Zusätzliche Möglichkeiten heben Sicherheitsanforderungen, Betrugsprüfungen und andere verpflichtende Verfahren der Plattform nicht auf."
+        ]
+      },
+      {
+        "title": "Änderung der Regeln",
+        "blocks": [
+          "Cashback+ darf diese Aktivitätsregeln ändern, wenn sich die Gesetzgebung, das Geschäftsmodell, die technische Infrastruktur oder die Anforderungen der Partner ändern.",
+          "Wesentliche Änderungen werden eine angemessene Zeit vor ihrem Inkrafttreten auf der Plattform veröffentlicht."
+        ]
+      },
+      {
+        "title": "Wichtige Informationen",
+        "blocks": [
+          "Cashback+ ist ein Verbraucherprämienprogramm.",
+          "Boni und andere Vergütungen der Plattform sind keine Bankprodukte, kein elektronisches Geld, keine Investitionen und keine Zahlungsmittel.",
+          "Die Teilnahme am Programm garantiert keine bestimmte Höhe der Vergütung und hängt von der Einhaltung der Plattformbedingungen und der Anforderungen der Partner ab."
+        ]
+      }
+    ],
+    "fr": [
+      {
+        "title": "Objet des règles",
+        "blocks": [
+          "Les présentes Règles d’activité définissent les modalités de crédit des récompenses, d’utilisation des bonus, d’application des limites et des mesures de protection de la plateforme Cashback+.",
+          "Les Règles d’activité visent à assurer le fonctionnement équitable du programme de récompenses, à protéger les utilisateurs et à prévenir les abus.",
+          "L’utilisation des fonctionnalités Cashback+ liées à l’obtention de récompenses signifie que l’utilisateur accepte les présentes Règles."
+        ]
+      },
+      {
+        "title": "Cashback",
+        "blocks": [
+          "Le cashback est une récompense qui peut être créditée à l’utilisateur après confirmation de l’achat par un partenaire ou un réseau d’affiliation.",
+          "Le montant du cashback affiché avant la confirmation de l’achat est provisoire.",
+          "Le crédit du cashback dépend :",
+          [
+            "du respect des conditions de l’offre ;",
+            "de la confirmation de la transaction par le partenaire ;",
+            "de l’absence d’annulation de la commande ;",
+            "de l’absence de retour du produit ;",
+            "du respect des règles de la plateforme par l’utilisateur."
+          ],
+          "Les achats ne sont pas soumis aux limites générales de Cashback+, mais certains partenaires peuvent fixer leurs propres restrictions et exigences supplémentaires."
+        ]
+      },
+      {
+        "title": "Bonus",
+        "blocks": [
+          "Les bonus sont des unités internes du programme de récompenses Cashback+.",
+          "Les bonus :",
+          [
+            "ne sont pas des fonds monétaires ;",
+            "ne sont pas de la monnaie électronique ;",
+            "ne sont pas un instrument de paiement ;",
+            "ne sont pas un actif d’investissement."
+          ],
+          "Des bonus peuvent être crédités pour la participation à des programmes publicitaires, à des études et à d’autres activités de la plateforme.",
+          "L’utilisation des bonus est régie par les présentes Règles, les Terms & Conditions et les conditions des différents programmes."
+        ]
+      },
+      {
+        "title": "Confirmation des activités",
+        "blocks": [
+          "Le visionnage de vidéos, la participation à des études et les autres actions ne sont comptabilisés qu’après réception d’une confirmation du partenaire concerné ou après l’achèvement de la vérification nécessaire.",
+          "Les notifications du navigateur, les messages des applications ou les statuts intermédiaires ne confirment pas, à eux seuls, le crédit d’une récompense."
+        ]
+      },
+      {
+        "title": "Limites d’activité",
+        "blocks": [
+          "Les limites visent à protéger la plateforme, les utilisateurs et les partenaires contre les abus et les erreurs techniques.",
+          "L’application de limites ne signifie pas que l’utilisateur est accusé de fraude ou d’infraction aux règles.",
+          "Limites actuelles de la plateforme :",
+          [
+            "messages du forum : jusqu’à 30 par jour ;",
+            "sujets du forum : jusqu’à 5 par jour ;",
+            "avis : jusqu’à 3 par jour ;",
+            "études : jusqu’à 5 par jour et jusqu’à 100 par mois ;",
+            "vidéos : jusqu’à 50 par jour et jusqu’à 1500 par mois."
+          ],
+          "Cashback+ peut modifier les limites si cela est nécessaire au développement de la plateforme, à la prévention des abus ou à l’évolution des exigences techniques."
+        ]
+      },
+      {
+        "title": "Actions répétées",
+        "blocks": [
+          "Les opérations répétées effectuées uniquement pour obtenir une récompense supplémentaire sans activité réelle ne sont pas comptabilisées à nouveau.",
+          "Les tentatives de création artificielle d’activité peuvent entraîner des vérifications supplémentaires."
+        ]
+      },
+      {
+        "title": "Transfert de bonus",
+        "blocks": [
+          "Si la fonctionnalité correspondante est disponible sur la plateforme, les utilisateurs peuvent se transférer des bonus dans les limites établies.",
+          "Le transfert de bonus s’effectue exclusivement au sein du programme Cashback+ et ne constitue ni un transfert d’argent, ni un service de paiement, ni une opération financière.",
+          "Cashback+ peut restreindre les transferts de bonus pendant les vérifications de sécurité."
+        ]
+      },
+      {
+        "title": "Réservation de bonus",
+        "blocks": [
+          "Lors de l’utilisation de bonus en lien avec un achat précis, une partie des bonus peut être temporairement réservée jusqu’à la fin de la vérification de cet achat.",
+          "Si l’achat n’est pas confirmé ou est annulé, la réservation peut être annulée et les bonus restitués à l’utilisateur conformément aux règles du programme en vigueur."
+        ]
+      },
+      {
+        "title": "Activités interdites",
+        "blocks": [
+          "Il est interdit aux utilisateurs de :",
+          [
+            "créer des comptes fictifs ;",
+            "créer de faux avis ;",
+            "créer artificiellement des événements ou des actions ;",
+            "contourner les restrictions établies ;",
+            "utiliser des outils automatisés sans l’autorisation de la plateforme ;",
+            "recevoir des crédits en double pour une même action."
+          ]
+        ]
+      },
+      {
+        "title": "Vérification des crédits",
+        "blocks": [
+          "En cas de soupçon d’erreur technique, de crédits en double ou d’infraction aux règles, Cashback+ peut procéder à une vérification supplémentaire.",
+          "Le traitement des crédits peut être temporairement suspendu pendant la vérification.",
+          "L’utilisateur peut contacter le service d’assistance pour obtenir des précisions."
+        ]
+      },
+      {
+        "title": "Crédits erronés",
+        "blocks": [
+          "Si un crédit résulte d’une erreur technique, d’une défaillance du système ou d’une opération en double, Cashback+ peut le rectifier après vérification.",
+          "Les récompenses confirmées et légitimement créditées ne peuvent faire l’objet d’une annulation ou d’une confiscation arbitraire."
+        ]
+      },
+      {
+        "title": "Événements de démonstration",
+        "blocks": [
+          "Les événements de démonstration, de test et de formation sont comptabilisés séparément de l’activité réelle.",
+          "Aucun argent réel, cashback ou bonus n’est crédité pour ces événements."
+        ]
+      },
+      {
+        "title": "Journal de sécurité",
+        "blocks": [
+          "Pour assurer la sécurité, Cashback+ tient un journal interne des événements.",
+          "Le journal de sécurité ne contient pas :",
+          [
+            "de mots de passe ;",
+            "de jetons d’accès ;",
+            "le texte des demandes des utilisateurs ;",
+            "d’adresses IP en clair ;",
+            "d’adresses électroniques en clair."
+          ],
+          "La durée standard de conservation des journaux est de 30 jours, sauf si une conservation plus longue est nécessaire pour examiner une demande d’un utilisateur, résoudre un litige, assurer la sécurité ou respecter les exigences légales.",
+          "Seules les personnes habilitées ont accès aux journaux."
+        ]
+      },
+      {
+        "title": "Niveaux d’accès",
+        "blocks": [
+          "La plateforme peut utiliser plusieurs niveaux d’accès et de fonctionnalités.",
+          "La disponibilité de fonctionnalités supplémentaires ne supprime pas les exigences de sécurité, les vérifications antifraude ni les autres procédures obligatoires de la plateforme."
+        ]
+      },
+      {
+        "title": "Modification des règles",
+        "blocks": [
+          "Cashback+ peut modifier les présentes Règles d’activité en cas d’évolution de la législation, du modèle économique, de l’infrastructure technique ou des exigences des partenaires.",
+          "Les modifications importantes sont publiées sur la plateforme dans un délai raisonnable avant leur entrée en vigueur."
+        ]
+      },
+      {
+        "title": "Informations importantes",
+        "blocks": [
+          "Cashback+ est un programme de récompenses destinées aux consommateurs.",
+          "Les bonus et autres récompenses de la plateforme ne sont ni des produits bancaires, ni de la monnaie électronique, ni des investissements, ni des instruments de paiement.",
+          "La participation au programme ne garantit aucun montant de récompense particulier et dépend du respect des conditions de la plateforme et des exigences des partenaires."
+        ]
+      }
+    ]
+  }
+}

@@ -45,7 +45,7 @@ export default function PhoneInput(props: Props) {
         "&.Mui-focused .MuiOutlinedInput-notchedOutline":{border:"2px solid #0d6efd"},
         "& .MuiSelect-select":{padding:"12px 32px 12px 10px",display:"flex",alignItems:"center"}}}
     >
-      <CountrySearchHeader><input aria-label={props.locale.toLowerCase() === "ru" ? "Поиск страны" : "Search countries"} placeholder={props.locale.toLowerCase() === "ru" ? "Страна или код" : "Country or calling code"} value={search} onChange={e=>setSearch(e.target.value)} onKeyDown={e=>{if(!["Escape","ArrowDown","ArrowUp","Tab"].includes(e.key))e.stopPropagation();}} style={{width:"100%",padding:10,boxSizing:"border-box"}} /></CountrySearchHeader>
+      <CountrySearchHeader><input aria-label={({ru:"Поиск страны",en:"Search countries",de:"Land suchen",fr:"Rechercher un pays"}[props.locale.toLowerCase()] || "Search countries")} placeholder={({ru:"Страна или код",en:"Country or calling code",de:"Land oder Vorwahl",fr:"Pays ou indicatif"}[props.locale.toLowerCase()] || "Country or calling code")} value={search} onChange={e=>setSearch(e.target.value)} onKeyDown={e=>{if(!["Escape","ArrowDown","ArrowUp","Tab"].includes(e.key))e.stopPropagation();}} style={{width:"100%",padding:10,boxSizing:"border-box"}} /></CountrySearchHeader>
       {options.filter(o => o.country === "GB" || o.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()) || ("+"+getCountryCallingCode(o.country)).includes(search.trim())).map(({country, name}) => <MenuItem key={country} value={country}
         sx={{gap:1,whiteSpace:"normal"}}>
         <CountryFlag country={country} /> <span>{name} (+{getCountryCallingCode(country)})</span>

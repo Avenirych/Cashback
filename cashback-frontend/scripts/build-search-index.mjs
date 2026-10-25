@@ -16,6 +16,7 @@ const routes = [
   ['/cookies', 'CookiePolicy'], ['/faq', 'FAQ'], ['/contacts', 'Contacts'], ['/terms', 'TermsAndConditions'],
   ['/privacy', 'PrivacyPolicy'], ['/product-offers', 'ProductOffers'],
   ['/forum/rules', 'ForumRules'],
+  ['/activity-limits', 'ActivityRules'], ['/forum/moderation', 'ModerationPolicy'],
 ];
 const titles = {
   '/': ['Главная', 'Home'], '/about': ['О нас', 'About us'],
@@ -29,6 +30,13 @@ const titles = {
   '/privacy': ['Конфиденциальность', 'Privacy'],
   '/product-offers': ['Предложения', 'Product offers'],
   '/forum/rules': ['Правила форума', 'Forum rules'],
+  '/activity-limits': ['Правила активности', 'Activity rules'],
+  '/forum/moderation': ['Модерация, уведомления и апелляции', 'Moderation, notices and appeals'],
+};
+const publicDocuments = {
+  '/forum/rules': 'forumRules.json', '/activity-limits': 'activityRules.json',
+  '/forum/moderation': 'moderationRules.json', '/privacy': 'privacyPolicy.json',
+  '/terms': 'termsPolicy.json', '/cookies': 'cookiePolicy.json',
 };
 
 function read(file) {
@@ -69,10 +77,10 @@ const index = routes.map(([url, filename]) => {
     ts.forEachChild(node,visit);
   }
   visit(tree);
-  if (url === '/forum/rules') fragments.push(...strings(JSON.parse(read(path.join(src, 'content/forumRules.json'))).rules));
+  if (publicDocuments[url]) fragments.push(...strings(JSON.parse(read(path.join(src, 'content', publicDocuments[url]))).rules));
   const keys=new Set(Array.from(code.matchAll(/\bt\.([A-Za-z0-9_]+)/g),m=>m[1]));
   for(const dict of Object.values(scope.translations)) for(const [key,value] of Object.entries(dict)) {
-    if(keys.has(key)||(url==='/privacy'&&key.startsWith('privacy'))||(url==='/faq'&&key.startsWith('faq'))) fragments.push(...strings(value));
+    if(keys.has(key)||(url==='/faq'&&key.startsWith('faq'))) fragments.push(...strings(value));
   }
   return {path:url,title:titles[url][0],titleEn:titles[url][1],text:fragments.join(' ').replace(/\s+/g,' ').trim().slice(0,80000)};
 });

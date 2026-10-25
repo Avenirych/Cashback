@@ -42,7 +42,7 @@ test('successful form submission switches immediately to prominent confirmation 
  fireEvent.change(screen.getByLabelText('Телефон'),{target:{value:'02079460123'}});
  fireEvent.change(screen.getByLabelText('Email'),{target:{value:'buyer@example.test'}});
  fireEvent.change(screen.getByLabelText('Пароль'),{target:{value:'Synthetic-password8!'}});
- fireEvent.click(screen.getByRole('checkbox'));
+ for (const id of ['age-confirmed','terms','privacy-acknowledged']) fireEvent.click(document.getElementById(id)!);
  fireEvent.click(screen.getByRole('button',{name:'Регистрация'}));
  await screen.findByRole('heading',{name:'Подтвердите электронную почту'});
  expect(auth.register).toHaveBeenCalledWith({name:'Test Buyer',firstName:'Test',lastName:'Buyer',phone_e164:'+442079460123',email:'buyer@example.test',password:'Synthetic-password8!'});

@@ -1,0 +1,281 @@
+{
+  "sourceSha256": "dab6351b975ea950f8f1c20fbb46aa09a77ae7744cc97277c6a3506746e01625",
+  "titles": {
+    "ru": "Модерация, уведомления и апелляции",
+    "en": "Moderation, notices and appeals",
+    "de": "Moderation, Mitteilungen und Einsprüche",
+    "fr": "Modération, notifications et recours"
+  },
+  "effectiveDate": {
+    "ru": "Дата вступления в силу: 30 октября 2026 года",
+    "en": "Effective date: 30 October 2026",
+    "de": "Gültig ab: 30. Oktober 2026",
+    "fr": "Date d’entrée en vigueur : 30 octobre 2026"
+  },
+  "rules": {
+    "ru": [
+      [
+        "Назначение модерации",
+        "Модерация форума Cashback+ направлена на:\n- защиту пользователей;\n- поддержание конструктивного общения;\n- обеспечение достоверности отзывов;\n- предотвращение мошенничества и злоупотреблений;\n- соблюдение Правил форума.\nМодерация применяется одинаково к положительным и отрицательным отзывам.\nНаличие жалобы не означает автоматического нарушения правил.\nКаждое дело рассматривается индивидуально с учётом контекста публикации и имеющихся материалов."
+      ],
+      [
+        "Как работает проверка материалов",
+        "Новые темы, сообщения, отзывы и иные публикации могут проходить предварительную или последующую проверку.\nДля выявления возможных нарушений Cashback+ может использовать:\n- автоматизированные средства анализа;\n- ручную проверку модераторами;\n- обращения пользователей через систему жалоб;\n- проверки безопасности платформы.\nАвтоматические признаки используются исключительно как вспомогательный инструмент.\nАвтоматическая система не принимает окончательных дисциплинарных решений без предусмотренной правилами проверки.\nНаличие автоматического предупреждения само по себе не подтверждает нарушение."
+      ],
+      [
+        "Жалобы пользователей",
+        "Каждый пользователь может сообщить о предполагаемом нарушении через предусмотренный функционал платформы.\nЖалоба должна подаваться добросовестно и содержать описание предполагаемого нарушения.\nЗапрещается использовать систему жалоб для:\n- подавления законной критики;\n- давления на других пользователей;\n- конкурентной борьбы;\n- удаления публикаций исключительно из-за несогласия с мнением автора.\nЗлоупотребление системой жалоб может рассматриваться как отдельное нарушение правил."
+      ],
+      [
+        "Принципы принятия решений",
+        "При рассмотрении материалов модераторы оценивают:\n- содержание публикации;\n- контекст обсуждения;\n- историю нарушений;\n- наличие доказательств;\n- полученные обращения пользователей.\nМодераторы обязаны действовать добросовестно и последовательно.\nЛичные взгляды модератора не являются самостоятельным основанием для удаления публикации или применения санкций."
+      ],
+      [
+        "Уведомления о решениях",
+        "При подтверждении нарушения пользователь получает уведомление через интерфейс платформы, электронную почту либо иной доступный канал связи.\nВ уведомлении по возможности указываются:\n- дата решения;\n- описание нарушения;\n- нарушенный раздел Правил форума;\n- применённая мера;\n- срок ограничения;\n- порядок подачи апелляции.\nЕсли раскрытие определённой информации может создать угрозу безопасности платформы или других пользователей, объём раскрываемых сведений может быть ограничен."
+      ],
+      [
+        "Подтверждённые нарушения",
+        "Учитываются только нарушения, подтверждённые после проверки.\nНарушения, отменённые по итогам апелляции либо исправленные модератором, исключаются из истории пользователя и не учитываются при определении дальнейших санкций."
+      ],
+      [
+        "Система санкций",
+        "Санкции применяются последовательно и пропорционально характеру нарушения.\n### Первое нарушение\nПрименяются:\n- предупреждение;\n- удаление либо скрытие нарушающего материала.\nИные ограничения не применяются.\n### Второе нарушение\nПрименяется ограничение публикации новых материалов сроком 30 календарных дней.\nЧтение форума остаётся доступным.\n### Третье нарушение\nПрименяется ограничение публикации материалов и участия в обсуждениях сроком 180 календарных дней.\nЧтение форума остаётся доступным.\n### Четвёртое нарушение\nПрименяется бессрочный запрет:\n- на создание новых тем;\n- на публикацию сообщений;\n- на размещение отзывов;\n- на участие в обсуждениях.\nДоступ к чтению общедоступного содержимого форума может сохраняться."
+      ],
+      [
+        "Серьёзные нарушения",
+        "В исключительных случаях Cashback+ вправе применять более строгие меры без прохождения всех промежуточных этапов санкций.\nЭто возможно при:\n- угрозах насилием;\n- публикации чужих персональных данных;\n- мошенничестве;\n- попытках обхода блокировок;\n- массовом спаме;\n- использовании множества аккаунтов;\n- публикации незаконного контента;\n- серьёзных нарушениях безопасности платформы.\nВ таких случаях решение принимается индивидуально с учётом тяжести нарушения и имеющихся доказательств."
+      ],
+      [
+        "Форум и основной аккаунт Cashback+",
+        "Форумный аккаунт и основной аккаунт Cashback+ рассматриваются отдельно.\nФорумные ограничения автоматически не приводят к:\n- потере кэшбэка;\n- потере бонусов;\n- отмене подтверждённых вознаграждений;\n- ограничению участия в исследовательских программах;\n- блокировке основного аккаунта Cashback+.\nОтдельные проверки и ограничения могут применяться независимо, если имеются основания, предусмотренные Условиями использования, Правилами активности или требованиями безопасности платформы."
+      ],
+      [
+        "Вознаграждения и форумные санкции",
+        "Форумные нарушения сами по себе не являются основанием для отмены законно начисленных и подтверждённых вознаграждений.\nПодтверждённые кэшбэк-начисления и правомерно начисленные бонусы не подлежат произвольной конфискации исключительно из-за применения форумных санкций.\nКорректировка начислений допускается только в случаях, предусмотренных Условиями использования, Правилами активности или применимым законодательством."
+      ],
+      [
+        "Апелляции",
+        "Пользователь вправе обжаловать любое подтверждённое нарушение либо применённую санкцию.\nАпелляция может быть подана через предусмотренную платформой форму либо через службу поддержки."
+      ],
+      [
+        "Рассмотрение апелляций",
+        "При рассмотрении апелляции учитываются:\n- материалы нарушения;\n- пояснения пользователя;\n- решение модератора;\n- обстоятельства конкретного случая.\nАпелляцию рассматривает уполномоченный модератор, который по возможности не участвовал в принятии первоначального решения.\nПо результатам рассмотрения решение может быть:\n- оставлено без изменений;\n- изменено;\n- отменено полностью.\nПри отмене решения соответствующее нарушение исключается из истории пользователя."
+      ],
+      [
+        "Сроки рассмотрения",
+        "Cashback+ стремится рассматривать:\n- обычные жалобы пользователей в течение 14 календарных дней;\n- апелляции в течение 30 календарных дней.\nВ сложных случаях срок может быть увеличен, если требуется дополнительная проверка или получение информации от заинтересованных сторон."
+      ],
+      [
+        "Журнал решений",
+        "Все подтверждённые нарушения, санкции и результаты апелляций фиксируются в журнале модерации.\nДоступ к таким сведениям предоставляется только уполномоченным сотрудникам и модераторам в объёме, необходимом для исполнения их обязанностей.\nОбработка соответствующих данных осуществляется согласно Политике конфиденциальности."
+      ],
+      [
+        "Независимость модерации",
+        "Модерация предназначена для обеспечения соблюдения Правил форума и защиты сообщества.\nОна не используется для:\n- удаления добросовестной критики;\n- искусственного улучшения репутации товаров, продавцов или Cashback+;\n- удаления отрицательных отзывов только потому, что они отрицательные;\n- продвижения отдельных участников форума.\nПоложительные и отрицательные публикации оцениваются по одинаковым критериям."
+      ],
+      [
+        "Важная информация",
+        "Модерация направлена на обеспечение безопасности сообщества, прозрачности отзывов и соблюдения правил платформы.\nНичто в настоящем документе не ограничивает права пользователей, которые не могут быть ограничены или исключены в соответствии с применимым законодательством.\nНастоящий документ применяется совместно с:\n- Terms and Conditions;\n- Правилами форума;\n- Правилами активности;\n- Политикой конфиденциальности."
+      ]
+    ],
+    "en": [
+      [
+        "Purpose of moderation",
+        "Moderation of the Cashback+ forum aims to:\n- protect users;\n- maintain constructive communication;\n- ensure the authenticity of reviews;\n- prevent fraud and abuse;\n- ensure compliance with the Forum Rules.\nModeration applies equally to positive and negative reviews.\nA report does not automatically mean that a rule has been broken.\nEach case is considered individually, taking account of the context of the publication and the available materials."
+      ],
+      [
+        "How content checks work",
+        "New topics, messages, reviews and other publications may be checked before or after publication.\nTo identify possible violations, Cashback+ may use:\n- automated analysis tools;\n- manual checks by moderators;\n- user submissions through the reporting system;\n- platform security checks.\nAutomated signals are used solely as an aid.\nThe automated system does not make final disciplinary decisions without the review prescribed by the rules.\nAn automated warning does not, in itself, confirm a violation."
+      ],
+      [
+        "User reports",
+        "Any user may report a suspected violation through the functionality provided by the platform.\nA report must be submitted in good faith and describe the suspected violation.\nThe reporting system must not be used for:\n- suppressing lawful criticism;\n- putting pressure on other users;\n- competing against others commercially;\n- removing publications solely because of disagreement with the author’s opinion.\nAbuse of the reporting system may be treated as a separate violation of the rules."
+      ],
+      [
+        "Decision-making principles",
+        "When reviewing materials, moderators assess:\n- the content of the publication;\n- the context of the discussion;\n- the violation history;\n- the available evidence;\n- submissions received from users.\nModerators must act in good faith and consistently.\nA moderator’s personal views do not, in themselves, justify deleting a publication or imposing sanctions."
+      ],
+      [
+        "Decision notifications",
+        "When a violation is confirmed, the user receives a notification through the platform interface, by email or through another available communication channel.\nWhere possible, the notification states:\n- the decision date;\n- a description of the violation;\n- the section of the Forum Rules that was breached;\n- the measure applied;\n- the restriction period;\n- how to submit an appeal.\nIf disclosing certain information could threaten the security of the platform or other users, the amount of information disclosed may be limited."
+      ],
+      [
+        "Confirmed violations",
+        "Only violations confirmed after review are counted.\nViolations overturned on appeal or corrected by a moderator are excluded from the user’s history and are not counted when determining subsequent sanctions."
+      ],
+      [
+        "Sanctions system",
+        "Sanctions are applied progressively and proportionately to the nature of the violation.\n### First violation\nThe following apply:\n- a warning;\n- deletion or hiding of the offending material.\nNo other restrictions apply.\n### Second violation\nThe publication of new materials is restricted for 30 calendar days.\nReading the forum remains available.\n### Third violation\nPublishing materials and participating in discussions are restricted for 180 calendar days.\nReading the forum remains available.\n### Fourth violation\nAn indefinite ban applies to:\n- creating new topics;\n- publishing messages;\n- posting reviews;\n- participating in discussions.\nAccess to reading publicly accessible forum content may remain available."
+      ],
+      [
+        "Serious violations",
+        "In exceptional cases, Cashback+ may apply stricter measures without proceeding through all intermediate sanction stages.\nThis is possible in cases of:\n- threats of violence;\n- publication of other people’s personal data;\n- fraud;\n- attempts to circumvent bans;\n- mass spam;\n- use of multiple accounts;\n- publication of unlawful content;\n- serious platform security violations.\nIn such cases, the decision is made individually, taking account of the seriousness of the violation and the available evidence."
+      ],
+      [
+        "The forum and the main Cashback+ account",
+        "The forum account and the main Cashback+ account are treated separately.\nForum restrictions do not automatically result in:\n- loss of cashback;\n- loss of bonuses;\n- cancellation of confirmed rewards;\n- restrictions on participation in research programmes;\n- blocking the main Cashback+ account.\nSeparate checks and restrictions may be applied independently where there are grounds under the Terms of Use, Activity Rules or platform security requirements."
+      ],
+      [
+        "Rewards and forum sanctions",
+        "Forum violations do not, in themselves, justify cancelling legitimately credited and confirmed rewards.\nConfirmed cashback credits and legitimately credited bonuses must not be arbitrarily confiscated solely because forum sanctions have been applied.\nRewards may be adjusted only in the circumstances provided for in the Terms of Use, Activity Rules or applicable law."
+      ],
+      [
+        "Appeals",
+        "The user may appeal any confirmed violation or sanction imposed.\nAn appeal may be submitted through the form provided by the platform or through support."
+      ],
+      [
+        "Reviewing appeals",
+        "When reviewing an appeal, the following are considered:\n- the materials relating to the violation;\n- the user’s explanation;\n- the moderator’s decision;\n- the circumstances of the particular case.\nThe appeal is reviewed by an authorised moderator who, where possible, was not involved in the original decision.\nFollowing review, the decision may be:\n- left unchanged;\n- amended;\n- overturned entirely.\nIf the decision is overturned, the corresponding violation is excluded from the user’s history."
+      ],
+      [
+        "Review timeframes",
+        "Cashback+ aims to review:\n- ordinary user reports within 14 calendar days;\n- appeals within 30 calendar days.\nIn complex cases, the timeframe may be extended if additional checks or information from interested parties are required."
+      ],
+      [
+        "Decision log",
+        "All confirmed violations, sanctions and appeal outcomes are recorded in the moderation log.\nAccess to this information is provided only to authorised staff and moderators to the extent necessary to perform their duties.\nThe relevant data is processed in accordance with the Privacy Policy."
+      ],
+      [
+        "Independence of moderation",
+        "Moderation is intended to ensure compliance with the Forum Rules and protect the community.\nIt is not used for:\n- removing good-faith criticism;\n- artificially improving the reputation of products, sellers or Cashback+;\n- removing negative reviews solely because they are negative;\n- promoting particular forum members.\nPositive and negative publications are assessed against the same criteria."
+      ],
+      [
+        "Important information",
+        "Moderation aims to ensure community safety, transparency of reviews and compliance with platform rules.\nNothing in this document limits users’ rights that cannot be limited or excluded under applicable law.\nThis document applies together with:\n- Terms and Conditions;\n- Forum Rules;\n- Activity Rules;\n- Privacy Policy."
+      ]
+    ],
+    "de": [
+      [
+        "Zweck der Moderation",
+        "Die Moderation des Cashback+ Forums dient:\n- dem Schutz der Nutzer;\n- der Aufrechterhaltung konstruktiver Kommunikation;\n- der Gewährleistung der Authentizität von Bewertungen;\n- der Verhinderung von Betrug und Missbrauch;\n- der Einhaltung der Forenregeln.\nDie Moderation gilt gleichermaßen für positive und negative Bewertungen.\nEine Meldung bedeutet nicht automatisch einen Regelverstoß.\nJeder Fall wird individuell unter Berücksichtigung des Veröffentlichungskontexts und der verfügbaren Materialien geprüft."
+      ],
+      [
+        "Ablauf der Inhaltsprüfung",
+        "Neue Themen, Beiträge, Bewertungen und andere Veröffentlichungen können vor oder nach der Veröffentlichung geprüft werden.\nZur Erkennung möglicher Verstöße kann Cashback+ Folgendes einsetzen:\n- automatisierte Analysewerkzeuge;\n- manuelle Prüfungen durch Moderatoren;\n- über das Meldesystem eingereichte Nutzermeldungen;\n- Sicherheitsprüfungen der Plattform.\nAutomatische Hinweise dienen ausschließlich als Hilfsmittel.\nDas automatisierte System trifft keine endgültigen disziplinarischen Entscheidungen ohne die in den Regeln vorgesehene Prüfung.\nEine automatische Warnung bestätigt für sich genommen keinen Verstoß."
+      ],
+      [
+        "Meldungen von Nutzern",
+        "Jeder Nutzer kann über die vorgesehenen Plattformfunktionen einen vermuteten Verstoß melden.\nEine Meldung muss nach Treu und Glauben erfolgen und den vermuteten Verstoß beschreiben.\nDas Meldesystem darf nicht für folgende Zwecke genutzt werden:\n- die Unterdrückung rechtmäßiger Kritik;\n- die Ausübung von Druck auf andere Nutzer;\n- den wirtschaftlichen Konkurrenzkampf;\n- die Entfernung von Veröffentlichungen allein wegen Meinungsverschiedenheiten mit dem Verfasser.\nDer Missbrauch des Meldesystems kann als eigenständiger Regelverstoß gewertet werden."
+      ],
+      [
+        "Grundsätze der Entscheidungsfindung",
+        "Bei der Prüfung von Materialien berücksichtigen Moderatoren:\n- den Inhalt der Veröffentlichung;\n- den Kontext der Diskussion;\n- die Verstoßhistorie;\n- das Vorliegen von Beweisen;\n- eingegangene Nutzermeldungen.\nModeratoren müssen nach Treu und Glauben und einheitlich handeln.\nDie persönlichen Ansichten eines Moderators sind für sich genommen kein Grund für die Löschung einer Veröffentlichung oder die Verhängung von Sanktionen."
+      ],
+      [
+        "Benachrichtigungen über Entscheidungen",
+        "Bei einem bestätigten Verstoß erhält der Nutzer eine Benachrichtigung über die Plattformoberfläche, per E-Mail oder über einen anderen verfügbaren Kommunikationskanal.\nDie Benachrichtigung enthält nach Möglichkeit:\n- das Datum der Entscheidung;\n- eine Beschreibung des Verstoßes;\n- den verletzten Abschnitt der Forenregeln;\n- die angewandte Maßnahme;\n- die Dauer der Beschränkung;\n- das Verfahren zur Einlegung eines Einspruchs.\nWenn die Offenlegung bestimmter Informationen die Sicherheit der Plattform oder anderer Nutzer gefährden könnte, kann der Umfang der offengelegten Informationen beschränkt werden."
+      ],
+      [
+        "Bestätigte Verstöße",
+        "Nur nach einer Prüfung bestätigte Verstöße werden berücksichtigt.\nVerstöße, die nach einem Einspruch aufgehoben oder von einem Moderator berichtigt wurden, werden aus der Historie des Nutzers ausgeschlossen und bei weiteren Sanktionen nicht berücksichtigt."
+      ],
+      [
+        "Sanktionssystem",
+        "Sanktionen werden stufenweise und im Verhältnis zur Art des Verstoßes angewandt.\n### Erster Verstoß\nEs gelten:\n- eine Verwarnung;\n- die Löschung oder Ausblendung des regelwidrigen Materials.\nWeitere Beschränkungen werden nicht angewandt.\n### Zweiter Verstoß\nDie Veröffentlichung neuer Materialien wird für 30 Kalendertage beschränkt.\nDas Lesen des Forums bleibt möglich.\n### Dritter Verstoß\nDie Veröffentlichung von Materialien und die Teilnahme an Diskussionen werden für 180 Kalendertage beschränkt.\nDas Lesen des Forums bleibt möglich.\n### Vierter Verstoß\nEs gilt ein unbefristetes Verbot:\n- neue Themen zu erstellen;\n- Beiträge zu veröffentlichen;\n- Bewertungen abzugeben;\n- an Diskussionen teilzunehmen.\nDer Lesezugriff auf öffentlich zugängliche Foreninhalte kann erhalten bleiben."
+      ],
+      [
+        "Schwerwiegende Verstöße",
+        "In Ausnahmefällen darf Cashback+ strengere Maßnahmen anwenden, ohne sämtliche Zwischenstufen der Sanktionen zu durchlaufen.\nDies ist möglich bei:\n- Gewaltandrohungen;\n- der Veröffentlichung personenbezogener Daten anderer Personen;\n- Betrug;\n- Versuchen, Sperren zu umgehen;\n- massenhaftem Spam;\n- der Nutzung mehrerer Konten;\n- der Veröffentlichung rechtswidriger Inhalte;\n- schwerwiegenden Verstößen gegen die Plattformsicherheit.\nIn solchen Fällen wird unter Berücksichtigung der Schwere des Verstoßes und der vorliegenden Beweise individuell entschieden."
+      ],
+      [
+        "Forum und Cashback+ Hauptkonto",
+        "Das Forumkonto und das Cashback+ Hauptkonto werden getrennt betrachtet.\nForenbeschränkungen führen nicht automatisch zu:\n- dem Verlust von Cashback;\n- dem Verlust von Boni;\n- der Aufhebung bestätigter Vergütungen;\n- einer Einschränkung der Teilnahme an Studienprogrammen;\n- einer Sperrung des Cashback+ Hauptkontos.\nGesonderte Prüfungen und Beschränkungen können unabhängig angewandt werden, wenn dafür Gründe nach den Nutzungsbedingungen, den Aktivitätsregeln oder den Sicherheitsanforderungen der Plattform vorliegen."
+      ],
+      [
+        "Vergütungen und Forensanktionen",
+        "Forenverstöße allein rechtfertigen nicht die Aufhebung rechtmäßig gutgeschriebener und bestätigter Vergütungen.\nBestätigte Cashback-Gutschriften und rechtmäßig gutgeschriebene Boni dürfen nicht allein aufgrund von Forensanktionen willkürlich eingezogen werden.\nGutschriften dürfen nur in den Fällen berichtigt werden, die in den Nutzungsbedingungen, den Aktivitätsregeln oder im geltenden Recht vorgesehen sind."
+      ],
+      [
+        "Einsprüche",
+        "Nutzer können gegen jeden bestätigten Verstoß oder jede verhängte Sanktion Einspruch einlegen.\nEin Einspruch kann über das vorgesehene Plattformformular oder den Support eingereicht werden."
+      ],
+      [
+        "Prüfung von Einsprüchen",
+        "Bei der Prüfung eines Einspruchs werden berücksichtigt:\n- die Materialien zum Verstoß;\n- die Erläuterungen des Nutzers;\n- die Entscheidung des Moderators;\n- die Umstände des Einzelfalls.\nDer Einspruch wird von einem befugten Moderator geprüft, der nach Möglichkeit nicht an der ursprünglichen Entscheidung beteiligt war.\nNach der Prüfung kann die Entscheidung:\n- unverändert bleiben;\n- geändert werden;\n- vollständig aufgehoben werden.\nBei Aufhebung der Entscheidung wird der betreffende Verstoß aus der Historie des Nutzers ausgeschlossen."
+      ],
+      [
+        "Bearbeitungsfristen",
+        "Cashback+ strebt folgende Bearbeitungszeiten an:\n- gewöhnliche Nutzermeldungen innerhalb von 14 Kalendertagen;\n- Einsprüche innerhalb von 30 Kalendertagen.\nIn komplexen Fällen kann die Frist verlängert werden, wenn zusätzliche Prüfungen oder Informationen von Beteiligten erforderlich sind."
+      ],
+      [
+        "Entscheidungsprotokoll",
+        "Alle bestätigten Verstöße, Sanktionen und Ergebnisse von Einsprüchen werden im Moderationsprotokoll festgehalten.\nZugriff auf diese Informationen erhalten ausschließlich befugte Mitarbeiter und Moderatoren, soweit dies für die Erfüllung ihrer Aufgaben erforderlich ist.\nDie betreffenden Daten werden gemäß der Datenschutzerklärung verarbeitet."
+      ],
+      [
+        "Unabhängigkeit der Moderation",
+        "Die Moderation dient der Einhaltung der Forenregeln und dem Schutz der Gemeinschaft.\nSie wird nicht für folgende Zwecke eingesetzt:\n- die Entfernung gutgläubiger Kritik;\n- die künstliche Verbesserung des Rufs von Produkten, Verkäufern oder Cashback+;\n- die Entfernung negativer Bewertungen allein deshalb, weil sie negativ sind;\n- die Förderung einzelner Forenmitglieder.\nPositive und negative Veröffentlichungen werden nach denselben Kriterien beurteilt."
+      ],
+      [
+        "Wichtige Informationen",
+        "Die Moderation dient der Sicherheit der Gemeinschaft, der Transparenz von Bewertungen und der Einhaltung der Plattformregeln.\nKeine Bestimmung dieses Dokuments schränkt Nutzerrechte ein, die nach geltendem Recht weder eingeschränkt noch ausgeschlossen werden dürfen.\nDieses Dokument gilt zusammen mit:\n- Terms and Conditions;\n- den Forenregeln;\n- den Aktivitätsregeln;\n- der Datenschutzerklärung."
+      ]
+    ],
+    "fr": [
+      [
+        "Objet de la modération",
+        "La modération du forum Cashback+ vise à :\n- protéger les utilisateurs ;\n- maintenir des échanges constructifs ;\n- assurer l’authenticité des avis ;\n- prévenir la fraude et les abus ;\n- faire respecter les Règles du forum.\nLa modération s’applique de la même manière aux avis positifs et négatifs.\nUn signalement ne signifie pas automatiquement qu’une règle a été enfreinte.\nChaque dossier est examiné individuellement, en tenant compte du contexte de la publication et des éléments disponibles."
+      ],
+      [
+        "Fonctionnement de la vérification des contenus",
+        "Les nouveaux sujets, messages, avis et autres publications peuvent être vérifiés avant ou après leur publication.\nPour identifier d’éventuelles infractions, Cashback+ peut utiliser :\n- des outils d’analyse automatisée ;\n- une vérification manuelle par les modérateurs ;\n- les demandes des utilisateurs transmises par le système de signalement ;\n- les vérifications de sécurité de la plateforme.\nLes signaux automatiques sont utilisés uniquement comme outil d’aide.\nLe système automatisé ne prend pas de décisions disciplinaires définitives sans la vérification prévue par les règles.\nUn avertissement automatique ne confirme pas, à lui seul, une infraction."
+      ],
+      [
+        "Signalements des utilisateurs",
+        "Chaque utilisateur peut signaler une infraction présumée au moyen des fonctionnalités prévues par la plateforme.\nLe signalement doit être soumis de bonne foi et décrire l’infraction présumée.\nIl est interdit d’utiliser le système de signalement pour :\n- faire taire des critiques licites ;\n- exercer une pression sur d’autres utilisateurs ;\n- mener une lutte concurrentielle ;\n- supprimer des publications uniquement en raison d’un désaccord avec l’opinion de leur auteur.\nL’abus du système de signalement peut être considéré comme une infraction distincte aux règles."
+      ],
+      [
+        "Principes de prise de décision",
+        "Lors de l’examen des contenus, les modérateurs évaluent :\n- le contenu de la publication ;\n- le contexte de la discussion ;\n- l’historique des infractions ;\n- la présence de preuves ;\n- les demandes reçues des utilisateurs.\nLes modérateurs doivent agir de bonne foi et de manière cohérente.\nLes opinions personnelles d’un modérateur ne constituent pas, à elles seules, un motif de suppression d’une publication ou d’application de sanctions."
+      ],
+      [
+        "Notifications des décisions",
+        "Lorsqu’une infraction est confirmée, l’utilisateur reçoit une notification dans l’interface de la plateforme, par courrier électronique ou par un autre canal de communication disponible.\nLa notification indique, dans la mesure du possible :\n- la date de la décision ;\n- une description de l’infraction ;\n- la section des Règles du forum enfreinte ;\n- la mesure appliquée ;\n- la durée de la restriction ;\n- les modalités d’introduction d’un recours.\nSi la divulgation de certaines informations peut menacer la sécurité de la plateforme ou d’autres utilisateurs, l’étendue des informations divulguées peut être limitée."
+      ],
+      [
+        "Infractions confirmées",
+        "Seules les infractions confirmées après vérification sont prises en compte.\nLes infractions annulées à la suite d’un recours ou corrigées par un modérateur sont exclues de l’historique de l’utilisateur et ne sont pas prises en compte pour déterminer les sanctions ultérieures."
+      ],
+      [
+        "Système de sanctions",
+        "Les sanctions sont appliquées progressivement et proportionnellement à la nature de l’infraction.\n### Première infraction\nLes mesures suivantes s’appliquent :\n- un avertissement ;\n- la suppression ou le masquage du contenu en infraction.\nAucune autre restriction n’est appliquée.\n### Deuxième infraction\nLa publication de nouveaux contenus est restreinte pendant 30 jours calendaires.\nLa lecture du forum reste possible.\n### Troisième infraction\nLa publication de contenus et la participation aux discussions sont restreintes pendant 180 jours calendaires.\nLa lecture du forum reste possible.\n### Quatrième infraction\nUne interdiction de durée indéterminée s’applique :\n- à la création de nouveaux sujets ;\n- à la publication de messages ;\n- à la publication d’avis ;\n- à la participation aux discussions.\nL’accès en lecture aux contenus du forum accessibles au public peut être maintenu."
+      ],
+      [
+        "Infractions graves",
+        "Dans des cas exceptionnels, Cashback+ peut appliquer des mesures plus strictes sans passer par toutes les étapes intermédiaires des sanctions.\nCela est possible en cas de :\n- menaces de violence ;\n- publication des données personnelles d’autrui ;\n- fraude ;\n- tentatives de contournement des blocages ;\n- spam massif ;\n- utilisation de plusieurs comptes ;\n- publication de contenus illicites ;\n- violations graves de la sécurité de la plateforme.\nDans ces cas, la décision est prise individuellement en tenant compte de la gravité de l’infraction et des preuves disponibles."
+      ],
+      [
+        "Forum et compte principal Cashback+",
+        "Le compte du forum et le compte principal Cashback+ sont traités séparément.\nLes restrictions du forum n’entraînent pas automatiquement :\n- la perte du cashback ;\n- la perte des bonus ;\n- l’annulation des récompenses confirmées ;\n- des restrictions de participation aux programmes d’études ;\n- le blocage du compte principal Cashback+.\nDes vérifications et restrictions distinctes peuvent être appliquées indépendamment lorsqu’il existe des motifs prévus par les Conditions d’utilisation, les Règles d’activité ou les exigences de sécurité de la plateforme."
+      ],
+      [
+        "Récompenses et sanctions du forum",
+        "Les infractions du forum ne constituent pas, à elles seules, un motif d’annulation des récompenses légitimement créditées et confirmées.\nLes crédits de cashback confirmés et les bonus légitimement crédités ne peuvent être confisqués arbitrairement au seul motif de l’application de sanctions du forum.\nLa rectification des crédits n’est autorisée que dans les cas prévus par les Conditions d’utilisation, les Règles d’activité ou la législation applicable."
+      ],
+      [
+        "Recours",
+        "L’utilisateur peut contester toute infraction confirmée ou toute sanction appliquée.\nUn recours peut être introduit au moyen du formulaire prévu par la plateforme ou auprès du service d’assistance."
+      ],
+      [
+        "Examen des recours",
+        "Lors de l’examen d’un recours, les éléments suivants sont pris en compte :\n- les éléments relatifs à l’infraction ;\n- les explications de l’utilisateur ;\n- la décision du modérateur ;\n- les circonstances du cas particulier.\nLe recours est examiné par un modérateur habilité qui, dans la mesure du possible, n’a pas participé à la décision initiale.\nÀ l’issue de l’examen, la décision peut être :\n- laissée inchangée ;\n- modifiée ;\n- annulée entièrement.\nEn cas d’annulation de la décision, l’infraction correspondante est exclue de l’historique de l’utilisateur."
+      ],
+      [
+        "Délais d’examen",
+        "Cashback+ s’efforce d’examiner :\n- les signalements ordinaires des utilisateurs dans un délai de 14 jours calendaires ;\n- les recours dans un délai de 30 jours calendaires.\nDans les cas complexes, le délai peut être prolongé si des vérifications supplémentaires ou des informations de parties intéressées sont nécessaires."
+      ],
+      [
+        "Journal des décisions",
+        "Toutes les infractions confirmées, les sanctions et les résultats des recours sont consignés dans le journal de modération.\nL’accès à ces informations est réservé aux employés et modérateurs habilités, dans la mesure nécessaire à l’exercice de leurs fonctions.\nLes données concernées sont traitées conformément à la Politique de confidentialité."
+      ],
+      [
+        "Indépendance de la modération",
+        "La modération vise à faire respecter les Règles du forum et à protéger la communauté.\nElle n’est pas utilisée pour :\n- supprimer des critiques de bonne foi ;\n- améliorer artificiellement la réputation de produits, de vendeurs ou de Cashback+ ;\n- supprimer des avis négatifs uniquement parce qu’ils sont négatifs ;\n- promouvoir certains membres du forum.\nLes publications positives et négatives sont évaluées selon les mêmes critères."
+      ],
+      [
+        "Informations importantes",
+        "La modération vise à assurer la sécurité de la communauté, la transparence des avis et le respect des règles de la plateforme.\nAucune disposition du présent document ne limite les droits des utilisateurs qui ne peuvent être limités ou exclus en vertu de la législation applicable.\nLe présent document s’applique conjointement avec :\n- Terms and Conditions ;\n- les Règles du forum ;\n- les Règles d’activité ;\n- la Politique de confidentialité."
+      ]
+    ]
+  }
+}

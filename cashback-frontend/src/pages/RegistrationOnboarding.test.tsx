@@ -12,7 +12,7 @@ test('terms and current fields create pending email verification, never program 
   render(<AuthProvider><MemoryRouter><Register lang="EN" onLangChange={()=>{}}/></MemoryRouter></AuthProvider>);
   act(()=>{for(const [id,value] of [['firstName','New'],['lastName','Buyer'],['email',user.email],['phone','02079460123'],['password','Strong8!Buyer']])fireEvent.change(document.getElementById(id)!,{target:{value}});});
   expect(screen.getByRole('button',{name:'Register'})).toBeDisabled();
-  fireEvent.click(screen.getByRole('checkbox'));fireEvent.click(screen.getByRole('button',{name:'Register'}));
+  for (const id of ['age-confirmed','terms','privacy-acknowledged']) fireEvent.click(document.getElementById(id)!);fireEvent.click(screen.getByRole('button',{name:'Register'}));
   await waitFor(()=>expect(global.fetch).toHaveBeenCalledTimes(1));
   await screen.findByRole('heading',{name:'Confirm your email'});
   expect(localStorage.getItem('cashback_token')).toBeNull();

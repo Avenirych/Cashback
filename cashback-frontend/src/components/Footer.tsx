@@ -2,6 +2,8 @@ import React from "react";
 import {activityText} from './ActivityLimits';
 import { Link } from "react-router-dom";
 import { translations } from "../i18n";
+import {openCookieSettings} from '../cookieConsent';
+import {cookieMessages} from '../content/cookieMessages';
 
 interface FooterProps {
   lang: string;
@@ -25,6 +27,7 @@ export default function Footer({ lang }: FooterProps) {
           <Link to="/privacy">{t.footerPrivacy}</Link>
           <Link to="/faq">{t.footerFaq}</Link>
           <Link to="/cookies">{t.footerCookies}</Link>
+          <button type="button" onClick={openCookieSettings}>{(cookieMessages[lang?.toLowerCase() as keyof typeof cookieMessages] ?? cookieMessages.en).manage}</button>
           <Link to="/activity-limits">{activityText(lang).rules}</Link>
         </div>
       </nav>

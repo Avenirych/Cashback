@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import {readCookieConsent, subscribeCookieConsent} from '../cookieConsent';
 
 type EventType = "necessary" | "analytics" | "functional" | "marketing";
 
@@ -18,12 +19,7 @@ interface CookieSettings {
 }
 
 export default function Analytics() {
-  const [cookieSettings, setCookieSettings] = useState<CookieSettings>({
-    necessary: true,
-    analytics: false,
-    functional: false,
-    marketing: false,
-  });
+  const [cookieSettings, setCookieSettings] = useState<CookieSettings>(()=>({...readCookieConsent(),functional:false}));
 
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [loading, setLoading] = useState(false);
@@ -35,13 +31,12 @@ export default function Analytics() {
   const [typeFilter, setTypeFilter] = useState<EventType | "all">("all");
 
   useEffect(() => {
-    const saved = localStorage.getItem("cashback_cookie_settings");
-    if (saved) {
-      setCookieSettings(JSON.parse(saved));
-    }
+    return subscribeCookieConsent(value=>setCookieSettings({...value,functional:false}));
   }, []);
 
   useEffect(() => {
+    if (!cookieSettings.analytics) { setEvents([]); setLoading(false); setError(null); return; }
+    const controller = new AbortController();
     const fetchEvents = async () => {
       setLoading(true);
       setError(null);
@@ -53,22 +48,24 @@ export default function Analytics() {
         if (typeFilter !== "all") params.append("type", typeFilter);
 
         const res = await fetch(
-          `http://localhost:3000/analytics/events?${params.toString()}`
+          `http://localhost:3000/analytics/events?${params.toString()}`,
+          {signal:controller.signal}
         );
         if (!res.ok) {
           throw new Error(`Ошибка загрузки: ${res.status}`);
         }
         const data = await res.json();
-        setEvents(data);
+        if (!controller.signal.aborted) setEvents(data);
       } catch (e: any) {
-        setError(e.message || "Не удалось загрузить события");
+        if (!controller.signal.aborted) setError(e.message || "Не удалось загрузить события");
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
 
     fetchEvents();
-  }, [dateFrom, dateTo, storeFilter, typeFilter]);
+    return ()=>controller.abort();
+  }, [dateFrom, dateTo, storeFilter, typeFilter, cookieSettings.analytics]);
 
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {

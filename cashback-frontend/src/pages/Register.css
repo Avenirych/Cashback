@@ -1,0 +1,201 @@
+.register-layout {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.register-back-link {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-bottom: 0 !important;
+}
+
+.register-form-column,
+.register-card,
+.register-name-fields,
+.register-field-row {
+  min-width: 0;
+}
+
+.register-card {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 28px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-wrap: anywhere;
+}
+
+.register-name-fields,
+.register-field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.register-illustration {
+  min-width: 0;
+  min-height: 0;
+  border-radius: 20px;
+  background: #f2e4cd;
+}
+
+.register-illustration-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+@media (min-width: 640px) {
+  .register-name-fields,
+  .register-field-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .register-layout {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+
+  .register-illustration {
+    position: relative;
+  }
+
+  /* Absolute contents cannot make the grid row taller than the form. */
+  .register-illustration-content {
+    position: absolute;
+    inset: 20px;
+    padding: 0;
+    container-type: size;
+  }
+
+  /* Preserve the tree's 2:3 coordinate system, including animated coins. */
+  .register-illustration-content > div {
+    width: min(100%, calc(100cqh * 2 / 3)) !important;
+  }
+}
+
+@media (max-width: 479px) {
+  .register-layout {
+    padding: 20px 12px;
+    gap: 16px;
+  }
+
+  .register-card {
+    padding: 20px 16px;
+  }
+}
+
+.register-field-row > * {
+  min-width: 0;
+}
+
+.register-field-row label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.register-password-strength {
+  line-height: 1.5;
+}
+
+.register-password-strength ul {
+  margin: 6px 0 0;
+  padding-left: 20px;
+}
+
+.register-form {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.register-consent {
+  min-width: 0;
+  margin: 0;
+  padding: 6px 10px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.register-consent legend {
+  padding: 0 4px;
+  line-height: 1.2;
+}
+
+.register-confirmations {
+  display: grid;
+  gap: 4px;
+}
+
+.register-consent-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.register-consent label {
+  min-height: 28px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.register-consent input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin: 1px 0 0;
+}
+
+.register-consent p {
+  margin: 4px 0 0;
+}
+
+.register-nature {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.register-submit {
+  min-height: 44px;
+}
+
+.register-legal-notes {
+  font-size: 14px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.register-legal-notes p {
+  margin: 4px 0 0;
+}
+
+.register-legal-notes p:first-child {
+  margin-top: 0;
+}
+
+.register-login-link {
+  margin: 8px 0 0;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.register-form input[type="checkbox"]:focus-visible,
+.register-form a:focus-visible,
+.register-submit:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}

@@ -1,0 +1,1844 @@
+{
+  "rules": {
+    "ru": [
+      {
+        "title": "1. Кто мы",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ является платформой потребительских вознаграждений, управляемой компанией Cashback Plus Ltd."
+          },
+          {
+            "type": "paragraph",
+            "text": "Платформа предоставляет пользователям доступ к программам кэшбэка, бонусным программам, партнёрским предложениям, исследовательским проектам и инструментам сравнения предложений различных продавцов."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ не является банком, платёжной организацией, эмитентом электронных денег, инвестиционной платформой или поставщиком финансовых услуг."
+          },
+          {
+            "type": "paragraph",
+            "text": "Если прямо не указано иное, Cashback+ не является продавцом товаров или услуг и не выступает стороной договора купли-продажи между пользователем и соответствующим продавцом."
+          }
+        ]
+      },
+      {
+        "title": "2. Определения",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Для целей настоящих Условий используются следующие определения."
+          },
+          {
+            "type": "definition",
+            "text": "Пользователь"
+          },
+          {
+            "type": "paragraph",
+            "text": "Физическое лицо, использующее платформу Cashback+."
+          },
+          {
+            "type": "definition",
+            "text": "Партнёр"
+          },
+          {
+            "type": "paragraph",
+            "text": "Магазин, продавец, партнёрская сеть, рекламная платформа, исследовательская организация или иное независимое третье лицо, предоставляющее товары, услуги либо программы вознаграждений через Cashback+."
+          },
+          {
+            "type": "definition",
+            "text": "Кэшбэк"
+          },
+          {
+            "type": "paragraph",
+            "text": "Вознаграждение, которое может быть начислено пользователю после подтверждения соответствующей покупки партнёром или партнёрской сетью."
+          },
+          {
+            "type": "paragraph",
+            "text": "Размер кэшбэка, указанный до подтверждения транзакции, является предварительным."
+          },
+          {
+            "type": "definition",
+            "text": "Бонус"
+          },
+          {
+            "type": "paragraph",
+            "text": "Внутренняя единица программы вознаграждений Cashback+."
+          },
+          {
+            "type": "paragraph",
+            "text": "Бонусы не являются денежными средствами, электронными деньгами, банковским вкладом, платёжным инструментом или инвестиционным активом."
+          },
+          {
+            "type": "definition",
+            "text": "Исследовательская компания"
+          },
+          {
+            "type": "paragraph",
+            "text": "Независимая организация, проводящая исследования, опросы, интервью, тестирование продуктов или иные исследовательские мероприятия."
+          },
+          {
+            "type": "definition",
+            "text": "Компенсация покупки"
+          },
+          {
+            "type": "paragraph",
+            "text": "Использование подтверждённых вознаграждений в рамках правил программы с целью уменьшения фактических расходов пользователя по соответствующей покупке."
+          },
+          {
+            "type": "paragraph",
+            "text": "Компенсация покупки зависит от условий программы и не гарантируется."
+          }
+        ]
+      },
+      {
+        "title": "3. Право на участие",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Использование Cashback+ допускается только лицами, достигшими возраста 18 лет."
+          },
+          {
+            "type": "paragraph",
+            "text": "Создавая учётную запись, пользователь подтверждает, что:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "достиг возраста 18 лет;",
+              "обладает необходимой дееспособностью;",
+              "предоставляет достоверную информацию;",
+              "соблюдает настоящие Условия использования."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Отдельные предложения партнёров могут содержать дополнительные требования к участникам."
+          }
+        ]
+      },
+      {
+        "title": "4. Вознаграждения Cashback+",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ предоставляет пользователям возможность получать вознаграждения из различных источников."
+          },
+          {
+            "type": "paragraph",
+            "text": "Разные виды вознаграждений регулируются различными правилами начисления и подтверждения."
+          },
+          {
+            "type": "paragraph",
+            "text": "Начисление любого вознаграждения зависит от соблюдения условий соответствующей программы и подтверждения со стороны партнёра, если такое подтверждение требуется."
+          },
+          {
+            "type": "heading",
+            "text": "4.1 Кэшбэк от покупок"
+          },
+          {
+            "type": "paragraph",
+            "text": "При совершении покупки через партнёрское предложение продавец или партнёрская сеть может выплачивать Cashback+ комиссию за привлечение клиента."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ может передавать пользователю часть такого вознаграждения в виде кэшбэка."
+          },
+          {
+            "type": "paragraph",
+            "text": "Размер доступного кэшбэка отображается до покупки и зависит от условий конкретного предложения."
+          },
+          {
+            "type": "paragraph",
+            "text": "Начисление кэшбэка осуществляется только после подтверждения покупки соответствующим партнёром."
+          },
+          {
+            "type": "paragraph",
+            "text": "Возврат товара, отмена заказа или нарушение условий предложения могут привести к уменьшению либо отмене начисления."
+          },
+          {
+            "type": "heading",
+            "text": "4.2 Бонусы за участие в рекламных программах"
+          },
+          {
+            "type": "paragraph",
+            "text": "Пользователи могут добровольно участвовать в рекламных программах, размещённых на платформе."
+          },
+          {
+            "type": "paragraph",
+            "text": "В случаях, предусмотренных условиями соответствующей кампании, пользователю могут начисляться бонусы."
+          },
+          {
+            "type": "paragraph",
+            "text": "Размер бонусов отображается до принятия решения об участии в программе."
+          },
+          {
+            "type": "paragraph",
+            "text": "Бонусы:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "учитываются на бонусном балансе пользователя;",
+              "являются частью программы вознаграждений Cashback+;",
+              "не могут быть выведены напрямую в денежной форме;",
+              "используются исключительно в соответствии с Правилами активности и настоящими Условиями."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Начисление бонусов зависит от подтверждения соответствующей активности партнёром или рекламодателем."
+          },
+          {
+            "type": "heading",
+            "text": "4.3 Бонусы за участие в исследовательских программах"
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ может предоставлять пользователям информацию о программах исследований, интервью, опросов и тестирования продуктов, организуемых независимыми исследовательскими компаниями."
+          },
+          {
+            "type": "paragraph",
+            "text": "В случаях, когда исследовательская компания выплачивает Cashback+ партнёрское вознаграждение за привлечение участника, часть такого вознаграждения может быть предоставлена пользователю в форме бонусов."
+          },
+          {
+            "type": "paragraph",
+            "text": "Размер и условия начисления бонусов определяются правилами конкретной программы."
+          },
+          {
+            "type": "heading",
+            "text": "4.4 Прямые выплаты исследовательских компаний"
+          },
+          {
+            "type": "paragraph",
+            "text": "Некоторые исследовательские компании могут выплачивать пользователям вознаграждение напрямую."
+          },
+          {
+            "type": "paragraph",
+            "text": "Такие выплаты:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "осуществляются соответствующей исследовательской компанией;",
+              "не проходят через Cashback+;",
+              "не отражаются на балансе Cashback+;",
+              "регулируются условиями соответствующей организации."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ не является стороной таких выплат."
+          },
+          {
+            "type": "heading",
+            "text": "4.5 Передача бонусов"
+          },
+          {
+            "type": "paragraph",
+            "text": "Платформа может предоставлять возможность передачи бонусов между зарегистрированными пользователями."
+          },
+          {
+            "type": "paragraph",
+            "text": "Передача бонусов осуществляется исключительно внутри программы Cashback+."
+          },
+          {
+            "type": "paragraph",
+            "text": "Передача бонусов не является:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "денежным переводом;",
+              "платёжной услугой;",
+              "банковской операцией;",
+              "операцией с электронными деньгами;",
+              "финансовой транзакцией."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Платформа вправе устанавливать разумные ограничения на передачу бонусов в целях безопасности и предотвращения злоупотреблений."
+          }
+        ]
+      },
+      {
+        "title": "5. Использование бонусов и компенсация покупок",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Бонусы могут использоваться только способами, предусмотренными Правилами активности и функциональностью платформы."
+          },
+          {
+            "type": "paragraph",
+            "text": "Если условия конкретной программы предусматривают использование бонусов при расчёте вознаграждения по покупке, бонусы могут учитываться при определении суммы компенсации покупки."
+          },
+          {
+            "type": "paragraph",
+            "text": "Размер компенсации зависит от:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "суммы подтверждённого кэшбэка;",
+              "количества доступных бонусов;",
+              "условий конкретного предложения;",
+              "действующих ограничений программы."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "В отдельных случаях совокупные вознаграждения могут компенсировать значительную часть или полную стоимость соответствующей покупки."
+          },
+          {
+            "type": "paragraph",
+            "text": "Такой результат не гарантируется и зависит от выполнения всех условий программы."
+          }
+        ]
+      },
+      {
+        "title": "6. Выплаты",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Подтверждённый кэшбэк и иные вознаграждения, предусмотренные правилами программы, могут направляться к выплате после подтверждения права пользователя на получение соответствующего вознаграждения."
+          },
+          {
+            "type": "paragraph",
+            "text": "Срок выплаты может зависеть от:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "партнёра;",
+              "платёжного провайдера;",
+              "технических проверок;",
+              "требований безопасности;",
+              "применимого законодательства."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ не принимает депозиты пользователей и не предоставляет банковские либо платёжные счета."
+          },
+          {
+            "type": "paragraph",
+            "text": "Любые отображаемые балансы представляют собой учёт вознаграждений в рамках программы и не являются банковскими счетами пользователей."
+          }
+        ]
+      },
+      {
+        "title": "7. Правила поведения пользователей",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Пользователь обязан:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "использовать платформу добросовестно;",
+              "предоставлять достоверную информацию;",
+              "соблюдать правила платформы;",
+              "не создавать фиктивные аккаунты;",
+              "не использовать автоматизированные средства для искусственного создания активности;",
+              "не пытаться получать необоснованные вознаграждения."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Нарушение данных требований может привести к ограничению или прекращению доступа в соответствии с настоящими Условиями и Правилами активности."
+          }
+        ]
+      },
+      {
+        "title": "8. Ограничение и прекращение доступа",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ вправе временно ограничить доступ к учётной записи или отдельным функциям при наличии обоснованных оснований полагать, что были нарушены правила платформы либо требования безопасности."
+          },
+          {
+            "type": "paragraph",
+            "text": "Подтверждённые и правомерно начисленные вознаграждения не подлежат произвольной конфискации."
+          },
+          {
+            "type": "paragraph",
+            "text": "Любое изменение или отмена начислений должны иметь разумное основание, включая:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "техническую ошибку;",
+              "дублирующее начисление;",
+              "нарушение правил программы;",
+              "отмену начисления партнёром;",
+              "подтверждённое злоупотребление системой."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Пользователь вправе обратиться в службу поддержки для пересмотра решения."
+          }
+        ]
+      },
+      {
+        "title": "9. Ограничение ответственности",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ предоставляет информационные инструменты поиска и сравнения предложений, а также программы вознаграждений."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ответственность за товары, услуги, доставку, возврат, гарантийное обслуживание и иные обязательства по договору купли-продажи несёт соответствующий продавец."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ принимает разумные меры для обеспечения актуальности информации, однако не гарантирует постоянную точность, полноту или доступность данных, предоставленных партнёрами."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ не несёт ответственности за нарушения обязательств независимыми партнёрами, если такие нарушения не вызваны собственными действиями или нарушениями со стороны Cashback+."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ничто в настоящих Условиях не исключает и не ограничивает ответственность Cashback+ за:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "мошенничество;",
+              "умышленное введение в заблуждение;",
+              "смерть или вред здоровью вследствие небрежности;",
+              "нарушение обязательных прав потребителей;",
+              "незаконную обработку персональных данных;",
+              "любые иные случаи, когда ограничение ответственности запрещено законом."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "10. Изменение программы",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ вправе изменять:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "размеры вознаграждений;",
+              "лимиты программы;",
+              "правила начисления;",
+              "механики использования бонусов;",
+              "функциональность платформы;",
+              "настоящие Условия использования."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Существенные изменения публикуются на платформе до их вступления в силу в разумный срок."
+          },
+          {
+            "type": "paragraph",
+            "text": "Изменения не применяются ретроактивно к уже подтверждённым правам пользователя, если иное не требуется законодательством или не связано с исправлением очевидной ошибки."
+          }
+        ]
+      },
+      {
+        "title": "11. Применимое право",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Настоящие Условия регулируются законодательством Англии и Уэльса."
+          },
+          {
+            "type": "paragraph",
+            "text": "Споры, возникающие в связи с использованием платформы Cashback+, подлежат рассмотрению судами Англии и Уэльса, если иное не предусмотрено обязательными нормами законодательства о защите прав потребителей."
+          }
+        ]
+      }
+    ],
+    "en": [
+      {
+        "title": "1. Who we are",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ is a consumer rewards platform operated by Cashback Plus Ltd."
+          },
+          {
+            "type": "paragraph",
+            "text": "The platform gives users access to cashback programmes, bonus programmes, partner offers, research projects and tools for comparing offers from different sellers."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ is not a bank, payment institution, electronic money issuer, investment platform or financial services provider."
+          },
+          {
+            "type": "paragraph",
+            "text": "Unless expressly stated otherwise, Cashback+ is not the seller of goods or services and is not a party to the sales contract between the user and the relevant seller."
+          }
+        ]
+      },
+      {
+        "title": "2. Definitions",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "The following definitions apply for the purposes of these Terms."
+          },
+          {
+            "type": "definition",
+            "text": "User"
+          },
+          {
+            "type": "paragraph",
+            "text": "An individual using the Cashback+ platform."
+          },
+          {
+            "type": "definition",
+            "text": "Partner"
+          },
+          {
+            "type": "paragraph",
+            "text": "A store, seller, affiliate network, advertising platform, research organisation or other independent third party providing goods, services or rewards programmes through Cashback+."
+          },
+          {
+            "type": "definition",
+            "text": "Cashback"
+          },
+          {
+            "type": "paragraph",
+            "text": "A reward that may be credited to the user after the relevant purchase is confirmed by a partner or affiliate network."
+          },
+          {
+            "type": "paragraph",
+            "text": "The cashback amount shown before the transaction is confirmed is provisional."
+          },
+          {
+            "type": "definition",
+            "text": "Bonus"
+          },
+          {
+            "type": "paragraph",
+            "text": "An internal unit of the Cashback+ rewards programme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Bonuses are not money, electronic money, bank deposits, payment instruments or investment assets."
+          },
+          {
+            "type": "definition",
+            "text": "Research company"
+          },
+          {
+            "type": "paragraph",
+            "text": "An independent organisation conducting research, surveys, interviews, product testing or other research activities."
+          },
+          {
+            "type": "definition",
+            "text": "Purchase compensation"
+          },
+          {
+            "type": "paragraph",
+            "text": "Using confirmed rewards under the programme rules to reduce the user’s actual expenditure on the relevant purchase."
+          },
+          {
+            "type": "paragraph",
+            "text": "Purchase compensation depends on programme terms and is not guaranteed."
+          }
+        ]
+      },
+      {
+        "title": "3. Eligibility",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ may be used only by persons aged 18 or over."
+          },
+          {
+            "type": "paragraph",
+            "text": "By creating an account, the user confirms that they:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "are at least 18 years old;",
+              "have the necessary legal capacity;",
+              "provide accurate information;",
+              "comply with these Terms of Use."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Individual partner offers may impose additional eligibility requirements."
+          }
+        ]
+      },
+      {
+        "title": "4. Cashback+ rewards",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ enables users to receive rewards from various sources."
+          },
+          {
+            "type": "paragraph",
+            "text": "Different types of rewards are subject to different crediting and confirmation rules."
+          },
+          {
+            "type": "paragraph",
+            "text": "Any reward being credited depends on compliance with the relevant programme terms and partner confirmation where required."
+          },
+          {
+            "type": "heading",
+            "text": "4.1 Cashback on purchases"
+          },
+          {
+            "type": "paragraph",
+            "text": "When a purchase is made through a partner offer, the seller or affiliate network may pay Cashback+ a customer referral commission."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ may pass part of that reward to the user as cashback."
+          },
+          {
+            "type": "paragraph",
+            "text": "The available cashback amount is displayed before purchase and depends on the particular offer terms."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback is credited only after the relevant partner confirms the purchase."
+          },
+          {
+            "type": "paragraph",
+            "text": "Product returns, order cancellation or breach of the offer terms may result in a reduction or cancellation of the credit."
+          },
+          {
+            "type": "heading",
+            "text": "4.2 Bonuses for participating in advertising programmes"
+          },
+          {
+            "type": "paragraph",
+            "text": "Users may voluntarily participate in advertising programmes available on the platform."
+          },
+          {
+            "type": "paragraph",
+            "text": "Bonuses may be credited where provided for by the relevant campaign terms."
+          },
+          {
+            "type": "paragraph",
+            "text": "The bonus amount is displayed before the decision to participate in the programme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Bonuses:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "are recorded in the user’s bonus balance;",
+              "form part of the Cashback+ rewards programme;",
+              "cannot be withdrawn directly as money;",
+              "are used exclusively in accordance with the Activity Rules and these Terms."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Bonus credits depend on confirmation of the relevant activity by the partner or advertiser."
+          },
+          {
+            "type": "heading",
+            "text": "4.3 Bonuses for participating in research programmes"
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ may provide information about research, interview, survey and product testing programmes organised by independent research companies."
+          },
+          {
+            "type": "paragraph",
+            "text": "Where a research company pays Cashback+ a referral reward for recruiting a participant, part of that reward may be provided to the user as bonuses."
+          },
+          {
+            "type": "paragraph",
+            "text": "The amount and conditions of bonus credits are determined by the rules of the particular programme."
+          },
+          {
+            "type": "heading",
+            "text": "4.4 Direct payments from research companies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Some research companies may pay users directly."
+          },
+          {
+            "type": "paragraph",
+            "text": "These payments:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "are made by the relevant research company;",
+              "do not pass through Cashback+;",
+              "are not reflected in the Cashback+ balance;",
+              "are governed by the terms of the relevant organisation."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ is not a party to these payments."
+          },
+          {
+            "type": "heading",
+            "text": "4.5 Bonus transfers"
+          },
+          {
+            "type": "paragraph",
+            "text": "The platform may offer bonus transfers between registered users."
+          },
+          {
+            "type": "paragraph",
+            "text": "Bonus transfers take place exclusively within the Cashback+ programme."
+          },
+          {
+            "type": "paragraph",
+            "text": "A bonus transfer is not:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "a money transfer;",
+              "a payment service;",
+              "a banking operation;",
+              "an electronic money operation;",
+              "a financial transaction."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "The platform may impose reasonable bonus transfer restrictions for security and abuse prevention."
+          }
+        ]
+      },
+      {
+        "title": "5. Using bonuses and purchase compensation",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Bonuses may be used only in ways provided for by the Activity Rules and platform functionality."
+          },
+          {
+            "type": "paragraph",
+            "text": "If a particular programme allows bonuses to be used when calculating a purchase reward, bonuses may be taken into account in determining purchase compensation."
+          },
+          {
+            "type": "paragraph",
+            "text": "The amount of compensation depends on:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "the confirmed cashback amount;",
+              "the number of available bonuses;",
+              "the terms of the particular offer;",
+              "the programme restrictions in force."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "In some cases, combined rewards may compensate a substantial part or the full cost of the relevant purchase."
+          },
+          {
+            "type": "paragraph",
+            "text": "This outcome is not guaranteed and depends on all programme terms being met."
+          }
+        ]
+      },
+      {
+        "title": "6. Payouts",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Confirmed cashback and other rewards provided for by programme rules may be submitted for payout once the user’s entitlement to the relevant reward is confirmed."
+          },
+          {
+            "type": "paragraph",
+            "text": "Payout timing may depend on:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "the partner;",
+              "the payment provider;",
+              "technical checks;",
+              "security requirements;",
+              "applicable law."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ does not accept user deposits or provide bank or payment accounts."
+          },
+          {
+            "type": "paragraph",
+            "text": "Any displayed balances record programme rewards and are not users’ bank accounts."
+          }
+        ]
+      },
+      {
+        "title": "7. User conduct rules",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "The user must:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "use the platform in good faith;",
+              "provide accurate information;",
+              "comply with platform rules;",
+              "not create fake accounts;",
+              "not use automated tools to create artificial activity;",
+              "not attempt to obtain unjustified rewards."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Breaching these requirements may result in restricted or terminated access under these Terms and the Activity Rules."
+          }
+        ]
+      },
+      {
+        "title": "8. Restricting and terminating access",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ may temporarily restrict access to an account or individual features where there are reasonable grounds to believe platform rules or security requirements have been breached."
+          },
+          {
+            "type": "paragraph",
+            "text": "Confirmed and legitimately credited rewards must not be arbitrarily confiscated."
+          },
+          {
+            "type": "paragraph",
+            "text": "Any adjustment or cancellation of credits must have reasonable grounds, including:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "a technical error;",
+              "a duplicate credit;",
+              "a breach of programme rules;",
+              "cancellation of the credit by a partner;",
+              "confirmed abuse of the system."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "The user may contact support to request a review of the decision."
+          }
+        ]
+      },
+      {
+        "title": "9. Limitation of liability",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ provides information tools for finding and comparing offers, as well as rewards programmes."
+          },
+          {
+            "type": "paragraph",
+            "text": "The relevant seller is responsible for goods, services, delivery, returns, warranties and other obligations under the sales contract."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ takes reasonable steps to keep information current but does not guarantee the ongoing accuracy, completeness or availability of partner-provided data."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ is not responsible for independent partners’ breaches of obligations unless caused by Cashback+’s own acts or breaches."
+          },
+          {
+            "type": "paragraph",
+            "text": "Nothing in these Terms excludes or limits Cashback+’s liability for:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "fraud;",
+              "deliberate misrepresentation;",
+              "death or personal injury caused by negligence;",
+              "breaches of mandatory consumer rights;",
+              "unlawful processing of personal data;",
+              "any other circumstances in which limiting liability is prohibited by law."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "10. Changes to the programme",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ may change:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "reward amounts;",
+              "programme limits;",
+              "crediting rules;",
+              "bonus usage mechanisms;",
+              "platform functionality;",
+              "these Terms of Use."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Material changes are published on the platform a reasonable time before taking effect."
+          },
+          {
+            "type": "paragraph",
+            "text": "Changes do not apply retroactively to users’ already confirmed rights unless required by law or connected with correcting an obvious error."
+          }
+        ]
+      },
+      {
+        "title": "11. Governing law",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "These Terms are governed by the laws of England and Wales."
+          },
+          {
+            "type": "paragraph",
+            "text": "Disputes arising from use of the Cashback+ platform are subject to the courts of England and Wales unless otherwise provided by mandatory consumer protection law."
+          }
+        ]
+      }
+    ],
+    "de": [
+      {
+        "title": "1. Wer wir sind",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ ist eine von Cashback Plus Ltd betriebene Plattform für Verbraucherprämien."
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Plattform bietet Zugang zu Cashback- und Bonusprogrammen, Partnerangeboten, Forschungsprojekten und Werkzeugen zum Vergleich von Angeboten verschiedener Verkäufer."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ ist weder eine Bank noch ein Zahlungsinstitut, E-Geld-Emittent, eine Anlageplattform oder ein Finanzdienstleister."
+          },
+          {
+            "type": "paragraph",
+            "text": "Sofern nicht ausdrücklich anders angegeben, ist Cashback+ weder Verkäufer von Waren oder Dienstleistungen noch Partei des Kaufvertrags zwischen dem Nutzer und dem jeweiligen Verkäufer."
+          }
+        ]
+      },
+      {
+        "title": "2. Begriffsbestimmungen",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Für diese Bedingungen gelten die folgenden Begriffsbestimmungen."
+          },
+          {
+            "type": "definition",
+            "text": "Nutzer"
+          },
+          {
+            "type": "paragraph",
+            "text": "Eine natürliche Person, die die Cashback+ Plattform nutzt."
+          },
+          {
+            "type": "definition",
+            "text": "Partner"
+          },
+          {
+            "type": "paragraph",
+            "text": "Ein Geschäft, Verkäufer, Partnernetzwerk, eine Werbeplattform, Forschungseinrichtung oder ein anderer unabhängiger Dritter, der Waren, Dienstleistungen oder Prämienprogramme über Cashback+ anbietet."
+          },
+          {
+            "type": "definition",
+            "text": "Cashback"
+          },
+          {
+            "type": "paragraph",
+            "text": "Eine Vergütung, die dem Nutzer nach Bestätigung des jeweiligen Kaufs durch einen Partner oder ein Partnernetzwerk gutgeschrieben werden kann."
+          },
+          {
+            "type": "paragraph",
+            "text": "Der vor der Transaktionsbestätigung angezeigte Cashback-Betrag ist vorläufig."
+          },
+          {
+            "type": "definition",
+            "text": "Bonus"
+          },
+          {
+            "type": "paragraph",
+            "text": "Eine interne Einheit des Cashback+ Prämienprogramms."
+          },
+          {
+            "type": "paragraph",
+            "text": "Boni sind weder Geld noch elektronisches Geld, Bankeinlagen, Zahlungsmittel oder Anlagewerte."
+          },
+          {
+            "type": "definition",
+            "text": "Forschungsunternehmen"
+          },
+          {
+            "type": "paragraph",
+            "text": "Eine unabhängige Organisation, die Studien, Umfragen, Interviews, Produkttests oder andere Forschungsmaßnahmen durchführt."
+          },
+          {
+            "type": "definition",
+            "text": "Kaufkompensation"
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Nutzung bestätigter Vergütungen nach den Programmregeln zur Verringerung der tatsächlichen Ausgaben des Nutzers für den jeweiligen Kauf."
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Kaufkompensation hängt von den Programmbedingungen ab und ist nicht garantiert."
+          }
+        ]
+      },
+      {
+        "title": "3. Teilnahmeberechtigung",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ darf nur von Personen ab 18 Jahren genutzt werden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Mit der Kontoerstellung bestätigt der Nutzer, dass er:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "mindestens 18 Jahre alt ist;",
+              "die erforderliche Geschäftsfähigkeit besitzt;",
+              "richtige Angaben macht;",
+              "diese Nutzungsbedingungen einhält."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Einzelne Partnerangebote können zusätzliche Teilnahmevoraussetzungen vorsehen."
+          }
+        ]
+      },
+      {
+        "title": "4. Cashback+ Vergütungen",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ ermöglicht Nutzern, Vergütungen aus verschiedenen Quellen zu erhalten."
+          },
+          {
+            "type": "paragraph",
+            "text": "Für verschiedene Vergütungsarten gelten unterschiedliche Gutschrift- und Bestätigungsregeln."
+          },
+          {
+            "type": "paragraph",
+            "text": "Jede Gutschrift hängt von der Einhaltung der jeweiligen Programmbedingungen und gegebenenfalls der Bestätigung durch den Partner ab."
+          },
+          {
+            "type": "heading",
+            "text": "4.1 Cashback für Einkäufe"
+          },
+          {
+            "type": "paragraph",
+            "text": "Bei einem Kauf über ein Partnerangebot kann der Verkäufer oder das Partnernetzwerk Cashback+ eine Vermittlungsprovision zahlen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ kann einen Teil dieser Vergütung als Cashback an den Nutzer weitergeben."
+          },
+          {
+            "type": "paragraph",
+            "text": "Der verfügbare Cashback-Betrag wird vor dem Kauf angezeigt und hängt von den jeweiligen Angebotsbedingungen ab."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback wird erst nach Bestätigung des Kaufs durch den jeweiligen Partner gutgeschrieben."
+          },
+          {
+            "type": "paragraph",
+            "text": "Warenrückgaben, Stornierungen oder Verstöße gegen Angebotsbedingungen können zu einer Verringerung oder Aufhebung der Gutschrift führen."
+          },
+          {
+            "type": "heading",
+            "text": "4.2 Boni für die Teilnahme an Werbeprogrammen"
+          },
+          {
+            "type": "paragraph",
+            "text": "Nutzer können freiwillig an Werbeprogrammen auf der Plattform teilnehmen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Boni können gutgeschrieben werden, wenn die Bedingungen der jeweiligen Kampagne dies vorsehen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Bonushöhe wird vor der Entscheidung über die Teilnahme am Programm angezeigt."
+          },
+          {
+            "type": "paragraph",
+            "text": "Boni:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "werden im Bonusguthaben des Nutzers erfasst;",
+              "sind Teil des Cashback+ Prämienprogramms;",
+              "können nicht direkt als Geld ausgezahlt werden;",
+              "werden ausschließlich gemäß den Aktivitätsregeln und diesen Bedingungen verwendet."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Bonusgutschriften hängen von der Bestätigung der jeweiligen Aktivität durch den Partner oder Werbetreibenden ab."
+          },
+          {
+            "type": "heading",
+            "text": "4.3 Boni für die Teilnahme an Forschungsprogrammen"
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ kann Informationen über Studien, Interviews, Umfragen und Produkttests unabhängiger Forschungsunternehmen bereitstellen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Zahlt ein Forschungsunternehmen Cashback+ eine Partnervergütung für die Vermittlung eines Teilnehmers, kann ein Teil davon dem Nutzer als Bonus gewährt werden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Höhe und Bedingungen der Bonusgutschrift richten sich nach den Regeln des jeweiligen Programms."
+          },
+          {
+            "type": "heading",
+            "text": "4.4 Direkte Zahlungen von Forschungsunternehmen"
+          },
+          {
+            "type": "paragraph",
+            "text": "Einige Forschungsunternehmen können Nutzer direkt vergüten."
+          },
+          {
+            "type": "paragraph",
+            "text": "Diese Zahlungen:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "werden vom jeweiligen Forschungsunternehmen geleistet;",
+              "laufen nicht über Cashback+;",
+              "werden nicht im Cashback+ Guthaben ausgewiesen;",
+              "unterliegen den Bedingungen der jeweiligen Organisation."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ ist an diesen Zahlungen nicht als Partei beteiligt."
+          },
+          {
+            "type": "heading",
+            "text": "4.5 Übertragung von Boni"
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Plattform kann Bonusübertragungen zwischen registrierten Nutzern ermöglichen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Bonusübertragungen erfolgen ausschließlich innerhalb des Cashback+ Programms."
+          },
+          {
+            "type": "paragraph",
+            "text": "Eine Bonusübertragung ist keine:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Geldüberweisung;",
+              "Zahlungsdienstleistung;",
+              "Banktransaktion;",
+              "E-Geld-Transaktion;",
+              "Finanztransaktion."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Plattform darf aus Sicherheitsgründen und zur Missbrauchsverhinderung angemessene Beschränkungen für Bonusübertragungen festlegen."
+          }
+        ]
+      },
+      {
+        "title": "5. Verwendung von Boni und Kaufkompensation",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Boni dürfen nur auf die in den Aktivitätsregeln und Plattformfunktionen vorgesehenen Arten verwendet werden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Sieht ein Programm die Verwendung von Boni bei der Berechnung einer Kaufvergütung vor, können Boni bei der Ermittlung der Kaufkompensation berücksichtigt werden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Höhe der Kompensation hängt ab von:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "dem bestätigten Cashback-Betrag;",
+              "der Anzahl verfügbarer Boni;",
+              "den Bedingungen des jeweiligen Angebots;",
+              "den geltenden Programmbeschränkungen."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "In einzelnen Fällen können die gesamten Vergütungen einen erheblichen Teil oder die vollen Kosten des betreffenden Kaufs ausgleichen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Dieses Ergebnis ist nicht garantiert und setzt die Erfüllung aller Programmbedingungen voraus."
+          }
+        ]
+      },
+      {
+        "title": "6. Auszahlungen",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Bestätigtes Cashback und andere nach den Programmregeln vorgesehene Vergütungen können zur Auszahlung gelangen, sobald der Anspruch des Nutzers auf die jeweilige Vergütung bestätigt wurde."
+          },
+          {
+            "type": "paragraph",
+            "text": "Der Auszahlungszeitpunkt kann abhängen von:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "dem Partner;",
+              "dem Zahlungsdienstleister;",
+              "technischen Prüfungen;",
+              "Sicherheitsanforderungen;",
+              "dem geltenden Recht."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ nimmt keine Nutzereinlagen entgegen und stellt keine Bank- oder Zahlungskonten bereit."
+          },
+          {
+            "type": "paragraph",
+            "text": "Angezeigte Guthaben dienen der Erfassung von Programmvergütungen und sind keine Bankkonten der Nutzer."
+          }
+        ]
+      },
+      {
+        "title": "7. Verhaltensregeln für Nutzer",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Nutzer müssen:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "die Plattform nach Treu und Glauben nutzen;",
+              "richtige Angaben machen;",
+              "die Plattformregeln einhalten;",
+              "keine fiktiven Konten erstellen;",
+              "keine automatisierten Mittel zur künstlichen Erzeugung von Aktivitäten verwenden;",
+              "nicht versuchen, unbegründete Vergütungen zu erhalten."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Verstöße gegen diese Anforderungen können nach diesen Bedingungen und den Aktivitätsregeln zur Einschränkung oder Beendigung des Zugangs führen."
+          }
+        ]
+      },
+      {
+        "title": "8. Einschränkung und Beendigung des Zugangs",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ darf den Zugang zu einem Konto oder einzelnen Funktionen vorübergehend beschränken, wenn begründete Anhaltspunkte für Verstöße gegen Plattformregeln oder Sicherheitsanforderungen vorliegen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Bestätigte und rechtmäßig gutgeschriebene Vergütungen dürfen nicht willkürlich eingezogen werden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Jede Änderung oder Aufhebung von Gutschriften muss einen angemessenen Grund haben, einschließlich:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "eines technischen Fehlers;",
+              "einer doppelten Gutschrift;",
+              "eines Verstoßes gegen Programmregeln;",
+              "der Aufhebung einer Gutschrift durch einen Partner;",
+              "eines bestätigten Systemmissbrauchs."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Nutzer können sich zur Überprüfung der Entscheidung an den Support wenden."
+          }
+        ]
+      },
+      {
+        "title": "9. Haftungsbeschränkung",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ bietet Informationswerkzeuge zur Suche und zum Vergleich von Angeboten sowie Prämienprogramme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Für Waren, Dienstleistungen, Lieferung, Rückgabe, Gewährleistung und andere Verpflichtungen aus dem Kaufvertrag ist der jeweilige Verkäufer verantwortlich."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ ergreift angemessene Maßnahmen zur Aktualität der Informationen, garantiert jedoch nicht die dauerhafte Richtigkeit, Vollständigkeit oder Verfügbarkeit der von Partnern bereitgestellten Daten."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ haftet nicht für Pflichtverletzungen unabhängiger Partner, sofern diese nicht durch eigene Handlungen oder Pflichtverletzungen von Cashback+ verursacht wurden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Diese Bedingungen schließen oder beschränken die Haftung von Cashback+ nicht für:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Betrug;",
+              "vorsätzliche Täuschung;",
+              "Tod oder Körperverletzung durch Fahrlässigkeit;",
+              "Verletzungen zwingender Verbraucherrechte;",
+              "rechtswidrige Verarbeitung personenbezogener Daten;",
+              "andere Fälle, in denen eine Haftungsbeschränkung gesetzlich verboten ist."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "10. Änderungen des Programms",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ darf Folgendes ändern:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Vergütungshöhen;",
+              "Programmlimits;",
+              "Gutschriftregeln;",
+              "Mechanismen der Bonusverwendung;",
+              "Plattformfunktionen;",
+              "diese Nutzungsbedingungen."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Wesentliche Änderungen werden eine angemessene Zeit vor ihrem Inkrafttreten auf der Plattform veröffentlicht."
+          },
+          {
+            "type": "paragraph",
+            "text": "Änderungen gelten nicht rückwirkend für bereits bestätigte Nutzerrechte, sofern dies nicht gesetzlich erforderlich ist oder der Berichtigung eines offensichtlichen Fehlers dient."
+          }
+        ]
+      },
+      {
+        "title": "11. Anwendbares Recht",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Diese Bedingungen unterliegen dem Recht von England und Wales."
+          },
+          {
+            "type": "paragraph",
+            "text": "Streitigkeiten aus der Nutzung der Cashback+ Plattform unterliegen den Gerichten von England und Wales, sofern zwingendes Verbraucherschutzrecht nichts anderes vorsieht."
+          }
+        ]
+      }
+    ],
+    "fr": [
+      {
+        "title": "1. Qui nous sommes",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ est une plateforme de récompenses destinées aux consommateurs, exploitée par Cashback Plus Ltd."
+          },
+          {
+            "type": "paragraph",
+            "text": "La plateforme donne accès à des programmes de cashback et de bonus, à des offres de partenaires, à des projets d’études et à des outils de comparaison d’offres de différents vendeurs."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ n’est ni une banque, ni un établissement de paiement, ni un émetteur de monnaie électronique, ni une plateforme d’investissement, ni un prestataire de services financiers."
+          },
+          {
+            "type": "paragraph",
+            "text": "Sauf indication contraire expresse, Cashback+ n’est pas le vendeur des biens ou services et n’est pas partie au contrat de vente entre l’utilisateur et le vendeur concerné."
+          }
+        ]
+      },
+      {
+        "title": "2. Définitions",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Les définitions suivantes s’appliquent aux présentes Conditions."
+          },
+          {
+            "type": "definition",
+            "text": "Utilisateur"
+          },
+          {
+            "type": "paragraph",
+            "text": "Une personne physique utilisant la plateforme Cashback+."
+          },
+          {
+            "type": "definition",
+            "text": "Partenaire"
+          },
+          {
+            "type": "paragraph",
+            "text": "Un magasin, vendeur, réseau d’affiliation, plateforme publicitaire, organisme d’études ou autre tiers indépendant proposant des biens, services ou programmes de récompenses par l’intermédiaire de Cashback+."
+          },
+          {
+            "type": "definition",
+            "text": "Cashback"
+          },
+          {
+            "type": "paragraph",
+            "text": "Une récompense pouvant être créditée après confirmation de l’achat concerné par un partenaire ou un réseau d’affiliation."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le montant du cashback indiqué avant confirmation de la transaction est provisoire."
+          },
+          {
+            "type": "definition",
+            "text": "Bonus"
+          },
+          {
+            "type": "paragraph",
+            "text": "Une unité interne du programme de récompenses Cashback+."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les bonus ne sont ni des fonds monétaires, ni de la monnaie électronique, ni des dépôts bancaires, ni des instruments de paiement, ni des actifs d’investissement."
+          },
+          {
+            "type": "definition",
+            "text": "Société d’études"
+          },
+          {
+            "type": "paragraph",
+            "text": "Une organisation indépendante réalisant des études, sondages, entretiens, tests de produits ou autres activités de recherche."
+          },
+          {
+            "type": "definition",
+            "text": "Compensation d’un achat"
+          },
+          {
+            "type": "paragraph",
+            "text": "L’utilisation de récompenses confirmées selon les règles du programme afin de réduire les dépenses effectives de l’utilisateur pour l’achat concerné."
+          },
+          {
+            "type": "paragraph",
+            "text": "La compensation d’un achat dépend des conditions du programme et n’est pas garantie."
+          }
+        ]
+      },
+      {
+        "title": "3. Conditions de participation",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ est réservé aux personnes âgées de 18 ans ou plus."
+          },
+          {
+            "type": "paragraph",
+            "text": "En créant un compte, l’utilisateur confirme :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "avoir au moins 18 ans ;",
+              "disposer de la capacité juridique nécessaire ;",
+              "fournir des informations exactes ;",
+              "respecter les présentes Conditions d’utilisation."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Certaines offres de partenaires peuvent prévoir des conditions de participation supplémentaires."
+          }
+        ]
+      },
+      {
+        "title": "4. Récompenses Cashback+",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ permet aux utilisateurs de recevoir des récompenses de différentes sources."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les différents types de récompenses sont soumis à des règles de crédit et de confirmation différentes."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le crédit de toute récompense dépend du respect des conditions du programme concerné et de la confirmation du partenaire lorsqu’elle est requise."
+          },
+          {
+            "type": "heading",
+            "text": "4.1 Cashback sur les achats"
+          },
+          {
+            "type": "paragraph",
+            "text": "Lors d’un achat par une offre partenaire, le vendeur ou le réseau d’affiliation peut verser à Cashback+ une commission d’apport de clientèle."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ peut reverser une partie de cette rémunération à l’utilisateur sous forme de cashback."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le montant du cashback disponible est affiché avant l’achat et dépend des conditions de l’offre concernée."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le cashback n’est crédité qu’après confirmation de l’achat par le partenaire concerné."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le retour du produit, l’annulation de la commande ou le non-respect des conditions de l’offre peuvent entraîner la réduction ou l’annulation du crédit."
+          },
+          {
+            "type": "heading",
+            "text": "4.2 Bonus pour la participation aux programmes publicitaires"
+          },
+          {
+            "type": "paragraph",
+            "text": "Les utilisateurs peuvent participer volontairement aux programmes publicitaires proposés sur la plateforme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Des bonus peuvent être crédités lorsque les conditions de la campagne concernée le prévoient."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le montant des bonus est affiché avant la décision de participer au programme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les bonus :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "sont comptabilisés dans le solde de bonus de l’utilisateur ;",
+              "font partie du programme de récompenses Cashback+ ;",
+              "ne peuvent pas être retirés directement sous forme d’argent ;",
+              "sont utilisés exclusivement conformément aux Règles d’activité et aux présentes Conditions."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Le crédit des bonus dépend de la confirmation de l’activité concernée par le partenaire ou l’annonceur."
+          },
+          {
+            "type": "heading",
+            "text": "4.3 Bonus pour la participation aux programmes d’études"
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ peut présenter des programmes d’études, d’entretiens, de sondages et de tests de produits organisés par des sociétés d’études indépendantes."
+          },
+          {
+            "type": "paragraph",
+            "text": "Lorsqu’une société d’études verse à Cashback+ une rémunération partenaire pour le recrutement d’un participant, une partie peut être accordée à l’utilisateur sous forme de bonus."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le montant et les conditions du crédit des bonus sont fixés par les règles du programme concerné."
+          },
+          {
+            "type": "heading",
+            "text": "4.4 Paiements directs des sociétés d’études"
+          },
+          {
+            "type": "paragraph",
+            "text": "Certaines sociétés d’études peuvent rémunérer directement les utilisateurs."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ces paiements :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "sont effectués par la société d’études concernée ;",
+              "ne transitent pas par Cashback+ ;",
+              "ne figurent pas dans le solde Cashback+ ;",
+              "sont régis par les conditions de l’organisation concernée."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ n’est pas partie à ces paiements."
+          },
+          {
+            "type": "heading",
+            "text": "4.5 Transfert de bonus"
+          },
+          {
+            "type": "paragraph",
+            "text": "La plateforme peut permettre le transfert de bonus entre utilisateurs inscrits."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le transfert de bonus s’effectue exclusivement au sein du programme Cashback+."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le transfert de bonus ne constitue pas :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "un transfert d’argent ;",
+              "un service de paiement ;",
+              "une opération bancaire ;",
+              "une opération de monnaie électronique ;",
+              "une transaction financière."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "La plateforme peut fixer des restrictions raisonnables aux transferts de bonus pour assurer la sécurité et prévenir les abus."
+          }
+        ]
+      },
+      {
+        "title": "5. Utilisation des bonus et compensation des achats",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Les bonus ne peuvent être utilisés que selon les modalités prévues par les Règles d’activité et les fonctionnalités de la plateforme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Si un programme prévoit l’utilisation de bonus dans le calcul de la récompense d’un achat, ils peuvent être pris en compte pour déterminer la compensation de l’achat."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le montant de la compensation dépend :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "du montant du cashback confirmé ;",
+              "du nombre de bonus disponibles ;",
+              "des conditions de l’offre concernée ;",
+              "des restrictions du programme en vigueur."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Dans certains cas, les récompenses cumulées peuvent compenser une partie importante ou la totalité du prix de l’achat concerné."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ce résultat n’est pas garanti et dépend du respect de toutes les conditions du programme."
+          }
+        ]
+      },
+      {
+        "title": "6. Versements",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Le cashback confirmé et les autres récompenses prévues par le programme peuvent être soumis au versement après confirmation du droit de l’utilisateur à la récompense concernée."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le délai de versement peut dépendre :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "du partenaire ;",
+              "du prestataire de paiement ;",
+              "des vérifications techniques ;",
+              "des exigences de sécurité ;",
+              "de la législation applicable."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ n’accepte pas de dépôts des utilisateurs et ne fournit pas de comptes bancaires ou de paiement."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les soldes affichés comptabilisent les récompenses du programme et ne sont pas des comptes bancaires des utilisateurs."
+          }
+        ]
+      },
+      {
+        "title": "7. Règles de conduite des utilisateurs",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "L’utilisateur doit :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "utiliser la plateforme de bonne foi ;",
+              "fournir des informations exactes ;",
+              "respecter les règles de la plateforme ;",
+              "ne pas créer de comptes fictifs ;",
+              "ne pas utiliser d’outils automatisés pour créer artificiellement de l’activité ;",
+              "ne pas tenter d’obtenir des récompenses injustifiées."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Le non-respect de ces exigences peut entraîner une restriction ou une cessation d’accès conformément aux présentes Conditions et aux Règles d’activité."
+          }
+        ]
+      },
+      {
+        "title": "8. Restriction et cessation d’accès",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ peut restreindre temporairement l’accès à un compte ou à certaines fonctionnalités lorsqu’il existe des motifs raisonnables de croire que les règles de la plateforme ou les exigences de sécurité ont été enfreintes."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les récompenses confirmées et légitimement créditées ne peuvent être confisquées arbitrairement."
+          },
+          {
+            "type": "paragraph",
+            "text": "Toute modification ou annulation de crédits doit être raisonnablement justifiée, notamment par :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "une erreur technique ;",
+              "un crédit en double ;",
+              "une violation des règles du programme ;",
+              "l’annulation du crédit par un partenaire ;",
+              "un abus confirmé du système."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "L’utilisateur peut contacter l’assistance pour demander le réexamen de la décision."
+          }
+        ]
+      },
+      {
+        "title": "9. Limitation de responsabilité",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ fournit des outils d’information pour rechercher et comparer des offres, ainsi que des programmes de récompenses."
+          },
+          {
+            "type": "paragraph",
+            "text": "Le vendeur concerné est responsable des biens, services, livraisons, retours, garanties et autres obligations du contrat de vente."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ prend des mesures raisonnables pour actualiser les informations, sans garantir en permanence l’exactitude, l’exhaustivité ou la disponibilité des données fournies par les partenaires."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ n’est pas responsable des manquements des partenaires indépendants, sauf s’ils sont causés par ses propres actes ou manquements."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les présentes Conditions n’excluent ni ne limitent la responsabilité de Cashback+ en cas de :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "fraude ;",
+              "fausse déclaration intentionnelle ;",
+              "décès ou préjudice corporel causé par négligence ;",
+              "violation des droits impératifs des consommateurs ;",
+              "traitement illicite de données personnelles ;",
+              "toute autre situation où la limitation de responsabilité est interdite par la loi."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "10. Modification du programme",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ peut modifier :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "les montants des récompenses ;",
+              "les limites du programme ;",
+              "les règles de crédit ;",
+              "les mécanismes d’utilisation des bonus ;",
+              "les fonctionnalités de la plateforme ;",
+              "les présentes Conditions d’utilisation."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Les modifications importantes sont publiées sur la plateforme dans un délai raisonnable avant leur entrée en vigueur."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les modifications ne s’appliquent pas rétroactivement aux droits déjà confirmés de l’utilisateur, sauf si la loi l’exige ou pour corriger une erreur manifeste."
+          }
+        ]
+      },
+      {
+        "title": "11. Droit applicable",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Les présentes Conditions sont régies par le droit de l’Angleterre et du pays de Galles."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les litiges liés à l’utilisation de Cashback+ relèvent des tribunaux de l’Angleterre et du pays de Galles, sauf disposition contraire des règles impératives de protection des consommateurs."
+          }
+        ]
+      }
+    ]
+  }
+}

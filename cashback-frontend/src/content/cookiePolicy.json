@@ -1,0 +1,1440 @@
+{
+  "rules": {
+    "ru": [
+      {
+        "title": "1. Введение",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Настоящая Политика использования файлов Cookie объясняет, каким образом платформа Cashback+ использует cookie и аналогичные технологии при посещении сайта и использовании его функций."
+          },
+          {
+            "type": "paragraph",
+            "text": "Политика применяется совместно с:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Политикой конфиденциальности;",
+              "Terms and Conditions;",
+              "Правилами активности;",
+              "иными документами платформы."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Используя сайт Cashback+, вы соглашаетесь на использование необходимых файлов cookie в соответствии с настоящей Политикой."
+          },
+          {
+            "type": "paragraph",
+            "text": "Для использования необязательных cookie мы запрашиваем ваше согласие в случаях, предусмотренных законодательством."
+          }
+        ]
+      },
+      {
+        "title": "2. Что такое Cookie",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cookie представляют собой небольшие текстовые файлы, которые сохраняются браузером на устройстве пользователя при посещении сайта."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cookie помогают:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "обеспечивать работу сайта;",
+              "поддерживать авторизацию;",
+              "сохранять настройки пользователя;",
+              "обеспечивать безопасность;",
+              "анализировать использование платформы;",
+              "подтверждать покупки и начисление вознаграждений."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. Какие Cookie мы используем",
+        "blocks": [
+          {
+            "type": "heading",
+            "text": "Необходимые Cookie"
+          },
+          {
+            "type": "paragraph",
+            "text": "Эти cookie необходимы для работы платформы."
+          },
+          {
+            "type": "paragraph",
+            "text": "Без них некоторые функции могут быть недоступны."
+          },
+          {
+            "type": "paragraph",
+            "text": "Они используются, в частности, для:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "авторизации пользователей;",
+              "защиты аккаунтов;",
+              "обеспечения безопасности сессии;",
+              "сохранения пользовательских настроек;",
+              "предотвращения мошенничества;",
+              "корректной работы сайта."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Для использования необходимых cookie отдельное согласие не требуется."
+          },
+          {
+            "type": "heading",
+            "text": "Функциональные Cookie"
+          },
+          {
+            "type": "paragraph",
+            "text": "Эти cookie позволяют запоминать настройки пользователя и улучшать работу интерфейса."
+          },
+          {
+            "type": "paragraph",
+            "text": "Например:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "выбранный язык;",
+              "региональные настройки;",
+              "отображение интерфейса;",
+              "пользовательские предпочтения."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Использование таких cookie может зависеть от согласия пользователя в соответствии с применимым законодательством."
+          },
+          {
+            "type": "heading",
+            "text": "Аналитические Cookie"
+          },
+          {
+            "type": "paragraph",
+            "text": "Аналитические cookie помогают понимать, как пользователи взаимодействуют с платформой."
+          },
+          {
+            "type": "paragraph",
+            "text": "Они могут использоваться для:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "анализа посещаемости;",
+              "оценки производительности сайта;",
+              "выявления технических ошибок;",
+              "улучшения пользовательского опыта."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Если это требуется законодательством, аналитические cookie используются только после получения соответствующего согласия пользователя."
+          },
+          {
+            "type": "heading",
+            "text": "Партнёрские Cookie"
+          },
+          {
+            "type": "paragraph",
+            "text": "Поскольку Cashback+ предоставляет доступ к программам кэшбэка и партнёрским предложениям, некоторые партнёры могут использовать собственные cookie или аналогичные технологии."
+          },
+          {
+            "type": "paragraph",
+            "text": "Такие технологии могут использоваться для:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "отслеживания переходов пользователей;",
+              "подтверждения покупок;",
+              "подтверждения права на начисление кэшбэка;",
+              "предотвращения мошенничества;",
+              "учёта партнёрских вознаграждений."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Использование партнёрских cookie регулируется как настоящей Политикой, так и политиками соответствующих партнёров."
+          },
+          {
+            "type": "heading",
+            "text": "Рекламные Cookie"
+          },
+          {
+            "type": "paragraph",
+            "text": "Если на платформе используются рекламные программы, отдельные рекламные партнёры могут применять cookie для оценки эффективности рекламных кампаний."
+          },
+          {
+            "type": "paragraph",
+            "text": "Такие cookie не используются до получения согласия пользователя, если такое согласие требуется законодательством."
+          }
+        ]
+      },
+      {
+        "title": "4. Как используются Cookie в программе Cashback+",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Некоторые программы Cashback+ основаны на взаимодействии с партнёрскими продавцами и сетями."
+          },
+          {
+            "type": "paragraph",
+            "text": "Для подтверждения факта перехода пользователя к партнёру и последующего начисления кэшбэка могут использоваться cookie либо аналогичные технологии отслеживания."
+          },
+          {
+            "type": "paragraph",
+            "text": "Отключение определённых cookie может привести к тому, что:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "переход к партнёру не будет корректно зарегистрирован;",
+              "покупка не сможет быть сопоставлена с аккаунтом пользователя;",
+              "начисление кэшбэка или иных вознаграждений станет невозможным."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Это не влияет на возможность совершения покупки у партнёра, однако может повлиять на получение вознаграждений в рамках программы Cashback+."
+          }
+        ]
+      },
+      {
+        "title": "5. Срок хранения Cookie",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Различные cookie могут храниться в течение разных периодов времени."
+          },
+          {
+            "type": "heading",
+            "text": "Сессионные Cookie"
+          },
+          {
+            "type": "paragraph",
+            "text": "Существуют только до закрытия браузера."
+          },
+          {
+            "type": "heading",
+            "text": "Постоянные Cookie"
+          },
+          {
+            "type": "paragraph",
+            "text": "Сохраняются на устройстве в течение определённого срока либо до их удаления пользователем."
+          },
+          {
+            "type": "paragraph",
+            "text": "Конкретный срок хранения может зависеть от назначения cookie и требований соответствующего партнёра или поставщика услуг."
+          }
+        ]
+      },
+      {
+        "title": "6. Управление Cookie",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Пользователь может управлять использованием cookie несколькими способами:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "через настройки панели согласия на сайте;",
+              "через настройки браузера;",
+              "путём удаления уже сохранённых cookie."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Большинство браузеров позволяют:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "блокировать определённые категории cookie;",
+              "удалять существующие cookie;",
+              "получать уведомления об их использовании."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Отключение некоторых cookie может привести к ограничению доступности отдельных функций платформы."
+          }
+        ]
+      },
+      {
+        "title": "7. Отзыв согласия",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Если обработка определённых cookie основана на согласии пользователя, такое согласие может быть отозвано в любой момент через настройки сайта либо настройки браузера."
+          },
+          {
+            "type": "paragraph",
+            "text": "Отзыв согласия не влияет на законность обработки данных, выполненной до момента его отзыва."
+          }
+        ]
+      },
+      {
+        "title": "8. Сторонние сервисы",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "При использовании отдельных функций Cashback+ сторонние поставщики услуг могут устанавливать собственные cookie."
+          },
+          {
+            "type": "paragraph",
+            "text": "К таким поставщикам могут относиться:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "поставщики аналитики;",
+              "облачные сервисы;",
+              "платёжные провайдеры;",
+              "партнёрские сети;",
+              "рекламные платформы;",
+              "исследовательские организации."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ не контролирует работу cookie, устанавливаемых независимыми сторонними организациями."
+          },
+          {
+            "type": "paragraph",
+            "text": "Пользователям рекомендуется знакомиться с политиками конфиденциальности и использования cookie таких организаций."
+          }
+        ]
+      },
+      {
+        "title": "9. Защита данных",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Информация, собираемая посредством cookie, обрабатывается в соответствии с нашей Политикой конфиденциальности и применимым законодательством о защите данных."
+          },
+          {
+            "type": "paragraph",
+            "text": "Мы принимаем разумные технические и организационные меры для защиты информации от несанкционированного доступа, изменения, раскрытия или уничтожения."
+          }
+        ]
+      },
+      {
+        "title": "10. Изменение Политики",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ вправе периодически обновлять настоящую Политику использования файлов Cookie для отражения изменений законодательства, технологий или функциональности платформы."
+          },
+          {
+            "type": "paragraph",
+            "text": "При существенных изменениях пользователи будут уведомлены посредством сайта или иными доступными способами."
+          },
+          {
+            "type": "paragraph",
+            "text": "Новая редакция вступает в силу с момента публикации, если не указано иное."
+          }
+        ]
+      },
+      {
+        "title": "11. Контакты",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Если у вас возникли вопросы относительно использования файлов Cookie или обработки связанных с ними данных, вы можете связаться с нами через страницу «Контакты» либо направить запрос по адресу:"
+          },
+          {
+            "type": "paragraph",
+            "text": "**privacy@cashbackplus.co.uk**"
+          }
+        ]
+      }
+    ],
+    "en": [
+      {
+        "title": "1. Introduction",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "This Cookie Policy explains how the Cashback+ platform uses cookies and similar technologies when you visit the website and use its features."
+          },
+          {
+            "type": "paragraph",
+            "text": "The Policy applies together with:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "the Privacy Policy;",
+              "Terms and Conditions;",
+              "the Activity Rules;",
+              "other platform documents."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "By using Cashback+, you agree to the use of necessary cookies in accordance with this Policy."
+          },
+          {
+            "type": "paragraph",
+            "text": "We request your consent for optional cookies where required by law."
+          }
+        ]
+      },
+      {
+        "title": "2. What cookies are",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cookies are small text files saved by a browser on a user’s device when visiting a website."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cookies help to:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "operate the website;",
+              "maintain authentication;",
+              "retain user settings;",
+              "provide security;",
+              "analyse platform usage;",
+              "confirm purchases and reward credits."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. Which cookies we use",
+        "blocks": [
+          {
+            "type": "heading",
+            "text": "Necessary cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "These cookies are necessary for platform operation."
+          },
+          {
+            "type": "paragraph",
+            "text": "Without them, some features may be unavailable."
+          },
+          {
+            "type": "paragraph",
+            "text": "They are used, in particular, for:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "user authentication;",
+              "account protection;",
+              "session security;",
+              "saving user preferences;",
+              "fraud prevention;",
+              "correct website operation."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Separate consent is not required for necessary cookies."
+          },
+          {
+            "type": "heading",
+            "text": "Functional cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "These cookies remember user settings and improve interface operation."
+          },
+          {
+            "type": "paragraph",
+            "text": "For example:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "the selected language;",
+              "regional settings;",
+              "interface display;",
+              "user preferences."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Use of these cookies may depend on consent under applicable law."
+          },
+          {
+            "type": "heading",
+            "text": "Analytics cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Analytics cookies help us understand how users interact with the platform."
+          },
+          {
+            "type": "paragraph",
+            "text": "They may be used for:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "traffic analysis;",
+              "website performance assessment;",
+              "identifying technical errors;",
+              "improving user experience."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Where required by law, analytics cookies are used only after the user’s consent has been obtained."
+          },
+          {
+            "type": "heading",
+            "text": "Partner cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Because Cashback+ provides access to cashback programmes and partner offers, some partners may use their own cookies or similar technologies."
+          },
+          {
+            "type": "paragraph",
+            "text": "These technologies may be used for:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "tracking user referrals;",
+              "confirming purchases;",
+              "confirming eligibility for cashback;",
+              "fraud prevention;",
+              "recording affiliate rewards."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Partner cookies are governed by this Policy and the policies of the relevant partners."
+          },
+          {
+            "type": "heading",
+            "text": "Advertising cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "If advertising programmes are used on the platform, individual advertising partners may use cookies to assess campaign effectiveness."
+          },
+          {
+            "type": "paragraph",
+            "text": "These cookies are not used before consent is obtained where consent is required by law."
+          }
+        ]
+      },
+      {
+        "title": "4. How cookies are used in the Cashback+ programme",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Some Cashback+ programmes rely on interaction with partner sellers and networks."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cookies or similar tracking technologies may be used to confirm a user’s referral to a partner and subsequently credit cashback."
+          },
+          {
+            "type": "paragraph",
+            "text": "Disabling certain cookies may mean that:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "the partner referral is not recorded correctly;",
+              "the purchase cannot be matched to the user’s account;",
+              "cashback or other rewards cannot be credited."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "This does not affect the ability to purchase from the partner, but may affect rewards under the Cashback+ programme."
+          }
+        ]
+      },
+      {
+        "title": "5. Cookie retention periods",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Different cookies may be stored for different periods."
+          },
+          {
+            "type": "heading",
+            "text": "Session cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Exist only until the browser is closed."
+          },
+          {
+            "type": "heading",
+            "text": "Persistent cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Remain on the device for a specified period or until deleted by the user."
+          },
+          {
+            "type": "paragraph",
+            "text": "The particular duration may depend on the cookie’s purpose and the relevant partner’s or provider’s requirements."
+          }
+        ]
+      },
+      {
+        "title": "6. Managing cookies",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Users can manage cookies in several ways:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "through the website consent panel settings;",
+              "through browser settings;",
+              "by deleting cookies already stored."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Most browsers allow users to:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "block certain cookie categories;",
+              "delete existing cookies;",
+              "receive notifications about their use."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Disabling some cookies may restrict access to individual platform features."
+          }
+        ]
+      },
+      {
+        "title": "7. Withdrawing consent",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Where processing certain cookies is based on consent, that consent may be withdrawn at any time through website or browser settings."
+          },
+          {
+            "type": "paragraph",
+            "text": "Withdrawing consent does not affect the lawfulness of processing before withdrawal."
+          }
+        ]
+      },
+      {
+        "title": "8. Third-party services",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Third-party service providers may set their own cookies when certain Cashback+ features are used."
+          },
+          {
+            "type": "paragraph",
+            "text": "These providers may include:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "analytics providers;",
+              "cloud services;",
+              "payment providers;",
+              "affiliate networks;",
+              "advertising platforms;",
+              "research organisations."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ does not control cookies set by independent third parties."
+          },
+          {
+            "type": "paragraph",
+            "text": "Users are advised to read those organisations’ privacy and cookie policies."
+          }
+        ]
+      },
+      {
+        "title": "9. Data protection",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Information collected through cookies is processed in accordance with our Privacy Policy and applicable data protection law."
+          },
+          {
+            "type": "paragraph",
+            "text": "We take reasonable technical and organisational measures to protect information against unauthorised access, alteration, disclosure or destruction."
+          }
+        ]
+      },
+      {
+        "title": "10. Changes to the Policy",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ may periodically update this Cookie Policy to reflect changes in legislation, technologies or platform functionality."
+          },
+          {
+            "type": "paragraph",
+            "text": "Users will be notified of material changes through the website or other available means."
+          },
+          {
+            "type": "paragraph",
+            "text": "The new version takes effect upon publication unless otherwise stated."
+          }
+        ]
+      },
+      {
+        "title": "11. Contact details",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "If you have questions about cookies or related data processing, you can contact us through the Contacts page or send a request to:"
+          },
+          {
+            "type": "paragraph",
+            "text": "**privacy@cashbackplus.co.uk**"
+          }
+        ]
+      }
+    ],
+    "de": [
+      {
+        "title": "1. Einführung",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Diese Cookie-Richtlinie erläutert, wie die Cashback+ Plattform beim Besuch der Website und bei der Nutzung ihrer Funktionen Cookies und ähnliche Technologien verwendet."
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Richtlinie gilt zusammen mit:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "der Datenschutzerklärung;",
+              "Terms and Conditions;",
+              "den Aktivitätsregeln;",
+              "anderen Plattformdokumenten."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Mit der Nutzung von Cashback+ stimmen Sie der Verwendung notwendiger Cookies gemäß dieser Richtlinie zu."
+          },
+          {
+            "type": "paragraph",
+            "text": "Für optionale Cookies bitten wir um Einwilligung, soweit gesetzlich erforderlich."
+          }
+        ]
+      },
+      {
+        "title": "2. Was Cookies sind",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cookies sind kleine Textdateien, die der Browser beim Besuch einer Website auf dem Gerät des Nutzers speichert."
+          },
+          {
+            "type": "paragraph",
+            "text": "Cookies helfen dabei:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "die Website zu betreiben;",
+              "die Anmeldung aufrechtzuerhalten;",
+              "Nutzereinstellungen zu speichern;",
+              "Sicherheit zu gewährleisten;",
+              "die Plattformnutzung zu analysieren;",
+              "Einkäufe und Vergütungsgutschriften zu bestätigen."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. Welche Cookies wir verwenden",
+        "blocks": [
+          {
+            "type": "heading",
+            "text": "Notwendige Cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Diese Cookies sind für den Betrieb der Plattform erforderlich."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ohne sie können einzelne Funktionen nicht verfügbar sein."
+          },
+          {
+            "type": "paragraph",
+            "text": "Sie werden insbesondere verwendet für:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "die Nutzeranmeldung;",
+              "den Schutz von Konten;",
+              "die Sitzungssicherheit;",
+              "die Speicherung von Nutzereinstellungen;",
+              "die Betrugsprävention;",
+              "den korrekten Betrieb der Website."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Für notwendige Cookies ist keine gesonderte Einwilligung erforderlich."
+          },
+          {
+            "type": "heading",
+            "text": "Funktionale Cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Diese Cookies speichern Nutzereinstellungen und verbessern die Bedienung der Oberfläche."
+          },
+          {
+            "type": "paragraph",
+            "text": "Zum Beispiel:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "die gewählte Sprache;",
+              "regionale Einstellungen;",
+              "die Darstellung der Oberfläche;",
+              "Nutzerpräferenzen."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Verwendung dieser Cookies kann nach geltendem Recht von einer Einwilligung abhängen."
+          },
+          {
+            "type": "heading",
+            "text": "Analyse-Cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Analyse-Cookies helfen zu verstehen, wie Nutzer mit der Plattform interagieren."
+          },
+          {
+            "type": "paragraph",
+            "text": "Sie können verwendet werden für:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "die Analyse von Besuchen;",
+              "die Bewertung der Website-Leistung;",
+              "die Erkennung technischer Fehler;",
+              "die Verbesserung des Nutzungserlebnisses."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Soweit gesetzlich erforderlich, werden Analyse-Cookies erst nach Einwilligung des Nutzers verwendet."
+          },
+          {
+            "type": "heading",
+            "text": "Partner-Cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Da Cashback+ Zugang zu Cashback-Programmen und Partnerangeboten bietet, können einige Partner eigene Cookies oder ähnliche Technologien verwenden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Diese Technologien können verwendet werden für:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "die Nachverfolgung von Nutzerweiterleitungen;",
+              "die Bestätigung von Einkäufen;",
+              "die Bestätigung des Cashback-Anspruchs;",
+              "die Betrugsprävention;",
+              "die Erfassung von Partnervergütungen."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Für Partner-Cookies gelten diese Richtlinie und die Richtlinien der jeweiligen Partner."
+          },
+          {
+            "type": "heading",
+            "text": "Werbe-Cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Werden Werbeprogramme auf der Plattform eingesetzt, können einzelne Werbepartner Cookies zur Bewertung der Kampagnenwirksamkeit verwenden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Diese Cookies werden nicht vor einer Einwilligung verwendet, wenn diese gesetzlich erforderlich ist."
+          }
+        ]
+      },
+      {
+        "title": "4. Verwendung von Cookies im Cashback+ Programm",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Einige Cashback+ Programme beruhen auf der Zusammenarbeit mit Partnerverkäufern und Netzwerken."
+          },
+          {
+            "type": "paragraph",
+            "text": "Zur Bestätigung einer Weiterleitung zum Partner und der anschließenden Cashback-Gutschrift können Cookies oder ähnliche Nachverfolgungstechnologien verwendet werden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Deaktivierung bestimmter Cookies kann dazu führen, dass:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "die Weiterleitung zum Partner nicht richtig erfasst wird;",
+              "der Kauf nicht dem Nutzerkonto zugeordnet werden kann;",
+              "Cashback oder andere Vergütungen nicht gutgeschrieben werden können."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Dies beeinträchtigt nicht die Möglichkeit, beim Partner einzukaufen, kann aber Vergütungen im Cashback+ Programm beeinflussen."
+          }
+        ]
+      },
+      {
+        "title": "5. Speicherdauer von Cookies",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Verschiedene Cookies können unterschiedlich lange gespeichert werden."
+          },
+          {
+            "type": "heading",
+            "text": "Sitzungs-Cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Bestehen nur bis zum Schließen des Browsers."
+          },
+          {
+            "type": "heading",
+            "text": "Dauerhafte Cookies"
+          },
+          {
+            "type": "paragraph",
+            "text": "Bleiben für einen bestimmten Zeitraum oder bis zur Löschung durch den Nutzer auf dem Gerät."
+          },
+          {
+            "type": "paragraph",
+            "text": "Die konkrete Dauer kann vom Zweck des Cookies und den Anforderungen des jeweiligen Partners oder Anbieters abhängen."
+          }
+        ]
+      },
+      {
+        "title": "6. Verwaltung von Cookies",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Nutzer können die Cookie-Verwendung auf verschiedene Weise verwalten:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "über die Einstellungen der Einwilligungsoberfläche auf der Website;",
+              "über Browsereinstellungen;",
+              "durch Löschen bereits gespeicherter Cookies."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Die meisten Browser ermöglichen:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "bestimmte Cookie-Kategorien zu blockieren;",
+              "vorhandene Cookies zu löschen;",
+              "Benachrichtigungen über ihre Verwendung zu erhalten."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Die Deaktivierung einzelner Cookies kann die Verfügbarkeit bestimmter Plattformfunktionen einschränken."
+          }
+        ]
+      },
+      {
+        "title": "7. Widerruf der Einwilligung",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Beruht die Verarbeitung bestimmter Cookies auf einer Einwilligung, kann diese jederzeit über Website- oder Browsereinstellungen widerrufen werden."
+          },
+          {
+            "type": "paragraph",
+            "text": "Der Widerruf berührt nicht die Rechtmäßigkeit der Verarbeitung vor dem Widerruf."
+          }
+        ]
+      },
+      {
+        "title": "8. Dienste Dritter",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Bei der Nutzung einzelner Cashback+ Funktionen können externe Dienstleister eigene Cookies setzen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Dazu können gehören:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Analyseanbieter;",
+              "Cloud-Dienste;",
+              "Zahlungsdienstleister;",
+              "Partnernetzwerke;",
+              "Werbeplattformen;",
+              "Forschungsorganisationen."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ kontrolliert nicht die Cookies unabhängiger Dritter."
+          },
+          {
+            "type": "paragraph",
+            "text": "Nutzern wird empfohlen, die Datenschutz- und Cookie-Richtlinien dieser Organisationen zu lesen."
+          }
+        ]
+      },
+      {
+        "title": "9. Datenschutz",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Durch Cookies erhobene Informationen werden gemäß unserer Datenschutzerklärung und dem geltenden Datenschutzrecht verarbeitet."
+          },
+          {
+            "type": "paragraph",
+            "text": "Wir treffen angemessene technische und organisatorische Maßnahmen zum Schutz vor unbefugtem Zugriff, Änderung, Offenlegung oder Zerstörung."
+          }
+        ]
+      },
+      {
+        "title": "10. Änderungen der Richtlinie",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ darf diese Cookie-Richtlinie regelmäßig aktualisieren, um Änderungen der Gesetzgebung, der Technologien oder der Plattformfunktionen zu berücksichtigen."
+          },
+          {
+            "type": "paragraph",
+            "text": "Bei wesentlichen Änderungen werden Nutzer über die Website oder andere verfügbare Wege informiert."
+          },
+          {
+            "type": "paragraph",
+            "text": "Die neue Fassung tritt mit der Veröffentlichung in Kraft, sofern nichts anderes angegeben ist."
+          }
+        ]
+      },
+      {
+        "title": "11. Kontakt",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Bei Fragen zu Cookies oder zur Verarbeitung der zugehörigen Daten können Sie uns über die Kontaktseite erreichen oder eine Anfrage senden an:"
+          },
+          {
+            "type": "paragraph",
+            "text": "**privacy@cashbackplus.co.uk**"
+          }
+        ]
+      }
+    ],
+    "fr": [
+      {
+        "title": "1. Introduction",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "La présente Politique relative aux cookies explique comment la plateforme Cashback+ utilise les cookies et technologies similaires lors des visites du site et de l’utilisation de ses fonctionnalités."
+          },
+          {
+            "type": "paragraph",
+            "text": "La Politique s’applique conjointement avec :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "la Politique de confidentialité ;",
+              "Terms and Conditions ;",
+              "les Règles d’activité ;",
+              "les autres documents de la plateforme."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "En utilisant Cashback+, vous acceptez l’utilisation des cookies nécessaires conformément à la présente Politique."
+          },
+          {
+            "type": "paragraph",
+            "text": "Nous demandons votre consentement pour les cookies facultatifs lorsque la législation l’exige."
+          }
+        ]
+      },
+      {
+        "title": "2. Définition des cookies",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Les cookies sont de petits fichiers texte enregistrés par le navigateur sur l’appareil de l’utilisateur lorsqu’il visite un site."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les cookies permettent :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "de faire fonctionner le site ;",
+              "de maintenir l’authentification ;",
+              "de conserver les paramètres de l’utilisateur ;",
+              "d’assurer la sécurité ;",
+              "d’analyser l’utilisation de la plateforme ;",
+              "de confirmer les achats et le crédit des récompenses."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. Cookies utilisés",
+        "blocks": [
+          {
+            "type": "heading",
+            "text": "Cookies nécessaires"
+          },
+          {
+            "type": "paragraph",
+            "text": "Ces cookies sont nécessaires au fonctionnement de la plateforme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Sans eux, certaines fonctionnalités peuvent être indisponibles."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ils sont notamment utilisés pour :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "l’authentification des utilisateurs ;",
+              "la protection des comptes ;",
+              "la sécurité des sessions ;",
+              "la conservation des préférences ;",
+              "la prévention de la fraude ;",
+              "le bon fonctionnement du site."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Les cookies nécessaires ne requièrent pas de consentement distinct."
+          },
+          {
+            "type": "heading",
+            "text": "Cookies fonctionnels"
+          },
+          {
+            "type": "paragraph",
+            "text": "Ces cookies mémorisent les paramètres de l’utilisateur et améliorent le fonctionnement de l’interface."
+          },
+          {
+            "type": "paragraph",
+            "text": "Par exemple :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "la langue choisie ;",
+              "les paramètres régionaux ;",
+              "l’affichage de l’interface ;",
+              "les préférences de l’utilisateur."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Leur utilisation peut dépendre du consentement selon la législation applicable."
+          },
+          {
+            "type": "heading",
+            "text": "Cookies analytiques"
+          },
+          {
+            "type": "paragraph",
+            "text": "Les cookies analytiques permettent de comprendre comment les utilisateurs interagissent avec la plateforme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ils peuvent servir à :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "analyser la fréquentation ;",
+              "évaluer les performances du site ;",
+              "détecter les erreurs techniques ;",
+              "améliorer l’expérience utilisateur."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Lorsque la législation l’exige, ils ne sont utilisés qu’après obtention du consentement de l’utilisateur."
+          },
+          {
+            "type": "heading",
+            "text": "Cookies partenaires"
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ donnant accès à des programmes de cashback et à des offres partenaires, certains partenaires peuvent utiliser leurs propres cookies ou technologies similaires."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ces technologies peuvent servir à :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "suivre les redirections des utilisateurs ;",
+              "confirmer les achats ;",
+              "confirmer le droit au cashback ;",
+              "prévenir la fraude ;",
+              "comptabiliser les rémunérations partenaires."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Les cookies partenaires sont régis par la présente Politique et celles des partenaires concernés."
+          },
+          {
+            "type": "heading",
+            "text": "Cookies publicitaires"
+          },
+          {
+            "type": "paragraph",
+            "text": "Si des programmes publicitaires sont utilisés sur la plateforme, certains partenaires publicitaires peuvent utiliser des cookies pour évaluer l’efficacité des campagnes."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ces cookies ne sont pas utilisés avant le consentement lorsque celui-ci est requis par la législation."
+          }
+        ]
+      },
+      {
+        "title": "4. Utilisation des cookies dans le programme Cashback+",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Certains programmes Cashback+ reposent sur les interactions avec les vendeurs et réseaux partenaires."
+          },
+          {
+            "type": "paragraph",
+            "text": "Des cookies ou technologies de suivi similaires peuvent confirmer la redirection vers un partenaire et permettre le crédit ultérieur du cashback."
+          },
+          {
+            "type": "paragraph",
+            "text": "La désactivation de certains cookies peut entraîner :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "l’absence d’enregistrement correct de la redirection ;",
+              "l’impossibilité d’associer l’achat au compte de l’utilisateur ;",
+              "l’impossibilité de créditer le cashback ou d’autres récompenses."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cela n’empêche pas l’achat auprès du partenaire, mais peut affecter les récompenses du programme Cashback+."
+          }
+        ]
+      },
+      {
+        "title": "5. Durée de conservation des cookies",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Les cookies peuvent être conservés pendant des durées différentes."
+          },
+          {
+            "type": "heading",
+            "text": "Cookies de session"
+          },
+          {
+            "type": "paragraph",
+            "text": "Ils existent uniquement jusqu’à la fermeture du navigateur."
+          },
+          {
+            "type": "heading",
+            "text": "Cookies persistants"
+          },
+          {
+            "type": "paragraph",
+            "text": "Ils restent sur l’appareil pendant une durée déterminée ou jusqu’à leur suppression par l’utilisateur."
+          },
+          {
+            "type": "paragraph",
+            "text": "La durée précise peut dépendre de la finalité du cookie et des exigences du partenaire ou prestataire concerné."
+          }
+        ]
+      },
+      {
+        "title": "6. Gestion des cookies",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "L’utilisateur peut gérer les cookies de plusieurs façons :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "par les paramètres du panneau de consentement du site ;",
+              "par les paramètres du navigateur ;",
+              "en supprimant les cookies déjà enregistrés."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "La plupart des navigateurs permettent :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "de bloquer certaines catégories de cookies ;",
+              "de supprimer les cookies existants ;",
+              "d’être informé de leur utilisation."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "La désactivation de certains cookies peut limiter la disponibilité de certaines fonctionnalités."
+          }
+        ]
+      },
+      {
+        "title": "7. Retrait du consentement",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Si le traitement de certains cookies repose sur le consentement, celui-ci peut être retiré à tout moment dans les paramètres du site ou du navigateur."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ce retrait n’affecte pas la licéité des traitements antérieurs."
+          }
+        ]
+      },
+      {
+        "title": "8. Services tiers",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Des prestataires tiers peuvent déposer leurs propres cookies lors de l’utilisation de certaines fonctionnalités Cashback+."
+          },
+          {
+            "type": "paragraph",
+            "text": "Ces prestataires peuvent comprendre :"
+          },
+          {
+            "type": "list",
+            "items": [
+              "des fournisseurs d’analyse ;",
+              "des services cloud ;",
+              "des prestataires de paiement ;",
+              "des réseaux d’affiliation ;",
+              "des plateformes publicitaires ;",
+              "des organismes d’études."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cashback+ ne contrôle pas les cookies déposés par des organisations tierces indépendantes."
+          },
+          {
+            "type": "paragraph",
+            "text": "Il est recommandé de consulter leurs politiques de confidentialité et de cookies."
+          }
+        ]
+      },
+      {
+        "title": "9. Protection des données",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Les informations recueillies par les cookies sont traitées conformément à notre Politique de confidentialité et à la législation applicable sur la protection des données."
+          },
+          {
+            "type": "paragraph",
+            "text": "Nous prenons des mesures techniques et organisationnelles raisonnables contre les accès non autorisés, les modifications, la divulgation ou la destruction."
+          }
+        ]
+      },
+      {
+        "title": "10. Modification de la Politique",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Cashback+ peut mettre à jour périodiquement cette Politique pour refléter les évolutions de la législation, des technologies ou des fonctionnalités de la plateforme."
+          },
+          {
+            "type": "paragraph",
+            "text": "Les utilisateurs seront informés des modifications importantes par le site ou d’autres moyens disponibles."
+          },
+          {
+            "type": "paragraph",
+            "text": "La nouvelle version entre en vigueur dès publication, sauf indication contraire."
+          }
+        ]
+      },
+      {
+        "title": "11. Contacts",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Pour toute question sur les cookies ou le traitement des données associées, contactez-nous par la page Contacts ou envoyez une demande à :"
+          },
+          {
+            "type": "paragraph",
+            "text": "**privacy@cashbackplus.co.uk**"
+          }
+        ]
+      }
+    ]
+  }
+}

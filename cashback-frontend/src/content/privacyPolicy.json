@@ -1,0 +1,319 @@
+{
+  "sourceSha256": "7b6f15f0d912a87b98f1c7964543fede5e2e78698799cc96bda5c4c821c06138",
+  "title": {
+    "ru": "Политика конфиденциальности и защиты данных",
+    "en": "Privacy and Data Protection Policy",
+    "de": "Datenschutz- und Datensicherheitsrichtlinie",
+    "fr": "Politique de confidentialité et de protection des données"
+  },
+  "effectiveDate": {
+    "ru": "Дата вступления в силу: 30 сентября 2026 года",
+    "en": "Effective date: 30 September 2026",
+    "de": "Gültig ab: 30. September 2026",
+    "fr": "Date d’entrée en vigueur : 30 septembre 2026"
+  },
+  "cookieLinkText": {
+    "ru": "Политике использования Cookie",
+    "en": "Cookie Policy",
+    "de": "Cookie-Richtlinie",
+    "fr": "Politique relative aux cookies"
+  },
+  "rules": {
+    "ru": [
+      [
+        "Кто мы",
+        "Cashback+ является информационной платформой и программой потребительских вознаграждений, предоставляющей пользователям доступ к программам кэшбэка, бонусным программам, партнёрским предложениям, исследованиям и инструментам сравнения товаров и услуг.\nМы стремимся обеспечивать прозрачную и законную обработку персональных данных в соответствии с законодательством Великобритании о защите данных."
+      ],
+      [
+        "Контролёр персональных данных",
+        "Если иное прямо не указано отдельно, компания Cashback Plus Ltd является контролёром персональных данных, обрабатываемых в рамках платформы Cashback+.\nКомпания несёт ответственность за соблюдение требований законодательства Великобритании о защите данных, включая UK GDPR и Data Protection Act 2018.\nПо вопросам обработки персональных данных вы можете обращаться по адресу:\nprivacy@cashbackplus.uk"
+      ],
+      [
+        "Какие данные мы обрабатываем",
+        "В зависимости от используемых функций платформы мы можем обрабатывать следующие категории данных.\n### Данные учётной записи\n- адрес электронной почты;\n- отображаемое имя пользователя;\n- дата регистрации;\n- язык интерфейса;\n- настройки профиля;\n- история входов в систему.\n### Данные, связанные с вознаграждениями\n- информация о начисленном кэшбэке;\n- информация о начисленных бонусах;\n- использование бонусов;\n- история подтверждений покупок;\n- история участия в программах платформы.\n### Технические данные\n- IP-адрес;\n- тип браузера;\n- тип устройства;\n- версия операционной системы;\n- язык браузера;\n- дата и время посещений;\n- диагностическая информация о работе платформы.\n### Данные местоположения\nМы можем определять примерное местоположение пользователя на основании IP-адреса.\nТакая информация может использоваться для:\n- обеспечения безопасности аккаунта;\n- предотвращения мошенничества;\n- соблюдения географических ограничений партнёрских программ;\n- диагностики работы платформы.\nМы не осуществляем постоянное отслеживание геолокации пользователя.\n### Информация об исследованиях\nЕсли пользователь добровольно принимает участие в исследовательских программах, Cashback+ может получать информацию о факте участия, необходимую для начисления предусмотренных вознаграждений.\nОбъём передаваемой информации зависит от условий соответствующей программы."
+      ],
+      [
+        "Цели обработки данных",
+        "Персональные данные используются исключительно для целей функционирования платформы Cashback+.\nМы можем использовать данные для:\n- создания и обслуживания учётной записи;\n- предоставления доступа к функциям платформы;\n- начисления кэшбэка и бонусов;\n- подтверждения права на получение вознаграждений;\n- обработки запросов пользователей;\n- обеспечения безопасности аккаунта;\n- предотвращения мошенничества;\n- анализа и улучшения работы платформы;\n- выполнения требований законодательства;\n- разрешения споров и рассмотрения обращений.\nМы не продаём персональные данные пользователей третьим лицам."
+      ],
+      [
+        "Правовые основания обработки",
+        "Мы осуществляем обработку данных на следующих основаниях.\n### Исполнение договора\nОбработка необходима для предоставления доступа к платформе и исполнения Условий использования Cashback+.\n### Законный интерес\nМы можем обрабатывать данные для:\n- обеспечения безопасности платформы;\n- предотвращения злоупотреблений;\n- защиты пользователей;\n- развития и улучшения сервиса;\n- рассмотрения обращений.\n### Согласие пользователя\nМы запрашиваем согласие в случаях, когда это требуется законодательством, включая использование отдельных категорий файлов Cookie и направление маркетинговых сообщений.\nПользователь вправе отозвать своё согласие в любое время.\n### Юридические обязанности\nМы можем обрабатывать данные для выполнения требований законодательства, включая налоговые и иные обязательные требования."
+      ],
+      [
+        "Передача данных третьим лицам",
+        "Для обеспечения работы платформы мы можем передавать ограниченный объём данных следующим категориям организаций:\n- поставщикам облачной инфраструктуры;\n- поставщикам систем безопасности;\n- партнёрским сетям и программам, используемым для отслеживания покупок и начисления вознаграждений;\n- платёжным провайдерам;\n- аналитическим сервисам;\n- исследовательским организациям, если пользователь участвует в соответствующей программе.\nПередача данных осуществляется только в объёме, необходимом для достижения соответствующей цели."
+      ],
+      [
+        "Международная передача данных",
+        "В отдельных случаях персональные данные могут обрабатываться за пределами Соединённого Королевства.\nЕсли данные передаются в страны, которые не обеспечивают уровень защиты, сопоставимый с требованиями UK GDPR, Cashback+ использует предусмотренные законодательством механизмы защиты, включая:\n- Standard Contractual Clauses (SCC);\n- международные соглашения о передаче данных;\n- иные допустимые механизмы защиты."
+      ],
+      [
+        "Сроки хранения данных",
+        "Мы храним персональные данные только в течение периода, необходимого для достижения целей обработки.\nСрок хранения зависит от характера данных, требований законодательства и необходимости защиты законных интересов платформы и пользователей.\nПосле удаления аккаунта отдельные данные могут сохраняться до одного года либо дольше, если это необходимо для:\n- исполнения юридических обязанностей;\n- разрешения споров;\n- предотвращения мошенничества;\n- обеспечения безопасности платформы;\n- защиты прав пользователей и Cashback+.\nПосле истечения соответствующих сроков данные удаляются либо обезличиваются."
+      ],
+      [
+        "Защита данных",
+        "Мы применяем разумные технические и организационные меры для защиты персональных данных.\nТакие меры могут включать:\n- использование HTTPS;\n- контроль доступа к данным;\n- резервное копирование;\n- мониторинг безопасности;\n- аудит действий администраторов;\n- защиту от несанкционированного доступа.\nПароли пользователей не хранятся в открытом виде.\nПароли обрабатываются и хранятся в виде криптографических хешей с использованием современных алгоритмов защиты и не могут быть восстановлены в исходном виде.\nНесмотря на принимаемые меры, ни одна система не может гарантировать абсолютную безопасность данных."
+      ],
+      [
+        "Права пользователей",
+        "В соответствии с UK GDPR пользователь имеет право:\n- получить доступ к своим данным;\n- исправить неточные данные;\n- удалить данные в случаях, предусмотренных законом;\n- ограничить обработку;\n- возразить против обработки;\n- получить данные в переносимом формате, если это применимо;\n- отозвать согласие;\n- подать жалобу в надзорный орган."
+      ],
+      [
+        "Рассмотрение обращений",
+        "Мы стремимся рассматривать обращения, связанные с защитой данных, без неоправданных задержек.\nВ большинстве случаев ответ предоставляется в течение одного календарного месяца в соответствии с требованиями UK GDPR.\nВ сложных случаях этот срок может быть продлён, если это допускается законодательством."
+      ],
+      [
+        "Жалобы в ICO",
+        "Если вы считаете, что ваши персональные данные обрабатываются с нарушением законодательства, вы вправе обратиться в Information Commissioner's Office (ICO), который является надзорным органом Великобритании по вопросам защиты данных.\nДополнительная информация размещена на сайте:\nhttps://ico.org.uk\nМы рекомендуем сначала обратиться напрямую в Cashback+, чтобы мы могли попытаться разрешить вопрос максимально быстро и эффективно."
+      ],
+      [
+        "Автоматизированная обработка данных",
+        "Cashback+ не принимает решений, имеющих для пользователя юридические последствия либо оказывающих аналогично существенное влияние исключительно на основании автоматизированной обработки данных.\nАвтоматизированные инструменты могут использоваться для выявления мошенничества, нарушений правил или подозрительной активности.\nПри необходимости результаты таких проверок могут дополнительно рассматриваться уполномоченными сотрудниками."
+      ],
+      [
+        "Cookie и аналогичные технологии",
+        "Cashback+ использует файлы Cookie и аналогичные технологии для:\n- работы платформы;\n- обеспечения безопасности;\n- сохранения пользовательских настроек;\n- анализа использования сервиса;\n- подтверждения покупок;\n- начисления кэшбэка и вознаграждений.\nПодробная информация содержится в отдельной Политике использования Cookie."
+      ],
+      [
+        "Возрастные ограничения",
+        "Платформа Cashback+ предназначена исключительно для лиц, достигших возраста 18 лет.\nЕсли нам станет известно, что учётная запись была создана лицом младше 18 лет в нарушение Условий использования, такая учётная запись может быть ограничена либо удалена после проведения проверки."
+      ],
+      [
+        "Характер платформы и вознаграждений",
+        "Cashback+ является информационной платформой и программой потребительских вознаграждений.\nКэшбэк, бонусы и иные вознаграждения платформы:\n- не являются банковскими продуктами;\n- не являются депозитами;\n- не являются электронными деньгами;\n- не являются инвестициями;\n- не являются платёжными инструментами.\nИспользование платформы не создаёт между пользователем и Cashback+ банковских, инвестиционных или иных финансовых отношений."
+      ],
+      [
+        "Изменение Политики",
+        "Мы можем периодически обновлять настоящую Политику конфиденциальности для отражения изменений законодательства, технологий или работы платформы.\nО существенных изменениях пользователи уведомляются через сайт либо иными доступными способами.\nНовая редакция вступает в силу с момента публикации, если не указано иное."
+      ],
+      [
+        "Контакты",
+        "По вопросам обработки персональных данных и реализации ваших прав обращайтесь:\nEmail: privacy@cashbackplus.uk\nПо общим вопросам поддержки:\nEmail: support@cashbackplus.uk\nПо юридическим вопросам:\nEmail: legal@cashbackplus.uk"
+      ]
+    ],
+    "en": [
+      [
+        "Who we are",
+        "Cashback+ is an information platform and consumer rewards programme that provides users with access to cashback programmes, bonus programmes, partner offers, research and tools for comparing products and services.\nWe aim to ensure transparent and lawful processing of personal data in accordance with United Kingdom data protection law."
+      ],
+      [
+        "Data controller",
+        "Unless expressly stated otherwise, Cashback Plus Ltd is the controller of personal data processed within the Cashback+ platform.\nThe company is responsible for complying with United Kingdom data protection law, including the UK GDPR and the Data Protection Act 2018.\nFor matters concerning the processing of personal data, you can contact:\nprivacy@cashbackplus.uk"
+      ],
+      [
+        "What data we process",
+        "Depending on the platform features used, we may process the following categories of data.\n### Account data\n- email address;\n- user display name;\n- registration date;\n- interface language;\n- profile settings;\n- login history.\n### Data related to rewards\n- information about credited cashback;\n- information about credited bonuses;\n- use of bonuses;\n- purchase confirmation history;\n- participation history in platform programmes.\n### Technical data\n- IP address;\n- browser type;\n- device type;\n- operating system version;\n- browser language;\n- visit dates and times;\n- diagnostic information about platform operation.\n### Location data\nWe may determine a user’s approximate location from their IP address.\nThis information may be used for:\n- account security;\n- fraud prevention;\n- compliance with geographical restrictions of partner programmes;\n- platform diagnostics.\nWe do not continuously track users’ geolocation.\n### Research information\nIf a user voluntarily participates in research programmes, Cashback+ may receive information confirming participation that is necessary to credit the specified rewards.\nThe amount of information transferred depends on the terms of the relevant programme."
+      ],
+      [
+        "Purposes of processing",
+        "Personal data is used exclusively for purposes relating to the operation of the Cashback+ platform.\nWe may use data for:\n- creating and maintaining an account;\n- providing access to platform features;\n- crediting cashback and bonuses;\n- confirming eligibility for rewards;\n- handling user requests;\n- account security;\n- fraud prevention;\n- analysing and improving platform operation;\n- complying with legal requirements;\n- resolving disputes and considering submissions.\nWe do not sell users’ personal data to third parties."
+      ],
+      [
+        "Legal bases for processing",
+        "We process data on the following bases.\n### Performance of a contract\nProcessing is necessary to provide access to the platform and perform the Cashback+ Terms of Use.\n### Legitimate interests\nWe may process data for:\n- platform security;\n- preventing abuse;\n- protecting users;\n- developing and improving the service;\n- considering submissions.\n### User consent\nWe request consent where required by law, including for the use of certain categories of cookies and the sending of marketing messages.\nUsers may withdraw their consent at any time.\n### Legal obligations\nWe may process data to comply with legal requirements, including tax and other mandatory requirements."
+      ],
+      [
+        "Sharing data with third parties",
+        "To operate the platform, we may share a limited amount of data with the following categories of organisations:\n- cloud infrastructure providers;\n- security system providers;\n- affiliate networks and programmes used to track purchases and credit rewards;\n- payment providers;\n- analytics services;\n- research organisations, if the user participates in the relevant programme.\nData is shared only to the extent necessary to achieve the relevant purpose."
+      ],
+      [
+        "International data transfers",
+        "In some cases, personal data may be processed outside the United Kingdom.\nIf data is transferred to countries that do not provide a level of protection comparable to UK GDPR requirements, Cashback+ uses safeguards provided for by law, including:\n- Standard Contractual Clauses (SCC);\n- international data transfer agreements;\n- other permitted safeguards."
+      ],
+      [
+        "Data retention periods",
+        "We retain personal data only for as long as necessary to achieve the purposes of processing.\nThe retention period depends on the nature of the data, legal requirements and the need to protect the legitimate interests of the platform and users.\nAfter account deletion, some data may be retained for up to one year or longer if necessary for:\n- compliance with legal obligations;\n- resolving disputes;\n- fraud prevention;\n- platform security;\n- protecting the rights of users and Cashback+.\nOnce the relevant periods expire, the data is deleted or anonymised."
+      ],
+      [
+        "Data security",
+        "We apply reasonable technical and organisational measures to protect personal data.\nThese measures may include:\n- HTTPS;\n- data access controls;\n- backups;\n- security monitoring;\n- auditing administrator actions;\n- protection against unauthorised access.\nUsers’ passwords are not stored in plain text.\nPasswords are processed and stored as cryptographic hashes using modern protection algorithms and cannot be restored to their original form.\nDespite the measures taken, no system can guarantee absolute data security."
+      ],
+      [
+        "User rights",
+        "Under the UK GDPR, users have the right to:\n- access their data;\n- correct inaccurate data;\n- have data deleted in circumstances provided for by law;\n- restrict processing;\n- object to processing;\n- receive data in a portable format, where applicable;\n- withdraw consent;\n- lodge a complaint with a supervisory authority."
+      ],
+      [
+        "Handling requests",
+        "We aim to handle data protection requests without undue delay.\nIn most cases, a response is provided within one calendar month in accordance with UK GDPR requirements.\nIn complex cases, this period may be extended where permitted by law."
+      ],
+      [
+        "Complaints to the ICO",
+        "If you believe your personal data is being processed unlawfully, you may contact the Information Commissioner's Office (ICO), the United Kingdom’s data protection supervisory authority.\nFurther information is available at:\nhttps://ico.org.uk\nWe recommend contacting Cashback+ directly first so that we can try to resolve the matter as quickly and effectively as possible."
+      ],
+      [
+        "Automated data processing",
+        "Cashback+ does not make decisions that have legal or similarly significant effects on users solely on the basis of automated data processing.\nAutomated tools may be used to detect fraud, rule violations or suspicious activity.\nWhere necessary, the results of these checks may be reviewed further by authorised staff."
+      ],
+      [
+        "Cookies and similar technologies",
+        "Cashback+ uses cookies and similar technologies for:\n- platform operation;\n- security;\n- saving user preferences;\n- analysing service usage;\n- confirming purchases;\n- crediting cashback and rewards.\nFurther information is provided in the separate Cookie Policy."
+      ],
+      [
+        "Age restrictions",
+        "The Cashback+ platform is intended exclusively for persons aged 18 or over.\nIf we become aware that an account was created by a person under 18 in breach of the Terms of Use, that account may be restricted or deleted after review."
+      ],
+      [
+        "Nature of the platform and rewards",
+        "Cashback+ is an information platform and consumer rewards programme.\nCashback, bonuses and other platform rewards:\n- are not banking products;\n- are not deposits;\n- are not electronic money;\n- are not investments;\n- are not payment instruments.\nUsing the platform does not create banking, investment or other financial relationships between the user and Cashback+."
+      ],
+      [
+        "Changes to the Policy",
+        "We may periodically update this Privacy Policy to reflect changes in legislation, technology or platform operation.\nUsers are notified of material changes through the website or other available means.\nThe new version takes effect upon publication unless otherwise stated."
+      ],
+      [
+        "Contact details",
+        "For matters concerning personal data processing and exercising your rights, contact:\nEmail: privacy@cashbackplus.uk\nFor general support enquiries:\nEmail: support@cashbackplus.uk\nFor legal matters:\nEmail: legal@cashbackplus.uk"
+      ]
+    ],
+    "de": [
+      [
+        "Wer wir sind",
+        "Cashback+ ist eine Informationsplattform und ein Verbraucherprämienprogramm, das Nutzern Zugang zu Cashback-Programmen, Bonusprogrammen, Partnerangeboten, Studien sowie Werkzeugen zum Vergleich von Produkten und Dienstleistungen bietet.\nWir bemühen uns um eine transparente und rechtmäßige Verarbeitung personenbezogener Daten gemäß dem Datenschutzrecht des Vereinigten Königreichs."
+      ],
+      [
+        "Verantwortlicher für personenbezogene Daten",
+        "Sofern nicht ausdrücklich anders angegeben, ist Cashback Plus Ltd der Verantwortliche für die auf der Cashback+ Plattform verarbeiteten personenbezogenen Daten.\nDas Unternehmen ist für die Einhaltung des Datenschutzrechts des Vereinigten Königreichs verantwortlich, einschließlich der UK GDPR und des Data Protection Act 2018.\nBei Fragen zur Verarbeitung personenbezogener Daten können Sie sich an folgende Adresse wenden:\nprivacy@cashbackplus.uk"
+      ],
+      [
+        "Welche Daten wir verarbeiten",
+        "Je nach genutzten Plattformfunktionen können wir die folgenden Datenkategorien verarbeiten.\n### Kontodaten\n- E-Mail-Adresse;\n- Anzeigename des Nutzers;\n- Registrierungsdatum;\n- Sprache der Benutzeroberfläche;\n- Profileinstellungen;\n- Anmeldehistorie.\n### Daten zu Vergütungen\n- Informationen über gutgeschriebenes Cashback;\n- Informationen über gutgeschriebene Boni;\n- Verwendung von Boni;\n- Historie der Kaufbestätigungen;\n- Historie der Teilnahme an Plattformprogrammen.\n### Technische Daten\n- IP-Adresse;\n- Browsertyp;\n- Gerätetyp;\n- Betriebssystemversion;\n- Browsersprache;\n- Datum und Uhrzeit von Besuchen;\n- Diagnoseinformationen zum Betrieb der Plattform.\n### Standortdaten\nWir können den ungefähren Standort eines Nutzers anhand seiner IP-Adresse bestimmen.\nDiese Informationen können für folgende Zwecke verwendet werden:\n- die Sicherheit des Kontos;\n- die Verhinderung von Betrug;\n- die Einhaltung geografischer Beschränkungen von Partnerprogrammen;\n- die Diagnose des Plattformbetriebs.\nWir verfolgen den geografischen Standort von Nutzern nicht dauerhaft.\n### Informationen zu Studien\nWenn Nutzer freiwillig an Studienprogrammen teilnehmen, kann Cashback+ Informationen über die Teilnahme erhalten, die zur Gutschrift der vorgesehenen Vergütungen erforderlich sind.\nDer Umfang der übermittelten Informationen hängt von den Bedingungen des jeweiligen Programms ab."
+      ],
+      [
+        "Zwecke der Datenverarbeitung",
+        "Personenbezogene Daten werden ausschließlich für Zwecke des Betriebs der Cashback+ Plattform verwendet.\nWir können Daten für folgende Zwecke verwenden:\n- die Erstellung und Verwaltung eines Kontos;\n- die Bereitstellung des Zugangs zu Plattformfunktionen;\n- die Gutschrift von Cashback und Boni;\n- die Bestätigung des Anspruchs auf Vergütungen;\n- die Bearbeitung von Nutzeranfragen;\n- die Sicherheit des Kontos;\n- die Verhinderung von Betrug;\n- die Analyse und Verbesserung des Plattformbetriebs;\n- die Erfüllung gesetzlicher Anforderungen;\n- die Beilegung von Streitigkeiten und die Prüfung von Anliegen.\nWir verkaufen personenbezogene Daten der Nutzer nicht an Dritte."
+      ],
+      [
+        "Rechtsgrundlagen der Verarbeitung",
+        "Wir verarbeiten Daten auf den folgenden Grundlagen.\n### Vertragserfüllung\nDie Verarbeitung ist erforderlich, um Zugang zur Plattform bereitzustellen und die Nutzungsbedingungen von Cashback+ zu erfüllen.\n### Berechtigtes Interesse\nWir können Daten für folgende Zwecke verarbeiten:\n- die Sicherheit der Plattform;\n- die Verhinderung von Missbrauch;\n- den Schutz der Nutzer;\n- die Weiterentwicklung und Verbesserung des Dienstes;\n- die Prüfung von Anliegen.\n### Einwilligung des Nutzers\nWir bitten um Einwilligung, wenn dies gesetzlich erforderlich ist, einschließlich der Verwendung bestimmter Cookie-Kategorien und des Versands von Marketingnachrichten.\nNutzer können ihre Einwilligung jederzeit widerrufen.\n### Rechtliche Verpflichtungen\nWir können Daten verarbeiten, um gesetzliche Anforderungen zu erfüllen, einschließlich steuerlicher und anderer verpflichtender Anforderungen."
+      ],
+      [
+        "Weitergabe von Daten an Dritte",
+        "Zum Betrieb der Plattform können wir einen begrenzten Datenumfang an die folgenden Kategorien von Organisationen weitergeben:\n- Anbieter von Cloud-Infrastruktur;\n- Anbieter von Sicherheitssystemen;\n- Partnernetzwerke und Programme zur Nachverfolgung von Einkäufen und zur Gutschrift von Vergütungen;\n- Zahlungsdienstleister;\n- Analysedienste;\n- Studienorganisationen, wenn Nutzer am entsprechenden Programm teilnehmen.\nDie Weitergabe erfolgt nur in dem Umfang, der zur Erreichung des jeweiligen Zwecks erforderlich ist."
+      ],
+      [
+        "Internationale Datenübermittlungen",
+        "In bestimmten Fällen können personenbezogene Daten außerhalb des Vereinigten Königreichs verarbeitet werden.\nWerden Daten in Länder übermittelt, die kein mit den Anforderungen der UK GDPR vergleichbares Schutzniveau bieten, verwendet Cashback+ gesetzlich vorgesehene Schutzmechanismen, einschließlich:\n- Standard Contractual Clauses (SCC);\n- internationaler Datenübermittlungsvereinbarungen;\n- anderer zulässiger Schutzmechanismen."
+      ],
+      [
+        "Speicherfristen",
+        "Wir speichern personenbezogene Daten nur so lange, wie dies zur Erreichung der Verarbeitungszwecke erforderlich ist.\nDie Speicherfrist hängt von der Art der Daten, den gesetzlichen Anforderungen und der Notwendigkeit ab, berechtigte Interessen der Plattform und der Nutzer zu schützen.\nNach der Kontolöschung können bestimmte Daten bis zu einem Jahr oder länger gespeichert werden, sofern dies für folgende Zwecke erforderlich ist:\n- die Erfüllung rechtlicher Verpflichtungen;\n- die Beilegung von Streitigkeiten;\n- die Verhinderung von Betrug;\n- die Sicherheit der Plattform;\n- den Schutz der Rechte der Nutzer und von Cashback+.\nNach Ablauf der jeweiligen Fristen werden die Daten gelöscht oder anonymisiert."
+      ],
+      [
+        "Datensicherheit",
+        "Wir wenden angemessene technische und organisatorische Maßnahmen zum Schutz personenbezogener Daten an.\nDiese Maßnahmen können Folgendes umfassen:\n- die Verwendung von HTTPS;\n- die Kontrolle des Datenzugriffs;\n- Sicherungskopien;\n- die Sicherheitsüberwachung;\n- die Protokollierung von Administratorhandlungen;\n- den Schutz vor unbefugtem Zugriff.\nPasswörter der Nutzer werden nicht im Klartext gespeichert.\nPasswörter werden mithilfe moderner Schutzalgorithmen als kryptografische Hashwerte verarbeitet und gespeichert und können nicht in ihrer ursprünglichen Form wiederhergestellt werden.\nTrotz der ergriffenen Maßnahmen kann kein System absolute Datensicherheit garantieren."
+      ],
+      [
+        "Rechte der Nutzer",
+        "Nach der UK GDPR haben Nutzer das Recht:\n- Zugang zu ihren Daten zu erhalten;\n- unrichtige Daten berichtigen zu lassen;\n- Daten in den gesetzlich vorgesehenen Fällen löschen zu lassen;\n- die Verarbeitung einzuschränken;\n- der Verarbeitung zu widersprechen;\n- gegebenenfalls Daten in einem übertragbaren Format zu erhalten;\n- eine Einwilligung zu widerrufen;\n- bei einer Aufsichtsbehörde Beschwerde einzulegen."
+      ],
+      [
+        "Bearbeitung von Anfragen",
+        "Wir bemühen uns, datenschutzbezogene Anfragen ohne unangemessene Verzögerungen zu bearbeiten.\nIn den meisten Fällen erfolgt die Antwort gemäß den Anforderungen der UK GDPR innerhalb eines Kalendermonats.\nIn komplexen Fällen kann diese Frist verlängert werden, soweit dies gesetzlich zulässig ist."
+      ],
+      [
+        "Beschwerden beim ICO",
+        "Wenn Sie der Ansicht sind, dass Ihre personenbezogenen Daten rechtswidrig verarbeitet werden, können Sie sich an das Information Commissioner's Office (ICO), die Datenschutzaufsichtsbehörde des Vereinigten Königreichs, wenden.\nWeitere Informationen finden Sie auf der Website:\nhttps://ico.org.uk\nWir empfehlen, sich zunächst direkt an Cashback+ zu wenden, damit wir versuchen können, das Anliegen möglichst schnell und wirksam zu lösen."
+      ],
+      [
+        "Automatisierte Datenverarbeitung",
+        "Cashback+ trifft keine Entscheidungen mit rechtlichen oder vergleichbar erheblichen Auswirkungen auf Nutzer ausschließlich auf Grundlage einer automatisierten Datenverarbeitung.\nAutomatisierte Werkzeuge können zur Erkennung von Betrug, Regelverstößen oder verdächtigen Aktivitäten eingesetzt werden.\nFalls erforderlich, können die Ergebnisse solcher Prüfungen zusätzlich von befugten Mitarbeitern geprüft werden."
+      ],
+      [
+        "Cookies und ähnliche Technologien",
+        "Cashback+ verwendet Cookies und ähnliche Technologien für:\n- den Betrieb der Plattform;\n- die Sicherheit;\n- die Speicherung von Nutzereinstellungen;\n- die Analyse der Dienstnutzung;\n- die Bestätigung von Einkäufen;\n- die Gutschrift von Cashback und Vergütungen.\nWeitere Informationen enthält die gesonderte Cookie-Richtlinie."
+      ],
+      [
+        "Altersbeschränkungen",
+        "Die Cashback+ Plattform richtet sich ausschließlich an Personen ab 18 Jahren.\nErfahren wir, dass ein Konto entgegen den Nutzungsbedingungen von einer Person unter 18 Jahren erstellt wurde, kann dieses Konto nach einer Prüfung eingeschränkt oder gelöscht werden."
+      ],
+      [
+        "Art der Plattform und der Vergütungen",
+        "Cashback+ ist eine Informationsplattform und ein Verbraucherprämienprogramm.\nCashback, Boni und andere Vergütungen der Plattform:\n- sind keine Bankprodukte;\n- sind keine Einlagen;\n- sind kein elektronisches Geld;\n- sind keine Investitionen;\n- sind keine Zahlungsmittel.\nDie Nutzung der Plattform begründet zwischen dem Nutzer und Cashback+ keine Bank-, Anlage- oder sonstigen Finanzbeziehungen."
+      ],
+      [
+        "Änderungen der Richtlinie",
+        "Wir können diese Datenschutzrichtlinie regelmäßig aktualisieren, um Änderungen der Gesetzgebung, der Technologien oder des Plattformbetriebs Rechnung zu tragen.\nNutzer werden über wesentliche Änderungen auf der Website oder auf anderen verfügbaren Wegen informiert.\nDie neue Fassung tritt mit ihrer Veröffentlichung in Kraft, sofern nichts anderes angegeben ist."
+      ],
+      [
+        "Kontakt",
+        "Bei Fragen zur Verarbeitung personenbezogener Daten und zur Ausübung Ihrer Rechte wenden Sie sich an:\nE-Mail: privacy@cashbackplus.uk\nBei allgemeinen Supportfragen:\nE-Mail: support@cashbackplus.uk\nBei rechtlichen Fragen:\nE-Mail: legal@cashbackplus.uk"
+      ]
+    ],
+    "fr": [
+      [
+        "Qui nous sommes",
+        "Cashback+ est une plateforme d’information et un programme de récompenses destinées aux consommateurs, donnant aux utilisateurs accès à des programmes de cashback, des programmes de bonus, des offres de partenaires, des études et des outils de comparaison de produits et de services.\nNous nous efforçons d’assurer un traitement transparent et licite des données personnelles conformément à la législation du Royaume-Uni sur la protection des données."
+      ],
+      [
+        "Responsable du traitement des données",
+        "Sauf indication contraire expresse, Cashback Plus Ltd est le responsable du traitement des données personnelles traitées dans le cadre de la plateforme Cashback+.\nLa société est responsable du respect de la législation du Royaume-Uni sur la protection des données, notamment le UK GDPR et le Data Protection Act 2018.\nPour toute question relative au traitement des données personnelles, vous pouvez écrire à :\nprivacy@cashbackplus.uk"
+      ],
+      [
+        "Quelles données nous traitons",
+        "Selon les fonctionnalités utilisées, nous pouvons traiter les catégories de données suivantes.\n### Données du compte\n- adresse électronique ;\n- nom affiché de l’utilisateur ;\n- date d’inscription ;\n- langue de l’interface ;\n- paramètres du profil ;\n- historique des connexions.\n### Données relatives aux récompenses\n- informations sur le cashback crédité ;\n- informations sur les bonus crédités ;\n- utilisation des bonus ;\n- historique des confirmations d’achats ;\n- historique de participation aux programmes de la plateforme.\n### Données techniques\n- adresse IP ;\n- type de navigateur ;\n- type d’appareil ;\n- version du système d’exploitation ;\n- langue du navigateur ;\n- dates et heures des visites ;\n- informations de diagnostic sur le fonctionnement de la plateforme.\n### Données de localisation\nNous pouvons déterminer la localisation approximative d’un utilisateur à partir de son adresse IP.\nCes informations peuvent être utilisées pour :\n- assurer la sécurité du compte ;\n- prévenir la fraude ;\n- respecter les restrictions géographiques des programmes partenaires ;\n- diagnostiquer le fonctionnement de la plateforme.\nNous n’effectuons pas de suivi permanent de la géolocalisation des utilisateurs.\n### Informations sur les études\nSi l’utilisateur participe volontairement à des programmes d’études, Cashback+ peut recevoir les informations relatives à sa participation nécessaires au crédit des récompenses prévues.\nL’étendue des informations transmises dépend des conditions du programme concerné."
+      ],
+      [
+        "Finalités du traitement",
+        "Les données personnelles sont utilisées exclusivement pour les besoins du fonctionnement de la plateforme Cashback+.\nNous pouvons utiliser les données pour :\n- créer et gérer un compte ;\n- donner accès aux fonctionnalités de la plateforme ;\n- créditer le cashback et les bonus ;\n- confirmer l’admissibilité aux récompenses ;\n- traiter les demandes des utilisateurs ;\n- assurer la sécurité du compte ;\n- prévenir la fraude ;\n- analyser et améliorer le fonctionnement de la plateforme ;\n- respecter les exigences légales ;\n- résoudre les litiges et examiner les demandes.\nNous ne vendons pas les données personnelles des utilisateurs à des tiers."
+      ],
+      [
+        "Bases juridiques du traitement",
+        "Nous traitons les données sur les bases suivantes.\n### Exécution du contrat\nLe traitement est nécessaire pour donner accès à la plateforme et exécuter les Conditions d’utilisation de Cashback+.\n### Intérêt légitime\nNous pouvons traiter des données pour :\n- assurer la sécurité de la plateforme ;\n- prévenir les abus ;\n- protéger les utilisateurs ;\n- développer et améliorer le service ;\n- examiner les demandes.\n### Consentement de l’utilisateur\nNous demandons le consentement lorsque la législation l’exige, notamment pour l’utilisation de certaines catégories de cookies et l’envoi de messages marketing.\nL’utilisateur peut retirer son consentement à tout moment.\n### Obligations légales\nNous pouvons traiter des données pour respecter les exigences légales, notamment fiscales et autres obligations impératives."
+      ],
+      [
+        "Communication de données à des tiers",
+        "Pour assurer le fonctionnement de la plateforme, nous pouvons communiquer une quantité limitée de données aux catégories d’organisations suivantes :\n- fournisseurs d’infrastructure cloud ;\n- fournisseurs de systèmes de sécurité ;\n- réseaux et programmes d’affiliation utilisés pour suivre les achats et créditer les récompenses ;\n- prestataires de paiement ;\n- services d’analyse ;\n- organismes d’études, si l’utilisateur participe au programme concerné.\nLes données sont communiquées uniquement dans la mesure nécessaire à la réalisation de la finalité concernée."
+      ],
+      [
+        "Transferts internationaux de données",
+        "Dans certains cas, les données personnelles peuvent être traitées en dehors du Royaume-Uni.\nSi les données sont transférées vers des pays n’offrant pas un niveau de protection comparable aux exigences du UK GDPR, Cashback+ utilise les mécanismes de protection prévus par la législation, notamment :\n- Standard Contractual Clauses (SCC) ;\n- accords internationaux de transfert de données ;\n- autres mécanismes de protection autorisés."
+      ],
+      [
+        "Durées de conservation",
+        "Nous conservons les données personnelles uniquement pendant la durée nécessaire à la réalisation des finalités du traitement.\nLa durée de conservation dépend de la nature des données, des exigences légales et de la nécessité de protéger les intérêts légitimes de la plateforme et des utilisateurs.\nAprès la suppression du compte, certaines données peuvent être conservées jusqu’à un an ou davantage si cela est nécessaire pour :\n- respecter les obligations légales ;\n- résoudre des litiges ;\n- prévenir la fraude ;\n- assurer la sécurité de la plateforme ;\n- protéger les droits des utilisateurs et de Cashback+.\nÀ l’expiration des durées concernées, les données sont supprimées ou anonymisées."
+      ],
+      [
+        "Sécurité des données",
+        "Nous appliquons des mesures techniques et organisationnelles raisonnables pour protéger les données personnelles.\nCes mesures peuvent comprendre :\n- l’utilisation du HTTPS ;\n- le contrôle de l’accès aux données ;\n- les sauvegardes ;\n- la surveillance de la sécurité ;\n- l’audit des actions des administrateurs ;\n- la protection contre les accès non autorisés.\nLes mots de passe des utilisateurs ne sont pas stockés en clair.\nLes mots de passe sont traités et stockés sous forme de hachages cryptographiques au moyen d’algorithmes de protection modernes et ne peuvent pas être restaurés dans leur forme d’origine.\nMalgré les mesures prises, aucun système ne peut garantir la sécurité absolue des données."
+      ],
+      [
+        "Droits des utilisateurs",
+        "Conformément au UK GDPR, l’utilisateur a le droit :\n- d’accéder à ses données ;\n- de faire rectifier les données inexactes ;\n- de faire supprimer les données dans les cas prévus par la loi ;\n- de limiter le traitement ;\n- de s’opposer au traitement ;\n- de recevoir les données dans un format portable, lorsque cela est applicable ;\n- de retirer son consentement ;\n- de déposer une réclamation auprès d’une autorité de contrôle."
+      ],
+      [
+        "Traitement des demandes",
+        "Nous nous efforçons de traiter les demandes relatives à la protection des données sans retard injustifié.\nDans la plupart des cas, une réponse est fournie dans un délai d’un mois calendaire conformément aux exigences du UK GDPR.\nDans les cas complexes, ce délai peut être prolongé si la législation le permet."
+      ],
+      [
+        "Réclamations auprès de l’ICO",
+        "Si vous estimez que vos données personnelles sont traitées en violation de la législation, vous pouvez contacter l’Information Commissioner's Office (ICO), l’autorité de contrôle du Royaume-Uni chargée de la protection des données.\nDes informations complémentaires sont disponibles sur le site :\nhttps://ico.org.uk\nNous recommandons de contacter d’abord directement Cashback+ afin que nous puissions tenter de résoudre la question aussi rapidement et efficacement que possible."
+      ],
+      [
+        "Traitement automatisé des données",
+        "Cashback+ ne prend pas de décisions produisant des effets juridiques ou affectant l’utilisateur de manière similaire et significative sur le seul fondement d’un traitement automatisé des données.\nDes outils automatisés peuvent être utilisés pour détecter la fraude, les infractions aux règles ou les activités suspectes.\nSi nécessaire, les résultats de ces vérifications peuvent être examinés en complément par des employés habilités."
+      ],
+      [
+        "Cookies et technologies similaires",
+        "Cashback+ utilise des cookies et des technologies similaires pour :\n- faire fonctionner la plateforme ;\n- assurer la sécurité ;\n- conserver les préférences des utilisateurs ;\n- analyser l’utilisation du service ;\n- confirmer les achats ;\n- créditer le cashback et les récompenses.\nDes informations détaillées figurent dans la Politique relative aux cookies distincte."
+      ],
+      [
+        "Restrictions d’âge",
+        "La plateforme Cashback+ est destinée exclusivement aux personnes âgées de 18 ans ou plus.\nSi nous apprenons qu’un compte a été créé par une personne de moins de 18 ans en violation des Conditions d’utilisation, ce compte peut être restreint ou supprimé après vérification."
+      ],
+      [
+        "Nature de la plateforme et des récompenses",
+        "Cashback+ est une plateforme d’information et un programme de récompenses destinées aux consommateurs.\nLe cashback, les bonus et les autres récompenses de la plateforme :\n- ne sont pas des produits bancaires ;\n- ne sont pas des dépôts ;\n- ne sont pas de la monnaie électronique ;\n- ne sont pas des investissements ;\n- ne sont pas des instruments de paiement.\nL’utilisation de la plateforme ne crée pas de relation bancaire, d’investissement ou d’autre relation financière entre l’utilisateur et Cashback+."
+      ],
+      [
+        "Modification de la Politique",
+        "Nous pouvons mettre à jour périodiquement la présente Politique de confidentialité pour tenir compte de l’évolution de la législation, des technologies ou du fonctionnement de la plateforme.\nLes utilisateurs sont informés des modifications importantes par le site ou par d’autres moyens disponibles.\nLa nouvelle version entre en vigueur dès sa publication, sauf indication contraire."
+      ],
+      [
+        "Contacts",
+        "Pour toute question relative au traitement des données personnelles et à l’exercice de vos droits, contactez :\nE-mail : privacy@cashbackplus.uk\nPour les questions générales d’assistance :\nE-mail : support@cashbackplus.uk\nPour les questions juridiques :\nE-mail : legal@cashbackplus.uk"
+      ]
+    ]
+  }
+}

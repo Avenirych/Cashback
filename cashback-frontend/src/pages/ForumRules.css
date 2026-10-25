@@ -1,0 +1,84 @@
+.forum-rules-page {
+  width: 100%;
+  max-width: 980px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 40px 20px 30px;
+  overflow-wrap: anywhere;
+}
+.forum-rules-page h1,
+.forum-rules-date {
+  text-align: center;
+}
+.forum-rule-sections {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  margin: 24px 0;
+}
+.forum-rule-panel {
+  min-width: 0;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  background: #fff;
+  color: #1f1f1f;
+  overflow-wrap: anywhere;
+}
+.forum-rule-panel[open] {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+.forum-rule-panel > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  list-style: none;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.forum-rule-panel > summary::-webkit-details-marker {
+  display: none;
+}
+.forum-rule-panel > summary:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+.forum-rule-panel[open] > summary {
+  background: #f2f2f2;
+  border-radius: 12px 12px 0 0;
+}
+.forum-rule-arrow {
+  flex-shrink: 0;
+  font-size: 24px;
+  line-height: 1;
+}
+.forum-rule-panel[open] .forum-rule-arrow {
+  transform: rotate(180deg);
+}
+.forum-rule-body {
+  padding: 18px 20px;
+  border-top: 1px solid #eee;
+  color: #444;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.forum-rule-body p {
+  margin: 0 0 12px;
+}
+.forum-rule-body ul {
+  margin: 0 0 12px;
+  padding-left: 24px;
+}
+.forum-rule-body > :last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 479px) {
+  .forum-rules-page { padding: 24px 12px; }
+  .forum-rule-panel > summary,
+  .forum-rule-body { padding: 14px 16px; }
+}
