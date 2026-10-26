@@ -1,3 +1,6 @@
+import catalogue from './content/researchPrograms.json';
+import localisation from './content/researchDetails.json';
+
 export interface DirectionText {
   title: string;
   summary: string;
@@ -10,6 +13,8 @@ export interface ResearchDirection {
   id: string;
   ru: DirectionText;
   en: DirectionText;
+  de: DirectionText;
+  fr: DirectionText;
 }
 
 export interface Study {
@@ -18,22 +23,22 @@ export interface Study {
   expectedBonuses: number;
 }
 
-export const directions: ResearchDirection[] = [
+const baseDirections: Omit<ResearchDirection, 'de' | 'fr'>[] = [
   {
     id: "surveys",
     ru: {
       title: "Маркетинговые опросы",
-      summary: "Анкеты о покупках, привычках и предпочтениях.",
-      goals: "Изучить мнение покупателей и улучшить продукты и рекламу.",
-      participants: "Потребители, соответствующие требованиям конкретного опроса.",
-      conditions: "Пройти предварительный отбор и честно ответить на вопросы.",
+      summary: "Анкеты о покупках, привычках, предпочтениях и отношении к товарам и услугам.",
+      goals: "Изучение мнения потребителей и получение обратной связи для совершенствования товаров, услуг и рекламных материалов.",
+      participants: "Пользователи, соответствующие критериям конкретного исследования.",
+      conditions: "Для отдельных программ может потребоваться предварительный отбор и успешное прохождение квалификационных вопросов.",
     },
     en: {
       title: "Paid Surveys",
-      summary: "Questionnaires about purchases, habits and preferences.",
-      goals: "Understand customer opinions and improve products and advertising.",
-      participants: "Consumers who meet the requirements of each survey.",
-      conditions: "Complete screening and answer the questions honestly.",
+      summary: "Questionnaires about purchases, habits, preferences and attitudes towards goods and services.",
+      goals: "Studying consumer opinions and obtaining feedback to improve goods, services and advertising materials.",
+      participants: "Users who meet the criteria of the particular study.",
+      conditions: "Some programmes may require preliminary selection and successful completion of qualifying questions.",
     },
   },
   {
@@ -195,6 +200,18 @@ export const directions: ResearchDirection[] = [
   },
 ];
 
+// Titles share the catalogue source; identifiers and demo generation stay unchanged.
+export const directions: ResearchDirection[] = baseDirections.map((direction, index) => {
+  const title = (lang: keyof typeof catalogue) => catalogue[lang].cards[index].title.replace(/^\d+\)\s*/, '');
+  return {
+    ...direction,
+    ru: {...direction.ru, title: title('RU')},
+    en: {...direction.en, title: title('EN')},
+    de: {...localisation.translations.DE[index], title: title('DE')},
+    fr: {...localisation.translations.FR[index], title: title('FR')},
+  };
+});
+
 // Воспроизводимая псевдослучайная генерация.
 // Изменение seed создаст другой демонстрационный набор.
 function createRandom(seed: number) {
@@ -229,31 +246,14 @@ export function getDirectionText(
   direction: ResearchDirection,
   lang: string
 ): DirectionText {
-  return lang.toUpperCase() === "RU" ? direction.ru : direction.en;
+  const key = lang.toLowerCase();
+  if (key === 'ru') return direction.ru;
+  if (key === 'de') return direction.de;
+  if (key === 'fr') return direction.fr;
+  return direction.en;
 }
 
 export function getResearchMessages(lang: string) {
-  const ru = lang.toUpperCase() === "RU";
-
-  return {
-    title: ru ? "Исследования" : "Research",
-    subtitle: ru
-      ? "Выберите направление и откройте список исследований."
-      : "Choose a category and browse its studies.",
-    demo: ru
-      ? "Демонстрационный каталог. Партнёры пока не подключены. Ожидаемые бонусы не гарантированы и не начисляются."
-      : "Demo catalogue. Partners are not connected yet. Expected bonuses are not guaranteed and are not credited.",
-    goals: ru ? "Цели" : "Goals",
-    participants: ru ? "Участники" : "Participants",
-    conditions: ru ? "Условия" : "Conditions",
-    expected: ru ? "Ожидаемые бонусы" : "Expected bonuses",
-    bonusRange: ru ? "5–50 бонусов за исследование" : "5–50 bonuses per study",
-    studyCount: ru ? "Исследований" : "Studies",
-    start: "Apply / Start",
-    participate: ru ? "Участвовать" : "Participate",
-    back: ru ? "Все направления" : "All categories",
-    notFound: ru ? "Направление не найдено" : "Category not found",
-    empty: ru ? "Нет исследований" : "No studies",
-    studyName: (id: number) => ru ? `Исследование № ${id}` : `Study No. ${id}`,
-  };
+  const t = localisation.messages[lang.toUpperCase() as keyof typeof localisation.messages] ?? localisation.messages.EN;
+  return {...t, studyName: (id: number) => t.studyName.replace('{id}', String(id))};
 }

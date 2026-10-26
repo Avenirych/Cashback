@@ -243,3 +243,15 @@ test("auth switch ignores a previous user's status response", async () => {
   expect(auth.user?.email_verified).toBe(true);
   expect(localStorage.getItem("cashback_token")).toBe("pending-token");
  });
+
+test.each([401,429,503,403])('login status %s never leaks backend response details',async status=>{
+ localStorage.clear();const body=jest.fn(async()=>({message:'User not found; database secret'}));
+ (fetch as jest.Mock).mockResolvedValue({ok:false,status,json:body,text:body});mount();
+ let failure:any;await act(async()=>{failure=await auth.login({email:'buyer@example.test',password:'synthetic'}).catch(e=>e)});
+ expect(failure.kind).toBe(status===401?'credentials':status===429?'limited':status===503?'server':'unknown');
+ expect(failure.message).not.toMatch(/User not found|database secret/);expect(body).not.toHaveBeenCalled();expect(auth.user).toBeNull();expect(localStorage.getItem('cashback_token')).toBeNull();
+});
+test('network failure receives a safe login category without exposing transport details',async()=>{
+ localStorage.clear();(fetch as jest.Mock).mockRejectedValue(new TypeError('private endpoint details'));mount();let failure:any;
+ await act(async()=>{failure=await auth.login({email:'buyer@example.test',password:'synthetic'}).catch(e=>e)});expect(failure.kind).toBe('network');expect(failure.message).not.toContain('private endpoint');
+});

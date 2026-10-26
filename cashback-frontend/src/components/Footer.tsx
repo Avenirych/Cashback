@@ -7,9 +7,10 @@ import {cookieMessages} from '../content/cookieMessages';
 
 interface FooterProps {
   lang: string;
+  linkLabels?: { terms: string; contacts: string };
 }
 
-export default function Footer({ lang }: FooterProps) {
+export default function Footer({ lang, linkLabels }: FooterProps) {
   const t = translations[lang?.toUpperCase()] ?? translations["EN"];
 
   return (
@@ -33,9 +34,9 @@ export default function Footer({ lang }: FooterProps) {
       </nav>
       <div style={{ marginBottom: "10px" }}>
         <Link to="/terms" style={{ marginRight: "20px" }}>
-          {t.terms ?? "Terms"}
+          {linkLabels?.terms ?? t.terms ?? "Terms"}
         </Link>
-        <Link to="/contacts">{t.contacts ?? "Contacts"}</Link>
+        <Link to="/contacts">{linkLabels?.contacts ?? t.contacts ?? "Contacts"}</Link>
       </div>
 
       <div style={{ fontSize: "14px", color: "#555" }}>

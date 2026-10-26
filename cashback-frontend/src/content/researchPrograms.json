@@ -1,0 +1,130 @@
+{
+  "RU": {
+    "pageTitle": "Исследовательские программы Cashback+",
+    "pageSubtitle": "Выберите направление исследования. Ниже кратко описаны цели, кто может участвовать и какие условия участия могут предусматриваться.",
+    "participate": "Участвовать", "waiting": "Подождите…",
+    "importantTitle": "Важная информация",
+    "importantParagraphs": [
+      "Cashback+ предоставляет информацию об исследовательских программах независимых организаций.",
+      "Cashback+ не является организатором исследований, работодателем, кадровым агентством или посредником по трудоустройству.",
+      "Условия участия, критерии отбора и размеры вознаграждений определяются организаторами соответствующих исследований.",
+      "Участие в исследовании не гарантирует получение приглашения, прохождение отбора или определённого размера вознаграждения."
+    ],
+    "rewardsTitle": "Важная информация о вознаграждениях",
+    "rewardsParagraphs": [
+      "Некоторые исследовательские организации осуществляют выплаты напрямую участникам.",
+      "Такие выплаты не проходят через Cashback+ и регулируются условиями соответствующей организации."
+    ],
+    "rewardsBefore": "В отдельных случаях Cashback+ может получать партнёрское вознаграждение за привлечение участника и начислять пользователю дополнительные бонусы в соответствии с ",
+    "rulesLink": "Правилами активности", "rewardsAfter": " платформы.",
+    "bonusNature": "Бонусы Cashback+ являются частью программы потребительских вознаграждений и не являются денежными средствами, электронными деньгами, банковским вкладом или инвестиционным продуктом.",
+    "cards": [
+      {"id":1,"title":"1) Маркетинговые опросы","summary":"Самый распространенный формат: анкеты о покупках, привычках, финансах, авто и других темах.","goals":"Цель: собрать мнения потребителей, проверить гипотезы и улучшить продукты/рекламу.","participants":"Участники: широкая аудитория пользователей, иногда узкие сегменты по возрасту, региону или интересам.","conditions":"Условия: заполнение анкеты, прохождение квалификации (скрининг), честные и полные ответы."},
+      {"id":2,"title":"2) Фокус-группы","summary":"Групповые обсуждения продукта, интерфейса или рекламы, часто в Zoom.","goals":"Цель: получить глубокую качественную обратную связь и понять мотивацию пользователей.","participants":"Участники: потребители из целевой аудитории, а также специалисты (врачи, IT, финансы и т.д.).","conditions":"Условия: участие в сессии по времени, активное обсуждение, соблюдение инструкций модератора."},
+      {"id":3,"title":"3) UX-исследования сайтов и приложений","summary":"Тестирование интерфейсов: регистрация, покупка, навигация, комментарии по удобству.","goals":"Цель: выявить проблемы UX/UI и повысить конверсию/удобство продукта.","participants":"Участники: обычные пользователи и целевые группы с нужным опытом.","conditions":"Условия: выполнение сценариев, иногда запись экрана и голосовых комментариев."},
+      {"id":4,"title":"4) Программы оценки клиентского сервиса (Mystery Shopping)","summary":"Проверка клиентского сервиса через реальный пользовательский путь.","goals":"Цель: оценить качество обслуживания, скорость ответа поддержки и работу процесса заказа.","participants":"Участники: пользователи, готовые пройти заданный сценарий взаимодействия с сервисом.","conditions":"Условия: оформить заказ/обращение в поддержку, заполнить отчет по результатам."},
+      {"id":5,"title":"5) Медицинские исследования","summary":"Проекты с пациентами, родственниками пациентов и иногда здоровыми добровольцами.","goals":"Цель: собрать данные о лечении, симптомах, опыте пациентов и восприятии медицинских решений.","participants":"Участники: люди с конкретными диагнозами, их родственники, иногда контрольные группы.","conditions":"Условия: строгий скрининг, подтверждение критериев участия, соблюдение протоколов исследования."},
+      {"id":6,"title":"6) Исследования среди профессионалов (B2B Research)","summary":"Интервью и опросы среди специалистов: руководителей, бухгалтеров, программистов, владельцев бизнеса.","goals":"Цель: понять рынок, процессы принятия решений и профессиональные потребности.","participants":"Участники: подтвержденные специалисты и эксперты в своей области.","conditions":"Условия: верификация опыта/должности, интервью по профильным темам."},
+      {"id":7,"title":"7) Онлайн-дневники (Diary Studies)","summary":"Длительное наблюдение: участник несколько дней/недель фиксирует поведение и опыт.","goals":"Цель: изучить реальные привычки пользователей в динамике, а не в одномоментном опросе.","participants":"Участники: пользователи, готовые регулярно вести записи и выполнять задания.","conditions":"Условия: систематические записи, своевременная отправка заметок/материалов."},
+      {"id":8,"title":"8) Сообщества исследователей (Research Communities)","summary":"Закрытые сообщества брендов с регулярными мини-опросами и обсуждениями.","goals":"Цель: получать непрерывную обратную связь от лояльной аудитории.","participants":"Участники: приглашенные пользователи, соответствующие профилю бренда.","conditions":"Условия: периодическое участие в обсуждениях и коротких опросах."},
+      {"id":9,"title":"9) Академические исследования","summary":"Исследования университетов, бизнес-школ и лабораторий (в т.ч. поведенческие и психологические).","goals":"Цель: научные данные для статей, диссертаций и прикладных исследований.","participants":"Участники: студенты и широкая аудитория, подходящая под критерии конкретного проекта.","conditions":"Условия: выполнение исследовательских задач, соблюдение этических правил и инструкций."},
+      {"id":10,"title":"10) Экспертные интервью","summary":"Компании и инвестиционные фонды могут приглашать экспертов для консультаций.","goals":"Цель: получить практическую отраслевую экспертизу для принятия решений.","participants":"Участники: опытные профессионалы с подтверждаемой экспертизой.","conditions":"Условия: предварительный отбор, профильное интервью/созвон, соблюдение правил конфиденциальности."}
+    ]
+  },
+  "EN": {
+    "pageTitle": "Cashback+ research programmes",
+    "pageSubtitle": "Choose a research category. The cards below briefly describe the goals, who may participate and the participation conditions that may apply.",
+    "participate": "Participate", "waiting": "Please wait…",
+    "importantTitle": "Important information",
+    "importantParagraphs": [
+      "Cashback+ provides information about research programmes run by independent organisations.",
+      "Cashback+ is not a research organiser, employer, recruitment agency or employment intermediary.",
+      "Participation conditions, selection criteria and reward amounts are determined by the organisers of the respective studies.",
+      "Participation in a study does not guarantee an invitation, successful selection or a particular reward amount."
+    ],
+    "rewardsTitle": "Important information about rewards",
+    "rewardsParagraphs": [
+      "Some research organisations make payments directly to participants.",
+      "These payments do not pass through Cashback+ and are governed by the conditions of the respective organisation."
+    ],
+    "rewardsBefore": "In certain cases, Cashback+ may receive a referral reward for attracting a participant and award the user additional bonuses in accordance with the platform’s ",
+    "rulesLink": "Activity Rules", "rewardsAfter": ".",
+    "bonusNature": "Cashback+ bonuses form part of a consumer rewards programme and are not money, electronic money, a bank deposit or an investment product.",
+    "cards": [
+      {"id":1,"title":"1) Marketing surveys","summary":"The most common format: questionnaires about purchases, habits, finance, cars and other topics.","goals":"Goal: collect consumer opinions, test hypotheses and improve products and advertising.","participants":"Participants: a broad audience of users, sometimes specific groups defined by age, region or interests.","conditions":"Conditions: complete a questionnaire, pass qualification screening and provide honest, complete answers."},
+      {"id":2,"title":"2) Focus groups","summary":"Group discussions about a product, interface or advertising, often via Zoom.","goals":"Goal: gather in-depth qualitative feedback and understand user motivation.","participants":"Participants: consumers from the target audience, as well as professionals in medicine, IT, finance and other fields.","conditions":"Conditions: attend a session at the scheduled time, take an active part in the discussion and follow the moderator’s instructions."},
+      {"id":3,"title":"3) UX research for websites and apps","summary":"Interface testing: registration, purchasing, navigation and comments on usability.","goals":"Goal: identify UX/UI problems and improve product conversion and usability.","participants":"Participants: ordinary users and target groups with the required experience.","conditions":"Conditions: complete task scenarios; screen recordings and spoken comments may sometimes be required."},
+      {"id":4,"title":"4) Customer service evaluation programmes (Mystery Shopping)","summary":"Checking customer service through a real user journey.","goals":"Goal: assess service quality, support response times and the ordering process.","participants":"Participants: users willing to follow a specified scenario for interacting with a service.","conditions":"Conditions: place an order or contact support and complete a report on the results."},
+      {"id":5,"title":"5) Medical research","summary":"Projects involving patients, patients’ relatives and sometimes healthy volunteers.","goals":"Goal: collect data on treatment, symptoms, patient experiences and perceptions of medical solutions.","participants":"Participants: people with specific diagnoses, their relatives and sometimes control groups.","conditions":"Conditions: strict screening, verification of participation criteria and compliance with study protocols."},
+      {"id":6,"title":"6) Research among professionals (B2B Research)","summary":"Interviews and surveys with professionals: managers, accountants, developers and business owners.","goals":"Goal: understand the market, decision-making processes and professional needs.","participants":"Participants: verified professionals and experts in their field.","conditions":"Conditions: verification of experience or job role and interviews on relevant professional topics."},
+      {"id":7,"title":"7) Online diaries (Diary Studies)","summary":"Long-term observation: participants record their behaviour and experiences over several days or weeks.","goals":"Goal: study real user habits over time rather than through a single survey.","participants":"Participants: users willing to make regular entries and complete tasks.","conditions":"Conditions: systematic entries and timely submission of notes and materials."},
+      {"id":8,"title":"8) Research communities","summary":"Private brand communities with regular short surveys and discussions.","goals":"Goal: obtain continuous feedback from a loyal audience.","participants":"Participants: invited users who match the brand’s profile.","conditions":"Conditions: periodic participation in discussions and short surveys."},
+      {"id":9,"title":"9) Academic research","summary":"Studies conducted by universities, business schools and laboratories, including behavioural and psychological research.","goals":"Goal: collect scientific data for articles, theses and applied research.","participants":"Participants: students and members of the wider public who meet the criteria of the particular project.","conditions":"Conditions: complete research tasks and follow ethical rules and instructions."},
+      {"id":10,"title":"10) Expert interviews","summary":"Companies and investment funds may invite experts to provide consultations.","goals":"Goal: obtain practical industry expertise to support decision-making.","participants":"Participants: experienced professionals with verifiable expertise.","conditions":"Conditions: preliminary selection, a specialist interview or call and compliance with confidentiality rules."}
+    ]
+  },
+  "DE": {
+    "pageTitle": "Forschungsprogramme von Cashback+",
+    "pageSubtitle": "Wählen Sie einen Forschungsbereich. Die folgenden Karten beschreiben kurz die Ziele, die möglichen Teilnehmer und die gegebenenfalls geltenden Teilnahmebedingungen.",
+    "participate": "Teilnehmen", "waiting": "Bitte warten…",
+    "importantTitle": "Wichtige Informationen",
+    "importantParagraphs": [
+      "Cashback+ stellt Informationen über Forschungsprogramme unabhängiger Organisationen bereit.",
+      "Cashback+ ist weder Forschungsveranstalter noch Arbeitgeber, Personalagentur oder Arbeitsvermittler.",
+      "Teilnahmebedingungen, Auswahlkriterien und die Höhe der Vergütungen werden von den Veranstaltern der jeweiligen Studien festgelegt.",
+      "Die Teilnahme an einer Studie garantiert weder eine Einladung noch eine erfolgreiche Auswahl oder eine bestimmte Vergütungshöhe."
+    ],
+    "rewardsTitle": "Wichtige Informationen zu Vergütungen",
+    "rewardsParagraphs": [
+      "Einige Forschungsorganisationen leisten Zahlungen direkt an die Teilnehmer.",
+      "Diese Zahlungen werden nicht über Cashback+ abgewickelt und unterliegen den Bedingungen der jeweiligen Organisation."
+    ],
+    "rewardsBefore": "In bestimmten Fällen kann Cashback+ für die Vermittlung eines Teilnehmers eine Partnervergütung erhalten und dem Nutzer gemäß den ",
+    "rulesLink": "Aktivitätsregeln", "rewardsAfter": " der Plattform zusätzliche Boni gewähren.",
+    "bonusNature": "Cashback+-Boni sind Teil eines Verbraucherprämienprogramms und sind weder Geldmittel noch elektronisches Geld, eine Bankeinlage oder ein Anlageprodukt.",
+    "cards": [
+      {"id":1,"title":"1) Marketingumfragen","summary":"Das häufigste Format: Fragebögen zu Einkäufen, Gewohnheiten, Finanzen, Autos und anderen Themen.","goals":"Ziel: Verbrauchermeinungen sammeln, Hypothesen prüfen und Produkte sowie Werbung verbessern.","participants":"Teilnehmer: eine breite Nutzerschaft, manchmal bestimmte Gruppen nach Alter, Region oder Interessen.","conditions":"Bedingungen: einen Fragebogen ausfüllen, die Eignungsprüfung durchlaufen und ehrlich sowie vollständig antworten."},
+      {"id":2,"title":"2) Fokusgruppen","summary":"Gruppendiskussionen über ein Produkt, eine Benutzeroberfläche oder Werbung, häufig über Zoom.","goals":"Ziel: tiefgehende qualitative Rückmeldungen erhalten und die Motivation der Nutzer verstehen.","participants":"Teilnehmer: Verbraucher aus der Zielgruppe sowie Fachleute aus Medizin, IT, Finanzen und anderen Bereichen.","conditions":"Bedingungen: zum festgelegten Zeitpunkt an einer Sitzung teilnehmen, aktiv diskutieren und die Anweisungen des Moderators befolgen."},
+      {"id":3,"title":"3) UX-Forschung zu Websites und Apps","summary":"Testen von Benutzeroberflächen: Registrierung, Einkauf, Navigation und Kommentare zur Benutzerfreundlichkeit.","goals":"Ziel: UX/UI-Probleme erkennen und die Konversionsrate sowie die Benutzerfreundlichkeit des Produkts verbessern.","participants":"Teilnehmer: gewöhnliche Nutzer und Zielgruppen mit der erforderlichen Erfahrung.","conditions":"Bedingungen: vorgegebene Aufgaben ausführen; gelegentlich sind Bildschirmaufnahmen und gesprochene Kommentare erforderlich."},
+      {"id":4,"title":"4) Programme zur Bewertung des Kundenservice (Mystery Shopping)","summary":"Prüfung des Kundenservice anhand eines tatsächlichen Nutzerablaufs.","goals":"Ziel: die Servicequalität, die Reaktionsgeschwindigkeit des Supports und den Bestellprozess bewerten.","participants":"Teilnehmer: Nutzer, die bereit sind, ein vorgegebenes Szenario zur Interaktion mit einem Dienst auszuführen.","conditions":"Bedingungen: eine Bestellung aufgeben oder den Support kontaktieren und einen Ergebnisbericht ausfüllen."},
+      {"id":5,"title":"5) Medizinische Forschung","summary":"Projekte mit Patienten, deren Angehörigen und manchmal gesunden Freiwilligen.","goals":"Ziel: Daten zu Behandlungen, Symptomen, Patientenerfahrungen und der Wahrnehmung medizinischer Lösungen sammeln.","participants":"Teilnehmer: Menschen mit bestimmten Diagnosen, ihre Angehörigen und manchmal Kontrollgruppen.","conditions":"Bedingungen: strenge Eignungsprüfung, Nachweis der Teilnahmekriterien und Einhaltung der Studienprotokolle."},
+      {"id":6,"title":"6) Forschung unter Fachleuten (B2B Research)","summary":"Interviews und Umfragen mit Fachleuten: Führungskräften, Buchhaltern, Programmierern und Unternehmensinhabern.","goals":"Ziel: den Markt, Entscheidungsprozesse und berufliche Bedürfnisse verstehen.","participants":"Teilnehmer: überprüfte Fachleute und Experten auf ihrem Gebiet.","conditions":"Bedingungen: Nachweis der Erfahrung oder Position und Interviews zu fachbezogenen Themen."},
+      {"id":7,"title":"7) Online-Tagebücher (Diary Studies)","summary":"Langzeitbeobachtung: Teilnehmer dokumentieren ihr Verhalten und ihre Erfahrungen über mehrere Tage oder Wochen.","goals":"Ziel: tatsächliche Nutzergewohnheiten im Zeitverlauf statt in einer einmaligen Umfrage untersuchen.","participants":"Teilnehmer: Nutzer, die bereit sind, regelmäßig Einträge zu verfassen und Aufgaben zu erledigen.","conditions":"Bedingungen: systematische Einträge und rechtzeitige Übermittlung von Notizen und Materialien."},
+      {"id":8,"title":"8) Forschungsgemeinschaften (Research Communities)","summary":"Geschlossene Markengemeinschaften mit regelmäßigen Kurzumfragen und Diskussionen.","goals":"Ziel: kontinuierliche Rückmeldungen von einer treuen Zielgruppe erhalten.","participants":"Teilnehmer: eingeladene Nutzer, die dem Profil der Marke entsprechen.","conditions":"Bedingungen: regelmäßige Teilnahme an Diskussionen und kurzen Umfragen."},
+      {"id":9,"title":"9) Akademische Forschung","summary":"Studien von Universitäten, Wirtschaftshochschulen und Laboren, einschließlich verhaltenswissenschaftlicher und psychologischer Forschung.","goals":"Ziel: wissenschaftliche Daten für Artikel, Abschlussarbeiten und angewandte Forschung sammeln.","participants":"Teilnehmer: Studierende und Angehörige der breiten Öffentlichkeit, die die Kriterien des jeweiligen Projekts erfüllen.","conditions":"Bedingungen: Forschungsaufgaben erledigen sowie ethische Regeln und Anweisungen befolgen."},
+      {"id":10,"title":"10) Experteninterviews","summary":"Unternehmen und Investmentfonds können Experten zu Beratungen einladen.","goals":"Ziel: praktische Branchenkenntnisse für die Entscheidungsfindung gewinnen.","participants":"Teilnehmer: erfahrene Fachleute mit nachweisbaren Fachkenntnissen.","conditions":"Bedingungen: Vorauswahl, ein Fachinterview oder Gespräch und Einhaltung der Vertraulichkeitsregeln."}
+    ]
+  },
+  "FR": {
+    "pageTitle": "Programmes de recherche Cashback+",
+    "pageSubtitle": "Choisissez un domaine de recherche. Les fiches ci-dessous décrivent brièvement les objectifs, les participants potentiels et les conditions de participation susceptibles de s’appliquer.",
+    "participate": "Participer", "waiting": "Veuillez patienter…",
+    "importantTitle": "Informations importantes",
+    "importantParagraphs": [
+      "Cashback+ fournit des informations sur les programmes de recherche d’organisations indépendantes.",
+      "Cashback+ n’est ni un organisateur de recherches, ni un employeur, ni une agence de recrutement, ni un intermédiaire en matière d’emploi.",
+      "Les conditions de participation, les critères de sélection et les montants des récompenses sont déterminés par les organisateurs des études concernées.",
+      "La participation à une étude ne garantit ni une invitation, ni la réussite de la sélection, ni un montant particulier de récompense."
+    ],
+    "rewardsTitle": "Informations importantes sur les récompenses",
+    "rewardsParagraphs": [
+      "Certaines organisations de recherche effectuent des paiements directement aux participants.",
+      "Ces paiements ne transitent pas par Cashback+ et sont régis par les conditions de l’organisation concernée."
+    ],
+    "rewardsBefore": "Dans certains cas, Cashback+ peut recevoir une rémunération de partenariat pour avoir attiré un participant et attribuer à l’utilisateur des bonus supplémentaires conformément aux ",
+    "rulesLink": "Règles d’activité", "rewardsAfter": " de la plateforme.",
+    "bonusNature": "Les bonus Cashback+ font partie d’un programme de récompenses destinées aux consommateurs et ne constituent ni des fonds, ni de la monnaie électronique, ni un dépôt bancaire, ni un produit d’investissement.",
+    "cards": [
+      {"id":1,"title":"1) Enquêtes marketing","summary":"Le format le plus courant : des questionnaires sur les achats, les habitudes, les finances, les voitures et d’autres sujets.","goals":"Objectif : recueillir les opinions des consommateurs, tester des hypothèses et améliorer les produits et la publicité.","participants":"Participants : un large public d’utilisateurs, parfois des groupes spécifiques selon l’âge, la région ou les centres d’intérêt.","conditions":"Conditions : remplir un questionnaire, passer la sélection préalable et fournir des réponses honnêtes et complètes."},
+      {"id":2,"title":"2) Groupes de discussion","summary":"Discussions en groupe sur un produit, une interface ou une publicité, souvent sur Zoom.","goals":"Objectif : obtenir des retours qualitatifs approfondis et comprendre la motivation des utilisateurs.","participants":"Participants : consommateurs du public cible et professionnels de la médecine, de l’informatique, de la finance et d’autres domaines.","conditions":"Conditions : participer à une séance à l’heure prévue, prendre une part active à la discussion et suivre les instructions du modérateur."},
+      {"id":3,"title":"3) Recherche UX sur les sites et les applications","summary":"Tests d’interfaces : inscription, achat, navigation et commentaires sur la facilité d’utilisation.","goals":"Objectif : repérer les problèmes UX/UI et améliorer le taux de conversion et la facilité d’utilisation du produit.","participants":"Participants : utilisateurs ordinaires et groupes cibles possédant l’expérience requise.","conditions":"Conditions : réaliser des scénarios de tâches ; un enregistrement de l’écran et des commentaires vocaux sont parfois nécessaires."},
+      {"id":4,"title":"4) Programmes d’évaluation du service client (Mystery Shopping)","summary":"Vérification du service client à travers un véritable parcours utilisateur.","goals":"Objectif : évaluer la qualité du service, la rapidité des réponses de l’assistance et le fonctionnement du processus de commande.","participants":"Participants : utilisateurs prêts à suivre un scénario précis d’interaction avec un service.","conditions":"Conditions : passer une commande ou contacter l’assistance, puis remplir un rapport sur les résultats."},
+      {"id":5,"title":"5) Recherche médicale","summary":"Projets impliquant des patients, leurs proches et parfois des volontaires en bonne santé.","goals":"Objectif : recueillir des données sur les traitements, les symptômes, l’expérience des patients et la perception des solutions médicales.","participants":"Participants : personnes présentant des diagnostics précis, leurs proches et parfois des groupes témoins.","conditions":"Conditions : sélection stricte, vérification des critères de participation et respect des protocoles de recherche."},
+      {"id":6,"title":"6) Recherche auprès des professionnels (B2B Research)","summary":"Entretiens et enquêtes auprès de professionnels : dirigeants, comptables, développeurs et chefs d’entreprise.","goals":"Objectif : comprendre le marché, les processus de décision et les besoins professionnels.","participants":"Participants : professionnels vérifiés et experts dans leur domaine.","conditions":"Conditions : vérification de l’expérience ou du poste et entretiens sur des sujets professionnels pertinents."},
+      {"id":7,"title":"7) Journaux en ligne (Diary Studies)","summary":"Observation sur la durée : le participant consigne son comportement et son expérience pendant plusieurs jours ou semaines.","goals":"Objectif : étudier les habitudes réelles des utilisateurs dans le temps plutôt que par une enquête ponctuelle.","participants":"Participants : utilisateurs prêts à tenir régulièrement un journal et à réaliser des tâches.","conditions":"Conditions : entrées systématiques et envoi des notes et des documents dans les délais."},
+      {"id":8,"title":"8) Communautés de recherche (Research Communities)","summary":"Communautés privées de marques proposant régulièrement de courtes enquêtes et des discussions.","goals":"Objectif : obtenir des retours continus d’un public fidèle.","participants":"Participants : utilisateurs invités correspondant au profil de la marque.","conditions":"Conditions : participation périodique aux discussions et aux courtes enquêtes."},
+      {"id":9,"title":"9) Recherche académique","summary":"Études menées par des universités, des écoles de commerce et des laboratoires, notamment en recherche comportementale et psychologique.","goals":"Objectif : recueillir des données scientifiques pour des articles, des thèses et des recherches appliquées.","participants":"Participants : étudiants et membres du grand public répondant aux critères du projet concerné.","conditions":"Conditions : réaliser les tâches de recherche et respecter les règles éthiques et les instructions."},
+      {"id":10,"title":"10) Entretiens avec des experts","summary":"Les entreprises et les fonds d’investissement peuvent inviter des experts à des consultations.","goals":"Objectif : obtenir une expertise sectorielle pratique pour faciliter la prise de décision.","participants":"Participants : professionnels expérimentés possédant une expertise vérifiable.","conditions":"Conditions : sélection préalable, entretien ou appel spécialisé et respect des règles de confidentialité."}
+    ]
+  }
+}

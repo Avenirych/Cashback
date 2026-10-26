@@ -425,3 +425,20 @@
     opacity: 0.4;
   }
 }
+.ads-introduction { margin-bottom: 24px; overflow-wrap: anywhere; }
+.ads-introduction h1 { margin: 0 0 18px; font-size: clamp(26px,4vw,36px); }
+.ads-introduction p { line-height: 1.65; margin: 10px 0; }
+.ads-demo-badge { display: inline-block; margin-top: 8px; padding: 10px 16px; border: 2px solid #76551f; border-radius: 10px; background: #fff5d9; color: #604314; }
+.ads-screen { min-height: 340px; }
+.ads-consent { grid-template-columns: minmax(0, 1fr); }
+.ads-consent-box { width: fit-content; min-width: 0; max-width: 100%; }
+.ads-agree { max-width: 100%; overflow-wrap: anywhere; }
+.ads-cost { line-height: 1.5; overflow-wrap: anywhere; }
+.ads-cost span { display: block; }
+.ads-counter { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.ads-information { width: 100%; margin-top: 24px; padding: 24px; border-radius: 16px; background: rgb(255 255 255 / 90%); box-shadow: 0 6px 20px rgb(0 0 0 / 6%); overflow-wrap: anywhere; }
+.ads-information h2 { font-size: 22px; margin: 0 0 16px; }
+.ads-information p { line-height: 1.65; margin: 12px 0 0; }
+.ads-information a { color: #0953a4; }
+.ads-information a:focus-visible { outline: 3px solid #0078ff; outline-offset: 4px; }
+@media(max-width: 700px) { .ads-consent { padding: 12px; } .ads-consent-box,.ads-information { padding: 16px; } .ads-screen { min-height: 330px; } }

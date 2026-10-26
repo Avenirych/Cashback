@@ -63,9 +63,7 @@ export default function Welcome({ lang }: WelcomeProps) {
               marginBottom: "30px",
             }}
           >
-            {lang.toLowerCase() === "ru"
-              ? "Получайте кэшбэк и дополнительные бонусы за участие в программах Cashback+."
-              : t.description ?? "Enjoy your visit!"}
+            {t.description}
           </p>
 
           <div className="welcome-actions" style={{ display: "flex", gap: "20px" }}>
@@ -103,17 +101,13 @@ export default function Welcome({ lang }: WelcomeProps) {
               {t.getBonuses ?? "Get bonuses"}
             </button>
           </div>
-          {lang.toLowerCase() === "ru" && (
-            <p className="welcome-explanation">
-              Размер компенсации зависит от условий конкретного предложения и может отличаться для разных пользователей.
-            </p>
-          )}
+          <p className="welcome-explanation">{t.compensationExplanation}</p>
         </div>
 
         <div className="welcome-art">
           <img
             src="/assets/Oduvanchiki.jpeg"
-            alt="Oduvanchiki"
+            alt={t.welcomeImageAlt}
             style={{
               width: "100%",
               borderRadius: "20px",
@@ -139,7 +133,7 @@ export default function Welcome({ lang }: WelcomeProps) {
       </main>
 
       <ReviewsCarousel mode={reviewDisplayMode(process.env.REACT_APP_REVIEWS_MODE)} />
-      <Footer lang={lang} />
+      <Footer lang={lang} linkLabels={t.welcomeFooterLinks} />
     </div>
   );
 }

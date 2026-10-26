@@ -1,51 +1,14 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import content from "../content/bonusPrograms.json";
+import "./Bonuses.css";
+import { Link, useNavigate } from "react-router-dom";
 import { useLang } from "../context/LanguageContext";
-
-const messages = {
-  RU: {
-    title: "Получение бонусов",
-    description: "Выберите способ получения бонусов:",
-    video: "Смотреть рекламу",
-    research: "Участвовать в исследованиях",
-  },
-  EN: {
-    title: "Get bonuses",
-    description: "Choose how to earn bonuses:",
-    video: "Watch ads",
-    research: "Participate in research",
-  },
-  DE: {
-    title: "Boni erhalten",
-    description: "Wählen Sie, wie Sie Boni verdienen möchten:",
-    video: "Werbung ansehen",
-    research: "An Studien teilnehmen",
-  },
-  FR: {
-    title: "Obtenir des bonus",
-    description: "Choisissez comment gagner des bonus :",
-    video: "Regarder des publicités",
-    research: "Participer à des études",
-  },
-};
-
-function getMessages(lang: string) {
-  switch (lang.toUpperCase()) {
-    case "RU":
-      return messages.RU;
-    case "DE":
-      return messages.DE;
-    case "FR":
-      return messages.FR;
-    default:
-      return messages.EN;
-  }
-}
 
 export default function Bonuses() {
   const navigate = useNavigate();
   const { lang } = useLang();
-  const t = getMessages(lang);
+  const language = lang.toLowerCase() as keyof typeof content;
+  const copy = content[language] || content.en;
 
   const buttonStyle: React.CSSProperties = {
     padding: "16px 24px",
@@ -58,72 +21,27 @@ export default function Bonuses() {
   };
 
   return (
-    <main
-      style={{
-        minHeight: "calc(100vh - 72px)",
-        padding: "40px 20px",
-        background: "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
-        color: "#173a33",
-        fontFamily: "Segoe UI, system-ui, sans-serif",
-      }}
-    >
-      <section
-        style={{
-          maxWidth: "900px",
-          margin: "0 auto",
-          padding: "32px 24px",
-          borderRadius: "18px",
-          background: "rgba(255,255,255,0.85)",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "32px",
-            margin: "0 0 20px",
-          }}
-        >
-          {t.title}
-        </h1>
-
-        <p
-          style={{
-            fontSize: "18px",
-            margin: "0 0 30px",
-          }}
-        >
-          {t.description}
-        </p>
-
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => navigate("/bonuses/ads")}
-            style={{
-              ...buttonStyle,
-              background: "#0078ff",
-            }}
-          >
-            {t.video}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate("/bonuses/research")}
-            style={{
-              ...buttonStyle,
-              background: "#ff3b3b",
-            }}
-          >
-            {t.research}
-          </button>
+    <main className="bonuses-page" lang={language}>
+      <section className="bonuses-container">
+        <h1>{copy.title}</h1>
+        <p className="bonuses-introduction">{copy.description}</p>
+        <div className="bonuses-programs">
+          <article className="bonus-program-card">
+            <button type="button" onClick={() => navigate("/bonuses/ads")}
+              style={{ ...buttonStyle, background: "#0078ff" }}>{copy.adsTitle}</button>
+            <p>{copy.adsDescription}</p>
+          </article>
+          <article className="bonus-program-card">
+            <button type="button" onClick={() => navigate("/bonuses/research")}
+              style={{ ...buttonStyle, background: "#ff3b3b" }}>{copy.researchTitle}</button>
+            <p>{copy.researchDescription}</p>
+          </article>
         </div>
+        <section className="bonuses-information" aria-labelledby="bonuses-information-title">
+          <h2 id="bonuses-information-title">{copy.importantTitle}</h2>
+          {copy.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+          <p>{copy.termsBefore}<Link to="/activity-limits">{copy.activityLink}</Link>{copy.termsBetween}<Link to="/terms">{copy.termsLink}</Link>{copy.termsAfter}</p>
+        </section>
       </section>
     </main>
   );

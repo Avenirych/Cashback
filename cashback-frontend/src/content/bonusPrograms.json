@@ -1,0 +1,46 @@
+{
+ "ru": {
+  "title": "Бонусные программы Cashback+",
+  "description": "Выберите доступную программу участия. Начисление бонусов зависит от выполнения условий соответствующей программы и требований её организатора.",
+  "adsTitle": "Рекламные программы",
+  "adsDescription": "Участвуйте в доступных рекламных программах и получайте бонусы в соответствии с условиями конкретной кампании.",
+  "researchTitle": "Исследовательские программы",
+  "researchDescription": "Принимайте участие в исследованиях, опросах и тестированиях, проводимых независимыми организациями. Вознаграждения и условия участия определяются организаторами соответствующих программ.",
+  "importantTitle": "Важная информация",
+  "paragraphs": ["Бонусы являются частью программы потребительских вознаграждений Cashback+.", "Начисление бонусов зависит от выполнения условий соответствующей программы, прохождения необходимых проверок и подтверждения активности партнёром, если такое подтверждение требуется.", "Бонусы не являются денежными средствами, банковским вкладом, электронными деньгами или инвестиционным продуктом."],
+  "termsBefore": "Подробные условия использования бонусов содержатся в ", "activityLink": "Правилах активности", "termsBetween": " и ", "termsLink": "Условиях использования Cashback+", "termsAfter": "."
+ },
+ "en": {
+  "title": "Cashback+ bonus programmes",
+  "description": "Choose an available programme to participate in. Bonuses are awarded subject to fulfilment of the relevant programme’s conditions and its organiser’s requirements.",
+  "adsTitle": "Advertising programmes",
+  "adsDescription": "Participate in available advertising programmes and receive bonuses in accordance with the conditions of the particular campaign.",
+  "researchTitle": "Research programmes",
+  "researchDescription": "Take part in research, surveys and testing conducted by independent organisations. Rewards and participation conditions are determined by the organisers of the respective programmes.",
+  "importantTitle": "Important information",
+  "paragraphs": ["Bonuses form part of the Cashback+ consumer rewards programme.", "Bonuses are awarded subject to fulfilment of the relevant programme’s conditions, completion of the necessary checks and confirmation of activity by the partner, where such confirmation is required.", "Bonuses are not money, bank deposits, electronic money or investment products."],
+  "termsBefore": "Detailed conditions for using bonuses are set out in the ", "activityLink": "Activity Rules", "termsBetween": " and the ", "termsLink": "Cashback+ Terms of Use", "termsAfter": "."
+ },
+ "de": {
+  "title": "Cashback+-Bonusprogramme",
+  "description": "Wählen Sie ein verfügbares Programm zur Teilnahme aus. Die Gewährung von Boni hängt von der Erfüllung der Bedingungen des jeweiligen Programms und der Anforderungen seines Veranstalters ab.",
+  "adsTitle": "Werbeprogramme",
+  "adsDescription": "Nehmen Sie an verfügbaren Werbeprogrammen teil und erhalten Sie Boni gemäß den Bedingungen der jeweiligen Kampagne.",
+  "researchTitle": "Forschungsprogramme",
+  "researchDescription": "Nehmen Sie an Studien, Umfragen und Tests teil, die von unabhängigen Organisationen durchgeführt werden. Prämien und Teilnahmebedingungen werden von den Veranstaltern der jeweiligen Programme festgelegt.",
+  "importantTitle": "Wichtige Informationen",
+  "paragraphs": ["Boni sind Teil des Verbraucherprämienprogramms von Cashback+.", "Die Gewährung von Boni hängt von der Erfüllung der Bedingungen des jeweiligen Programms, dem Durchlaufen der erforderlichen Prüfungen und der Bestätigung der Aktivität durch den Partner ab, sofern eine solche Bestätigung erforderlich ist.", "Boni sind weder Geldmittel noch Bankeinlagen, E-Geld oder Anlageprodukte."],
+  "termsBefore": "Ausführliche Bedingungen für die Nutzung von Boni finden Sie in den ", "activityLink": "Aktivitätsregeln", "termsBetween": " und den ", "termsLink": "Nutzungsbedingungen von Cashback+", "termsAfter": "."
+ },
+ "fr": {
+  "title": "Programmes de bonus Cashback+",
+  "description": "Choisissez un programme disponible auquel participer. L’attribution des bonus dépend du respect des conditions du programme concerné et des exigences de son organisateur.",
+  "adsTitle": "Programmes publicitaires",
+  "adsDescription": "Participez aux programmes publicitaires disponibles et recevez des bonus conformément aux conditions de la campagne concernée.",
+  "researchTitle": "Programmes de recherche",
+  "researchDescription": "Participez à des études, à des enquêtes et à des tests menés par des organisations indépendantes. Les récompenses et les conditions de participation sont déterminées par les organisateurs des programmes concernés.",
+  "importantTitle": "Informations importantes",
+  "paragraphs": ["Les bonus font partie du programme de récompenses destinées aux consommateurs de Cashback+.", "L’attribution des bonus dépend du respect des conditions du programme concerné, de la réalisation des vérifications nécessaires et de la confirmation de l’activité par le partenaire, lorsqu’une telle confirmation est requise.", "Les bonus ne constituent ni des fonds, ni des dépôts bancaires, ni de la monnaie électronique, ni des produits d’investissement."],
+  "termsBefore": "Les conditions détaillées d’utilisation des bonus figurent dans les ", "activityLink": "Règles d’activité", "termsBetween": " et les ", "termsLink": "Conditions d’utilisation de Cashback+", "termsAfter": "."
+ }
+}

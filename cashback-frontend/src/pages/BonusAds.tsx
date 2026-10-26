@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import { useOnboarding } from "../onboarding";
 import "./BonusAds.css";
+import content from "../content/advertisingPrograms.json";
 import {BACKEND_URL} from '../backend';
 import {activityText} from '../components/ActivityLimits';
 
@@ -28,11 +29,6 @@ interface AdsViewerProps {
 
 const messages = {
   RU: {
-    consent: "Согласен смотреть рекламу",
-    cost: (value: Reward) =>
-      `За полный просмотр — ${value} ${value === 1 ? "бонус" : "бонуса"}`,
-    session: "За текущую сессию",
-    daily: "За сегодня",
     unit: "бонусов",
     finish: "Завершить сессию",
     watching: "Просмотр рекламы",
@@ -43,15 +39,9 @@ const messages = {
       "Не удалось загрузить демонстрацию. Обновите страницу и попробуйте снова.",
     storageError:
       "Дневной результат не удалось сохранить. Он доступен только до ухода со страницы.",
-    demo: "Демонстрационная анимация, не видеоролик. Тестовый счётчик хранится только в этом браузере и не связан с бонусами обмена на форуме. Реальный баланс не изменяется.",
     brandLine: "More video, more rewards",
   },
   EN: {
-    consent: "I agree to watch advertising",
-    cost: (value: Reward) =>
-      `Reward — ${value} ${value === 1 ? "bonus" : "bonuses"}`,
-    session: "This session",
-    daily: "Today",
     unit: "bonuses",
     finish: "End session",
     watching: "Watching advertising",
@@ -62,14 +52,9 @@ const messages = {
       "Could not load the demonstration. Refresh the page and try again.",
     storageError:
       "Could not save today's total. It is available only until you leave this page.",
-    demo: "Demo animation, not a video. This browser-only test counter is separate from forum exchange bonuses. Your real balance is not changed.",
     brandLine: "More video, more rewards",
   },
   DE: {
-    consent: "Ich stimme zu, Werbung anzusehen",
-    cost: (value: Reward) => `Vergütung — ${value} Boni`,
-    session: "Aktuelle Sitzung",
-    daily: "Heute",
     unit: "Boni",
     finish: "Sitzung beenden",
     watching: "Werbung wird angezeigt",
@@ -80,14 +65,9 @@ const messages = {
       "Hintergrund oder Münze konnte nicht geladen werden. Prüfen Sie die Bildpfade.",
     storageError:
       "Der Tageswert konnte nicht gespeichert werden. Er bleibt nur bis zum Verlassen der Seite verfügbar.",
-    demo: "Testboni. Ihr echtes Guthaben bleibt unverändert.",
     brandLine: "More video, more rewards",
   },
   FR: {
-    consent: "J’accepte de regarder la publicité",
-    cost: (value: Reward) => `Récompense — ${value} bonus`,
-    session: "Session actuelle",
-    daily: "Aujourd’hui",
     unit: "bonus",
     finish: "Terminer la session",
     watching: "Publicité en cours",
@@ -98,7 +78,6 @@ const messages = {
       "Impossible de charger le fond ou la pièce. Vérifiez les chemins des images.",
     storageError:
       "Impossible d’enregistrer le total du jour. Il reste disponible uniquement jusqu’à votre départ de cette page.",
-    demo: "Bonus de test. Votre solde réel reste inchangé.",
     brandLine: "More video, more rewards",
   },
 };
@@ -244,7 +223,8 @@ function AdsViewer({
   requireAccess,
 }: AdsViewerProps) {
   const { lang } = useLang();
-  const t = getMessages(lang);
+  const copy = content[lang.toLowerCase() as keyof typeof content] || content.en;
+  const t = { ...getMessages(lang), consent: copy.consent, session: copy.session, daily: copy.daily };
 
   const [reward, setReward] = useState<Reward>(
     () => pickReward()
@@ -473,8 +453,12 @@ function AdsViewer({
   };
 
   return (
-    <main className="ads-page">
+    <main className="ads-page" lang={lang.toLowerCase()}>
       <div className="ads-content">
+        <header className="ads-introduction">
+          <h1>{copy.title}</h1><p>{copy.subtitle}</p><p>{copy.voluntary}</p>
+          <strong className="ads-demo-badge">{copy.demoTitle}</strong>
+        </header>
         <section
           className={`ads-screen ${
             playing ? "is-playing" : ""
@@ -558,7 +542,7 @@ function AdsViewer({
                 </button>
 
                 <p className="ads-cost">
-                  {t.cost(reward)}
+                  <span>{copy.example} </span>{copy.maximum}
                 </p>
               </div>
             </div>
@@ -590,7 +574,16 @@ function AdsViewer({
           </button>
         </section>
 
-        <p className="ads-demo-note">{t.demo}</p>
+        <p className="ads-demo-note">{copy.counterNote}</p>
+        <section className="ads-information" aria-labelledby="ads-demo-title">
+          <h2 id="ads-demo-title">{copy.demoTitle}</h2>
+          {copy.demoParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+        </section>
+        <section className="ads-information" aria-labelledby="ads-important-title">
+          <h2 id="ads-important-title">{copy.importantTitle}</h2>
+          {copy.importantParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+          <p>{copy.termsBefore}<Link to="/activity-limits">{copy.activityLink}</Link>{copy.termsBetween}<Link to="/terms">{copy.termsLink}</Link>{copy.termsAfter}</p>
+        </section>
         {quotaError&&<p role="alert">{activityText(lang).error} <a href="/profile">{activityText(lang).title}</a></p>}
 
         {storageError && (

@@ -1,3 +1,4 @@
+import {LoginFailure} from "../loginErrors";
 import {activityText} from '../components/ActivityLimits';
 import { BACKEND_URL } from "../backend";
 import {clearReviewIntent} from '../reviewReturn';
@@ -630,19 +631,21 @@ export const AuthProvider = ({
     email: string;
     password: string;
   }) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    const text = await response.text();
-
+    let response: Response;
+    try {
+      response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+    } catch { throw new LoginFailure("network"); }
     if (!response.ok) {
-      throw new Error(parseError(text, "Login failed", language.current));
+      throw new LoginFailure(response.status === 401 ? "credentials" :
+        response.status === 429 ? "limited" : response.status >= 500 ? "server" : "unknown");
     }
-
-    const result = JSON.parse(text);
+    let result;
+    try { result = await response.json(); }
+    catch { throw new LoginFailure("server"); }
     applySessionPersistent(result.access_token, result.user);
   };
 

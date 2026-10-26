@@ -1,0 +1,138 @@
+{
+ "translations": {
+  "DE": [
+   {"summary":"Fragebögen zu Einkäufen, Gewohnheiten, Vorlieben und Einstellungen zu Waren und Dienstleistungen.","goals":"Untersuchung von Verbrauchermeinungen und Einholung von Rückmeldungen zur Verbesserung von Waren, Dienstleistungen und Werbematerialien.","participants":"Nutzer, die die Kriterien der jeweiligen Studie erfüllen.","conditions":"Einige Programme können eine Vorauswahl und das erfolgreiche Beantworten von Eignungsfragen erfordern."},
+   {"summary":"Moderierte Diskussionen über Produkte und Ideen.","goals":"Ausführliche Rückmeldungen erhalten und die Motivation der Teilnehmer verstehen.","participants":"Vertreter der Zielgruppe oder Fachleute aus dem betreffenden Bereich.","conditions":"Zum vereinbarten Zeitpunkt teilnehmen und sich an der Diskussion beteiligen."},
+   {"summary":"Prüfung der Benutzerfreundlichkeit von Websites und Apps.","goals":"Schwierigkeiten in der Benutzeroberfläche erkennen und das Nutzererlebnis verbessern.","participants":"Nutzer mit geeigneten Geräten und entsprechender Erfahrung.","conditions":"Aufgaben erledigen; Bildschirm- und Sprachaufnahmen nur mit Einwilligung."},
+   {"summary":"Bewertung des Service anhand eines vorgegebenen Szenarios.","goals":"Den Support und den Bestellprozess überprüfen.","participants":"Nutzer, die bereit sind, ein Szenario auszuführen und einen Bericht zu verfassen.","conditions":"Ausgaben und die Bedingungen ihrer Erstattung im Voraus vereinbaren."},
+   {"summary":"Umfragen und Interviews zu Gesundheit und Erfahrungen mit der Versorgung.","goals":"Die Bedürfnisse von Patienten und betreuenden Personen besser verstehen.","participants":"Patienten, Angehörige und andere geeignete Teilnehmer.","conditions":"Freiwillige Einwilligung und Schutz personenbezogener Daten. Hier werden keine klinischen Studien angeboten."},
+   {"summary":"Interviews über Arbeit, Unternehmen und berufliche Werkzeuge.","goals":"Entscheidungsprozesse und berufliche Bedürfnisse untersuchen.","participants":"Führungskräfte, Fachleute und Unternehmensinhaber.","conditions":"Die Erfahrung nachweisen, ohne vertrauliche Daten des Arbeitgebers offenzulegen."},
+   {"summary":"Regelmäßige Einträge zu Gewohnheiten und zur Nutzung von Produkten.","goals":"Das Verhalten der Teilnehmer über mehrere Tage oder Wochen untersuchen.","participants":"Nutzer, die bereit sind, regelmäßig Aufgaben zu erledigen.","conditions":"Einträge nach Zeitplan verfassen und Materialien rechtzeitig einreichen."},
+   {"summary":"Diskussionen und kurze Umfragen in geschlossenen Gruppen.","goals":"Regelmäßig Rückmeldungen zu Produkten erhalten.","participants":"Nutzer, die dem Profil der Gemeinschaft entsprechen.","conditions":"Die Gruppenregeln einhalten und an verfügbaren Aufgaben teilnehmen."},
+   {"summary":"Wissenschaftliche Umfragen und verhaltensbezogene Aufgaben.","goals":"Daten für wissenschaftliche Projekte sammeln.","participants":"Studierende und andere Teilnehmer, die die Kriterien des Projekts erfüllen.","conditions":"Die Teilnahmeerklärung lesen und die Anweisungen befolgen."},
+   {"summary":"Besprechung von Branchenfragen mit erfahrenen Fachleuten.","goals":"Fachliche Einschätzungen und praktisches Wissen erhalten.","participants":"Experten mit nachweisbarer Erfahrung.","conditions":"Die Auswahl durchlaufen und Beschränkungen hinsichtlich Vertraulichkeit und Interessenkonflikten einhalten."}
+  ],
+  "FR": [
+   {"summary":"Questionnaires sur les achats, les habitudes, les préférences et les attitudes envers les biens et les services.","goals":"Étudier l’opinion des consommateurs et recueillir des retours afin d’améliorer les biens, les services et les supports publicitaires.","participants":"Utilisateurs répondant aux critères de l’étude concernée.","conditions":"Certains programmes peuvent nécessiter une sélection préalable et la réussite des questions de qualification."},
+   {"summary":"Discussions sur des produits et des idées avec un modérateur.","goals":"Obtenir des retours détaillés et comprendre la motivation des participants.","participants":"Membres du public cible ou professionnels du domaine concerné.","conditions":"Se connecter à l’heure prévue et participer à la discussion."},
+   {"summary":"Vérification de la facilité d’utilisation des sites et des applications.","goals":"Repérer les difficultés de l’interface et améliorer l’expérience utilisateur.","participants":"Utilisateurs disposant des appareils et de l’expérience appropriés.","conditions":"Réaliser les tâches ; l’enregistrement de l’écran et de la voix nécessite un consentement."},
+   {"summary":"Évaluation du service selon un scénario défini.","goals":"Vérifier le fonctionnement de l’assistance et du processus de commande.","participants":"Utilisateurs prêts à suivre un scénario et à rédiger un rapport.","conditions":"Convenir à l’avance des dépenses et des conditions de leur remboursement."},
+   {"summary":"Enquêtes et entretiens sur la santé et l’expérience des soins.","goals":"Mieux comprendre les besoins des patients et des personnes qui les accompagnent.","participants":"Patients, proches et autres participants admissibles.","conditions":"Consentement volontaire et protection des données personnelles. Aucun essai clinique n’est proposé ici."},
+   {"summary":"Entretiens sur le travail, l’entreprise et les outils professionnels.","goals":"Étudier les processus de décision et les besoins professionnels.","participants":"Dirigeants, professionnels et chefs d’entreprise.","conditions":"Justifier son expérience sans divulguer de données confidentielles de l’employeur."},
+   {"summary":"Notes régulières sur les habitudes et l’utilisation des produits.","goals":"Étudier le comportement des participants pendant plusieurs jours ou semaines.","participants":"Utilisateurs prêts à effectuer régulièrement des tâches.","conditions":"Tenir le journal selon le calendrier et transmettre les documents dans les délais."},
+   {"summary":"Discussions et courtes enquêtes au sein de groupes privés.","goals":"Recueillir régulièrement des retours sur les produits.","participants":"Utilisateurs correspondant au profil de la communauté.","conditions":"Respecter les règles du groupe et participer aux tâches disponibles."},
+   {"summary":"Enquêtes scientifiques et tâches comportementales.","goals":"Recueillir des données pour des projets scientifiques.","participants":"Étudiants et autres participants répondant aux critères du projet.","conditions":"Lire le consentement à la participation et suivre les instructions."},
+   {"summary":"Discussions sur des questions sectorielles avec des professionnels expérimentés.","goals":"Obtenir une évaluation professionnelle et des connaissances pratiques.","participants":"Experts possédant une expérience vérifiable.","conditions":"Passer la sélection et respecter les restrictions relatives à la confidentialité et aux conflits d’intérêts."}
+  ]
+ },
+ "messages": {
+  "RU": {
+   "title":"Исследования","subtitle":"Выберите направление и откройте список исследований.",
+   "goals":"Цель исследований","participants":"Кто может участвовать","conditions":"Условия участия","expected":"Типичный диапазон бонусных вознаграждений","bonusRange":"От 5 до 50 бонусов за исследование.",
+   "rangeCaveat":"Фактический размер вознаграждения зависит от условий конкретной программы и результатов проверки участия.",
+   "rangeDemo":"Указанные диапазоны являются демонстрационными ориентирами, а не подтверждёнными предложениями партнёров.",
+   "possibleReward":"Возможное бонусное вознаграждение", "upTo":"до {amount}","rewardRange":"от {min} до {amount}",
+   "demoTitle":"Демонстрационный режим","demoParagraphs":[
+    "В настоящее время отображается демонстрационный каталог исследований.",
+    "Партнёрские исследовательские программы пока не подключены.",
+    "Показанные значения используются исключительно для демонстрации интерфейса.",
+    "Бонусы в демонстрационном режиме не начисляются и не влияют на баланс пользователя."
+   ],
+   "importantTitle":"Важная информация","importantParagraphs":[
+    "Cashback+ предоставляет информацию об исследовательских программах независимых организаций.",
+    "Cashback+ не является работодателем, кадровым агентством или организатором исследований.",
+    "Участие в исследовании не гарантирует прохождение отбора, получение приглашения или начисление определённого размера вознаграждения.",
+    "Бонусы Cashback+ являются частью программы потребительских вознаграждений и не являются денежными средствами, электронными деньгами, банковским вкладом или инвестиционным продуктом."
+   ],
+   "roleParagraphs":[
+    "Платформа предоставляет информацию о доступных возможностях участия и может начислять бонусы в соответствии с условиями партнёрских программ.",
+    "Условия участия, критерии отбора и порядок проведения исследований определяются организаторами соответствующих программ.",
+    "Некоторые исследовательские организации могут выплачивать вознаграждение участникам напрямую.",
+    "Такие выплаты не проходят через Cashback+ и регулируются условиями соответствующей организации."
+   ],
+   "roleBefore":"Дополнительные бонусы Cashback+, если они предусмотрены программой, начисляются отдельно и регулируются ","roleLink":"Правилами активности","roleAfter":".",
+   "studyCount":"Исследований","start":"Подать заявку / Начать","participate":"Перейти к участию","back":"Все направления","notFound":"Направление не найдено","empty":"Нет исследований","studyName":"Исследование № {id}","partnerNotConnected":"Партнёр пока не подключён"
+  },
+  "EN": {
+   "title":"Research","subtitle":"Choose a category and browse its studies.",
+   "goals":"Research objective","participants":"Who can participate","conditions":"Participation conditions","expected":"Typical bonus reward range","bonusRange":"From 5 to 50 bonuses per study.",
+   "rangeCaveat":"The actual reward amount depends on the conditions of the particular programme and the results of participation verification.",
+   "rangeDemo":"The ranges shown are demonstration guidelines, not confirmed partner offers.",
+   "possibleReward":"Possible bonus reward","upTo":"up to {amount}","rewardRange":"from {min} to {amount}",
+   "demoTitle":"Demonstration mode","demoParagraphs":[
+    "A demonstration catalogue of studies is currently displayed.",
+    "Partner research programmes are not connected yet.",
+    "The values shown are used solely to demonstrate the interface.",
+    "Bonuses are not awarded in demonstration mode and do not affect the user’s balance."
+   ],
+   "importantTitle":"Important information","importantParagraphs":[
+    "Cashback+ provides information about research programmes run by independent organisations.",
+    "Cashback+ is not an employer, recruitment agency or research organiser.",
+    "Participation in a study does not guarantee successful selection, an invitation or the award of a particular reward amount.",
+    "Cashback+ bonuses form part of a consumer rewards programme and are not money, electronic money, a bank deposit or an investment product."
+   ],
+   "roleParagraphs":[
+    "The platform provides information about available participation opportunities and may award bonuses in accordance with the conditions of partner programmes.",
+    "Participation conditions, selection criteria and study procedures are determined by the organisers of the respective programmes.",
+    "Some research organisations may pay rewards directly to participants.",
+    "These payments do not pass through Cashback+ and are governed by the conditions of the respective organisation."
+   ],
+   "roleBefore":"Additional Cashback+ bonuses, where provided for by the programme, are awarded separately and governed by the ","roleLink":"Activity Rules","roleAfter":".",
+   "studyCount":"Studies","start":"Apply / Start","participate":"Proceed to participation","back":"All categories","notFound":"Category not found","empty":"No studies","studyName":"Study No. {id}","partnerNotConnected":"Partner is not connected yet"
+  },
+  "DE": {
+   "title":"Forschung","subtitle":"Wählen Sie einen Bereich und öffnen Sie die Liste der Studien.",
+   "goals":"Forschungsziel","participants":"Wer teilnehmen kann","conditions":"Teilnahmebedingungen","expected":"Typische Spanne der Bonusprämien","bonusRange":"Von 5 bis 50 Boni pro Studie.",
+   "rangeCaveat":"Die tatsächliche Höhe der Prämie hängt von den Bedingungen des jeweiligen Programms und den Ergebnissen der Teilnahmeprüfung ab.",
+   "rangeDemo":"Die angegebenen Spannen dienen der Orientierung im Demonstrationsmodus und sind keine bestätigten Partnerangebote.",
+   "possibleReward":"Mögliche Bonusprämie","upTo":"bis zu {amount}","rewardRange":"von {min} bis {amount}",
+   "demoTitle":"Demonstrationsmodus","demoParagraphs":[
+    "Derzeit wird ein Demonstrationskatalog von Studien angezeigt.",
+    "Forschungsprogramme von Partnern sind noch nicht angebunden.",
+    "Die angezeigten Werte dienen ausschließlich zur Demonstration der Benutzeroberfläche.",
+    "Im Demonstrationsmodus werden keine Boni gewährt und das Guthaben des Nutzers wird nicht beeinflusst."
+   ],
+   "importantTitle":"Wichtige Informationen","importantParagraphs":[
+    "Cashback+ stellt Informationen über Forschungsprogramme unabhängiger Organisationen bereit.",
+    "Cashback+ ist weder Arbeitgeber noch Personalagentur oder Forschungsveranstalter.",
+    "Die Teilnahme an einer Studie garantiert weder eine erfolgreiche Auswahl noch eine Einladung oder die Gewährung einer bestimmten Prämienhöhe.",
+    "Cashback+-Boni sind Teil eines Verbraucherprämienprogramms und sind weder Geldmittel noch elektronisches Geld, eine Bankeinlage oder ein Anlageprodukt."
+   ],
+   "roleParagraphs":[
+    "Die Plattform informiert über verfügbare Teilnahmemöglichkeiten und kann Boni gemäß den Bedingungen von Partnerprogrammen gewähren.",
+    "Teilnahmebedingungen, Auswahlkriterien und der Ablauf der Studien werden von den Veranstaltern der jeweiligen Programme festgelegt.",
+    "Einige Forschungsorganisationen können Vergütungen direkt an die Teilnehmer zahlen.",
+    "Diese Zahlungen werden nicht über Cashback+ abgewickelt und unterliegen den Bedingungen der jeweiligen Organisation."
+   ],
+   "roleBefore":"Zusätzliche Cashback+-Boni werden, soweit im Programm vorgesehen, gesondert gewährt und unterliegen den ","roleLink":"Aktivitätsregeln","roleAfter":".",
+   "studyCount":"Studien","start":"Bewerben / Starten","participate":"Zur Teilnahme","back":"Alle Bereiche","notFound":"Bereich nicht gefunden","empty":"Keine Studien","studyName":"Studie Nr. {id}","partnerNotConnected":"Der Partner ist noch nicht angebunden"
+  },
+  "FR": {
+   "title":"Recherche","subtitle":"Choisissez un domaine et ouvrez la liste des études.",
+   "goals":"Objectif des recherches","participants":"Qui peut participer","conditions":"Conditions de participation","expected":"Fourchette typique de récompenses en bonus","bonusRange":"De 5 à 50 bonus par étude.",
+   "rangeCaveat":"Le montant réel de la récompense dépend des conditions du programme concerné et des résultats de la vérification de la participation.",
+   "rangeDemo":"Les fourchettes indiquées sont des repères de démonstration et non des offres confirmées de partenaires.",
+   "possibleReward":"Récompense possible en bonus","upTo":"jusqu’à {amount}","rewardRange":"de {min} à {amount}",
+   "demoTitle":"Mode démonstration","demoParagraphs":[
+    "Un catalogue de démonstration d’études est actuellement affiché.",
+    "Les programmes de recherche partenaires ne sont pas encore connectés.",
+    "Les valeurs affichées servent exclusivement à la démonstration de l’interface.",
+    "Aucun bonus n’est attribué en mode démonstration et le solde de l’utilisateur n’est pas affecté."
+   ],
+   "importantTitle":"Informations importantes","importantParagraphs":[
+    "Cashback+ fournit des informations sur les programmes de recherche d’organisations indépendantes.",
+    "Cashback+ n’est ni un employeur, ni une agence de recrutement, ni un organisateur de recherches.",
+    "La participation à une étude ne garantit ni la réussite de la sélection, ni une invitation, ni l’attribution d’un montant particulier de récompense.",
+    "Les bonus Cashback+ font partie d’un programme de récompenses destinées aux consommateurs et ne constituent ni des fonds, ni de la monnaie électronique, ni un dépôt bancaire, ni un produit d’investissement."
+   ],
+   "roleParagraphs":[
+    "La plateforme fournit des informations sur les possibilités de participation disponibles et peut attribuer des bonus conformément aux conditions des programmes partenaires.",
+    "Les conditions de participation, les critères de sélection et le déroulement des études sont déterminés par les organisateurs des programmes concernés.",
+    "Certaines organisations de recherche peuvent verser des récompenses directement aux participants.",
+    "Ces paiements ne transitent pas par Cashback+ et sont régis par les conditions de l’organisation concernée."
+   ],
+   "roleBefore":"Les bonus supplémentaires Cashback+, lorsqu’ils sont prévus par le programme, sont attribués séparément et régis par les ","roleLink":"Règles d’activité","roleAfter":".",
+   "studyCount":"Études","start":"Postuler / Commencer","participate":"Accéder à la participation","back":"Tous les domaines","notFound":"Domaine introuvable","empty":"Aucune étude","studyName":"Étude n° {id}","partnerNotConnected":"Le partenaire n’est pas encore connecté"
+  }
+ }
+}

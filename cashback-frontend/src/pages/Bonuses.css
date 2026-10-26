@@ -1,0 +1,15 @@
+.bonuses-page { min-height: calc(100vh - 72px); padding: 40px 20px; background: linear-gradient(to bottom,#f5e8d3,#e3d2b8); color: #173a33; font-family: Segoe UI,system-ui,sans-serif; }
+.bonuses-container { max-width: 1000px; margin: 0 auto; padding: 32px 24px; border-radius: 18px; background: rgba(255,255,255,.85); box-shadow: 0 8px 24px #00000014; box-sizing: border-box; }
+.bonuses-container h1 { font-size: clamp(26px,4vw,32px); margin: 0 0 20px; overflow-wrap: anywhere; }
+.bonuses-introduction { font-size: 18px; line-height: 1.6; margin: 0 0 30px; }
+.bonuses-programs { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+.bonus-program-card { min-width: 0; padding: 24px; background: #fff; border: 1px solid #d8e1dd; border-radius: 14px; display: flex; flex-direction: column; align-items: flex-start; }
+.bonuses-information h2 { font-size: 22px; line-height: 1.4; margin: 0 0 12px; overflow-wrap: anywhere; }
+.bonus-program-card p { margin: 18px 0 0; line-height: 1.65; overflow-wrap: anywhere; }
+.bonus-program-card button { width: 100%; min-height: 74px; line-height: 1.4; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+.bonuses-information { margin-top: 24px; padding: 24px; border-radius: 14px; border: 1px solid #d8e1dd; background: #fff; }
+.bonuses-information p { line-height: 1.65; overflow-wrap: anywhere; margin: 12px 0 0; }
+.bonuses-page a { color: #0953a4; }
+.bonuses-page :is(a,button):focus-visible { outline: 3px solid #164b99; outline-offset: 4px; }
+@media(max-width: 800px) { .bonuses-programs { grid-template-columns: minmax(0,1fr); } }
+@media(max-width: 479px) { .bonuses-page { padding: 24px 12px; } .bonuses-container { padding: 24px 16px; } .bonus-program-card,.bonuses-information { padding: 18px; } }

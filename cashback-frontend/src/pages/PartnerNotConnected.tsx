@@ -1,6 +1,10 @@
 import React from "react";
+import {useLang} from '../context/LanguageContext';
+import {getResearchMessages} from '../researchData';
 
 export default function PartnerNotConnected() {
+  const {lang} = useLang();
+  const t = getResearchMessages(lang);
   return (
     <main
       style={{
@@ -32,7 +36,7 @@ export default function PartnerNotConnected() {
           {/* Cat image */}
           <img
             src="/assets/cat.png"
-            alt="Partner is not connected yet"
+            alt={t.partnerNotConnected}
             style={{
               width: "100%",
               height: "auto",
@@ -69,7 +73,7 @@ export default function PartnerNotConnected() {
             color: "#2a2928",
           }}
         >
-          Partner is not connected yet
+          {t.partnerNotConnected}
         </p>
       </section>
     </main>

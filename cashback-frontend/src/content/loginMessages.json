@@ -1,0 +1,48 @@
+{
+  "ru": {
+    "title": "Вход",
+    "intro": "Войдите в свой аккаунт Cashback+, чтобы получить доступ к кэшбэку, бонусным программам, форуму и другим функциям платформы.",
+    "email": "Email", "password": "Пароль", "submit": "Войти", "loading": "Вход…",
+    "forgot": "Забыли пароль?", "recoveryUnavailable": "Автоматическое восстановление пароля пока недоступно. Связаться со службой поддержки:", "contacts": "Контакты",
+    "noAccount": "Нет аккаунта?", "register": "Регистрация", "home": "На главную",
+    "securityTitle": "Безопасность",
+    "security": "Никогда не сообщайте свой пароль третьим лицам. Cashback+ не запрашивает пароли по электронной почте, телефону или через сообщения на форуме.",
+    "attempts": "После нескольких неудачных попыток вход может быть временно ограничен для защиты аккаунта и пользователей платформы.",
+    "privacyTitle": "Конфиденциальность", "privacyBefore": "Ваши данные обрабатываются в соответствии с ", "privacyLink": "Политикой конфиденциальности", "privacyAfter": " Cashback+.",
+    "importantTitle": "Важная информация", "important": "Cashback+ является информационной платформой и программой потребительских вознаграждений.", "age": "Платформа предназначена для пользователей старше 18 лет.",
+    "errors": {"credentials": "Неверный адрес электронной почты или пароль.", "network": "Не удалось подключиться к серверу. Проверьте соединение и попробуйте ещё раз.", "server": "Сервер временно недоступен. Попробуйте позже.", "limited": "Вход временно ограничен из-за количества попыток. Попробуйте позже.", "unknown": "Не удалось выполнить вход. Попробуйте позже.", "email": "Укажите корректный адрес электронной почты.", "emailLong": "Адрес электронной почты не должен превышать 320 символов."}
+  },
+  "en": {
+    "title": "Sign in", "intro": "Sign in to your Cashback+ account to access cashback, bonus programmes, the forum and other platform features.",
+    "email": "Email", "password": "Password", "submit": "Sign in", "loading": "Signing in…",
+    "forgot": "Forgot your password?", "recoveryUnavailable": "Automatic password recovery is not yet available. Contact support:", "contacts": "Contacts",
+    "noAccount": "No account?", "register": "Register", "home": "Back to home",
+    "securityTitle": "Security", "security": "Never share your password with third parties. Cashback+ does not ask for passwords by email, by telephone or through forum messages.",
+    "attempts": "After several unsuccessful attempts, sign-in may be temporarily restricted to protect the account and platform users.",
+    "privacyTitle": "Privacy", "privacyBefore": "Your data is processed in accordance with the Cashback+ ", "privacyLink": "Privacy Policy", "privacyAfter": ".",
+    "importantTitle": "Important information", "important": "Cashback+ is an information platform and a consumer rewards programme.", "age": "The platform is intended for users over the age of 18.",
+    "errors": {"credentials": "Incorrect email address or password.", "network": "Could not connect to the server. Check your connection and try again.", "server": "The server is temporarily unavailable. Please try later.", "limited": "Sign-in is temporarily restricted due to the number of attempts. Please try later.", "unknown": "Could not sign in. Please try later.", "email": "Enter a valid email address.", "emailLong": "The email address must not exceed 320 characters."}
+  },
+  "de": {
+    "title": "Anmelden", "intro": "Melden Sie sich bei Ihrem Cashback+-Konto an, um Cashback, Bonusprogramme, das Forum und weitere Funktionen der Plattform zu nutzen.",
+    "email": "E-Mail", "password": "Passwort", "submit": "Anmelden", "loading": "Anmeldung läuft…",
+    "forgot": "Passwort vergessen?", "recoveryUnavailable": "Die automatische Passwortwiederherstellung ist noch nicht verfügbar. Kontakt zum Support:", "contacts": "Kontakt",
+    "noAccount": "Noch kein Konto?", "register": "Registrieren", "home": "Zur Startseite",
+    "securityTitle": "Sicherheit", "security": "Geben Sie Ihr Passwort niemals an Dritte weiter. Cashback+ fragt weder per E-Mail noch telefonisch oder über Forennachrichten nach Passwörtern.",
+    "attempts": "Nach mehreren fehlgeschlagenen Versuchen kann die Anmeldung zum Schutz des Kontos und der Plattformnutzer vorübergehend eingeschränkt werden.",
+    "privacyTitle": "Datenschutz", "privacyBefore": "Ihre Daten werden gemäß der ", "privacyLink": "Datenschutzerklärung", "privacyAfter": " von Cashback+ verarbeitet.",
+    "importantTitle": "Wichtige Informationen", "important": "Cashback+ ist eine Informationsplattform und ein Verbraucherprämienprogramm.", "age": "Die Plattform richtet sich an Nutzer über 18 Jahre.",
+    "errors": {"credentials": "E-Mail-Adresse oder Passwort falsch.", "network": "Die Verbindung zum Server ist fehlgeschlagen. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.", "server": "Der Server ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.", "limited": "Die Anmeldung ist aufgrund der Anzahl der Versuche vorübergehend eingeschränkt. Bitte versuchen Sie es später erneut.", "unknown": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es später erneut.", "email": "Geben Sie eine gültige E-Mail-Adresse ein.", "emailLong": "Die E-Mail-Adresse darf höchstens 320 Zeichen lang sein."}
+  },
+  "fr": {
+    "title": "Connexion", "intro": "Connectez-vous à votre compte Cashback+ pour accéder au cashback, aux programmes de bonus, au forum et aux autres fonctionnalités de la plateforme.",
+    "email": "E-mail", "password": "Mot de passe", "submit": "Se connecter", "loading": "Connexion en cours…",
+    "forgot": "Mot de passe oublié ?", "recoveryUnavailable": "La récupération automatique du mot de passe n’est pas encore disponible. Contacter l’assistance :", "contacts": "Contacts",
+    "noAccount": "Pas encore de compte ?", "register": "Inscription", "home": "Retour à l’accueil",
+    "securityTitle": "Sécurité", "security": "Ne communiquez jamais votre mot de passe à des tiers. Cashback+ ne demande pas de mots de passe par e-mail, par téléphone ou dans les messages du forum.",
+    "attempts": "Après plusieurs tentatives infructueuses, la connexion peut être temporairement restreinte afin de protéger le compte et les utilisateurs de la plateforme.",
+    "privacyTitle": "Confidentialité", "privacyBefore": "Vos données sont traitées conformément à la ", "privacyLink": "Politique de confidentialité", "privacyAfter": " de Cashback+.",
+    "importantTitle": "Informations importantes", "important": "Cashback+ est une plateforme d’information et un programme de récompenses destinées aux consommateurs.", "age": "La plateforme est destinée aux utilisateurs de plus de 18 ans.",
+    "errors": {"credentials": "Adresse e-mail ou mot de passe incorrect.", "network": "Impossible de se connecter au serveur. Vérifiez votre connexion et réessayez.", "server": "Le serveur est temporairement indisponible. Veuillez réessayer plus tard.", "limited": "La connexion est temporairement restreinte en raison du nombre de tentatives. Veuillez réessayer plus tard.", "unknown": "La connexion a échoué. Veuillez réessayer plus tard.", "email": "Saisissez une adresse e-mail valide.", "emailLong": "L’adresse e-mail ne doit pas dépasser 320 caractères."}
+  }
+}

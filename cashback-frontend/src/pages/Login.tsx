@@ -1,300 +1,80 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import ForumLogo from "../components/ForumLogo";
 import MoneyTree from "../components/MoneyTree";
-import { translations } from "../i18n";
 import { validateEmail } from "../utils/emailValidator";
+import { LoginFailure, LoginFailureKind } from "../loginErrors";
+import messages from "../content/loginMessages.json";
+import "./Login.css";
 
-export default function Login({
-  lang,
-  onLangChange,
-}: {
-  lang: string;
-  onLangChange: (lang: string) => void;
-}) {
-  const { login } = useAuth();
+export default function Login({ lang }: { lang: string; onLangChange: (lang: string) => void }) {
+  const { login, isEmailVerificationPending } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const nextValue=new URLSearchParams(location.search).get('next');
-  const reviewNext = nextValue==='/forum/reviews/new'||nextValue==='/forum'?nextValue:null;
-
+  const nextValue = new URLSearchParams(location.search).get("next");
+  const reviewNext = nextValue === "/forum/reviews/new" || nextValue === "/forum" ? nextValue : null;
+  const language = lang.toLowerCase() as keyof typeof messages;
+  const t = messages[language] || messages.en;
   const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [error, setError] = useState<LoginFailureKind | null>(null);
+  const [emailError, setEmailError] = useState<"email" | "emailLong" | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const t =
-    translations[lang as keyof typeof translations] ??
-    translations.EN;
-
-  const handleEmailChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newEmail = e.target.value;
-    setForm({ ...form, email: newEmail });
-
-    if (newEmail.trim()) {
-      const validation = validateEmail(newEmail);
-      setEmailError(validation.error || "");
-    } else {
-      setEmailError("");
-    }
+  const [signedIn, setSignedIn] = useState(false);
+  const inFlight = useRef(false);
+  const errorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (error) errorRef.current?.focus(); }, [error]);
+  useEffect(() => {
+    if (signedIn) navigate(isEmailVerificationPending ? "/verify-email" : reviewNext || "/", { replace: true });
+  }, [signedIn, isEmailVerificationPending, reviewNext, navigate]);
+  const validationError = (email: string) => email.trim().length > 320 ? "emailLong" as const : "email" as const;
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (inFlight.current) return;
+    if (!validateEmail(form.email).valid) { setEmailError(validationError(form.email)); return; }
+    if (!form.password.trim()) return;
+    inFlight.current = true; setError(null); setEmailError(null); setLoading(true);
+    try { await login(form); setSignedIn(true); }
+    catch (failure) {
+      setError(failure instanceof LoginFailure ? failure.kind : failure instanceof TypeError ? "network" : "unknown");
+    } finally { inFlight.current = false; setLoading(false); }
   };
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const emailValidation = validateEmail(form.email);
-    if (!emailValidation.valid) {
-      setEmailError(emailValidation.error || "Invalid email");
-      setError(emailValidation.error || "Email validation failed");
-      return;
-    }
-
-    setError("");
-    setEmailError("");
-    setLoading(true);
-
-    try {
-      await login(form);
-      navigate(reviewNext || "/", { replace: true });
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : t.loginRegister;
-      setError(errorMessage);
-      console.error("Login error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const isFormValid =
-    form.email.trim() &&
-    form.password.trim() &&
-    validateEmail(form.email).valid;
-
-  return (
-    <div
-      style={{
-        minHeight: "calc(100vh - 72px)",
-        background:
-          "linear-gradient(to bottom, #f5e8d3, #e3d2b8)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "40px 24px",
-          display: "flex",
-          justifyContent: "center",
-          gap: "80px",
-          alignItems: "flex-start",
-        }}
-      >
-        {/* LEFT: Login Form */}
-        <div
-          style={{
-            flex: 1,
-            maxWidth: "480px",
-            minWidth: "300px",
-          }}
-        >
-          <Link
-            to="/"
-            style={{
-              color: "#0d6efd",
-              textDecoration: "none",
-              marginBottom: "24px",
-              display: "inline-block",
-              fontSize: "14px",
-            }}
-          >
-            ← {t.backToHome}
-          </Link>
-
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "32px",
-              borderRadius: "12px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-            }}
-          >
-            <Link
-              to="/"
-              style={{
-                display: "inline-block",
-                marginBottom: "24px",
-                textDecoration: "none",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  cursor: "pointer",
-                }}
-              >
-                <ForumLogo size={32} />
-                <h1
-                  style={{
-                    margin: 0,
-                    fontSize: "24px",
-                    color: "#000",
-                  }}
-                >
-                  {t.login}
-                </h1>
-              </div>
-            </Link>
-
-            {error && (
-              <div
-                style={{
-                  backgroundColor: "#fee",
-                  color: "#c33",
-                  padding: "12px",
-                  borderRadius: "8px",
-                  marginBottom: "16px",
-                  border: "1px solid #fcc",
-                }}
-              >
-                {error}
-              </div>
-            )}
-
-            <form
-              onSubmit={submit}
-              style={{ display: "grid", gap: "12px" }}
-            >
-              <div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder={t.email}
-                  value={form.email}
-                  onChange={handleEmailChange}
-                  required
-                  autoComplete="email"
-                  disabled={loading}
-                  aria-invalid={emailError ? "true" : "false"}
-                  aria-describedby={
-                    emailError ? "email-error" : undefined
-                  }
-                  style={{
-                    padding: "12px",
-                    borderRadius: "6px",
-                    border: emailError
-                      ? "1px solid #dc3545"
-                      : "1px solid #ddd",
-                    fontSize: "14px",
-                    width: "100%",
-                    boxSizing: "border-box",
-                    backgroundColor: emailError
-                      ? "#ffe6e6"
-                      : "#fff",
-                  }}
-                />
-
-                {emailError && (
-                  <p
-                    id="email-error"
-                    role="alert"
-                    style={{
-                      color: "#dc3545",
-                      fontSize: "12px",
-                      marginTop: "6px",
-                      margin: "6px 0 0",
-                    }}
-                  >
-                    {emailError}
-                  </p>
-                )}
-              </div>
-
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder={t.password}
-                value={form.password}
-                onChange={(e) =>
-                  setForm({ ...form, password: e.target.value })
-                }
-                required
-                autoComplete="current-password"
-                disabled={loading}
-                style={{
-                  padding: "12px",
-                  borderRadius: "6px",
-                  border: "1px solid #ddd",
-                  fontSize: "14px",
-                  width: "100%",
-                  boxSizing: "border-box",
-                }}
-              />
-
-              <button
-                type="submit"
-                disabled={loading || !isFormValid}
-                style={{
-                  padding: "12px",
-                  backgroundColor:
-                    isFormValid && !loading ? "#0d6efd" : "#ccc",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor:
-                    isFormValid && !loading
-                      ? "pointer"
-                      : "not-allowed",
-                  fontSize: "16px",
-                  fontWeight: 500,
-                  transition:
-                    "background-color 0.3s ease",
-                }}
-              >
-                {loading ? t.creating : t.login}
-              </button>
-            </form>
-
-            <p
-              style={{
-                marginTop: "24px",
-                textAlign: "center",
-                color: "#666",
-              }}
-            >
-              {t.noAccount}{" "}
-              <Link
-                to={reviewNext ? "/register?next="+encodeURIComponent(reviewNext) : "/register"}
-                style={{
-                  color: "#0d6efd",
-                  textDecoration: "none",
-                  fontWeight: 600,
-                }}
-              >
-                {t.register}
-              </Link>
-            </p>
-          </div>
+  const valid = !!form.email.trim() && !!form.password.trim() && validateEmail(form.email).valid;
+  return <main className="login-page" lang={language}>
+    <div className="login-layout">
+      <Link to="/" className="login-home">← {t.home}</Link>
+      <div className="login-top">
+        <div className="login-card">
+          <div className="login-title"><ForumLogo size={32}/><h1>{t.title}</h1></div>
+          <p>{t.intro}</p>
+          {error && <div className="login-error" role="alert" tabIndex={-1} ref={errorRef}>{t.errors[error]}</div>}
+          <form onSubmit={submit} aria-busy={loading}>
+            <div>
+              <label htmlFor="email">{t.email}</label>
+              <input id="email" name="email" type="email" autoComplete="email" required disabled={loading}
+                value={form.email} onChange={event => {
+                  const email = event.target.value; setForm({ ...form, email });
+                  setEmailError(email.trim() && !validateEmail(email).valid ? validationError(email) : null);
+                }} aria-invalid={!!emailError} aria-describedby={emailError ? "email-error" : undefined}/>
+              {emailError && <p className="login-field-error" id="email-error" role="alert">{t.errors[emailError]}</p>}
+            </div>
+            <div>
+              <label htmlFor="password">{t.password}</label>
+              <input id="password" name="password" type="password" autoComplete="current-password" required
+                disabled={loading} value={form.password} onChange={event => setForm({ ...form, password: event.target.value })}/>
+            </div>
+            <button type="submit" disabled={loading || !valid}>{loading ? t.loading : t.submit}</button>
+          </form>
+          <div className="login-recovery"><p>{t.forgot}</p><p>{t.recoveryUnavailable} <Link to="/contacts">{t.contacts}</Link></p></div>
+          <p className="login-register">{t.noAccount}{" "}<Link to={reviewNext ? "/register?next=" + encodeURIComponent(reviewNext) : "/register"}>{t.register}</Link></p>
         </div>
-
-        {/* RIGHT: Money Tree Animation */}
-        <div
-          style={{
-            flex: 1,
-            maxWidth: "420px",
-            minWidth: "300px",
-          }}
-        >
-          <MoneyTree />
-        </div>
+        <aside className="login-illustration" aria-hidden="true"><MoneyTree/></aside>
+      </div>
+      <div className="login-info">
+        <section><h2>{t.securityTitle}</h2><p>{t.security}</p><p>{t.attempts}</p></section>
+        <section><h2>{t.privacyTitle}</h2><p>{t.privacyBefore}<Link to="/privacy">{t.privacyLink}</Link>{t.privacyAfter}</p></section>
+        <section><h2>{t.importantTitle}</h2><p>{t.important}</p><p>{t.age}</p></section>
       </div>
     </div>
-  );
+  </main>;
 }

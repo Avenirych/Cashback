@@ -8,6 +8,7 @@ import {
   getResearchMessages,
 } from "../researchData";
 import "./BonusResearch.css";
+import {formatResearchBonus} from '../researchBonusText';
 
 const STUDY_IMAGE_URL = "/assets/background2.png";
 
@@ -60,11 +61,28 @@ export default function ResearchDirection() {
             <dd>{text.conditions}</dd>
 
             <dt>{t.expected}</dt>
-            <dd>{t.bonusRange}</dd>
+            <dd>
+              <p>{t.bonusRange}</p>
+              <p>{t.rangeCaveat}</p>
+              <p>{t.rangeDemo}</p>
+            </dd>
           </dl>
         </section>
 
-        <p className="research-demo">{t.demo}</p>
+        <section className="research-demo research-direction-information" aria-labelledby="research-demo-heading">
+          <h2 id="research-demo-heading">{t.demoTitle}</h2>
+          {t.demoParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+        </section>
+
+        <section className="research-details research-direction-information" aria-labelledby="research-important-heading">
+          <h2 id="research-important-heading">{t.importantTitle}</h2>
+          {t.importantParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+        </section>
+
+        <div className="research-details research-direction-information research-direct-payments">
+          {t.roleParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+          <p>{t.roleBefore}<Link to="/activity-limits">{t.roleLink}</Link>{t.roleAfter}</p>
+        </div>
 
         <h2 className="research-list-title">
           {t.studyCount}: {directionStudies.length}
@@ -86,8 +104,8 @@ export default function ResearchDirection() {
               </div>
 
               <div className="research-study-bonuses">
-                <span>{t.expected}</span>
-                <strong>{study.expectedBonuses}</strong>
+                <span>{t.possibleReward}:</span>{' '}
+                <strong>{formatResearchBonus(study.expectedBonuses, lang)}</strong>
               </div>
 
               <Link

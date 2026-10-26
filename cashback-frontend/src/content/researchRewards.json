@@ -1,0 +1,62 @@
+{
+ "RU": {
+  "disclaimer":"Приведённые диапазоны являются ориентировочными примерами, а не подтверждённой статистикой выплат. Фактическое наличие вознаграждения, его размер и условия определяются организатором конкретного исследования.",
+  "cards":[
+   "Типичный диапазон вознаграждений, который может встречаться в подобных программах: £0.5–£20 за опрос.",
+   "Типичный диапазон вознаграждений, который может встречаться в подобных программах: £30–£300 за сессию; для редких специалистов — £500–£1000.",
+   "Типичный диапазон вознаграждений, который может встречаться в подобных программах: £5–£100 за тест.",
+   "В подобных программах может предусматриваться фиксированный гонорар и компенсация расходов; конкретные условия определяет организатор.",
+   "Типичный диапазон вознаграждений, который может встречаться в подобных программах: £50–£2000+.",
+   "Типичный диапазон вознаграждений, который может встречаться в подобных программах: £50–£500 за интервью.",
+   "Типичный диапазон вознаграждений, который может встречаться в подобных программах: £50–£500 за исследование.",
+   "В подобных программах вознаграждение может предоставляться деньгами или баллами/бонусами в зависимости от условий организатора.",
+   "Типичный диапазон вознаграждений, который может встречаться в подобных программах: £6–£20 в час.",
+   "Типичный диапазон вознаграждений, который может встречаться в подобных программах: £100–£1000+ за час."
+  ]
+ },
+ "EN": {
+  "disclaimer":"The ranges shown are indicative examples, not verified payment statistics. Whether a reward is available, its amount and its conditions are determined by the organiser of the particular study.",
+  "cards":[
+   "A typical reward range that may occur in similar programmes: £0.5–£20 per survey.",
+   "A typical reward range that may occur in similar programmes: £30–£300 per session; for rare specialist profiles — £500–£1000.",
+   "A typical reward range that may occur in similar programmes: £5–£100 per test.",
+   "Similar programmes may provide a fixed fee and reimbursement of expenses; the specific conditions are determined by the organiser.",
+   "A typical reward range that may occur in similar programmes: £50–£2000+.",
+   "A typical reward range that may occur in similar programmes: £50–£500 per interview.",
+   "A typical reward range that may occur in similar programmes: £50–£500 per study.",
+   "In similar programmes, rewards may be provided as money or points/bonuses depending on the organiser’s conditions.",
+   "A typical reward range that may occur in similar programmes: £6–£20 per hour.",
+   "A typical reward range that may occur in similar programmes: £100–£1000+ per hour."
+  ]
+ },
+ "DE": {
+  "disclaimer":"Die angegebenen Spannen sind unverbindliche Beispiele und keine bestätigten Auszahlungsstatistiken. Ob eine Vergütung verfügbar ist, wie hoch sie ausfällt und welche Bedingungen gelten, bestimmt der Veranstalter der jeweiligen Studie.",
+  "cards":[
+   "Eine typische Vergütungsspanne, die bei ähnlichen Programmen vorkommen kann: £0.5–£20 pro Umfrage.",
+   "Eine typische Vergütungsspanne, die bei ähnlichen Programmen vorkommen kann: £30–£300 pro Sitzung; für seltene Fachprofile — £500–£1000.",
+   "Eine typische Vergütungsspanne, die bei ähnlichen Programmen vorkommen kann: £5–£100 pro Test.",
+   "Ähnliche Programme können ein festes Honorar und die Erstattung von Ausgaben vorsehen; die konkreten Bedingungen bestimmt der Veranstalter.",
+   "Eine typische Vergütungsspanne, die bei ähnlichen Programmen vorkommen kann: £50–£2000+.",
+   "Eine typische Vergütungsspanne, die bei ähnlichen Programmen vorkommen kann: £50–£500 pro Interview.",
+   "Eine typische Vergütungsspanne, die bei ähnlichen Programmen vorkommen kann: £50–£500 pro Studie.",
+   "Bei ähnlichen Programmen kann die Vergütung je nach den Bedingungen des Veranstalters in Geld oder Punkten/Boni erfolgen.",
+   "Eine typische Vergütungsspanne, die bei ähnlichen Programmen vorkommen kann: £6–£20 pro Stunde.",
+   "Eine typische Vergütungsspanne, die bei ähnlichen Programmen vorkommen kann: £100–£1000+ pro Stunde."
+  ]
+ },
+ "FR": {
+  "disclaimer":"Les fourchettes indiquées sont des exemples indicatifs et non des statistiques de paiement vérifiées. L’existence d’une récompense, son montant et ses conditions sont déterminés par l’organisateur de l’étude concernée.",
+  "cards":[
+   "Une fourchette typique de récompenses pouvant se rencontrer dans des programmes similaires : £0.5–£20 par enquête.",
+   "Une fourchette typique de récompenses pouvant se rencontrer dans des programmes similaires : £30–£300 par séance ; pour les profils de spécialistes rares — £500–£1000.",
+   "Une fourchette typique de récompenses pouvant se rencontrer dans des programmes similaires : £5–£100 par test.",
+   "Des programmes similaires peuvent prévoir des honoraires fixes et le remboursement des frais ; les conditions précises sont déterminées par l’organisateur.",
+   "Une fourchette typique de récompenses pouvant se rencontrer dans des programmes similaires : £50–£2000+.",
+   "Une fourchette typique de récompenses pouvant se rencontrer dans des programmes similaires : £50–£500 par entretien.",
+   "Une fourchette typique de récompenses pouvant se rencontrer dans des programmes similaires : £50–£500 par étude.",
+   "Dans des programmes similaires, la récompense peut prendre la forme d’argent ou de points/bonus selon les conditions de l’organisateur.",
+   "Une fourchette typique de récompenses pouvant se rencontrer dans des programmes similaires : £6–£20 par heure.",
+   "Une fourchette typique de récompenses pouvant se rencontrer dans des programmes similaires : £100–£1000+ par heure."
+  ]
+ }
+}
