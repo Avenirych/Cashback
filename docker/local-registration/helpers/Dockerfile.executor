@@ -11,8 +11,8 @@ RUN node -e 'const [n,p]=process.argv.slice(1);if(!/^node:24\.21\.0-bookworm@sha
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts --no-audit --no-fund
 COPY tsconfig.json ./
-COPY src/docker-phone-*.ts ./src/
-COPY src/migrations/ ./src/migrations/
+COPY docker/local-registration/legacy-source/src/docker-phone-*.ts ./docker/local-registration/legacy-source/src/
+COPY docker/local-registration/legacy-source/src/migrations/ ./docker/local-registration/legacy-source/src/migrations/
 COPY docker/local-registration/helpers/tsconfig.executor.json ./docker/local-registration/helpers/tsconfig.executor.json
 RUN node node_modules/typescript/bin/tsc --project docker/local-registration/helpers/tsconfig.executor.json && npm prune --omit=dev --ignore-scripts --no-audit --no-fund
 

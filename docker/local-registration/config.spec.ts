@@ -1,6 +1,7 @@
+import {localConfiguration} from '../../src/local-configuration';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { validateLocalDemoMailpit } from '../../src/mail/local-demo-mailpit';
+import { validateLocalDemoMailpit } from './legacy-source/src/mail/local-demo-mailpit';
 
 // In-memory parsing only. No dotenv, AppModule, datasource, child process or sockets.
 const root = resolve(__dirname, '../..');
@@ -111,13 +112,46 @@ test('no backend/schema startup override and existing concurrency gate stays clo
   expect(services.backend).not.toHaveProperty('entrypoint');
   expect(services['postgres-test']).not.toHaveProperty('command');
   expect(services['postgres-test']).not.toHaveProperty('entrypoint');
-  for (const file of ['src/app.module.ts', 'src/data-source.ts']) {
-    const source = readFileSync(resolve(root, file), 'utf8');
-    expect(source).toMatch(/synchronize:\s*false/);
-    expect(source).toMatch(/migrationsRun:\s*false/);
-  }
-  const runner = readFileSync(resolve(root, 'src/docker-phone-migration-runner.ts'), 'utf8');
+  // Current application delegates database options to this pure, fail-closed factory.
+  const current=localConfiguration({HISTORICAL_LOCAL:'true',HISTORICAL_CONTAINER:'true',DB_HOST:'historical-postgres',DB_NAME:'cashback_historical_03573b7',DB_USER:'cashback_hist_runtime',DB_PORT:'5432',DB_PASSWORD:'synthetic-only',JWT_SECRET:'x'.repeat(40),FRONTEND_URL:'http://localhost:3004',PORT:'3006',HOST:'0.0.0.0',SMTP_HOST:'historical-mailpit',SMTP_PORT:'1025',USE_ETHEREAL:'false'});
+  expect(current.database).toMatchObject({synchronize:false,migrationsRun:false,installExtensions:false});
+  expect(readFileSync(resolve(root,'src/app.module.ts'),'utf8')).toContain('TypeOrmModule.forRoot(localConfiguration().database)');
+  // The old generic CLI data source was deliberately archived, not reactivated.
+  expect(existsSync(resolve(root,'src/data-source.ts'))).toBe(false);
+  const historicalSource=readFileSync(resolve(__dirname,'legacy-source/src/docker-phone-migration-data-source.ts'),'utf8');
+  expect(historicalSource).toMatch(/synchronize:\s*false/);
+  expect(historicalSource).toMatch(/migrationsRun:\s*false/);
+  expect(historicalSource).toContain('PHONE_GENERIC_CLI_FORBIDDEN');
+  const runner = readFileSync(resolve(root, 'docker/local-registration/legacy-source/src/docker-phone-migration-runner.ts'), 'utf8');
   expect(runner).toContain('PHONE_APPLY_CONCURRENCY_VERIFIED: boolean = false;');
-  expect(readFileSync(resolve(root, 'src/docker-phone-migration-data-source.ts'), 'utf8'))
+  expect(readFileSync(resolve(root, 'docker/local-registration/legacy-source/src/docker-phone-migration-data-source.ts'), 'utf8'))
     .toContain('cashback_phone_migration_check_');
+});
+
+test('recovered historical dependencies retain independently recorded snapshot hashes', () => {
+  const {createHash}=require('node:crypto') as typeof import('node:crypto');
+  const archive=resolve(__dirname,'legacy-source');
+  const manifest=JSON.parse(readFileSync(resolve(archive,'PROVENANCE.json'),'utf8'));
+  expect(manifest.activation).toBe('NOT_AUTHORIZED');
+  expect(manifest.files).toHaveLength(24);
+  for(const file of manifest.files){
+    expect(file.path).toMatch(/^src\/[A-Za-z0-9_./-]+\.ts$/);
+    expect(file.path).not.toContain('..');
+    const data=readFileSync(resolve(archive,file.path));
+    expect(data.length).toBe(file.bytes);
+    expect(createHash('sha256').update(data).digest('hex')).toBe(file.sha256);
+  }
+});
+
+test('recovered historical migrations and modules remain outside application build roots', () => {
+  const ts=require('typescript') as typeof import('typescript');
+  const file=resolve(root,'tsconfig.build.json');
+  const source=ts.readConfigFile(file,ts.sys.readFile);
+  expect(source.error).toBeUndefined();
+  const parsed=ts.parseJsonConfigFileContent(source.config,ts.sys,root);
+  expect(parsed.errors).toHaveLength(0);
+  expect(parsed.fileNames.length).toBeGreaterThan(0);
+  expect(parsed.fileNames.some(p=>p.includes('legacy-source'))).toBe(false);
+  expect(existsSync(resolve(root,'src/migrations/1792195200000-AddUserPhoneAndSmsConsent.ts'))).toBe(false);
+  expect(readFileSync(resolve(root,'src/app.module.ts'),'utf8')).not.toContain('legacy-source');
 });

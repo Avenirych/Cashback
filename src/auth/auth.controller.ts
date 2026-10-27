@@ -65,7 +65,7 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() body: RegisterBody,@Request() req:{socket?:{remoteAddress?:string}}={}) {
+  async register(@Body() body: RegisterBody,@Request() req:{socket?:{remoteAddress?:string}; headers?:{origin?:string}}={}) {
     if (!body) {
       throw new BadRequestException(
         'Registration data is required',
@@ -77,6 +77,7 @@ export class AuthController {
       body.password,
       `${body.firstName || ""} ${body.lastName || ""}`.trim(),
       {firstName:body.firstName,lastName:body.lastName,phone_e164:body.phone_e164},
+      ...(req.headers?.origin ? [req.headers.origin] : []),
     ));
   }
 
@@ -89,7 +90,7 @@ export class AuthController {
   @Post('resend-verification')
   async resendVerification(
     @Body() body: ResendVerificationBody,
-    @Request() req: { ip?: string; socket?: { remoteAddress?: string } } = {},
+    @Request() req: { ip?: string; socket?: { remoteAddress?: string }; headers?: { origin?: string } } = {},
   ) {
     if (!body) {
       throw new BadRequestException('Email is required');
@@ -98,6 +99,7 @@ export class AuthController {
     if(!this.activity?.enabled())this.checkResendLimit(req.ip || req.socket?.remoteAddress || 'unknown');
     return this.limited('resend',body.email,req,()=>this.authService.resendVerificationEmail(
       body.email,
+      ...(req.headers?.origin ? [req.headers.origin] : []),
     ));
   }
 

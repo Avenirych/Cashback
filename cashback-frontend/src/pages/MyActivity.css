@@ -1,0 +1,7 @@
+.my-activity-page { width: 100%; min-width: 0; }
+.my-activity-page :is(table, textarea, input) { max-width: 100%; }
+.my-activity-page form { margin-top: 18px; }
+.my-activity-page button { margin: 8px 8px 8px 0; }
+.my-activity-page dl { margin: 16px 0; }
+.my-activity-page dt { font-weight: 700; }
+.my-activity-page dd { margin: 0 0 10px; overflow-wrap: anywhere; }

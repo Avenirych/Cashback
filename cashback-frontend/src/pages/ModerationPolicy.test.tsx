@@ -9,7 +9,6 @@ let mockLang='ru';
 let mockAuth:any={user:null,token:null,loading:false};
 jest.mock('../context/LanguageContext',()=>({useLang:()=>({lang:mockLang})}));
 jest.mock('../context/AuthContext',()=>({useAuth:()=>mockAuth}));
-jest.mock('./ModerationCenter',()=>()=> <div data-testid="technical-moderation"/>);
 const originalDemo=process.env.REACT_APP_DEMO_ONLY;
 const codes=['ru','en','de','fr'] as const;
 beforeEach(()=>{mockLang='ru';mockAuth={user:null,token:null,loading:false};process.env.REACT_APP_DEMO_ONLY='true';global.fetch=jest.fn();});
@@ -49,10 +48,10 @@ test.each(['en','de','fr'] as const)('%s: complete translation with every list, 
 test('keyboard toggling preserves focus and multiple panels; language switch resets them',()=>{
  const view=mount(),q=view.container.querySelectorAll('summary');q[0].focus();fireEvent.keyDown(q[0],{key:'Enter'});fireEvent.keyDown(q[1],{key:' '});expect(view.container.querySelectorAll('details[open]')).toHaveLength(2);expect(document.activeElement).toBe(q[0]);fireEvent.keyDown(q[0],{key:' '});expect(view.container.querySelectorAll('details[open]')).toHaveLength(1);mockLang='de';view.rerender(<MemoryRouter><ModerationPolicy/></MemoryRouter>);expect(view.container.querySelectorAll('details[open]')).toHaveLength(0);
 });
-test.each([
- ['true',false,false,false],['true',true,true,false],['false',false,false,false],
- ['false',true,false,false],['false',true,true,true],
-] as const)('technical gate: demo %s user %s token %s => mounted %s',(demo,user,token,mounted)=>{
- process.env.REACT_APP_DEMO_ONLY=demo;mockAuth={user:user?{id:1,email_verified:true}:null,token:token?'fixture':null,loading:false};mount();expect(Boolean(screen.queryByTestId('technical-moderation'))).toBe(mounted);expect(screen.getByRole('heading',{name:content.titles.ru})).toBeInTheDocument();expect(fetch).not.toHaveBeenCalled();
+test.each(['true','false'])('authenticated policy links to relocated controls, demo=%s',demo=>{
+ process.env.REACT_APP_DEMO_ONLY=demo;mockAuth={user:{id:1,email_verified:true},token:'fixture',loading:false};mount();
+ expect(screen.getByRole('link',{name:'Моя активность'})).toHaveAttribute('href','/my-activity#my-activity-restrictions');
+ expect(screen.queryByTestId('technical-moderation')).toBeNull();expect(fetch).not.toHaveBeenCalled();
 });
+
 test('auth loading never starts technical moderation',()=>{process.env.REACT_APP_DEMO_ONLY='false';mockAuth={user:{id:1},token:'fixture',loading:true};mount();expect(screen.queryByTestId('technical-moderation')).not.toBeInTheDocument();});

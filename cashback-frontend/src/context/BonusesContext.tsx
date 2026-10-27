@@ -1,3 +1,4 @@
+import {canReadBonusSnapshot} from '../bonusReadOnly';
 import React, {
   createContext,
   useCallback,
@@ -46,7 +47,7 @@ export function BonusesProvider({
   const { user, token, loading } = useAuth();
 
   const activeToken =
-    !registrationIsolated() && !loading && user?.email_verified === true
+    canReadBonusSnapshot() && !loading && user?.email_verified === true
       ? token
       : null;
 
@@ -57,7 +58,7 @@ export function BonusesProvider({
   ]);
 
   return (
-    <BonusStore key={sessionKey} token={activeToken}>
+    <BonusStore key={sessionKey} token={activeToken} userId={user?.id}>
       {children}
     </BonusStore>
   );
@@ -66,9 +67,11 @@ export function BonusesProvider({
 function BonusStore({
   children,
   token,
+  userId,
 }: {
   children: React.ReactNode;
   token: string | null;
+  userId: number | undefined;
 }) {
   const [snapshot, setSnapshot] =
     useState<BonusSnapshot | null>(null);
@@ -80,7 +83,7 @@ function BonusStore({
   const controller = useRef<AbortController | null>(null);
 
   const refresh = useCallback(async () => {
-    if (registrationIsolated()) return;
+    if (!canReadBonusSnapshot()) return;
     if (!token || !active.current) return;
 
     const currentRevision = ++revision.current;
@@ -98,6 +101,7 @@ function BonusStore({
         currentController.signal
       );
 
+      if(next.items.some(item=>item.userId!==userId)||next.transfers.some(entry=>entry.fromUserId!==userId&&entry.toUserId!==userId))throw new Error("Invalid bonus snapshot");
       if (
         active.current &&
         currentRevision === revision.current
@@ -115,11 +119,7 @@ function BonusStore({
 
       // Не разрешаем использовать устаревший баланс.
       setSnapshot(null);
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Could not load bonuses"
-      );
+      setError("Could not load bonuses");
 
       throw err;
     } finally {
@@ -130,12 +130,12 @@ function BonusStore({
         setLoading(false);
       }
     }
-  }, [token]);
+  }, [token,userId]);
 
   useEffect(() => {
     active.current = true;
 
-    if (!token || registrationIsolated()) {
+    if (!token || !canReadBonusSnapshot()) {
       return () => {
         active.current = false;
       };
@@ -204,7 +204,7 @@ function BonusStore({
 
   const availableBonusIds = useMemo(
     () =>
-      items
+      (registrationIsolated()?[]:items)
         .filter(
           (item) =>
             item.status === "confirmed" &&

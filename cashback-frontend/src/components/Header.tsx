@@ -6,6 +6,7 @@ import { useLang } from "../context/LanguageContext";
 import { forumAvatarUrl } from "../forum";
 import SiteSearch from "./SiteSearch";
 import LanguageSwitcher from "./LanguageSwitcher";
+import activityContent from "../content/myActivity.json";
 
 const labels: Record<string, Record<string, string>> = {
   en: {
@@ -84,6 +85,7 @@ export default function Header() {
   }, [menuOpen]);
 
   const t = labels[lang.toLowerCase()] ?? labels.en;
+  const activityTitle = (activityContent[lang.toLowerCase() as keyof typeof activityContent] || activityContent.en).title;
 
   const avatar = forumAvatarUrl(
     forumUser?.avatar_url || user?.avatar_url
@@ -297,6 +299,8 @@ export default function Header() {
                 >
                   {t.profile}
                 </Link>
+
+                <Link to="/my-activity" onClick={() => setMenuOpen(false)} style={menuLinkStyle}>{activityTitle}</Link>
 
                 <button
                   type="button"

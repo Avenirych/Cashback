@@ -1,0 +1,11 @@
+.activity-limits-table {width:100%;border-collapse:collapse;table-layout:fixed;margin:16px 0;overflow-wrap:anywhere;font-size:.9rem;}
+.activity-limits-table th,.activity-limits-table td {padding:10px 6px;text-align:left;vertical-align:top;border-bottom:1px solid #ddd;}
+.activity-limits-label {display:none;}
+@media(max-width:767px) {
+ .activity-limits-table,.activity-limits-table tbody {display:block;}
+ .activity-limits-table thead {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+ .activity-limits-table tr {display:block;margin-bottom:18px;border-bottom:1px solid #b8a78b;}
+ .activity-limits-table tbody th {display:block;background:#f6f3ed;}
+ .activity-limits-table td {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;}
+ .activity-limits-label {display:inline;font-weight:600;}
+}

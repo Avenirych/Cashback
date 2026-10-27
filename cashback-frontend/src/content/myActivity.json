@@ -1,0 +1,86 @@
+{
+  "ru": {
+    "title": "Моя активность",
+    "restrictions": "Ограничения и оспаривание",
+    "moderationUnavailable": "Данные ограничений модерации недоступны в демонстрационном режиме.",
+    "level": "Уровень ограничения",
+    "blocked": "Публикации ограничены",
+    "yes": "Да",
+    "no": "Нет",
+    "until": "Срок действия",
+    "unknown": "Недоступно",
+    "actions": {
+      "submitted": "Отправлено на проверку",
+      "publish": "Опубликовано",
+      "hold": "Оставлено на проверке",
+      "confirm": "Нарушение подтверждено",
+      "reported": "Жалоба получена",
+      "revoked": "Решение отменено",
+      "upheld": "Решение оставлено в силе",
+      "manual-revoke": "Решение отменено модератором"
+    }
+  },
+  "en": {
+    "title": "My Activity",
+    "restrictions": "Restrictions and appeals",
+    "moderationUnavailable": "Moderation restriction data is unavailable in demonstration mode.",
+    "level": "Restriction level",
+    "blocked": "Posting restricted",
+    "yes": "Yes",
+    "no": "No",
+    "until": "Valid until",
+    "unknown": "Unavailable",
+    "actions": {
+      "submitted": "Submitted for review",
+      "publish": "Published",
+      "hold": "Held for review",
+      "confirm": "Violation confirmed",
+      "reported": "Report received",
+      "revoked": "Decision revoked",
+      "upheld": "Decision upheld",
+      "manual-revoke": "Decision revoked by a moderator"
+    }
+  },
+  "de": {
+    "title": "Meine Aktivitäten",
+    "restrictions": "Beschränkungen und Einsprüche",
+    "moderationUnavailable": "Daten zu Moderationsbeschränkungen sind im Demonstrationsmodus nicht verfügbar.",
+    "level": "Beschränkungsstufe",
+    "blocked": "Veröffentlichungen eingeschränkt",
+    "yes": "Ja",
+    "no": "Nein",
+    "until": "Gültig bis",
+    "unknown": "Nicht verfügbar",
+    "actions": {
+      "submitted": "Zur Prüfung eingereicht",
+      "publish": "Veröffentlicht",
+      "hold": "Zur Prüfung zurückgestellt",
+      "confirm": "Verstoß bestätigt",
+      "reported": "Meldung eingegangen",
+      "revoked": "Entscheidung aufgehoben",
+      "upheld": "Entscheidung bestätigt",
+      "manual-revoke": "Entscheidung durch Moderation aufgehoben"
+    }
+  },
+  "fr": {
+    "title": "Mon activité",
+    "restrictions": "Restrictions et recours",
+    "moderationUnavailable": "Les données des restrictions de modération sont indisponibles en mode démonstration.",
+    "level": "Niveau de restriction",
+    "blocked": "Publication restreinte",
+    "yes": "Oui",
+    "no": "Non",
+    "until": "Valable jusqu’au",
+    "unknown": "Indisponible",
+    "actions": {
+      "submitted": "Soumis à examen",
+      "publish": "Publié",
+      "hold": "Maintenu en attente",
+      "confirm": "Infraction confirmée",
+      "reported": "Signalement reçu",
+      "revoked": "Décision annulée",
+      "upheld": "Décision maintenue",
+      "manual-revoke": "Décision annulée par la modération"
+    }
+  }
+}

@@ -199,3 +199,16 @@
   outline: 2px solid #0d6efd;
   outline-offset: 2px;
 }
+
+/* Full-width grid row within the shared form/illustration container. */
+.register-marketing {
+  grid-column: 1 / -1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.register-marketing > div > div:first-child {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.register-marketing h3 {min-width: 0;}
+.register-marketing button {max-width: 100%;overflow-wrap: anywhere;}

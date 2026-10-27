@@ -1,8 +1,8 @@
 import { collectRegistrationServicePhase, CollectorBlocked } from './collector';
-import { REGISTRATION_PHONE_EXPECTED as E } from '../../src/docker-phone-registration-target';
+import { REGISTRATION_PHONE_EXPECTED as E } from './legacy-source/src/docker-phone-registration-target';
 import {serviceFixture} from './service-phase.fixture';
 import {configDigest} from './admission';
-import {registrationPeerFingerprint} from '../../src/docker-phone-registration-target';
+import {registrationPeerFingerprint} from './legacy-source/src/docker-phone-registration-target';
 const {report}=require('./deployment-package.cjs');
 describe('source-only deployment package',()=>{
   test('offline draft has fixed topology and unresolved identities, never fabricated approvals',()=>{

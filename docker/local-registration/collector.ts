@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import { readFile, realpath } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import { REGISTRATION_PHONE_EXPECTED as E } from '../../src/docker-phone-registration-target';
+import { REGISTRATION_PHONE_EXPECTED as E } from './legacy-source/src/docker-phone-registration-target';
 import { admitRegistrationResources, configDigest, AdmissionInput, AdmissionPolicy, COMPOSE_FILE, REGISTRATION_PROJECT, TEMPLATE_SHA256 } from './admission';
 
 type Json = AdmissionInput['template'];

@@ -1,0 +1,262 @@
+{
+  "ru": {
+    "personal": "Персональные данные",
+    "security": "Безопасность аккаунта",
+    "marketing": "Маркетинговые предпочтения",
+    "partner": "Партнёрские согласия",
+    "rewards": "Вознаграждения",
+    "limits": "Лимиты активности",
+    "tax": "Налоговая информация",
+    "appeals": "Оспаривание ограничений",
+    "deletion": "Удаление аккаунта",
+    "demo": "Демонстрационный режим",
+    "surname": "Фамилия",
+    "phone": "Телефон",
+    "support": "Служба поддержки",
+    "privacy": "Политика конфиденциальности",
+    "deleteRequest": "Написать по вопросу удаления данных",
+    "historyUnavailable": "История входов пока недоступна.",
+    "passwordHelp": "Смена пароля в профиле пока недоступна. Если необходима помощь с безопасностью аккаунта, обратитесь в поддержку.",
+    "balanceUnavailable": "Данные о балансе недоступны",
+    "rewardNote": "Показан существующий баланс аккаунта. Он не содержит разбивки по статусам и не обозначает подтверждённую сумму к выплате. Валюта этого показателя не указана.",
+    "program": "Участие в программе вознаграждений",
+    "manageMarketing": "Управлять партнёрскими рекомендациями",
+    "partnerNote": "Здесь доступны настройки партнёрских маркетинговых рекомендаций. Они не являются общим разрешением на передачу любых данных партнёрам.",
+    "limitsUnavailable": "Данные лимитов в этом режиме недоступны.",
+    "appealsUnavailable": "Если форма обращения недоступна, направьте запрос через службу поддержки.",
+    "taxUnavailable": "Форма налоговой информации на этой странице пока недоступна. Налоговые документы здесь не собираются.",
+    "edit": "Изменить",
+    "unauthorized": "Сессия недоступна. Войдите в аккаунт снова.",
+    "marketingPrivacy": "Маркетинговые коммуникации и конфиденциальность",
+    "rights": "Ваши права и отзыв согласия",
+    "cookies": "Политика Cookie",
+    "moderation": "Модерация, уведомления и апелляции",
+    "upper": [
+      "Для использования отдельных программ вознаграждений может потребоваться заполнение дополнительной информации профиля и предоставление документов, необходимых для соблюдения требований партнёров или применимого законодательства.",
+      "Регистрация аккаунта не означает автоматическое участие во всех программах Cashback+."
+    ],
+    "marketingText": [
+      "Маркетинговые сообщения являются необязательными и могут быть отключены в любое время.",
+      "Изменение маркетинговых предпочтений не влияет на получение обязательных сервисных уведомлений, связанных с безопасностью аккаунта и работой платформы."
+    ],
+    "partnerText": [
+      "Некоторые программы Cashback+, исследования и партнёрские предложения могут требовать передачи ограниченного объёма данных соответствующим партнёрам.",
+      "Передача данных осуществляется только в объёме, необходимом для исполнения соответствующей программы, и регулируется Политикой конфиденциальности."
+    ],
+    "limitsText": [
+      "Лимиты активности используются для обеспечения стабильной работы платформы и предотвращения злоупотреблений.",
+      "Лимиты не являются дисциплинарной мерой и сами по себе не означают нарушение правил."
+    ],
+    "appealsText": [
+      "Если вы считаете, что ограничение было применено ошибочно, вы можете отправить запрос на пересмотр решения.",
+      "Рассмотрение обращения осуществляется в порядке, предусмотренном разделом „Модерация, уведомления и апелляции“."
+    ],
+    "taxText": [
+      "Отдельные партнёрские программы могут требовать предоставления налоговой информации для участия в программах вознаграждений.",
+      "Если такая информация необходима, пользователю будет предложено заполнить соответствующую форму.",
+      "Налоговые документы используются исключительно для целей соблюдения требований партнёров и применимого законодательства."
+    ],
+    "securityText": "Если вы не узнаёте данную активность, немедленно смените пароль и обратитесь в службу поддержки.",
+    "deleteText": "Вы можете запросить удаление аккаунта и связанных персональных данных в соответствии с Политикой конфиденциальности. Отдельные данные могут сохраняться в случаях, предусмотренных законодательством.",
+    "deleteHelp": "Направьте запрос на адрес privacy@cashbackplus.uk, указав аккаунт, которого он касается. Удаление не выполняется автоматически при нажатии ссылки.",
+    "demoText": [
+      "Некоторые функции платформы работают в демонстрационном режиме и используются исключительно для тестирования интерфейса.",
+      "Вознаграждения, начисления и действия в демонстрационном режиме не влияют на реальные бонусы, кэшбэк или выплаты."
+    ]
+  },
+  "en": {
+    "personal": "Personal data",
+    "security": "Account security",
+    "marketing": "Marketing preferences",
+    "partner": "Partner consents",
+    "rewards": "Rewards",
+    "limits": "Activity limits",
+    "tax": "Tax information",
+    "appeals": "Contesting restrictions",
+    "deletion": "Account deletion",
+    "demo": "Demonstration mode",
+    "surname": "Last name",
+    "phone": "Phone",
+    "support": "Support",
+    "privacy": "Privacy Policy",
+    "deleteRequest": "Write to request data deletion",
+    "historyUnavailable": "Login history is not yet available.",
+    "passwordHelp": "Changing your password in Profile is not yet available. Contact support if you need help with account security.",
+    "balanceUnavailable": "Balance data is unavailable",
+    "rewardNote": "This is the existing account balance. It has no breakdown by reward status and does not represent a confirmed amount payable. The currency of this indicator is not specified.",
+    "program": "Reward programme participation",
+    "manageMarketing": "Manage partner recommendations",
+    "partnerNote": "Only partner marketing recommendation settings are available here. They are not blanket permission to share any data with partners.",
+    "limitsUnavailable": "Limit data is unavailable in this mode.",
+    "appealsUnavailable": "If the appeal form is unavailable, send your request through support.",
+    "taxUnavailable": "A tax information form is not yet available on this page. Tax documents are not collected here.",
+    "edit": "Edit",
+    "unauthorized": "Your session is unavailable. Please log in again.",
+    "marketingPrivacy": "Marketing communications and privacy",
+    "rights": "Your rights and withdrawal of consent",
+    "cookies": "Cookie Policy",
+    "moderation": "Moderation, notifications and appeals",
+    "upper": [
+      "Some reward programmes may require additional profile information and documents needed to comply with partner requirements or applicable law.",
+      "Registering an account does not automatically enrol you in every Cashback+ programme."
+    ],
+    "marketingText": [
+      "Marketing messages are optional and can be disabled at any time.",
+      "Changing your marketing preferences does not affect mandatory service notifications relating to account security and platform operation."
+    ],
+    "partnerText": [
+      "Some Cashback+ programmes, research studies and partner offers may require a limited amount of data to be shared with the relevant partners.",
+      "Data is shared only to the extent necessary to carry out the relevant programme and is governed by the Privacy Policy."
+    ],
+    "limitsText": [
+      "Activity limits help keep the platform stable and prevent abuse.",
+      "Limits are not a disciplinary measure and do not, by themselves, mean that rules have been broken."
+    ],
+    "appealsText": [
+      "If you believe a restriction was applied in error, you can request a review of the decision.",
+      "Requests are considered in accordance with the Moderation, notifications and appeals section."
+    ],
+    "taxText": [
+      "Certain partner programmes may require tax information to participate in reward programmes.",
+      "If this information is needed, the user will be invited to complete the relevant form.",
+      "Tax documents are used solely to comply with partner requirements and applicable law."
+    ],
+    "securityText": "If you do not recognise this activity, change your password immediately and contact support.",
+    "deleteText": "You can request deletion of your account and related personal data in accordance with the Privacy Policy. Some data may be retained where required by law.",
+    "deleteHelp": "Send your request to privacy@cashbackplus.uk and identify the account concerned. Clicking the link does not automatically delete the account.",
+    "demoText": [
+      "Some platform features operate in demonstration mode and are used solely to test the interface.",
+      "Rewards, credits and actions in demonstration mode do not affect real bonuses, cashback or payouts."
+    ]
+  },
+  "de": {
+    "personal": "Persönliche Daten",
+    "security": "Kontosicherheit",
+    "marketing": "Marketingeinstellungen",
+    "partner": "Einwilligungen für Partner",
+    "rewards": "Vergütungen",
+    "limits": "Aktivitätslimits",
+    "tax": "Steuerinformationen",
+    "appeals": "Beschränkungen anfechten",
+    "deletion": "Kontolöschung",
+    "demo": "Demonstrationsmodus",
+    "surname": "Nachname",
+    "phone": "Telefon",
+    "support": "Support",
+    "privacy": "Datenschutzrichtlinie",
+    "deleteRequest": "Löschung personenbezogener Daten anfragen",
+    "historyUnavailable": "Der Anmeldeverlauf ist noch nicht verfügbar.",
+    "passwordHelp": "Eine Passwortänderung im Profil ist noch nicht verfügbar. Wenden Sie sich an den Support, wenn Sie Hilfe zur Kontosicherheit benötigen.",
+    "balanceUnavailable": "Guthabendaten sind nicht verfügbar",
+    "rewardNote": "Angezeigt wird das bestehende Kontoguthaben. Es enthält keine Aufschlüsselung nach Vergütungsstatus und stellt keinen bestätigten Auszahlungsbetrag dar. Die Währung dieser Angabe ist nicht festgelegt.",
+    "program": "Teilnahme am Vergütungsprogramm",
+    "manageMarketing": "Partnerempfehlungen verwalten",
+    "partnerNote": "Hier sind nur Einstellungen für Marketingempfehlungen von Partnern verfügbar. Sie stellen keine pauschale Erlaubnis dar, beliebige Daten an Partner weiterzugeben.",
+    "limitsUnavailable": "Limitdaten sind in diesem Modus nicht verfügbar.",
+    "appealsUnavailable": "Falls das Einspruchsformular nicht verfügbar ist, senden Sie Ihre Anfrage an den Support.",
+    "taxUnavailable": "Auf dieser Seite ist noch kein Formular für Steuerinformationen verfügbar. Hier werden keine Steuerunterlagen erfasst.",
+    "edit": "Bearbeiten",
+    "unauthorized": "Ihre Sitzung ist nicht verfügbar. Melden Sie sich erneut an.",
+    "marketingPrivacy": "Marketingkommunikation und Datenschutz",
+    "rights": "Ihre Rechte und Widerruf der Einwilligung",
+    "cookies": "Cookie-Richtlinie",
+    "moderation": "Moderation, Benachrichtigungen und Einsprüche",
+    "upper": [
+      "Für die Nutzung bestimmter Vergütungsprogramme können zusätzliche Profilangaben und Unterlagen erforderlich sein, um Anforderungen von Partnern oder geltendem Recht zu entsprechen.",
+      "Die Registrierung eines Kontos bedeutet nicht automatisch die Teilnahme an allen Cashback+-Programmen."
+    ],
+    "marketingText": [
+      "Marketingnachrichten sind freiwillig und können jederzeit deaktiviert werden.",
+      "Änderungen der Marketingeinstellungen haben keinen Einfluss auf verpflichtende Servicemitteilungen zur Kontosicherheit und zum Betrieb der Plattform."
+    ],
+    "partnerText": [
+      "Einige Cashback+-Programme, Studien und Partnerangebote können die Weitergabe eines begrenzten Datenumfangs an die jeweiligen Partner erfordern.",
+      "Daten werden nur in dem Umfang weitergegeben, der zur Durchführung des jeweiligen Programms erforderlich ist, und unterliegen der Datenschutzrichtlinie."
+    ],
+    "limitsText": [
+      "Aktivitätslimits dienen dem stabilen Betrieb der Plattform und der Verhinderung von Missbrauch.",
+      "Limits sind keine Disziplinarmaßnahme und bedeuten für sich genommen keinen Regelverstoß."
+    ],
+    "appealsText": [
+      "Wenn Sie glauben, dass eine Beschränkung irrtümlich angewandt wurde, können Sie eine Überprüfung der Entscheidung beantragen.",
+      "Anfragen werden nach dem im Abschnitt „Moderation, Benachrichtigungen und Einsprüche“ beschriebenen Verfahren geprüft."
+    ],
+    "taxText": [
+      "Bestimmte Partnerprogramme können Steuerinformationen für die Teilnahme an Vergütungsprogrammen verlangen.",
+      "Falls diese Angaben benötigt werden, wird der Nutzer zum Ausfüllen des entsprechenden Formulars aufgefordert.",
+      "Steuerunterlagen werden ausschließlich zur Erfüllung von Partneranforderungen und geltendem Recht verwendet."
+    ],
+    "securityText": "Wenn Sie diese Aktivität nicht erkennen, ändern Sie sofort Ihr Passwort und wenden Sie sich an den Support.",
+    "deleteText": "Sie können die Löschung Ihres Kontos und der zugehörigen personenbezogenen Daten gemäß der Datenschutzrichtlinie beantragen. Bestimmte Daten können in gesetzlich vorgesehenen Fällen aufbewahrt werden.",
+    "deleteHelp": "Senden Sie Ihre Anfrage an privacy@cashbackplus.uk und geben Sie das betroffene Konto an. Das Anklicken des Links löscht das Konto nicht automatisch.",
+    "demoText": [
+      "Einige Funktionen der Plattform arbeiten im Demonstrationsmodus und dienen ausschließlich zum Testen der Benutzeroberfläche.",
+      "Vergütungen, Gutschriften und Aktionen im Demonstrationsmodus wirken sich nicht auf echte Boni, Cashback oder Auszahlungen aus."
+    ]
+  },
+  "fr": {
+    "personal": "Données personnelles",
+    "security": "Sécurité du compte",
+    "marketing": "Préférences marketing",
+    "partner": "Consentements relatifs aux partenaires",
+    "rewards": "Récompenses",
+    "limits": "Limites d’activité",
+    "tax": "Informations fiscales",
+    "appeals": "Contestation des restrictions",
+    "deletion": "Suppression du compte",
+    "demo": "Mode de démonstration",
+    "surname": "Nom de famille",
+    "phone": "Téléphone",
+    "support": "Assistance",
+    "privacy": "Politique de confidentialité",
+    "deleteRequest": "Écrire pour demander la suppression des données",
+    "historyUnavailable": "L’historique des connexions n’est pas encore disponible.",
+    "passwordHelp": "La modification du mot de passe dans le profil n’est pas encore disponible. Contactez l’assistance si vous avez besoin d’aide concernant la sécurité du compte.",
+    "balanceUnavailable": "Les données du solde ne sont pas disponibles",
+    "rewardNote": "Le solde existant du compte est affiché. Il n’est pas ventilé par statut de récompense et ne représente pas un montant confirmé à verser. La devise de cet indicateur n’est pas précisée.",
+    "program": "Participation au programme de récompenses",
+    "manageMarketing": "Gérer les recommandations de partenaires",
+    "partnerNote": "Seuls les réglages des recommandations marketing de partenaires sont disponibles ici. Ils ne constituent pas une autorisation générale de transmettre toutes les données aux partenaires.",
+    "limitsUnavailable": "Les données des limites ne sont pas disponibles dans ce mode.",
+    "appealsUnavailable": "Si le formulaire de recours est indisponible, envoyez votre demande à l’assistance.",
+    "taxUnavailable": "Aucun formulaire d’informations fiscales n’est encore disponible sur cette page. Aucun document fiscal n’y est recueilli.",
+    "edit": "Modifier",
+    "unauthorized": "Votre session est indisponible. Veuillez vous reconnecter.",
+    "marketingPrivacy": "Communications marketing et confidentialité",
+    "rights": "Vos droits et retrait du consentement",
+    "cookies": "Politique relative aux cookies",
+    "moderation": "Modération, notifications et recours",
+    "upper": [
+      "Certains programmes de récompenses peuvent nécessiter des informations complémentaires dans le profil et des documents permettant de respecter les exigences des partenaires ou la législation applicable.",
+      "L’inscription d’un compte n’entraîne pas une participation automatique à tous les programmes Cashback+."
+    ],
+    "marketingText": [
+      "Les messages marketing sont facultatifs et peuvent être désactivés à tout moment.",
+      "La modification des préférences marketing n’affecte pas les notifications de service obligatoires liées à la sécurité du compte et au fonctionnement de la plateforme."
+    ],
+    "partnerText": [
+      "Certains programmes Cashback+, études et offres de partenaires peuvent nécessiter la transmission d’un volume limité de données aux partenaires concernés.",
+      "Les données ne sont transmises que dans la mesure nécessaire à l’exécution du programme concerné et conformément à la Politique de confidentialité."
+    ],
+    "limitsText": [
+      "Les limites d’activité contribuent à la stabilité de la plateforme et à la prévention des abus.",
+      "Les limites ne sont pas une mesure disciplinaire et ne signifient pas, à elles seules, une violation des règles."
+    ],
+    "appealsText": [
+      "Si vous estimez qu’une restriction a été appliquée par erreur, vous pouvez demander le réexamen de la décision.",
+      "Les demandes sont examinées selon la procédure décrite dans la section « Modération, notifications et recours »."
+    ],
+    "taxText": [
+      "Certains programmes de partenaires peuvent exiger des informations fiscales pour participer aux programmes de récompenses.",
+      "Si ces informations sont nécessaires, l’utilisateur sera invité à remplir le formulaire correspondant.",
+      "Les documents fiscaux sont utilisés exclusivement pour respecter les exigences des partenaires et la législation applicable."
+    ],
+    "securityText": "Si vous ne reconnaissez pas cette activité, changez immédiatement votre mot de passe et contactez l’assistance.",
+    "deleteText": "Vous pouvez demander la suppression de votre compte et des données personnelles associées conformément à la Politique de confidentialité. Certaines données peuvent être conservées dans les cas prévus par la loi.",
+    "deleteHelp": "Envoyez votre demande à privacy@cashbackplus.uk en précisant le compte concerné. Cliquer sur le lien ne supprime pas automatiquement le compte.",
+    "demoText": [
+      "Certaines fonctions de la plateforme opèrent en mode de démonstration et servent exclusivement à tester l’interface.",
+      "Les récompenses, crédits et actions en mode de démonstration n’affectent pas les bonus réels, le cashback ou les versements."
+    ]
+  }
+}

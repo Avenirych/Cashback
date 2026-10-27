@@ -1,2 +1,5 @@
 # Preserve exact provenance blobs, including original EOF spacing, across Windows checkouts.
 /docker/legacy-remote/source/** -text whitespace=-blank-at-eof
+
+# Recovered historical source hashes must survive Windows/Linux checkouts.
+/docker/local-registration/legacy-source/src/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

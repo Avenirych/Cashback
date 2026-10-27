@@ -1,0 +1,129 @@
+{
+  "format": "historical-registration-source/v1",
+  "snapshot": "cashback-snapshot-backup-20261019-161438-f6ba9fdddf9a4c34b13b4a55bf2f9e15",
+  "sourceSubdirectory": "project",
+  "originalManifest": "verification.json",
+  "activation": "NOT_AUTHORIZED",
+  "files": [
+    {
+      "path": "src/docker-phone-registration-target.ts",
+      "bytes": 20198,
+      "sha256": "7e76ba1a75d39795e328c2eb8a810b80d89481deccd0f1218ac7c955b4345d7e"
+    },
+    {
+      "path": "src/docker-phone-migration-data-source.ts",
+      "bytes": 2296,
+      "sha256": "f1eddcee20dd008d30c18c0fe8a138e3173975feb6d86a61fd01130739aef7be"
+    },
+    {
+      "path": "src/migrations/1792195200000-AddUserPhoneAndSmsConsent.ts",
+      "bytes": 2526,
+      "sha256": "efa9eea1013700679d37b1f6434a5e4d726513e6f6a98012ae81b63f55095951"
+    },
+    {
+      "path": "src/docker-phone-migration-preflight.ts",
+      "bytes": 18529,
+      "sha256": "0ae245bd18041ca2026f8fc4e9eeea26988b90aae438cb2836658da44d23e250"
+    },
+    {
+      "path": "src/docker-phone-creation-contract.ts",
+      "bytes": 15906,
+      "sha256": "1491a25432926b9ad52be10670ac7f188e3e98bc0fd3fcd0d427bfb6386078ad"
+    },
+    {
+      "path": "src/docker-phone-approved-evidence.ts",
+      "bytes": 13051,
+      "sha256": "b6190fb8da1009cbcc98a7db7ba8a2aa357fcf070488df54163d24780315b621"
+    },
+    {
+      "path": "src/docker-phone-adapter-common.ts",
+      "bytes": 1609,
+      "sha256": "7d9c41b631b1e8001e3a88beecbb7c12336345c04162e38da27b71c3f01ae307"
+    },
+    {
+      "path": "src/docker-phone-access-adapters.ts",
+      "bytes": 19474,
+      "sha256": "2a1e41441ecdfd329ff2a9c0072fa8c1c6de91e4405a3786158843e0e82bea21"
+    },
+    {
+      "path": "src/docker-phone-concurrency.ts",
+      "bytes": 18347,
+      "sha256": "5058eb642b414825e68d804c45a2b2553764caa95508c16938eacd5d5868cebf"
+    },
+    {
+      "path": "src/docker-phone-migration-runner.ts",
+      "bytes": 17596,
+      "sha256": "3f0056199f743470c38dc1599d7ca3bc5280326acc2634c521bb28a2e031de19"
+    },
+    {
+      "path": "src/migrations/1733927999000-InitialApplicationTables.ts",
+      "bytes": 2474,
+      "sha256": "9ffe9832c7daecb6da4df031d37e6f964dfc1e94849f0c811112973dc458b7a3"
+    },
+    {
+      "path": "src/migrations/1733928000000-AddMarketingPreferences.ts",
+      "bytes": 1624,
+      "sha256": "9d5fa288a6f6e5f0bf63127d85a5a844b4eabea9da8535494516d8d9c6afbdb6"
+    },
+    {
+      "path": "src/migrations/1735000000000-AddEmailVerification.ts",
+      "bytes": 1038,
+      "sha256": "7cf39059c5405ce19534434a3661b036e2aa24d62ce60f8a26cf812a51373b46"
+    },
+    {
+      "path": "src/migrations/1791394800000-AddForumUsers.ts",
+      "bytes": 1244,
+      "sha256": "568b6de625b36ca20e4105cf0caa8f90899b249f1aadcd4a5ab9d6d9b0df9146"
+    },
+    {
+      "path": "src/migrations/CreateBonusTables.ts",
+      "bytes": 2952,
+      "sha256": "351b984d7398f34a37764e2908fdcc36a1b3a54db562a2551f55fc74b08babbd"
+    },
+    {
+      "path": "src/migrations/1791888000000-AddUsersEmailUnique.ts",
+      "bytes": 777,
+      "sha256": "ea8425ac74e2ca37f3ce8e81637c12db0fa86775d08c8851138a578b52e6691d"
+    },
+    {
+      "path": "src/docker-phone-access-sources.ts",
+      "bytes": 4480,
+      "sha256": "e85be53c7fc2adf8665d633c59a3fa3d458f5e5d72fe1ae4ff209b472ee0d0b5"
+    },
+    {
+      "path": "src/docker-phone-production-configuration.ts",
+      "bytes": 20481,
+      "sha256": "6ee04e23fa52f64fb4764b31914b788943f813b672a1c583c0c809669aa909d1"
+    },
+    {
+      "path": "src/docker-phone-infrastructure-ledger.ts",
+      "bytes": 22325,
+      "sha256": "14291b385a785014bbae0de8351567b66823fb99c4a837e021fb497599f54f8d"
+    },
+    {
+      "path": "src/docker-phone-helper-task.ts",
+      "bytes": 8693,
+      "sha256": "abf99fe20d6c491a2a383b2cd346d4403c69fa348d2a8e221f7c3c10a880bc29"
+    },
+    {
+      "path": "src/mail/local-demo-mailpit.ts",
+      "bytes": 1833,
+      "sha256": "ea413483e8eb6c317d2a10b656a4f3473217169d582f4ea89beb97df461312aa"
+    },
+    {
+      "path": "src/docker-phone-helper-runtime.ts",
+      "bytes": 15022,
+      "sha256": "9bb04b54ea1fb6399db21475501a5120b1dd219f00fe38f1908f0b9b46e442c4"
+    },
+    {
+      "path": "src/docker-phone-infrastructure-service.ts",
+      "bytes": 13294,
+      "sha256": "16bdd0c8baea53582632c5b09b0a8254a75d71c0060d40b2e229ae0af32ed58e"
+    },
+    {
+      "path": "src/docker-phone-infrastructure-authority.ts",
+      "bytes": 18475,
+      "sha256": "0d4e42a30876ed4f324c5efc2dec03f6c7304c53bfbfbc9fe99f694b62416d03"
+    }
+  ]
+}

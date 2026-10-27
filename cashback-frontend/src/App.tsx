@@ -31,6 +31,7 @@ import BonusAds from "./pages/BonusAds";
 import BonusResearch from "./pages/BonusResearch";
 import ResearchDirection from "./pages/ResearchDirection";
 import Profile from "./pages/Profile";
+import MyActivity from "./pages/MyActivity";
 import TopicsPage from "./pages/TopicsPage";
 import Topic from "./pages/Topic";
 import Login from "./pages/Login";
@@ -107,6 +108,7 @@ export function AppRoutes() {
         {/* Авторизация и подтверждение почты */}
         <Route element={<ProtectedGuard />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/my-activity" element={<MyActivity />} />
           <Route
             path="/forum/register"
             element={process.env.REACT_APP_DEMO_ONLY==='true'&&process.env.REACT_APP_LOCAL_DEMO_REVIEWS!=='true'?<DemoClosed/>:<ForumRegister />}

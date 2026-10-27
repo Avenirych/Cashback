@@ -30,6 +30,7 @@ export default function MarketingPreferencesModal({
   const [specialOffers, setSpecialOffers] = useState(false);
   const [partnerRecommendations, setPartnerRecommendations] = useState(false);
   const [smsMarketing, setSmsMarketing] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const alive = useRef(true);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
@@ -87,6 +88,13 @@ export default function MarketingPreferencesModal({
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+    return () => { if (previous?.isConnected) previous.focus(); };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -109,16 +117,27 @@ export default function MarketingPreferencesModal({
         style={{
           background: "white",
           borderRadius: "12px",
-          padding: "32px",
+          boxSizing: "border-box",
+          padding: "clamp(16px, 4vw, 32px)",
           maxWidth: "600px",
           width: "calc(100% - 40px)",
           maxHeight: "90vh",
           overflowY: "auto",
           boxShadow: "0 12px 48px rgba(0,0,0,0.15)",
         }}
+        ref={dialogRef} tabIndex={-1}
+        role="dialog" aria-modal="true" aria-labelledby="marketing-preferences-title"
+        onKeyDown={e => {
+          if (e.key === "Escape" && !isLoading) { e.stopPropagation(); onClose(); }
+          if (e.key !== "Tab") return;
+          const nodes = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('a[href],button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled)') || []);
+          const first = nodes[0], last = nodes[nodes.length - 1];
+          if (e.shiftKey && (document.activeElement === first || document.activeElement === dialogRef.current)) { e.preventDefault(); last?.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+        }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2
+        <h2 id="marketing-preferences-title"
           style={{
             fontSize: "24px",
             fontWeight: 700,
@@ -155,10 +174,12 @@ export default function MarketingPreferencesModal({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-start",
+                  flexWrap: "wrap",
+                  gap: 12,
                   marginBottom: "8px",
                 }}
               >
-                <div>
+                <div style={{flex: "1 1 220px", minWidth: 0}}>
                   <h3
                     style={{
                       fontSize: "16px",
@@ -187,7 +208,8 @@ export default function MarketingPreferencesModal({
                     fontSize: "12px",
                     fontWeight: 600,
                     whiteSpace: "nowrap",
-                    marginLeft: "12px",
+                  flexShrink: 0,
+                    marginLeft: 0,
                   }}
                 >
                   {t.mandatory}
@@ -212,10 +234,12 @@ export default function MarketingPreferencesModal({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-start",
+                  flexWrap: "wrap",
+                  gap: 12,
                   marginBottom: "12px",
                 }}
               >
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: "1 1 220px", minWidth: 0 }}>
                   <h3
                     style={{
                       fontSize: "16px",
@@ -244,7 +268,7 @@ export default function MarketingPreferencesModal({
                     fontSize: "12px",
                     fontWeight: 600,
                     whiteSpace: "nowrap",
-                    marginLeft: "12px",
+                    marginLeft: 0,
                   }}
                 >
                   {t.optional}
@@ -296,10 +320,12 @@ export default function MarketingPreferencesModal({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-start",
+                  flexWrap: "wrap",
+                  gap: 12,
                   marginBottom: "12px",
                 }}
               >
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: "1 1 220px", minWidth: 0 }}>
                   <h3
                     style={{
                       fontSize: "16px",
@@ -328,7 +354,7 @@ export default function MarketingPreferencesModal({
                     fontSize: "12px",
                     fontWeight: 600,
                     whiteSpace: "nowrap",
-                    marginLeft: "12px",
+                    marginLeft: 0,
                   }}
                 >
                   {t.optional}
@@ -411,6 +437,7 @@ export default function MarketingPreferencesModal({
                 display: "flex",
                 gap: "12px",
                 justifyContent: "flex-end",
+                flexWrap: "wrap",
               }}
             >
               <button
