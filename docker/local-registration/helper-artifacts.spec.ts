@@ -1,11 +1,11 @@
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {configDigest} from './admission';
-import {REGISTRATION_PHONE_EXPECTED as E} from '../../src/docker-phone-registration-target';
+import {REGISTRATION_PHONE_EXPECTED as E} from './legacy-source/src/docker-phone-registration-target';
 
 // Offline only: importing artifacts never invokes a Docker or PostgreSQL command.
 const base = resolve(__dirname, 'helpers');
-const read = (name:string) => readFileSync(resolve(base,name),'utf8');
+const read = (name:string) => readFileSync(resolve(base,name),'utf8').replace(/\r\n/g,'\n');
 const compose = JSON.parse(read('compose.helpers.json'));
 const manifest = JSON.parse(read('manifest.draft.json'));
 const entry = require('./helpers/helper-entrypoint.cjs') as {main:(args:string[])=>Record<string,unknown>};
@@ -112,13 +112,13 @@ describe('source-only helper build and deployment artifacts', () => {
 
   test('executor packages existing Harness only and does not introduce a second runner', () => {
     const dockerfile=read('Dockerfile.executor');
-    expect(dockerfile).toContain('COPY src/docker-phone-*.ts ./src/');
-    expect(dockerfile).toContain('COPY src/migrations/ ./src/migrations/');
+    expect(dockerfile).toContain('COPY docker/local-registration/legacy-source/src/docker-phone-*.ts ./docker/local-registration/legacy-source/src/');
+    expect(dockerfile).toContain('COPY docker/local-registration/legacy-source/src/migrations/ ./docker/local-registration/legacy-source/src/migrations/');
     expect(dockerfile).toContain('npm ci --ignore-scripts');
     const config=JSON.parse(read('tsconfig.executor.json'));
-    expect(config.include).toEqual(['../../../src/docker-phone-*.ts','../../../src/migrations/*.ts']);
-    expect(config.exclude).toContain('../../../src/**/*.spec.ts');
-    const runner=readFileSync(resolve(__dirname,'../../src/docker-phone-migration-runner.ts'),'utf8');
+    expect(config.include).toEqual(['../legacy-source/src/docker-phone-*.ts','../legacy-source/src/migrations/*.ts']);
+    expect(config.exclude).toContain('../legacy-source/src/**/*.spec.ts');
+    const runner=readFileSync(resolve(__dirname,'./legacy-source/src/docker-phone-migration-runner.ts'),'utf8');
     expect(runner).toContain('PHONE_APPLY_CONCURRENCY_VERIFIED: boolean = false;');
     expect(read('helper-entrypoint.cjs')).not.toMatch(/require\([^)]*(?:pg|child_process|net|https|migration-runner)/);
     expect(read('helper-entrypoint.cjs')).toContain("require('../dist/docker-phone-helper-runtime').runHelperProcess");

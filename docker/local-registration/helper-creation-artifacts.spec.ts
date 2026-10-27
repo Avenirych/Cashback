@@ -1,8 +1,8 @@
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {helperCreateArguments,verifyCreatedHelper,verifyRunningCreationPlan} from './helper-creation';
-import type {CreationHelper,CreationPlan} from '../../src/docker-phone-creation-contract';
-import {REGISTRATION_PHONE_EXPECTED as E,registrationPeerFingerprint} from '../../src/docker-phone-registration-target';
+import type {CreationHelper,CreationPlan} from './legacy-source/src/docker-phone-creation-contract';
+import {REGISTRATION_PHONE_EXPECTED as E,registrationPeerFingerprint} from './legacy-source/src/docker-phone-registration-target';
 
 // Exact source artifact contract, with in-memory Docker metadata only.
 const compose=JSON.parse(readFileSync(resolve(__dirname,'helpers/compose.helpers.json'),'utf8'));

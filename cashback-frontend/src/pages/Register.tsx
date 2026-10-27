@@ -469,12 +469,9 @@ export default function Register({
                     style={{padding: 18, border: "2px solid #0d6efd", borderRadius: 10, background: "#eef5ff"}}>
                     <strong>{language === "RU" ? "Где найти письмо в локальной версии" : ui("Where to find your local test message")}</strong>
                     <p>{language === "RU"
-                      ? "Это локальная версия Cashback+. Письма перехватываются тестовой почтой и не приходят в ваш обычный ящик. Откройте письмо для указанного выше адреса и нажмите «Подтвердить почту». Затем вернитесь сюда и нажмите «Проверить почту»."
+                      ? "Это локальная версия Cashback+. Письма перехватываются тестовой почтой и не приходят в ваш обычный ящик. Откройте письмо для указанного выше адреса и нажмите «Подтвердить почту». Затем вернитесь сюда и нажмите «Проверить подтверждение»."
                       : ui("This is local Cashback+. Messages arrive in the test mailbox, not your personal inbox. Open the message addressed to your email and click its confirmation link. Then return here and check the status.")}</p>
-                    <a href={LOCAL_TEST_MAILBOX_URL} target="_blank" rel="noopener noreferrer"
-                      style={{display: "inline-block", padding: "12px 18px", background: "#0d6efd", color: "white", borderRadius: 8, fontWeight: 700, textDecoration: "none"}}>
-                      {language === "RU" ? "Открыть тестовую почту" : ui("Open test mailbox")}
-                    </a>
+
                   </aside>
                 )}
 
@@ -487,8 +484,20 @@ export default function Register({
                   </p>
                 )}
 
+                {localTestMailboxEnabled() ? (
+                  <a href={LOCAL_TEST_MAILBOX_URL} target="_blank" rel="noopener noreferrer"
+                    style={{...buttonStyle, textAlign: "center", textDecoration: "none"}}>
+                    {language === "RU" ? "Проверить почту" : ui("Check email")}
+                  </a>
+                ) : (
+                  <button type="button" style={buttonStyle} onClick={() => setResendMessage(language === "RU"
+                    ? "Откройте свой почтовый ящик в приложении или на сайте почтового провайдера. Найдите письмо Cashback+ и перейдите по ссылке подтверждения. Если письма нет, проверьте папку «Спам». Затем вернитесь сюда и нажмите «Проверить подтверждение»."
+                    : ui("Open your inbox in your email app or on your email provider's website. Find the Cashback+ message and follow its confirmation link. If it is missing, check Spam. Then return here and select Check verification."))}>
+                    {language === "RU" ? "Проверить почту" : ui("Check email")}
+                  </button>
+                )}
                 <button type="button" onClick={handleCheck} disabled={busy} style={buttonStyle}>
-                  {busy ? v.waiting : language === "RU" ? "Проверить почту" : ui("Check email")}
+                  {busy ? v.waiting : language === "RU" ? "Проверить подтверждение" : ui("Check verification")}
                 </button>
                 <button
                   type="button"
@@ -639,8 +648,8 @@ export default function Register({
             <MoneyTree />
           </div>
         </div>
+        {user && verification && <div className="register-marketing"><MarketingPreferencesPanel key={user.id} lang={lang} hasPhone={Boolean(user.phone_e164)} /></div>}
       </div>
-      {user && verification && <MarketingPreferencesPanel key={user.id} lang={lang} hasPhone={Boolean(user.phone_e164)} />}
     </div>
   );
 }

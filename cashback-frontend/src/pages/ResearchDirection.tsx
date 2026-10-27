@@ -39,6 +39,20 @@ export default function ResearchDirection() {
     .filter((study) => study.directionId === direction.id)
     .sort((a, b) => a.id - b.id);
 
+  const directionInformation = (
+    <>
+        <section className="research-details research-direction-information" aria-labelledby="research-important-heading">
+          <h2 id="research-important-heading">{t.importantTitle}</h2>
+          {t.importantParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+        </section>
+
+        <div className="research-details research-direction-information research-direct-payments">
+          {t.roleParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+          <p>{t.roleBefore}<Link to="/activity-limits">{t.roleLink}</Link>{t.roleAfter}</p>
+        </div>
+    </>
+  );
+
   return (
     <main className="research-page">
       <div className="research-container">
@@ -74,15 +88,7 @@ export default function ResearchDirection() {
           {t.demoParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
         </section>
 
-        <section className="research-details research-direction-information" aria-labelledby="research-important-heading">
-          <h2 id="research-important-heading">{t.importantTitle}</h2>
-          {t.importantParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
-        </section>
-
-        <div className="research-details research-direction-information research-direct-payments">
-          {t.roleParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
-          <p>{t.roleBefore}<Link to="/activity-limits">{t.roleLink}</Link>{t.roleAfter}</p>
-        </div>
+        {direction.id !== "diaries" && directionInformation}
 
         <h2 className="research-list-title">
           {t.studyCount}: {directionStudies.length}
@@ -120,6 +126,12 @@ export default function ResearchDirection() {
 
           {directionStudies.length === 0 && <p>{t.empty}</p>}
         </div>
+
+        {direction.id === "diaries" && (
+          <div className="research-direction-bottom" style={{ marginTop: 24 }}>
+            {directionInformation}
+          </div>
+        )}
       </div>
     </main>
   );

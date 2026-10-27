@@ -1,3 +1,4 @@
+import profileContent from "../content/profilePresentation.json";
 import { BACKEND_URL, backendFetch } from "../backend";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
@@ -12,6 +13,7 @@ import type {
 interface MarketingPreferencesPanelProps {
   lang: string;
   hasPhone?: boolean;
+  embedded?: boolean;
 }
 
 const API_URL = BACKEND_URL;
@@ -40,10 +42,12 @@ function parsePreferences(value: unknown, ownerId: number | undefined): Marketin
 export default function MarketingPreferencesPanel({
   lang,
   hasPhone = false,
+  embedded = false,
 }: MarketingPreferencesPanelProps) {
   const { token, user } = useAuth();
   const lifetime = useRef<AbortController | null>(null);
   const normalizedLang = (lang || "EN").toUpperCase();
+  const copy = profileContent[normalizedLang.toLowerCase() as keyof typeof profileContent] || profileContent.en;
   const languageKey = normalizedLang as keyof typeof translations;
   const t = translations[languageKey] ?? translations.EN;
 
@@ -81,7 +85,7 @@ export default function MarketingPreferencesPanel({
         if (controller.signal.aborted) return;
         if (!response.ok) {
           if (response.status === 401) {
-            setError("Unauthorized. Please log in again.");
+            setError(copy.unauthorized);
             return;
           }
           throw new Error(`HTTP ${response.status}`);
@@ -99,7 +103,7 @@ export default function MarketingPreferencesPanel({
 
     fetchPreferences();
     return () => controller.abort();
-  }, [token, user?.id, t.preferencesError]);
+  }, [token, user?.id, t.preferencesError, copy.unauthorized]);
 
   const handleSavePreferences = async (
     formData: MarketingPreferencesFormData
@@ -172,7 +176,7 @@ export default function MarketingPreferencesPanel({
             marginBottom: "16px",
           }}
         >
-          <h3
+          {!embedded && <h3
             style={{
               fontSize: "18px",
               fontWeight: 600,
@@ -180,7 +184,7 @@ export default function MarketingPreferencesPanel({
             }}
           >
             {t.marketingPreferences}
-          </h3>
+          </h3>}
           <button
             disabled={!preferences || Boolean(error)}
             onClick={() => setIsModalOpen(true)}
@@ -195,7 +199,7 @@ export default function MarketingPreferencesPanel({
               fontWeight: 600,
             }}
           >
-            {normalizedLang === "RU" ? "Изменить" : "Edit"}
+            {copy.edit}
           </button>
         </div>
 
@@ -311,7 +315,8 @@ export default function MarketingPreferencesPanel({
         )}
       </div>
 
-      <p>{normalizedLang === "RU" ? "Маркетинговые согласия необязательны. Все три можно выключить и сохранить, чтобы отозвать согласие. Сервисные письма об аккаунте и правила форума — отдельно." : "Marketing choices are optional. Turn all three off and save to withdraw consent. Account service messages and forum rules are separate."} <Link to="/privacy#privacySection12">{normalizedLang === "RU" ? "Политика маркетинговых коммуникаций" : "Marketing privacy information"}</Link>{" · "}<Link to="/privacy#privacySection11">{normalizedLang === "RU" ? "Ваши права и отзыв согласия" : "Your rights and withdrawal"}</Link>{" · "}<Link to="/cookies">{normalizedLang === "RU" ? "Политика Cookies" : "Cookie Policy"}</Link></p>
+      {!embedded && copy.marketingText.map(text => <p key={text}>{text}</p>)}
+      <p><Link to="/privacy#privacySection12">{copy.marketingPrivacy}</Link>{" · "}<Link to="/privacy#privacySection11">{copy.rights}</Link>{" · "}<Link to="/cookies">{copy.cookies}</Link></p>
       {preferences && <p>{t.smsMarketing}: {preferences.smsMarketing ? t.enabled : t.disabled}</p>}
       <MarketingPreferencesModal
         hasPhone={hasPhone}

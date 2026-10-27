@@ -79,7 +79,7 @@ export class AuthService {
     };
   }
 
-  async register(email: string, password: string, name: string, details?: { firstName?: unknown; lastName?: unknown; phone_e164?: unknown }) {
+  async register(email: string, password: string, name: string, details?: { firstName?: unknown; lastName?: unknown; phone_e164?: unknown }, requestOrigin?: string) {
     if (
       typeof email !== 'string' ||
       typeof password !== 'string' ||
@@ -135,6 +135,7 @@ export class AuthService {
         user.email,
         emailToken,
         user.name,
+        ...(requestOrigin ? [requestOrigin] : []),
       );
       verificationEmailSent = true;
     } catch (error) {
@@ -171,7 +172,7 @@ export class AuthService {
     };
   }
 
-  async resendVerificationEmail(email: string) {
+  async resendVerificationEmail(email: string, requestOrigin?: string) {
     if (typeof email !== 'string' || !email.trim() || email.length > 320) {
       throw new BadRequestException('Email is required');
     }
@@ -205,6 +206,7 @@ export class AuthService {
         user.email,
         emailToken,
         user.name,
+        ...(requestOrigin ? [requestOrigin] : []),
       );
 
     } catch (error) {

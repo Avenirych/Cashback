@@ -25,9 +25,24 @@ test.each(cases)('$lang: $direction.id has localised copy, ten unchanged studies
  expect(Array.from(demo.querySelectorAll('p'),e=>e.textContent)).toEqual(t.demoParagraphs);
  expect(Array.from(important.querySelectorAll('p'),e=>e.textContent)).toEqual(t.importantParagraphs);
  expect(demo.previousElementSibling).toHaveClass('research-details');
- expect(demo.nextElementSibling).toBe(important);
  expect(important.nextElementSibling).toHaveClass('research-direct-payments');
- expect(important.nextElementSibling!.nextElementSibling).toHaveClass('research-list-title');
+ expect(v.container.querySelectorAll('#research-important-heading')).toHaveLength(1);
+ expect(v.container.querySelectorAll('.research-direct-payments')).toHaveLength(1);
+ if(direction.id==='diaries'){
+  expect(demo.nextElementSibling).toHaveClass('research-list-title');
+  const bottom=important.parentElement!;
+  expect(bottom).toHaveClass('research-direction-bottom');
+  expect(bottom.previousElementSibling).toHaveClass('research-study-list');
+  expect(bottom.children).toHaveLength(2);
+  expect(bottom.firstElementChild).toBe(important);
+  expect(bottom.lastElementChild).toHaveClass('research-direct-payments');
+  expect(bottom.nextElementSibling).toBeNull();
+  expect(bottom).toHaveStyle({marginTop:'24px'});
+ }else{
+  expect(demo.nextElementSibling).toBe(important);
+  expect(important.nextElementSibling!.nextElementSibling).toHaveClass('research-list-title');
+  expect(v.container.querySelector('.research-direction-bottom')).toBeNull();
+ }
  expect(screen.getByRole('link',{name:t.roleLink})).toHaveAttribute('href','/activity-limits');
  expect(v.container.querySelector('.research-direct-payments p:last-child')!.textContent).toBe(t.roleBefore+t.roleLink+t.roleAfter);
  expect(v.container.querySelectorAll('.research-study-image')).toHaveLength(10);

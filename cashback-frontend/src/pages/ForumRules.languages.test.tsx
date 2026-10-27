@@ -15,6 +15,8 @@ function mount(lang:string,registration=false){localStorage.setItem('lang',lang)
 function verify(container:HTMLElement,code:typeof codes[number]){
  const panels=container.querySelectorAll('details');expect(panels).toHaveLength(20);
  panels.forEach((panel,i)=>{const [heading,body]=forumRules[code][i],summary=within(panel).getByRole('button');
+  expect(summary).toHaveAttribute('id',`forum-rule-${code}-${i}-heading`);
+  expect(summary).toHaveAttribute('aria-controls',`forum-rule-${code}-${i}`);
   expect(summary).toHaveTextContent(`${i+1}. ${heading}`);expect(summary).toHaveAttribute('aria-expanded','false');expect(panel.open).toBe(false);
   const answer=document.getElementById(summary.getAttribute('aria-controls')!)!;
   expect(answer).toHaveAttribute('aria-labelledby',summary.id);expect(answer).not.toBeVisible();

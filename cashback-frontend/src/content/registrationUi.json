@@ -32,7 +32,7 @@
     "Continue to profile": "Zum Profil",
     "Local test mailbox": "Lokales Testpostfach",
     "Where to find your local test message": "Wo Sie Ihre lokale Testnachricht finden",
-    "This is local Cashback+. Messages arrive in the test mailbox, not your personal inbox. Open the message addressed to your email and click its confirmation link. Then return here and check the status.": "Dies ist die lokale Cashback+ Version. Nachrichten landen im Testpostfach, nicht in Ihrem persönlichen Postfach. Öffnen Sie die an Ihre Adresse gerichtete Nachricht und klicken Sie auf den Bestätigungslink. Kehren Sie dann zurück und prüfen Sie den Status.",
+    "This is local Cashback+. Messages arrive in the test mailbox, not your personal inbox. Open the message addressed to your email and click its confirmation link. Then return here and check the status.": "Dies ist die lokale Version von Cashback+. Nachrichten werden im Testpostfach abgefangen und erreichen nicht Ihr persönliches Postfach. Öffnen Sie die Nachricht an die oben angegebene Adresse und folgen Sie dem Bestätigungslink. Kehren Sie anschließend hierher zurück und wählen Sie „Bestätigung prüfen“.",
     "Open test mailbox": "Testpostfach öffnen",
     "Check email": "E-Mail prüfen",
     "Could not resend verification email": "Die Bestätigungs-E-Mail konnte nicht erneut gesendet werden.",
@@ -43,7 +43,9 @@
     "Email cannot contain consecutive dots": "Die E-Mail-Adresse darf keine aufeinanderfolgenden Punkte enthalten.",
     "Email local part cannot start or end with a dot": "Der lokale Teil darf nicht mit einem Punkt beginnen oder enden.",
     "Email domain cannot start or end with a dot": "Die Domain darf nicht mit einem Punkt beginnen oder enden.",
-    "Email domain cannot start or end with a hyphen": "Die Domain darf nicht mit einem Bindestrich beginnen oder enden."
+    "Email domain cannot start or end with a hyphen": "Die Domain darf nicht mit einem Bindestrich beginnen oder enden.",
+    "Check verification": "Bestätigung prüfen",
+    "Open your inbox in your email app or on your email provider's website. Find the Cashback+ message and follow its confirmation link. If it is missing, check Spam. Then return here and select Check verification.": "Öffnen Sie Ihr Postfach in Ihrer E-Mail-App oder auf der Website Ihres E-Mail-Anbieters. Suchen Sie die Nachricht von Cashback+ und folgen Sie dem Bestätigungslink. Falls sie fehlt, prüfen Sie den Spam-Ordner. Kehren Sie anschließend hierher zurück und wählen Sie „Bestätigung prüfen“."
   },
   "fr": {
     "First name": "Prénom",
@@ -78,7 +80,7 @@
     "Continue to profile": "Accéder au profil",
     "Local test mailbox": "Messagerie de test locale",
     "Where to find your local test message": "Où trouver votre message de test local",
-    "This is local Cashback+. Messages arrive in the test mailbox, not your personal inbox. Open the message addressed to your email and click its confirmation link. Then return here and check the status.": "Il s’agit de la version locale de Cashback+. Les messages arrivent dans la messagerie de test et non dans votre boîte personnelle. Ouvrez le message destiné à votre adresse et cliquez sur son lien de confirmation. Revenez ensuite vérifier le statut.",
+    "This is local Cashback+. Messages arrive in the test mailbox, not your personal inbox. Open the message addressed to your email and click its confirmation link. Then return here and check the status.": "Il s’agit de la version locale de Cashback+. Les messages sont interceptés dans la boîte de test et n’arrivent pas dans votre boîte personnelle. Ouvrez le message destiné à l’adresse indiquée ci-dessus et suivez son lien de confirmation. Revenez ensuite ici et sélectionnez « Vérifier la confirmation ».",
     "Open test mailbox": "Ouvrir la messagerie de test",
     "Check email": "Vérifier l’adresse électronique",
     "Could not resend verification email": "Impossible de renvoyer le message de confirmation.",
@@ -89,6 +91,8 @@
     "Email cannot contain consecutive dots": "L’adresse ne peut pas contenir de points consécutifs.",
     "Email local part cannot start or end with a dot": "La partie locale ne peut pas commencer ou finir par un point.",
     "Email domain cannot start or end with a dot": "Le domaine ne peut pas commencer ou finir par un point.",
-    "Email domain cannot start or end with a hyphen": "Le domaine ne peut pas commencer ou finir par un trait d’union."
+    "Email domain cannot start or end with a hyphen": "Le domaine ne peut pas commencer ou finir par un trait d’union.",
+    "Check verification": "Vérifier la confirmation",
+    "Open your inbox in your email app or on your email provider's website. Find the Cashback+ message and follow its confirmation link. If it is missing, check Spam. Then return here and select Check verification.": "Ouvrez votre boîte de réception dans votre application de messagerie ou sur le site de votre fournisseur de messagerie. Retrouvez le message de Cashback+ et suivez son lien de confirmation. S’il est absent, consultez les courriers indésirables. Revenez ensuite ici et sélectionnez « Vérifier la confirmation »."
   }
 }

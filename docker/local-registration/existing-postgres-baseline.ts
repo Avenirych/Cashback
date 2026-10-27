@@ -3,7 +3,7 @@ import {readFile,realpath} from 'node:fs/promises';
 import {isAbsolute,resolve} from 'node:path';
 import {AdmissionPolicy,COMPOSE_FILE,configDigest,TEMPLATE_SHA256} from './admission';
 import {normalizeCompose} from './collector';
-import {REGISTRATION_PHONE_EXPECTED as E,registrationPeerFingerprint,registrationNetworkFingerprint} from '../../src/docker-phone-registration-target';
+import {REGISTRATION_PHONE_EXPECTED as E,registrationPeerFingerprint,registrationNetworkFingerprint} from './legacy-source/src/docker-phone-registration-target';
 
 /** Independent owner assertions, not populated from observations by this collector. */
 export interface ExistingPostgresPolicy extends AdmissionPolicy {

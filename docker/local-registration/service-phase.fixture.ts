@@ -1,5 +1,5 @@
 import { AdmissionInput, AdmissionPolicy, configDigest } from './admission';
-import { REGISTRATION_PHONE_EXPECTED as E, registrationNetworkFingerprint, registrationPeerFingerprint } from '../../src/docker-phone-registration-target';
+import { REGISTRATION_PHONE_EXPECTED as E, registrationNetworkFingerprint, registrationPeerFingerprint } from './legacy-source/src/docker-phone-registration-target';
 const now = 200000;
 // Synthetic only; never runtime approval or observations.
 export function serviceFixture(){

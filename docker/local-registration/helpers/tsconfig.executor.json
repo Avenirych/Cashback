@@ -1,13 +1,22 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "../../../src",
+    "rootDir": "../legacy-source/src",
     "outDir": "../../../dist",
     "incremental": false,
     "declaration": false,
     "sourceMap": false,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["../../../src/docker-phone-*.ts", "../../../src/migrations/*.ts"],
-  "exclude": ["../../../node_modules", "../../../dist", "../../../src/**/*.spec.ts"]
+  "include": [
+    "../legacy-source/src/docker-phone-*.ts",
+    "../legacy-source/src/migrations/*.ts"
+  ],
+  "exclude": [
+    "../../../node_modules",
+    "../../../dist",
+    "../legacy-source/src/**/*.spec.ts"
+  ]
 }

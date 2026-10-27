@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { verificationFrontendOrigin } from './verification-origin';
 
 type MailMode = 'smtp' | 'ethereal' | 'preview';
 
@@ -87,11 +88,12 @@ export class MailService {
     email: string,
     token: string,
     userName: string,
+    requestOrigin?: string,
   ): Promise<string | null> {
     await this.initPromise;
 
     const frontendUrl =
-      process.env.FRONTEND_URL || 'http://localhost:3000';
+      verificationFrontendOrigin(requestOrigin);
     const link = `${frontendUrl}/verify-email?token=${encodeURIComponent(
       token,
     )}`;
@@ -137,15 +139,15 @@ export class MailService {
     return null;
   }
 
-  async sendVerificationEmail(email: string, token: string, userName: string): Promise<string | null> {
-    return this.sendSafely('verification', email, token, userName);
+  async sendVerificationEmail(email: string, token: string, userName: string, requestOrigin?: string): Promise<string | null> {
+    return this.sendSafely('verification', email, token, userName, requestOrigin);
   }
 
   private async sendSafely(operation: 'verification' | 'resend-verification', email: string,
-    token: string, userName: string): Promise<string | null> {
+    token: string, userName: string, requestOrigin?: string): Promise<string | null> {
     this.logger.log(`Mail delivery attempt (${operation})`);
     try {
-      const result = await this.deliverVerificationEmail(email, token, userName);
+      const result = await this.deliverVerificationEmail(email, token, userName, requestOrigin);
       this.logger.log(`Mail delivery completed (${operation}, ${this.mode})`);
       return result;
     } catch {
@@ -158,7 +160,8 @@ export class MailService {
     email: string,
     token: string,
     userName: string,
+    requestOrigin?: string,
   ): Promise<string | null> {
-    return this.sendSafely('resend-verification', email, token, userName);
+    return this.sendSafely('resend-verification', email, token, userName, requestOrigin);
   }
 }

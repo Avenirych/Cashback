@@ -2,7 +2,7 @@ import { serviceFixture } from './service-phase.fixture';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { admitRegistrationResources, AdmissionInput, AdmissionPolicy, COMPOSE_FILE, REGISTRATION_PROJECT, configDigest } from './admission';
-import { REGISTRATION_PHONE_EXPECTED as E, registrationNetworkFingerprint, registrationPeerFingerprint } from '../../src/docker-phone-registration-target';
+import { REGISTRATION_PHONE_EXPECTED as E, registrationNetworkFingerprint, registrationPeerFingerprint } from './legacy-source/src/docker-phone-registration-target';
 const template = JSON.parse(readFileSync(resolve(__dirname, 'compose.registration.json'), 'utf8'));
 const now = 200000;
 const image = `postgres:17-bookworm@sha256:${'a'.repeat(64)}`; // Synthetic unit fixture, NOT an approved image.

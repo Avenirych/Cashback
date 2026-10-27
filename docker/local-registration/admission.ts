@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
-import { REGISTRATION_PHONE_EXPECTED as E, validateRegistrationPeers, registrationPeerFingerprint, registrationNetworkFingerprint } from '../../src/docker-phone-registration-target';
-import type { RegistrationNetworkApproval } from '../../src/docker-phone-registration-target';
+import { REGISTRATION_PHONE_EXPECTED as E, validateRegistrationPeers, registrationPeerFingerprint, registrationNetworkFingerprint } from './legacy-source/src/docker-phone-registration-target';
+import type { RegistrationNetworkApproval } from './legacy-source/src/docker-phone-registration-target';
 
 export const REGISTRATION_PROJECT = 'cashback-registration-20261016-4f8c2a96b17d';
 export const COMPOSE_FILE = 'docker/local-registration/compose.registration.json';

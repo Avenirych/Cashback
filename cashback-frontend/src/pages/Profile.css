@@ -67,3 +67,35 @@
     gap: 2px;
   }
 }
+
+.profile-container, .profile-container * { box-sizing: border-box; }
+.profile-container { color: #173a33; max-width: 1000px; }
+.profile-container h1 { margin: 0 0 16px; font-size: clamp(26px, 4vw, 36px); line-height: 1.25; }
+.profile-container h2 { margin: 0 0 16px; font-size: 22px; line-height: 1.35; }
+.profile-container p { overflow-wrap: anywhere; }
+.profile-intro, .profile-section {
+  margin-bottom: 24px; padding: 24px; border-radius: 16px;
+  background: rgba(255,255,255,.94); box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  min-width: 0; overflow-wrap: anywhere;
+}
+.profile-intro { background: #fff8e6; border: 1px solid #cbb98e; }
+.profile-section > :last-child { margin-bottom: 0; }
+.profile-section .profile-details { min-width: 0; flex-basis: 240px; }
+.profile-container input, .profile-container select, .profile-container textarea { max-width: 100%; }
+.profile-container fieldset { min-width: 0; border: 1px solid #b8a78b; border-radius: 10px; padding: 18px; }
+.profile-container legend, .profile-container label { overflow-wrap: anywhere; }
+.profile-container fieldset label { display: block; margin-top: 12px; font-weight: 600; }
+.profile-container fieldset input, .profile-container fieldset select { width: 100%; padding: 10px; margin-top: 4px; border: 1px solid #8c9f98; border-radius: 6px; }
+.profile-container button { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.profile-container a { overflow-wrap: anywhere; }
+.profile-container :is(a,button,input,select,textarea,summary):focus-visible { outline: 3px solid #0078ff; outline-offset: 3px; }
+.profile-container [role="dialog"] div { min-width: 0; }
+.profile-container [role="dialog"] input[type="checkbox"] { flex-shrink: 0; }
+.profile-program summary { cursor: pointer; font-weight: 700; }
+.profile-reward-amount { font-size: 20px; }
+.profile-demo-notice { border-left: 4px solid #f0ad4e; background: #fff8e6; }
+@media (max-width: 600px) {
+  .profile-intro, .profile-section { padding: 18px; }
+  .profile-container h2 { font-size: 20px; }
+  .profile-container fieldset { padding: 12px; }
+}

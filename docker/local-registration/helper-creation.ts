@@ -2,10 +2,10 @@ import {execFile} from 'node:child_process';
 import {readFile,realpath} from 'node:fs/promises';
 import {resolve,isAbsolute} from 'node:path';
 import {randomBytes} from 'node:crypto';
-import {RegistrationInfrastructureLedger} from '../../src/docker-phone-infrastructure-ledger';
-import {LedgerDockerCreation,validateCreationPlan} from '../../src/docker-phone-creation-contract';
-import type {CreationPlan,CreationHelper,CreatedHelperIdentity,CreatedNetworkIdentity,CreationAuthorizationEnvelope,CreationFence} from '../../src/docker-phone-creation-contract';
-import {REGISTRATION_PHONE_EXPECTED as E,registrationSecurityDigest as hash,registrationPeerFingerprint,registrationNetworkFingerprint} from '../../src/docker-phone-registration-target';
+import {RegistrationInfrastructureLedger} from './legacy-source/src/docker-phone-infrastructure-ledger';
+import {LedgerDockerCreation,validateCreationPlan} from './legacy-source/src/docker-phone-creation-contract';
+import type {CreationPlan,CreationHelper,CreatedHelperIdentity,CreatedNetworkIdentity,CreationAuthorizationEnvelope,CreationFence} from './legacy-source/src/docker-phone-creation-contract';
+import {REGISTRATION_PHONE_EXPECTED as E,registrationSecurityDigest as hash,registrationPeerFingerprint,registrationNetworkFingerprint} from './legacy-source/src/docker-phone-registration-target';
 import {normalizeCompose} from './collector';
 import type {ExistingPostgresPolicy} from './existing-postgres-baseline';
 

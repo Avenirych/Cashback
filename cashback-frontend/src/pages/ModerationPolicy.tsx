@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {useLang} from '../context/LanguageContext';
 import {useAuth} from '../context/AuthContext';
 import content from '../content/moderationRules.json';
-import ModerationCenter from './ModerationCenter';
+import activityContent from '../content/myActivity.json';
 import './ForumRules.css';
 
 type Language = keyof typeof content.rules;
@@ -76,6 +76,6 @@ export default function ModerationPolicy() {
       </div>
       {demo && <p role="status">{navigation[language].demo}</p>}
     </main>
-    {!demo && !loading && user && token && <ModerationCenter/>}
+    {!loading && user && token && <Link to="/my-activity#my-activity-restrictions">{activityContent[language].title}</Link>}
   </>;
 }

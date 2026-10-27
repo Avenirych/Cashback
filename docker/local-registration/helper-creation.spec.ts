@@ -1,10 +1,10 @@
 import {firstStartHelpers,HelperCreationBlocked,productionHelperCreationIO} from './helper-creation';
 import type {HelperCreationIO} from './helper-creation';
 import {creationFenceFromProvider,executeCreationControlPlane} from './creation-control-plane';
-import {creationHelperSpecDigest,creationFencingBindingDigest} from '../../src/docker-phone-creation-contract';
-import type {CreationPlan,CreationHelper,CreationAuthorizationEnvelope} from '../../src/docker-phone-creation-contract';
-import type {SignedApprovalReader} from '../../src/docker-phone-approved-evidence';
-import {REGISTRATION_PHONE_EXPECTED as E,registrationSecurityDigest as hash} from '../../src/docker-phone-registration-target';
+import {creationHelperSpecDigest,creationFencingBindingDigest} from './legacy-source/src/docker-phone-creation-contract';
+import type {CreationPlan,CreationHelper,CreationAuthorizationEnvelope} from './legacy-source/src/docker-phone-creation-contract';
+import type {SignedApprovalReader} from './legacy-source/src/docker-phone-approved-evidence';
+import {REGISTRATION_PHONE_EXPECTED as E,registrationSecurityDigest as hash} from './legacy-source/src/docker-phone-registration-target';
 
 const h=(s:string)=>s.repeat(64);
 function fixture(){

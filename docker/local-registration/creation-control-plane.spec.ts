@@ -1,5 +1,5 @@
 import { executeCreationControlPlane } from './creation-control-plane';
-import { REGISTRATION_PHONE_EXPECTED as E, registrationSecurityDigest as hash } from '../../src/docker-phone-registration-target';
+import { REGISTRATION_PHONE_EXPECTED as E, registrationSecurityDigest as hash } from './legacy-source/src/docker-phone-registration-target';
 
 // Explicit offline dependency mocks. No protected file, daemon, service, ledger or SQL IO.
 const mockOrder:string[]=[];
@@ -9,14 +9,14 @@ const mockCollector=jest.fn();
 const mockVerifyRunning=jest.fn();
 const mockInstall=jest.fn();
 const mockLedger={inspect:jest.fn(),transaction:jest.fn()};
-jest.mock('../../src/docker-phone-infrastructure-ledger',()=>({RegistrationInfrastructureLedger:jest.fn(()=>mockLedger)}));
-jest.mock('../../src/docker-phone-production-configuration',()=>({
+jest.mock('./legacy-source/src/docker-phone-infrastructure-ledger',()=>({RegistrationInfrastructureLedger:jest.fn(()=>mockLedger)}));
+jest.mock('./legacy-source/src/docker-phone-production-configuration',()=>({
   loadCreationProductionPrerequisites:jest.fn(async()=>({fixture:'creation-capability'})),
   creationProductionComponents:jest.fn(()=>mockCreation),
   loadProductionMigrationConfiguration:jest.fn(async()=>mockCap),
   productionMigrationComponents:jest.fn(()=>mockProduction),
 }));
-jest.mock('../../src/docker-phone-access-sources',()=>({installProductionMigrationConfiguration:(...args:any[])=>mockInstall(...args)}));
+jest.mock('./legacy-source/src/docker-phone-access-sources',()=>({installProductionMigrationConfiguration:(...args:any[])=>mockInstall(...args)}));
 jest.mock('./collector',()=>({collectRegistrationServicePhase:(...args:any[])=>mockCollector(...args),productionCollectorIO:jest.fn(()=>({fixture:'real-collector-io-slot'}))}));
 jest.mock('./helper-creation',()=>({...jest.requireActual('./helper-creation'),verifyRunningCreationPlan:(...args:any[])=>mockVerifyRunning(...args)}));
 

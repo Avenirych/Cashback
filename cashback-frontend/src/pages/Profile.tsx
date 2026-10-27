@@ -1,5 +1,4 @@
 import { BACKEND_URL } from "../backend";
-import ActivityLimits from '../components/ActivityLimits';
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -17,6 +16,7 @@ import MarketingPreferencesPanel from "../components/MarketingPreferencesPanel";
 import WiseAccountNotice from "../components/WiseAccountNotice";
 import { validateEmail } from "../utils/emailValidator";
 import "./Profile.css";
+import profileContent from "../content/profilePresentation.json";
 
 const PROFILE_URL = `${BACKEND_URL}/auth/profile`;
 
@@ -58,7 +58,7 @@ interface ProfileMessages {
 
 export const messages: Record<ProfileLang, ProfileMessages> = {
   en: {
-    title: "Profile",
+    title: "User profile",
     loading: "Loading profile...",
     guestTitle: "You are not logged in",
     guestText: "Log in or register to see your profile.",
@@ -93,7 +93,7 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
       "Development mode: partner services and real payments are not connected. Wise credentials are stored only in this browser and are not sent to any service.",
   },
   ru: {
-    title: "Профиль",
+    title: "Профиль пользователя",
     loading: "Загрузка профиля...",
     guestTitle: "Вы не вошли в систему",
     guestText: "Войдите или зарегистрируйтесь, чтобы увидеть свой профиль.",
@@ -128,7 +128,7 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
       "Режим разработки: партнёрские сервисы и реальные платежи не подключены. Реквизиты Wise хранятся только в этом браузере и не отправляются ни в один сервис.",
   },
   de: {
-    title: "Profil",
+    title: "Benutzerprofil",
     loading: "Profil wird geladen...",
     guestTitle: "Sie sind nicht angemeldet",
     guestText: "Melden Sie sich an oder registrieren Sie sich, um Ihr Profil zu sehen.",
@@ -164,7 +164,7 @@ export const messages: Record<ProfileLang, ProfileMessages> = {
       "Entwicklungsmodus: Partnerdienste und echte Zahlungen sind nicht verbunden. Wise-Kontodaten werden nur in diesem Browser gespeichert und an keinen Dienst gesendet.",
   },
   fr: {
-    title: "Profil",
+    title: "Profil utilisateur",
     loading: "Chargement du profil...",
     guestTitle: "Vous n'êtes pas connecté",
     guestText: "Connectez-vous ou inscrivez-vous pour voir votre profil.",
@@ -528,68 +528,79 @@ export default function Profile() {
     ...(freshProfile || {}),
   };
 
+  const copy = profileContent[lang.toLowerCase() as keyof typeof profileContent] || profileContent.en;
+  const paragraphs = (items: string[]) => items.map(text => <p key={text}>{text}</p>);
+  const hasBalance = (typeof profile.balance === "number" || (typeof profile.balance === "string" && profile.balance.trim() !== "")) && Number.isFinite(Number(profile.balance));
+  const demoEnabled = process.env.REACT_APP_DEMO_ONLY === "true";
+
   return (
-    <main
-      className="profile-container"
-      aria-labelledby="profile-title"
-    >
-      <h1 id="profile-title">{t.title}</h1>
-      <p>{getOnboardingMessages(lang).explanation}</p>
+    <main className="profile-container" aria-labelledby="profile-title">
+      <header className="profile-intro">
+        <h1 id="profile-title">{t.title}</h1>
+        {paragraphs(copy.upper)}
+      </header>
 
-      <section className="profile-card">
-        {profile.avatar_url && (
-          <img
-            className="profile-avatar"
-            src={profile.avatar_url}
-            alt={t.avatarAlt}
-          />
-        )}
-
-        <dl className="profile-details">
-          <div className="profile-row">
-            <dt>{t.name}</dt>
-            <dd data-testid="profile-name">
-              {profile.firstName || profile.name || t.notSpecified}
-            </dd>
-          </div>
-
-          <div className="profile-row"><dt>{lang === "ru" ? "Фамилия" : "Last name"}</dt><dd>{profile.lastName || t.notSpecified}</dd></div>
-          <div className="profile-row"><dt>{lang === "ru" ? "Телефон" : "Phone"}</dt><dd>{profile.phone_e164 || t.notSpecified}</dd></div>
-          <div className="profile-row">
-            <dt>{t.email}</dt>
-            <dd data-testid="profile-email">
-              {profile.email || t.notSpecified}
-            </dd>
-          </div>
-
-          <div className="profile-row">
-            <dt>{t.balance}</dt>
-            <dd data-testid="profile-balance">
-              {formatBalance(profile.balance)}
-            </dd>
-          </div>
-        </dl>
+      <section className="profile-section" id="profile-personal" aria-labelledby="profile-personal-title">
+        <h2 id="profile-personal-title">{copy.personal}</h2>
+        <div className="profile-card">
+          {profile.avatar_url && <img className="profile-avatar" src={profile.avatar_url} alt={t.avatarAlt} />}
+          <dl className="profile-details">
+            <div className="profile-row"><dt>{t.name}</dt><dd data-testid="profile-name">{profile.firstName || profile.name || t.notSpecified}</dd></div>
+            <div className="profile-row"><dt>{copy.surname}</dt><dd>{profile.lastName || t.notSpecified}</dd></div>
+            <div className="profile-row"><dt>{copy.phone}</dt><dd>{profile.phone_e164 || t.notSpecified}</dd></div>
+            <div className="profile-row"><dt>{t.email}</dt><dd data-testid="profile-email">{profile.email || t.notSpecified}</dd></div>
+          </dl>
+        </div>
       </section>
 
-      <MarketingPreferencesPanel key={user.id} lang={lang} hasPhone={Boolean(freshProfile?.phone_e164 || user.phone_e164)} />
-      {token&&<ActivityLimits token={token} lang={lang}/>}
+      <section className="profile-section" id="profile-security" aria-labelledby="profile-security-title">
+        <h2 id="profile-security-title">{copy.security}</h2>
+        <p data-testid="login-history-unavailable">{copy.historyUnavailable}</p>
+        <p>{copy.securityText}</p><p>{copy.passwordHelp}</p>
+        <a href="mailto:support@cashbackplus.uk">{copy.support}</a>
+      </section>
 
-      <WiseAccountNotice lang={lang} />
+      <section className="profile-section" id="profile-marketing" aria-labelledby="profile-marketing-title">
+        <h2 id="profile-marketing-title">{copy.marketing}</h2>
+        {paragraphs(copy.marketingText)}
+        <MarketingPreferencesPanel key={user.id} lang={lang} embedded hasPhone={Boolean(freshProfile?.phone_e164 || user.phone_e164)} />
+      </section>
 
-      <WiseEnrollment
-        key={user.id}
-        userId={user.id}
-        lang={lang}
-      />
+      <section className="profile-section" id="profile-partners" aria-labelledby="profile-partners-title">
+        <h2 id="profile-partners-title">{copy.partner}</h2>
+        {paragraphs(copy.partnerText)}<p>{copy.partnerNote}</p>
+        <div className="profile-links"><Link to="/privacy#privacySection6">{copy.privacy}</Link><a href="#profile-marketing">{copy.manageMarketing}</a></div>
+      </section>
 
-      <p className="profile-demo-notice" role="note">
-        {t.demoNotice}
-      </p>
+      <section className="profile-section" id="profile-rewards" aria-labelledby="profile-rewards-title">
+        <h2 id="profile-rewards-title">{copy.rewards}</h2>
+        <p className="profile-reward-amount"><span>{t.balance}</span>: <strong data-testid="profile-balance">{hasBalance ? formatBalance(profile.balance) : copy.balanceUnavailable}</strong></p>
+        <p>{copy.rewardNote}</p>
+        <details className="profile-program">
+          <summary>{copy.program}</summary>
+          <p>{getOnboardingMessages(lang).explanation}</p>
+          <WiseAccountNotice lang={lang} />
+          <WiseEnrollment key={user.id} userId={user.id} lang={lang} />
+        </details>
+      </section>
 
-      <nav className="profile-links" aria-label={t.title}>
-        <Link to="/">{t.home}</Link>
-        <Link to="/shop">{t.shop}</Link>
-      </nav>
+      <section className="profile-section" id="profile-tax" aria-labelledby="profile-tax-title">
+        <h2 id="profile-tax-title">{copy.tax}</h2>
+        {paragraphs(copy.taxText)}<p>{copy.taxUnavailable}</p>
+      </section>
+
+      <section className="profile-section" id="profile-deletion" aria-labelledby="profile-deletion-title">
+        <h2 id="profile-deletion-title">{copy.deletion}</h2>
+        <p>{copy.deleteText}</p><p>{copy.deleteHelp}</p>
+        <div className="profile-links"><a href="mailto:privacy@cashbackplus.uk">{copy.deleteRequest}</a><Link to="/privacy">{copy.privacy}</Link></div>
+      </section>
+
+      {demoEnabled && <section className="profile-section profile-demo-notice" id="profile-demo" aria-labelledby="profile-demo-title">
+        <h2 id="profile-demo-title">{copy.demo}</h2>
+        <div role="note">{paragraphs(copy.demoText)}</div>
+      </section>}
+
+      <nav className="profile-links" aria-label={t.title}><Link to="/">{t.home}</Link><Link to="/shop">{t.shop}</Link></nav>
     </main>
   );
 }

@@ -1,3 +1,4 @@
+import {assertBonusSnapshotReadAllowed} from './bonusReadOnly';
 import { BACKEND_URL } from './backend';
 import { assertBonusNetworkAllowed } from './registrationIsolation';
 import type {
@@ -45,7 +46,8 @@ async function request(
   token: string,
   options: RequestInit = {}
 ): Promise<unknown> {
-  assertBonusNetworkAllowed();
+  if(path==="/api/bonus/snapshot"&&(options.method===undefined||options.method==="GET")&&options.body==null)assertBonusSnapshotReadAllowed();
+  else assertBonusNetworkAllowed();
   if (!token.trim()) {
     throw new Error("Authentication token is required");
   }
@@ -63,6 +65,7 @@ async function request(
     ...options,
     headers,
     cache: "no-store",
+    credentials: path === "/api/bonus/snapshot" ? "omit" : options.credentials,
   });
 
   const text = await response.text();
@@ -116,7 +119,9 @@ function isSnapshot(
         value >= 0
       );
     }) &&
-    typeof data.summary.lastUpdated === "string"
+    typeof data.summary.lastUpdated === "string" &&
+    Number.isFinite(Date.parse(data.summary.lastUpdated)) &&
+    data.items.every(isBonusItem) && data.transfers.every(isTransferLog)
   );
 }
 
@@ -152,7 +157,7 @@ export const bonusApi = {
     token: string,
     signal?: AbortSignal
   ): Promise<BonusSnapshot> {
-    assertBonusNetworkAllowed();
+    assertBonusSnapshotReadAllowed();
     const data = await request(
       "/api/bonus/snapshot",
       token,
@@ -222,3 +227,15 @@ export const bonusApi = {
     return data;
   },
 };
+
+function isBonusItem(value:unknown):boolean {
+ if(!isRecord(value))return false;
+ return typeof value.id==="string"&&!!value.id&&Number.isSafeInteger(value.userId)&&Number(value.userId)>0&&
+ ["ads","research","transfer","purchase","refund"].includes(String(value.source))&&
+ ["pending","confirmed","spent","expired","failed"].includes(String(value.status))&&
+ typeof value.amount==="number"&&Number.isFinite(value.amount)&&value.amount>=0&&
+ typeof value.isExpired==="boolean"&&
+ ["createdAt","expiresAt"].every(k=>typeof value[k]==="string"&&Number.isFinite(Date.parse(value[k] as string)))&&
+ (value.usedAt==null||(typeof value.usedAt==="string"&&Number.isFinite(Date.parse(value.usedAt))))&&
+ ["orderId","referenceId"].every(k=>value[k]==null||typeof value[k]==="string");
+}

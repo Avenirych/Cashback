@@ -1,11 +1,11 @@
 import {readFile,lstat,realpath} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
-import {RegistrationInfrastructureLedger} from '../../src/docker-phone-infrastructure-ledger';
-import {LedgerDockerCreation,validateCreationPlan} from '../../src/docker-phone-creation-contract';
-import type {CreationFence,CreationPlan} from '../../src/docker-phone-creation-contract';
-import {loadCreationProductionPrerequisites,creationProductionComponents,loadProductionMigrationConfiguration,productionMigrationComponents} from '../../src/docker-phone-production-configuration';
-import {installProductionMigrationConfiguration} from '../../src/docker-phone-access-sources';
-import {registrationSecurityDigest as hash,REGISTRATION_PHONE_EXPECTED as E} from '../../src/docker-phone-registration-target';
+import {RegistrationInfrastructureLedger} from './legacy-source/src/docker-phone-infrastructure-ledger';
+import {LedgerDockerCreation,validateCreationPlan} from './legacy-source/src/docker-phone-creation-contract';
+import type {CreationFence,CreationPlan} from './legacy-source/src/docker-phone-creation-contract';
+import {loadCreationProductionPrerequisites,creationProductionComponents,loadProductionMigrationConfiguration,productionMigrationComponents} from './legacy-source/src/docker-phone-production-configuration';
+import {installProductionMigrationConfiguration} from './legacy-source/src/docker-phone-access-sources';
+import {registrationSecurityDigest as hash,REGISTRATION_PHONE_EXPECTED as E} from './legacy-source/src/docker-phone-registration-target';
 import {firstStartHelpers,helperDockerTransport,productionHelperCreationIO,inspectHelperCreation,verifyRunningCreationPlan,HelperCreationBlocked} from './helper-creation';
 import {collectRegistrationServicePhase,productionCollectorIO} from './collector';
 import type {ExistingPostgresPolicy} from './existing-postgres-baseline';

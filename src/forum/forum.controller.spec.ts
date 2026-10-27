@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { startGuardedHttpTestApp } from '../../test/guarded-http-app';
 import { Test } from '@nestjs/testing';
 import {
@@ -63,20 +64,16 @@ describe('ForumController HTTP contract', () => {
     await app.close();
   });
 
-  it('publishes bilingual rules without authentication', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/forum/rules')
-      .expect(200);
+  it.each(['ru','en','de','fr'] as const)('%s: publishes all twenty approved sections without authentication using the existing contract', async lang => {
+    const document = JSON.parse(readFileSync('cashback-frontend/src/content/forumRules.json','utf8'));
+    const response = await request(app.getHttpServer()).get('/forum/rules').expect(200).expect('Content-Type',/json/);
+    expect(Object.keys(response.body).sort()).toEqual(['de','en','fr','ru']);
     expect(response.body).toEqual(FORUM_RULES);
-    expect(response.body.en).toContain('UK context and advice');
-    expect(response.body.en).toContain('Deleting a topic permanently removes');
-    expect(response.body.ru).toContain('Безвозвратное удаление');
-    expect(response.body.en).toContain(
-      'Rule violations may result in deletion of your forum account or a ban',
-    );
-    expect(response.body.ru).toContain(
-      'Нарушения могут привести к удалению вашего аккаунта форума или блокировке',
-    );
+    expect(typeof response.body[lang]).toBe('string');
+    expect(response.body[lang]).toBe(document.rules[lang].map((section:string[])=>section.join('\n')).join('\n\n'));
+    expect(document.rules[lang]).toHaveLength(20);
+    expect(service.register).not.toHaveBeenCalled();
+    expect(service.assertVerifiedUser).not.toHaveBeenCalled();
   });
 
   it.each([

@@ -1,3 +1,4 @@
+import profileContent from "../content/profilePresentation.json";
 import React from "react";
 import { render, screen, waitFor, act, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
@@ -32,7 +33,7 @@ function LangGrabber() {
 }
 
 function renderProfile() {
-  return render(
+  const view = render(
     <LanguageProvider>
       <LangGrabber />
       <MemoryRouter>
@@ -40,12 +41,18 @@ function renderProfile() {
       </MemoryRouter>
     </LanguageProvider>
   );
+  const summary = screen.queryByText(profileContent.en.program);
+  if (summary) fireEvent.click(summary);
+  return view;
 }
 
+const oldDemo = process.env.REACT_APP_DEMO_ONLY;
+afterAll(() => { if(oldDemo===undefined)delete process.env.REACT_APP_DEMO_ONLY;else process.env.REACT_APP_DEMO_ONLY=oldDemo; });
 const testUser = { id: 1, email: "anna@example.com", name: "Anna", balance: 12.5 };
 
 beforeEach(() => {
   localStorage.clear();
+  process.env.REACT_APP_DEMO_ONLY = "true";
   global.fetch = jest.fn().mockResolvedValue({
     ok: false,
     json: () => Promise.resolve(null),
@@ -119,8 +126,8 @@ describe("Profile page", () => {
 
   test.each([
     [{ ...testUser, balance: "15.75" }, "15.75"],
-    [{ ...testUser, balance: NaN }, "0.00"],
-    [{ ...testUser, balance: undefined }, "0.00"],
+    [{ ...testUser, balance: NaN }, profileContent.en.balanceUnavailable],
+    [{ ...testUser, balance: undefined }, profileContent.en.balanceUnavailable],
   ])("renders balance safely for %p", (user, expected) => {
     mockAuth({ user });
     renderProfile();
