@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {buildSearchIndex} from './build-search-index.mjs';
+test('all public routes are unique, nonempty, stable and have actual router destinations',()=>{const a=buildSearchIndex(),b=buildSearchIndex();assert.deepEqual(a,b);assert.equal(a.length,17);assert.equal(new Set(a.map(x=>x.path)).size,17);const app=fs.readFileSync(new URL('../src/App.tsx',import.meta.url),'utf8');for(const x of a){assert(x.text.trim());assert(x.title&&x.titleEn);assert(app.includes('"'+x.path+'"')||app.includes("'"+x.path+"'"),x.path);assert(!['/profile','/dashboard','/my-activity','/verify-email','/register','/login'].includes(x.path));}});
+test('external bonus and research copy is indexed in all four languages',()=>{const a=buildSearchIndex();for(const [route,file]of [['/bonuses','bonusPrograms.json'],['/bonuses/research','researchPrograms.json'],['/bonuses/ads','advertisingPrograms.json']]){const doc=JSON.parse(fs.readFileSync(new URL('../src/content/'+file,import.meta.url),'utf8'));const row=a.find(x=>x.path===route);for(const lang of ['ru','en','de','fr']){const text=doc[lang]||doc[lang.toUpperCase()];assert(text);const title=text.title||text.pageTitle;assert(title);assert(row.text.includes(title),route+' '+lang);}}});

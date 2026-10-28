@@ -64,6 +64,12 @@ const publicPages = JSON.parse(read(path.join(src, "content", "publicPages.json"
 const scope = {};
 vm.runInNewContext(ts.transpileModule(read(path.join(src,'i18n.ts')), {compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText, {exports:scope, require: name => { if (name === "./content/publicPages.json") return {default: publicPages}; throw Error("Unreviewed translation import: " + name); }});
 function strings(value) { return typeof value === 'string' ? [value] : Array.isArray(value) ? value.flatMap(strings) : value && typeof value === 'object' ? Object.values(value).flatMap(strings) : []; }
+export function buildSearchIndex() {
+const publicContent = {
+  "/bonuses": ["bonusPrograms.json"],
+  "/bonuses/ads": ["advertisingPrograms.json"],
+  "/bonuses/research": ["researchPrograms.json", "researchRewards.json"],
+};
 const index = routes.map(([url, filename]) => {
   const file = ['.tsx','.jsx','.ts','.js'].map(ext=>path.join(src,'pages',filename+ext)).find(fs.existsSync);
   if (!file) throw Error('Missing public page: '+filename);
@@ -81,12 +87,24 @@ const index = routes.map(([url, filename]) => {
   const publicPageKey = { '/about': 'about', '/services': 'services', '/contacts': 'contacts' }[url];
   if (publicPageKey) fragments.push(...strings(publicPages[publicPageKey]));
   if (publicDocuments[url]) fragments.push(...strings(JSON.parse(read(path.join(src, 'content', publicDocuments[url]))).rules));
+  for (const name of publicContent[url] || []) fragments.push(...strings(JSON.parse(read(path.join(src,"content",name)))));
   const keys=new Set(Array.from(code.matchAll(/\bt\.([A-Za-z0-9_]+)/g),m=>m[1]));
   for(const dict of Object.values(scope.translations)) for(const [key,value] of Object.entries(dict)) {
     if(keys.has(key)||(url==='/faq'&&key.startsWith('faq'))) fragments.push(...strings(value));
   }
   return {path:url,title:titles[url][0],titleEn:titles[url][1],text:fragments.join(' ').replace(/\s+/g,' ').trim().slice(0,80000)};
 });
+const paths = new Set();
+for (const entry of index) {
+  if (!entry.text || !entry.title || !entry.titleEn || !entry.path.startsWith('/') || paths.has(entry.path)) throw Error('Invalid public search entry: '+entry.path);
+  paths.add(entry.path);
+}
+return index;
+}
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+const index = buildSearchIndex();
 fs.mkdirSync(path.dirname(output),{recursive:true});
 fs.writeFileSync(output,JSON.stringify(index,null,2)+'\n');
 console.log('Search index created: '+index.length+' public pages');
+
+}
