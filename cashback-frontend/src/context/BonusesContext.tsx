@@ -51,14 +51,9 @@ export function BonusesProvider({
       ? token
       : null;
 
-  // Перемонтирование исключает показ данных прошлого аккаунта.
-  const sessionKey = JSON.stringify([
-    user?.id ?? null,
-    activeToken,
-  ]);
-
+  // Keep routing children mounted; bonus state is scoped inside the store.
   return (
-    <BonusStore key={sessionKey} token={activeToken} userId={user?.id}>
+    <BonusStore token={activeToken} userId={user?.id}>
       {children}
     </BonusStore>
   );
@@ -73,10 +68,18 @@ function BonusStore({
   token: string | null;
   userId: number | undefined;
 }) {
-  const [snapshot, setSnapshot] =
-    useState<BonusSnapshot | null>(null);
-  const [loading, setLoading] = useState(Boolean(token));
-  const [error, setError] = useState<string | null>(null);
+  const sessionKey = JSON.stringify([userId ?? null, token]);
+  const currentSession = useRef(sessionKey);
+  currentSession.current = sessionKey;
+  const [stored, setStored] = useState<{owner:string; value:BonusSnapshot|null}>({owner:sessionKey,value:null});
+  const [status, setStatus] = useState<{owner:string; loading:boolean; error:string|null}>({owner:sessionKey,loading:Boolean(token),error:null});
+  // Mask old data synchronously, before effect cleanup or a new request.
+  const snapshot = stored.owner === sessionKey ? stored.value : null;
+  const loading = status.owner === sessionKey ? status.loading : Boolean(token);
+  const error = status.owner === sessionKey ? status.error : null;
+  const setSnapshot = useCallback((value:BonusSnapshot|null) => setStored({owner:sessionKey,value}),[sessionKey]);
+  const setLoading = useCallback((value:boolean) => setStatus(s=>({owner:sessionKey,loading:value,error:s.owner===sessionKey?s.error:null})),[sessionKey]);
+  const setError = useCallback((value:string|null) => setStatus(s=>({owner:sessionKey,loading:s.owner===sessionKey?s.loading:Boolean(token),error:value})),[sessionKey,token]);
 
   const active = useRef(true);
   const revision = useRef(0);
@@ -84,7 +87,7 @@ function BonusStore({
 
   const refresh = useCallback(async () => {
     if (!canReadBonusSnapshot()) return;
-    if (!token || !active.current) return;
+    if (!token || !active.current || currentSession.current !== sessionKey) return;
 
     const currentRevision = ++revision.current;
 
@@ -104,6 +107,7 @@ function BonusStore({
       if(next.items.some(item=>item.userId!==userId)||next.transfers.some(entry=>entry.fromUserId!==userId&&entry.toUserId!==userId))throw new Error("Invalid bonus snapshot");
       if (
         active.current &&
+        currentSession.current === sessionKey &&
         currentRevision === revision.current
       ) {
         setSnapshot(next);
@@ -111,6 +115,7 @@ function BonusStore({
     } catch (err) {
       if (
         !active.current ||
+        currentSession.current !== sessionKey ||
         currentRevision !== revision.current ||
         currentController.signal.aborted
       ) {
@@ -125,15 +130,19 @@ function BonusStore({
     } finally {
       if (
         active.current &&
+        currentSession.current === sessionKey &&
         currentRevision === revision.current
       ) {
         setLoading(false);
       }
     }
-  }, [token,userId]);
+  }, [token,userId,sessionKey,setSnapshot,setLoading,setError]);
 
   useEffect(() => {
     active.current = true;
+    setSnapshot(null);
+    setLoading(Boolean(token));
+    setError(null);
 
     if (!token || !canReadBonusSnapshot()) {
       return () => {
@@ -161,7 +170,7 @@ function BonusStore({
       window.removeEventListener("focus", reload);
       document.removeEventListener("visibilitychange", reload);
     };
-  }, [token, refresh]);
+  }, [token, refresh,setSnapshot,setLoading,setError]);
 
   const transfer = useCallback(
     async (
@@ -169,7 +178,7 @@ function BonusStore({
       idempotencyKey: string
     ) => {
       assertBonusNetworkAllowed();
-      if (!token || !active.current) {
+      if (!token || !active.current || currentSession.current !== sessionKey) {
         throw new Error("Sign in and verify your email");
       }
 
@@ -179,7 +188,7 @@ function BonusStore({
         idempotencyKey
       );
 
-      if (!active.current) {
+      if (!active.current || currentSession.current !== sessionKey) {
         throw new Error(
           "Session changed. Check transfer history after signing in."
         );
@@ -189,7 +198,7 @@ function BonusStore({
       await refresh().catch(() => {});
       return result;
     },
-    [token, refresh]
+    [token, refresh,sessionKey]
   );
 
   const items = useMemo(

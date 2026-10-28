@@ -1,3 +1,4 @@
+import copy from "../content/verifyEmail.json";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -13,7 +14,7 @@ export default function VerifyEmail({ lang }: { lang: string }) {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   const attempt = useRef<Promise<void> | null>(null);
-  const ru = lang.toLowerCase() === "ru";
+  const t = copy[lang.toLowerCase() as keyof typeof copy] || copy.en;
   const [continueReview]=useState(reviewIntent);
   useEffect(() => {
     if (!token) return;
@@ -38,34 +39,34 @@ export default function VerifyEmail({ lang }: { lang: string }) {
     try {
       if (resend) {
         await resendVerification(email || user?.email || "");
-        setNotice(ru ? "Если аккаунт ожидает подтверждения, письмо будет отправлено. Проверьте также папку «Спам». Повторная отправка доступна не чаще раза в минуту." : "If verification is needed, an email will be sent. Check spam too. Wait a minute before requesting another.");
+        setNotice(t.noticeSent);
       } else if (await checkVerification()) setStatus("success");
-      else setNotice(ru ? "Почта ещё не подтверждена. Нажмите ссылку в письме." : "Email is not verified yet. Use the email link.");
-    } catch { setNotice(ru ? "Не удалось выполнить запрос. Попробуйте позже. Для проверки статуса можно войти в аккаунт." : "Request failed. Try later or log in to check status."); }
+      else setNotice(t.notVerified);
+    } catch { setNotice(t.requestFailed); }
     finally { setBusy(false); }
   };
   const button = { display: "inline-block", padding: "14px 24px", border: 0, borderRadius: 8, background: "#0d6efd", color: "white", fontSize: 17, textDecoration: "none", cursor: "pointer" };
   return <main style={{minHeight: "80vh", padding: "48px 20px", background: "#f5e8d3"}}>
     <section aria-live="polite" style={{maxWidth: 560, margin: "0 auto", padding: 32, background: "white", borderRadius: 12}}>
-      {(loading || status === "loading") && !success && <p role="status">{ru ? "Подтверждаем почту…" : "Verifying email…"}</p>}
+      {(loading || status === "loading") && !success && <p role="status">{t.verifying}</p>}
       {success && <>
-        <h1>{ru ? "Электронная почта подтверждена!" : "Email verified!"}</h1>
-        <p>{ru ? "Перейдите в профиль и завершите регистрацию." : "Continue to your profile to complete registration."}</p>
-        <Link style={button} to="/profile">{ru ? "Перейти в профиль" : "Continue to profile"}</Link>
+        <h1>{t.successTitle}</h1>
+        <p>{t.successContinue}</p>
+        <Link style={button} to="/profile">{t.profile}</Link>
         {continueReview&&<p><Link style={button} to={continueReview}>{reviewCopy(lang)?.leave}</Link></p>}
       </>}
       {status === "error" && !loading && !success && <>
-        <h1>{ru ? "Подтверждение почты" : "Email confirmation"}</h1>
-        <p role="alert">{ru ? "Не удалось подтвердить почту. Ссылка могла истечь или уже использоваться; возможна также ошибка соединения. Проверьте статус почты или войдите в аккаунт. Если почта не подтверждена, запросите новое письмо." : "We could not confirm your email. The link may have expired or been used, or the connection failed. Check email status or log in. If it is still unverified, request another email."}</p>
-        <button style={button} disabled={busy} onClick={() => action(false)}>{ru ? "Проверить почту" : "Check email"}</button>
+        <h1>{t.confirmationTitle}</h1>
+        <p role="alert">{t.errorDescription}</p>
+        <button style={button} disabled={busy} onClick={() => action(false)}>{t.checkEmail}</button>
         <form onSubmit={e => { e.preventDefault(); void action(true); }} style={{display: "grid", gap: 12, marginTop: 24}}>
-          <label>{ru ? "Электронная почта" : "Email"}<input aria-label={ru ? "Электронная почта" : "Email"} type="email" required value={email} onChange={e => setEmail(e.target.value)} style={{display: "block", width: "100%", padding: 10, boxSizing: "border-box"}} /></label>
-          <button style={button} disabled={busy}>{busy ? (ru ? "Подождите…" : "Please wait…") : (ru ? "Отправить письмо ещё раз" : "Resend email")}</button>
+          <label>{t.email}<input aria-label={t.email} type="email" required value={email} onChange={e => setEmail(e.target.value)} style={{display: "block", width: "100%", padding: 10, boxSizing: "border-box"}} /></label>
+          <button style={button} disabled={busy}>{busy ? (t.waiting) : (t.resend)}</button>
         </form>
-        <p><Link to="/login">{ru ? "Войти в аккаунт" : "Log in"}</Link></p>
+        <p><Link to="/login">{t.login}</Link></p>
       </>}
       {notice && <p role="status">{notice}</p>}
-      <p><Link to="/">{ru ? "На главную" : "Home"}</Link></p>
+      <p><Link to="/">{t.home}</Link></p>
     </section>
   </main>;
 }
