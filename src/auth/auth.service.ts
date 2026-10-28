@@ -11,6 +11,7 @@ import * as crypto from 'crypto';
 import { UsersService } from '../users/users.service';
 import { normalizePhone } from '../users/phone-normalization';
 import { User } from '../users/user.entity';
+import {serverAccountUuid} from '../users/server-account-identity';
 import { MailService } from '../mail/mail.service';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._+\-]{1,64}@[a-zA-Z0-9.\-]{1,255}\.[a-zA-Z]{2,}$/;
@@ -57,8 +58,10 @@ export class AuthService {
   }
 
   private createAccessToken(user: User): string {
+    const uuid = serverAccountUuid(user);
     return this.jwtService.sign({
       sub: user.id,
+      ...(uuid ? {account_uuid: uuid} : {}),
       email: user.email,
       name: user.name,
     });
@@ -247,13 +250,15 @@ export class AuthService {
     };
   }
 
-  async profile(user: { id: number; email: string; name?: string }) {
+  async profile(user: { id: number; email: string; name?: string; account_uuid?: string }) {
     const dbUser = await this.usersService.getById(user.id, true);
 
     if (!dbUser) {
       throw new UnauthorizedException('User not found');
     }
 
+    const uuid = serverAccountUuid(dbUser);
+    if (user.account_uuid !== undefined ? user.account_uuid !== uuid : !!uuid) throw new UnauthorizedException('Account identity changed');
     return this.safeUser(dbUser);
   }
 }

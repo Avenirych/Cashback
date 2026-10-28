@@ -1,3 +1,5 @@
+import {BonusUseTerms} from './bonus-use-terms';
+import {BONUS_USE_RULES} from './bonus-use-policy';
 import {returnDestinations,recordGiftRecovery,cancelGiftGroup,GiftEvidence} from './policy-gift';
 import type {EntityManager} from 'typeorm';
 import {randomUUID} from 'node:crypto';
@@ -10,16 +12,17 @@ export class PolicyPurchase {
  async reserve(m:EntityManager,principal:string,key:string,reference:string){
   const {actor,proof,facts:f}=await this.c.enter<{click:string;amount:string}>(m,principal,'reserve_fifo',reference);
   if(this.c.policy!==POLICY_21)throw Error('FIFO policy approval required');
-  return this.c.command(m,actor,key,{action:'reserve_fifo',facts:f,proof},async()=>{
+  return this.c.command(m,actor,key,{action:'reserve_fifo',facts:f,proof,...(this.useTerms?{applicationRules:BONUS_USE_RULES}:{})},async()=>{
    const [click]=await m.query('SELECT "buyerReference" FROM finance_purchase_clicks WHERE id=$1',[f.click]);if(click?.buyerReference!==actor)throw Error('Owned purchase click required');
-   const rows=await m.query('SELECT l.*,a."balancePence" AS amount,to_char(l."confirmedAt" AT TIME ZONE \'UTC\',\'YYYY-MM-DD"T"HH24:MI:SS.US"Z"\') AS confirmed FROM finance_bonus_lots l JOIN finance_accounts a ON a.id=l.available WHERE l.owner=$1 AND l.kind=\'bonus\' AND a."balancePence">0 ORDER BY l.id FOR UPDATE OF l,a',[actor]);
+   let rows=await m.query('SELECT l.*,a."balancePence" AS amount,to_char(l."confirmedAt" AT TIME ZONE \'UTC\',\'YYYY-MM-DD"T"HH24:MI:SS.US"Z"\') AS confirmed FROM finance_bonus_lots l JOIN finance_accounts a ON a.id=l.available WHERE l.owner=$1 AND l.kind=\'bonus\' AND a."balancePence">0 ORDER BY l.id FOR UPDATE OF l,a',[actor]);
+   if(this.useTerms){const allowed=await this.useTerms.eligibility(m,rows.map((r:any)=>r.id),await this.c.serverReceiptTime(m));rows=rows.filter((r:any)=>allowed.get(r.id));}
    const amount=policyPence(f.amount);if(!amount)throw Error('Positive reservation required');const plan=fifo<any>(rows,amount);if(plan.status!=='ready')return plan;if(plan.unfunded)return {status:'pending_review',reason:'INSUFFICIENT_ELIGIBLE_BONUS'};
    if((await m.query("SELECT 1 FROM finance_bonus_reservations WHERE click=$1 AND state='active'",[f.click])).length)throw Error('Click already reserved');
    const lines:any[]=[],parts:any[]=[];for(const a of plan.allocations){const id=randomUUID();lines.push({accountId:a.lot.available,side:'debit',amount:a.amount},{accountId:a.lot.reserved,side:'credit',amount:a.amount});parts.push({reservation:id,lot:a.lot.id,amount:a.amount.toString()});await m.query("INSERT INTO finance_bonus_reservations(id,lot,click,amount,state) VALUES($1,$2,$3,$4,'active')",[id,a.lot.id,f.click,a.amount.toString()]);}
    const j=await this.c.post(m,lines);return {status:'reserved',parts,journal:j.journalId,policy:this.c.policy};
   });
  }
- constructor(private readonly c:PolicyContext){}
+ constructor(private readonly c:PolicyContext,private readonly useTerms?:BonusUseTerms){}
  async ingest(m:EntityManager,principal:string,reference:string){
   // Capture server receipt before potentially delayed verification/actor-lock
   // scheduling. Nothing is accepted/persisted until authority verification succeeds.
@@ -71,8 +74,8 @@ export class PolicyPurchase {
   });
  }
  async apply(m:EntityManager,principal:string,key:string,reference:string){
-  const {actor,proof,facts:f}=await this.c.enter<{click:string;selection:string;reservation:string;currentVersionsVerified:boolean}&GiftEvidence>(m,principal,'apply_bonus',reference,f=>this.c.policy===POLICY_21?(f.giftOrigins||[]):[]);
-  return this.c.command(m,actor,key,{action:'apply_bonus',facts:f,proof},async()=>{
+  const {actor,proof,facts:f}=await this.c.enter<{click:string;selection:string;reservation:string;currentVersionsVerified:boolean;possibleCashbackPence?:string}&GiftEvidence>(m,principal,'apply_bonus',reference,f=>this.c.policy===POLICY_21?(f.giftOrigins||[]):[]);
+  return this.c.command(m,actor,key,{action:'apply_bonus',facts:f,proof,...(this.useTerms?{applicationRules:BONUS_USE_RULES}:{})},async()=>{
    const selected=await this.c.get(m,'selection',f.click,f.selection);
    if(await this.c.get(m,'bonus_cancel',f.click,'return'))return {status:'pending_review',reason:'CANCELLED_WINNER_NO_AUTOMATIC_REASSIGNMENT'};
    if(!selected||selected.payload.actor!==actor||f.currentVersionsVerified!==true)return {status:'pending_review',reason:'CURRENT_FINAL_SELECTION_REQUIRED'};
@@ -85,11 +88,19 @@ export class PolicyPurchase {
    if(await this.c.get(m,'bonus',f.click,'final'))return {status:'pending_review',reason:'BONUS_ALREADY_APPLIED'};
    if(this.c.policy!==POLICY_21&&(await m.query('SELECT 1 FROM finance_bonus_reservations r JOIN finance_bonus_lots l ON l.id=r.lot JOIN finance_bonus_lots p ON p.id=l.parent WHERE r.click=$1 AND p.owner<>$2 LIMIT 1',[f.click,actor])).length)return {status:'pending_review',reason:'GIFT_ORIGIN_DEBT_COORDINATION_REQUIRED'};
    let group=await m.query("SELECT r.*,l.owner,l.available,l.reserved,to_char(l.\"confirmedAt\" AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS confirmed FROM finance_bonus_reservations r JOIN finance_bonus_lots l ON l.id=r.lot WHERE r.click=$1 AND r.state='active' ORDER BY r.id FOR UPDATE OF r,l",[f.click]);
+   let applicationCap=BigInt(selected.payload.cap),eligible:Map<string,boolean>|null=null;
+   if(this.useTerms){
+    if(group.some((r:any)=>r.owner!==actor))throw Error('Owned reservation group required');
+    const decision=await this.useTerms.cap(selected.payload,f.possibleCashbackPence);
+    if(decision.status!=='ready')return decision;
+    applicationCap=decision.cap;
+    eligible=await this.useTerms.eligibility(m,group.map((r:any)=>r.lot),await this.c.serverReceiptTime(m));
+   }
    if(group.length>1){
     if(group.some((r:any)=>r.owner!==actor)||!group.some((r:any)=>r.id===f.reservation))throw Error('Owned attribution-group reservations required');
-    const total=group.reduce((n:bigint,r:any)=>n+BigInt(r.amount),0n),cap=BigInt(selected.payload.cap);
+    const total=group.reduce((n:bigint,r:any)=>n+BigInt(r.amount),0n),cap=applicationCap;
     let chosen:Map<string,bigint>|null=null;
-    if(this.c.policy===POLICY_21){const p=fifo<any>(group,cap<total?cap:total);if(p.status!=='ready')return p;chosen=new Map(p.allocations.map(a=>[a.lot.id,a.amount]));}
+    if(this.c.policy===POLICY_21){const p=fifo<any>(eligible?group.filter((r:any)=>eligible!.get(r.lot)):group,cap<total?cap:total);if(p.status!=='ready')return p;chosen=new Map(p.allocations.map(a=>[a.lot.id,a.amount]));}
     else if(cap>0n&&cap<total)return {status:'pending_review',reason:'PARTIAL_MULTI_LOT_BONUS_SOURCE_PRIORITY_REQUIRED'};
     const parts:any[]=[],lines:any[]=[],releaseRecords:any[]=[],claimed=new Map<string,bigint>();
     for(const r of group){const amount=BigInt(r.amount),used=chosen?(chosen.get(r.id)||0n):(cap===0n?0n:amount),consumed=await this.c.account(m,'policy:bonus:'+f.click+':'+r.lot,actor,'reserved','credit');lines.push({accountId:r.reserved,side:'debit',amount});if(used)lines.push({accountId:consumed,side:'credit',amount:used});if(amount>used){if(this.c.policy===POLICY_21){const dest=await returnDestinations(m,actor,f,r.lot,amount-used,claimed);if(dest.status!=='ready')return dest;lines.push(...dest.lines);releaseRecords.push({lot:r.lot,source:r.reserved,items:dest.recoveries});}else lines.push({accountId:r.available,side:'credit',amount:amount-used});}parts.push({reservation:r.id,lot:r.lot,used:used.toString(),available:r.available,consumed});}
@@ -98,7 +109,7 @@ export class PolicyPurchase {
    }
    const [r]=await m.query('SELECT r.*,l.owner,l.available,l.reserved FROM finance_bonus_reservations r JOIN finance_bonus_lots l ON l.id=r.lot WHERE r.id=$1 FOR UPDATE OF r,l',[f.reservation]);
    if(!r||r.owner!==actor||r.click!==f.click||r.state!=='active')throw Error('Active owned reservation required');
-   const amount=BigInt(r.amount),cap=BigInt(selected.payload.cap),used=amount<cap?amount:cap,excess=amount-used;
+   const amount=BigInt(r.amount),cap=applicationCap,used=eligible&&!eligible.get(r.lot)?0n:(amount<cap?amount:cap),excess=amount-used;
    const consumed=await this.c.account(m,'policy:bonus:'+f.click,actor,'reserved','credit');
    const lines=[{accountId:r.reserved,side:'debit' as const,amount},...(used?[{accountId:consumed,side:'credit' as const,amount:used}]:[]),...(excess?[{accountId:r.available,side:'credit' as const,amount:excess}]:[])];
    let release:any=null;if(this.c.policy===POLICY_21&&excess){release=await returnDestinations(m,actor,f,r.lot,excess,new Map());if(release.status!=='ready')return release;lines.splice(lines.length-1,1,...release.lines);}

@@ -1,0 +1,21 @@
+# Prepared financial reader and cutover
+
+Not imported into AppModule. No live endpoints, migrations, grants or writers enabled.
+
+Order: existing 17 migrations, AddFinanceIdentity1793201000000, AddFinanceCutover1793202000000. Use a separately reviewed maintenance transaction with a trusted NOLOGIN owner. Identity migration intentionally refuses LOGIN/superuser owners. It needs temporary approved DDL authority over users; do not grant it to the legacy runtime. Registry creation never changes legacy balances or declares money received.
+
+UUID registry is forward-only after enrollment. Deleting a user preserves issued identities. Inserts ignore caller UUID. Existing User entity deliberately remains unchanged, so an unapplied finance migration cannot break active legacy ORM queries. Financial lookup uses explicit columns only.
+
+Prepare a dedicated DataSource named finance-readonly, username cashback_finance_ro, synchronize=false, migrationsRun=false. Review finance-reader-grants.sql against the exact database. Verify PUBLIC/default ACL, schema/database CREATE/TEMP, memberships, object ownership and function EXECUTE before connection. The role must never inherit write rights. History grants cover only the columns used by the prepared own-lot-account history endpoint.
+
+Prepared GET endpoints: /api/v1/my/bonus-data and /api/v1/my/bonus-data/history. No mutation endpoints. History returns at most 100 recent own lot-account postings, hasMore and complete=false; it is not a full account statement or payout quote. Bank references, request hashes, event keys and counterparties are not returned. No legacy balance fallback.
+
+JWT issuance now captures account_uuid from the same database record used for authentication. UsersService SELECTs project to_jsonb(u)->>'account_uuid' alongside the entity; a missing pre-migration key yields NULL without querying a nonexistent column. Registration INSERT and atomic email-confirmation UPDATE use RETURNING to capture that operation's original row, never a later numeric-id lookup. UUID is stored in server-only WeakMap evidence bound to the entity and id; client/entity account_uuid properties are not accepted. AuthService signs this evidence without new identity creation. Active User ORM metadata remains unchanged.
+
+Before identity migration, ordinary sessions retain legacy claims and behavior; the financial API rejects them. After enrollment, ordinary JWT validation requires the signed UUID to match the fresh server record. Old numeric-only JWTs require reauthentication rather than being upgraded implicitly. A replaced numeric id cannot transfer an old token to the new generation. There is no added refresh endpoint: login/email verification issue tokens, and session reload validates the existing bearer. JWT expiry/signature settings, consent and password checks remain unchanged. Profile also rechecks its returned row against the authenticated UUID. The reader still remains unregistered and needs separately approved migrations/grants/config/deployment.
+
+Cutover is planned for 2026-11-01T00:00:00Z. admission_enabled=false is constrained and immutable. A new separately approved release is required to enable any writers; date alone cannot enable them. Closed admission guard executes before the old terms trigger. Missing dates stay NULL, late pre-cutover events stay historical, existing expiry/obligations remain unchanged. Historical review manifest is append-only and not readable by the public reader. No historical import is performed.
+
+Repeatable isolated SQL test: provide CASHBACK_FINANCE_TEST_DIR pointing to a dedicated D:/Cashback+ archive/reports directory containing that test cluster's pg-connect.json and pg-data. The runner verifies PG17, data directory and fixed synthetic database name before resetting ONLY that synthetic database. Never supply live credentials. It applies all 19 migrations, checks identity/grants/cutover/rollback; it does not connect to Docker. Test role and data are disposable inside that cluster.
+
+Financial launch remains blocked on historical review decisions, separately approved working migrations/grants, issuer/migration rollout and reauthentication, complete statement pagination if required, writer admission release, reconciliation and production deployment approval. Read-only API preparation is not financial activation.

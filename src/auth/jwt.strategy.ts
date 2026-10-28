@@ -1,6 +1,7 @@
 import { requiredJwtSecret } from '../local-configuration';
 import { Injectable, UnauthorizedException, ServiceUnavailableException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
+import {serverAccountUuid,validAccountUuid} from '../users/server-account-identity';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
@@ -28,6 +29,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user || user.id !== sub) throw new UnauthorizedException('Account unavailable');
     // There is no disabled/status column in the current schema. Do not confuse
     // unverified email or a forum-only ban with a disabled application account.
-    return { id: user.id, email: user.email };
+    const hasUuid = Object.prototype.hasOwnProperty.call(payload,'account_uuid');
+    const uuid = (payload as {account_uuid?:unknown}).account_uuid;
+    if(hasUuid&&(!validAccountUuid(uuid)||serverAccountUuid(user)!==uuid))throw new UnauthorizedException('Account identity changed');
+    if(!hasUuid && serverAccountUuid(user))throw new UnauthorizedException('Sign in again to refresh account identity');
+    // Pre-migration sessions retain legacy behavior; identity enrollment requires re-login.
+    return {id:user.id,email:user.email,...(hasUuid?{account_uuid:uuid}: {})};
   }
 }
