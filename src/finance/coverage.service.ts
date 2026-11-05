@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable, Inject, Optional } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import type { EntityManager } from 'typeorm';
@@ -33,6 +34,7 @@ export class CoverageService {
   if(!stored||stored.principalId!==g.principalId||stored.contextId!==g.contextId||stored.purpose!==g.purpose||stored.currency!==g.currency||stored.limitPence!==g.limitPence.toString()||JSON.stringify(stored.allowedLotIds)!==JSON.stringify(g.allowedLotIds))throw Error('Trusted mandate material conflict');
  }
  async createTargetWithManager(m:EntityManager,principal:string,input:SyntheticTargetCommand):Promise<{targetId:string;state:'created'|'reserved';replay:boolean}>{
+  assertFinancialWritesAllowed();
   this.active(m);const c={commandKey:key(input.commandKey),targetId:ref(input.targetId),mandateId:ref(input.mandateId),contextId:ref(input.contextId),currency:input.currency,amountPence:positive(input.amountPence)};
   if(c.currency!=='GBP')throw Error('Synthetic target must use GBP');
   const g=await this.grant(m,principal,c.mandateId,c.contextId);await this.lockGrant(m,g);const hash=evidenceHash([c.targetId,g.principalId,c.mandateId,c.contextId,c.currency,c.amountPence]);
@@ -50,6 +52,7 @@ export class CoverageService {
   let blocked=false;for(const id of lotIds){const s=await this.evidence.inspectLotEvidenceWithManager(m,id);blocked=blocked||s.blocked;}return blocked;
  }
  async reserveWithManager(m:EntityManager,principal:string,input:ReserveCoverageCommand):Promise<HistoricalCoverageResult&{replay:boolean;blocked:boolean}>{
+  assertFinancialWritesAllowed();
   this.active(m);const c={commandKey:key(input.commandKey),targetId:ref(input.targetId),mandateId:ref(input.mandateId),contextId:ref(input.contextId)};
   if(!Array.isArray(input.allocations)||input.allocations.length<1||input.allocations.length>100)throw Error('Invalid coverage allocation list');
   const fragments=input.allocations.map(x=>({lotId:ref(x.lotId),amountPence:positive(x.amountPence)})).sort((a,b)=>a.lotId.localeCompare(b.lotId));
@@ -81,6 +84,7 @@ export class CoverageService {
  }
  /** Future trust/mandate gate only. Not a permission to spend, release, pay or reclassify. */
  async assertReservationUsableWithManager(m:EntityManager,principal:string,reservationId:string,contextId:string):Promise<{restricted:true}>{
+  assertFinancialWritesAllowed();
   this.active(m);await m.query('SELECT pg_advisory_xact_lock(726405, 0)');const [r]=await m.query('SELECT * FROM public.finance_coverage_reservations WHERE id=$1',[ref(reservationId)]);if(!r)throw Error('Unknown synthetic reservation');
   const g=await this.grant(m,principal,r.mandateId,ref(contextId));const rows=await m.query('SELECT "lotId" FROM public.finance_coverage_allocations WHERE "reservationId"=$1 ORDER BY "lotId"',[r.id]);
   if(rows.some((x:any)=>!g.allowedLotIds.includes(x.lotId)))throw Error('Lot outside synthetic mandate');const blocked=await this.prelock(m,rows.map((x:any)=>x.lotId));await this.lockGrant(m,g);if(blocked)throw new CoverageBlockedError(r.id);return {restricted:true};

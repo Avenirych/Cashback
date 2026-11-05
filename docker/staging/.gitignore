@@ -1,0 +1,17 @@
+# Defence in depth; secret provisioning belongs outside this repository.
+.env*
+secrets/
+.secrets/
+*.pem
+*.key
+*.pfx
+*.p12
+*.dpapi
+db_password
+jwt_secret
+smtp_password
+pg_owner_password
+web_key
+pg_key
+mail_key
+mail_auth

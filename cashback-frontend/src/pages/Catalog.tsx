@@ -1,10 +1,11 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useEffect, useState } from "react";
 
 export default function Catalog() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/products")
+    fetch(`${LEGACY_BACKEND_URL}/products`)
       .then(r => r.json())
       .then(setProducts);
   }, []);

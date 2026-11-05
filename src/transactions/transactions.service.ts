@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -24,6 +25,7 @@ export class TransactionsService {
     clickId: number,
     amount: number,
   ) {
+  assertFinancialWritesAllowed();
     const user = await this.userRepo.findOne({
       where: { id: userId },
     });

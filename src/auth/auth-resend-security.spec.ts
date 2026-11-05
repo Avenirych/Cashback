@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../mail/mail.service';
 jest.mock('bcrypt', () => ({hash:jest.fn(),compare:jest.fn()}));
 
-const fixture = { id:101,email:'fixture@example.invalid',name:'Fixture',password:'synthetic-hash',balance:0,email_verified:false,avatar_url:null,created_at:new Date(),email_token:'a'.repeat(64),email_token_expires_at:new Date(Date.now()+86400000) };
+const fixture = { sessionVersion:0, id:101,email:'fixture@example.invalid',name:'Fixture',password:'synthetic-hash',balance:0,email_verified:false,avatar_url:null,created_at:new Date(),email_token:'a'.repeat(64),email_token_expires_at:new Date(Date.now()+86400000) };
 const message = 'If this account exists and requires verification, a verification email has been sent.';
 
 describe('Public resend capability isolation',()=>{

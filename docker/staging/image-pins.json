@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "platform": "linux/amd64",
+  "verifiedMetadataDate": "2026-10-30",
+  "scope": "Manifest/config hashes and platform verified; not vulnerability/signature/runtime approval.",
+  "images": {
+    "node": "node:24.22.2-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c",
+    "postgres": "postgres:17.11-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+    "nginx": "nginx:1.28.3-alpine@sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236",
+    "mailpit": "axllent/mailpit:v1.32.0@sha256:0790692be935ea4420d085694f7985b1f692ca6a8771ab0e0bd8ba75ac180498",
+    "dockerfile": "docker/dockerfile:1.27.1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e"
+  }
+}

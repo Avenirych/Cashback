@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import {
   BadRequestException,
   ConflictException,
@@ -168,6 +169,7 @@ export class BonusService {
     bonusIds: string[],
     idempotencyKey: string,
   ): Promise<BonusTransfer[]> {
+  assertFinancialWritesAllowed();
     if (
       typeof toUsername !== 'string' ||
       !/^[A-Za-z0-9_]{3,30}$/.test(toUsername.trim())
@@ -346,12 +348,14 @@ export class BonusService {
   }
 
   async spendBonusesOnPurchase(): Promise<never> {
+  assertFinancialWritesAllowed();
     throw new NotImplementedException(
       'Purchases are disabled until server-side orders and trusted pricing are implemented',
     );
   }
 
   async expireOldBonuses(): Promise<number> {
+  assertFinancialWritesAllowed();
     const result = await this.dataSource
       .getRepository(BonusItem)
       .update(

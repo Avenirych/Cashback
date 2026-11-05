@@ -1,4 +1,7 @@
-import { localConfiguration } from './local-configuration';
+import { APP_GUARD } from '@nestjs/core';
+import { FinancialWriteGuard } from './financial-write-deny';
+import { backendConfiguration } from './backend-configuration';
+import { createBackendDataSource } from './backend-database';
 import {ActivityModule} from './activity/activity.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -13,13 +16,17 @@ import { MarketingPreferencesModule } from './marketing-preferences/marketing-pr
 import { BonusModule } from './bonus/bonus.module';
 
 @Module({
+  providers: [{ provide: APP_GUARD, useClass: FinancialWriteGuard }],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,
     }),
 
-    TypeOrmModule.forRoot(localConfiguration().database),
+    TypeOrmModule.forRootAsync({
+      useFactory: () => backendConfiguration().database,
+      dataSourceFactory: createBackendDataSource,
+    }),
     ActivityModule,
 
     UsersModule,

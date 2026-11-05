@@ -16,7 +16,9 @@ const labels: Record<string, Record<string, string>> = {
     login: "Login / Register",
     profile: "Profile",
     dashboard: "Dashboard",
-    logout: "Logout",
+    logout: "Log out on all devices",
+    logoutConfirmed: "Signed out on all devices.",
+    logoutUnconfirmed: "Local sign-out completed; server revocation is unconfirmed.",
   },
   ru: {
     about: "О нас",
@@ -25,7 +27,9 @@ const labels: Record<string, Record<string, string>> = {
     login: "Вход / Регистрация",
     profile: "Профиль",
     dashboard: "Личный кабинет",
-    logout: "Выйти",
+    logout: "Выйти на всех устройствах",
+    logoutConfirmed: "Выполнен выход на всех устройствах.",
+    logoutUnconfirmed: "Локальный выход выполнен; серверный отзыв не подтверждён.",
   },
   de: {
     about: "Über uns",
@@ -34,7 +38,9 @@ const labels: Record<string, Record<string, string>> = {
     login: "Anmelden / Registrieren",
     profile: "Profil",
     dashboard: "Dashboard",
-    logout: "Abmelden",
+    logout: "Auf allen Geräten abmelden",
+    logoutConfirmed: "Auf allen Geräten abgemeldet.",
+    logoutUnconfirmed: "Lokal abgemeldet; serverseitiger Widerruf nicht bestätigt.",
   },
   fr: {
     about: "À propos",
@@ -43,7 +49,9 @@ const labels: Record<string, Record<string, string>> = {
     login: "Connexion / Inscription",
     profile: "Profil",
     dashboard: "Tableau de bord",
-    logout: "Déconnexion",
+    logout: "Déconnexion de tous les appareils",
+    logoutConfirmed: "Déconnexion de tous les appareils effectuée.",
+    logoutUnconfirmed: "Déconnexion locale effectuée ; révocation serveur non confirmée.",
   },
 };
 
@@ -53,6 +61,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [logoutResult, setLogoutResult] = useState<boolean | null>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const [failedAvatar, setFailedAvatar] = useState<string | null>(null);
 
@@ -103,11 +112,12 @@ export default function Header() {
       .join("")
       .toUpperCase() || "U";
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    const result = logout();
     setMenuOpen(false);
     setFailedAvatar(null);
     navigate("/");
+    setLogoutResult(await result);
   };
 
   return (
@@ -125,6 +135,7 @@ export default function Header() {
         borderBottom: "1px solid rgba(0,0,0,0.08)",
       }}
     >
+      {logoutResult !== null && <span role="status">{logoutResult ? t.logoutConfirmed : t.logoutUnconfirmed}</span>}
       {/* LOGO */}
       <Link
         to="/"

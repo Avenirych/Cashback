@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,6 +19,7 @@ export class WithdrawalService {
   ) {}
 
   async requestWithdrawal(userId: number, amount: number, method: string, details: string) {
+  assertFinancialWritesAllowed();
     const user = await this.usersService.getById(userId);
     if (!user) throw new BadRequestException('User not found');
 
@@ -53,6 +55,7 @@ export class WithdrawalService {
   }
 
   async approve(id: number) {
+  assertFinancialWritesAllowed();
     const withdrawal = await this.withdrawalRepo.findOne({ where: { id } });
     if (!withdrawal) throw new BadRequestException('Withdrawal not found');
 
@@ -61,6 +64,7 @@ export class WithdrawalService {
   }
 
   async reject(id: number) {
+  assertFinancialWritesAllowed();
     const withdrawal = await this.withdrawalRepo.findOne({ where: { id } });
     if (!withdrawal) throw new BadRequestException('Withdrawal not found');
 

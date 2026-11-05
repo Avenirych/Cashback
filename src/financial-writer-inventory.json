@@ -1,0 +1,478 @@
+[
+  {
+    "file": "src/bonus/bonus.service.ts",
+    "class": "BonusService",
+    "method": "transferBonuses",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/bonus/bonus.service.ts",
+    "class": "BonusService",
+    "method": "spendBonusesOnPurchase",
+    "parameters": 0,
+    "async": true
+  },
+  {
+    "file": "src/bonus/bonus.service.ts",
+    "class": "BonusService",
+    "method": "expireOldBonuses",
+    "parameters": 0,
+    "async": true
+  },
+  {
+    "file": "src/balance/balance.service.ts",
+    "class": "BalanceService",
+    "method": "addOperation",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/bonus-transfer/bonus-transfer.service.ts",
+    "class": "BonusTransferService",
+    "method": "transfer",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/withdrawal/withdrawal.service.ts",
+    "class": "WithdrawalService",
+    "method": "requestWithdrawal",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/withdrawal/withdrawal.service.ts",
+    "class": "WithdrawalService",
+    "method": "approve",
+    "parameters": 1,
+    "async": true
+  },
+  {
+    "file": "src/withdrawal/withdrawal.service.ts",
+    "class": "WithdrawalService",
+    "method": "reject",
+    "parameters": 1,
+    "async": true
+  },
+  {
+    "file": "src/cashback/cashback.service.ts",
+    "class": "CashbackService",
+    "method": "addCashback",
+    "parameters": 2,
+    "async": true
+  },
+  {
+    "file": "src/transactions/transactions.service.ts",
+    "class": "TransactionsService",
+    "method": "createTransaction",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/users/users.service.ts",
+    "class": "UsersService",
+    "method": "updateBalance",
+    "parameters": 2,
+    "async": true
+  },
+  {
+    "file": "src/finance/approved-bonus-operations.ts",
+    "class": "ApprovedBonusOperations",
+    "method": "settle",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/approved-bonus-operations.ts",
+    "class": "ApprovedBonusOperations",
+    "method": "transfer",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/bank-receipts.service.ts",
+    "class": "BankReceiptsService",
+    "method": "registerWithManager",
+    "parameters": 2,
+    "async": true
+  },
+  {
+    "file": "src/finance/bonus-use-terms.ts",
+    "class": "BonusUseTerms",
+    "method": "attach",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-candidates.service.ts",
+    "class": "ClassificationCandidatesService",
+    "method": "createLinkedRequestWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-candidates.service.ts",
+    "class": "ClassificationCandidatesService",
+    "method": "createCandidateWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-candidates.service.ts",
+    "class": "ClassificationCandidatesService",
+    "method": "reviewCandidateWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-corrections.service.ts",
+    "class": "ClassificationCorrectionsService",
+    "method": "authorizeForCorrectionWithManager",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-corrections.service.ts",
+    "class": "ClassificationCorrectionsService",
+    "method": "requestCorrectionWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-corrections.service.ts",
+    "class": "ClassificationCorrectionsService",
+    "method": "lockRequestWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-corrections.service.ts",
+    "class": "ClassificationCorrectionsService",
+    "method": "assertIndependentWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-corrections.service.ts",
+    "class": "ClassificationCorrectionsService",
+    "method": "stateWithManager",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification-corrections.service.ts",
+    "class": "ClassificationCorrectionsService",
+    "method": "reviewWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification.service.ts",
+    "class": "ClassificationService",
+    "method": "classifyWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/classification.service.ts",
+    "class": "ClassificationService",
+    "method": "requestCorrectionWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/coverage.service.ts",
+    "class": "CoverageService",
+    "method": "createTargetWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/coverage.service.ts",
+    "class": "CoverageService",
+    "method": "reserveWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/coverage.service.ts",
+    "class": "CoverageService",
+    "method": "assertReservationUsableWithManager",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "observeWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "approveWithManager",
+    "parameters": 6,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "revokeWithManager",
+    "parameters": 5,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "recheckWithManager",
+    "parameters": 6,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "restoreWithManager",
+    "parameters": 5,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "verify",
+    "parameters": 0,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "verifyWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "bindReceiptWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "inspectLotEvidenceWithManager",
+    "parameters": 2,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "assertLotEvidenceWithManager",
+    "parameters": 2,
+    "async": true
+  },
+  {
+    "file": "src/finance/evidence.service.ts",
+    "class": "EvidenceService",
+    "method": "historyWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/finance-events.service.ts",
+    "class": "FinanceEventsService",
+    "method": "postEventWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/finance.service.ts",
+    "class": "FinanceService",
+    "method": "post",
+    "parameters": 2,
+    "async": true
+  },
+  {
+    "file": "src/finance/finance.service.ts",
+    "class": "FinanceService",
+    "method": "postWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/lot-operations.ts",
+    "class": "LotOperations",
+    "method": "execute",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-context.ts",
+    "class": "PolicyContext",
+    "method": "enter",
+    "parameters": 5,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-context.ts",
+    "class": "PolicyContext",
+    "method": "record",
+    "parameters": 7,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-context.ts",
+    "class": "PolicyContext",
+    "method": "command",
+    "parameters": 5,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-context.ts",
+    "class": "PolicyContext",
+    "method": "account",
+    "parameters": 6,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-context.ts",
+    "class": "PolicyContext",
+    "method": "post",
+    "parameters": 2,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-coverage.ts",
+    "class": "PolicyCoverage",
+    "method": "release",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-debt-refund.ts",
+    "class": "PolicyDebtRefund",
+    "method": "collect",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-debt-refund.ts",
+    "class": "PolicyDebtRefund",
+    "method": "collectOwned",
+    "parameters": 2,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-debt-refund.ts",
+    "class": "PolicyDebtRefund",
+    "method": "refund",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-debt-refund.ts",
+    "class": "PolicyDebtRefund",
+    "method": "externalRepayment",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-debt-refund.ts",
+    "class": "PolicyDebtRefund",
+    "method": "feeLiability",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-debt-refund.ts",
+    "class": "PolicyDebtRefund",
+    "method": "linkedRecovery",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-debt-refund.ts",
+    "class": "PolicyDebtRefund",
+    "method": "recalculateReservation",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-payout.ts",
+    "class": "PolicyPayout",
+    "method": "claim",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-payout.ts",
+    "class": "PolicyPayout",
+    "method": "outcome",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-purchase.ts",
+    "class": "PolicyPurchase",
+    "method": "reserve",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-purchase.ts",
+    "class": "PolicyPurchase",
+    "method": "ingest",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-purchase.ts",
+    "class": "PolicyPurchase",
+    "method": "select",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-purchase.ts",
+    "class": "PolicyPurchase",
+    "method": "apply",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/policy-purchase.ts",
+    "class": "PolicyPurchase",
+    "method": "cancel",
+    "parameters": 4,
+    "async": true
+  },
+  {
+    "file": "src/finance/purchase-lifecycle.ts",
+    "class": "PurchaseLifecycle",
+    "method": "record",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/purchase-linkage.ts",
+    "class": "PurchaseLinkageService",
+    "method": "recordClickWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/purchase-linkage.ts",
+    "class": "PurchaseLinkageService",
+    "method": "recordOrderWithManager",
+    "parameters": 3,
+    "async": true
+  },
+  {
+    "file": "src/finance/receipt-settlement.ts",
+    "class": "ReceiptSettlement",
+    "method": "execute",
+    "parameters": 3,
+    "async": true
+  }
+]

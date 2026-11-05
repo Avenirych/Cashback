@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { ClassificationCorrectionsService } from './classification-corrections.service';
 import { Injectable, Inject, Optional } from '@nestjs/common';
 import { DataSource } from 'typeorm';
@@ -44,6 +45,7 @@ export class ClassificationService {
   return {...r,blocked:trust.blocked};
  }
  async classifyWithManager(m:EntityManager,principal:string,input:ClassifyReceiptCommand):Promise<ClassificationResult&{replay:boolean;blocked:boolean}>{
+  assertFinancialWritesAllowed();
   this.active(m);const c={commandKey:key(input.commandKey),receiptId:ref(input.receiptId),contextId:ref(input.contextId)};
   if(!Array.isArray(input.parts)||input.parts.length<1||input.parts.length>100)throw Error('Invalid classification parts');
   const parts=input.parts.map(p=>({partId:ref(p.partId),facts:canonicalSourceFacts({...p,receiptId:c.receiptId})})).sort((a,b)=>a.facts.offsetPence<b.facts.offsetPence?-1:a.facts.offsetPence>b.facts.offsetPence?1:a.partId.localeCompare(b.partId));
@@ -66,6 +68,7 @@ export class ClassificationService {
   return {...result,replay:false,blocked:false};
  }
  async requestCorrectionWithManager(m:EntityManager,principal:string,input:CorrectionRequestCommand):Promise<{requestId:string;partId:string;reason:string;createdAt:string;status:'requested';replay:boolean}>{
+  assertFinancialWritesAllowed();
   if(!this.corrections)throw Error('Trusted correction service is not configured; classify_source fallback forbidden');
   return this.corrections.requestCorrectionWithManager(m,principal,input);
  }

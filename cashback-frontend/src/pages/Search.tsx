@@ -1,3 +1,4 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useState } from "react";
 
 export default function Search() {
@@ -5,7 +6,7 @@ export default function Search() {
   const [results, setResults] = useState([]);
 
   const search = () => {
-    fetch(`http://localhost:3000/search?query=${query}`)
+    fetch(`${LEGACY_BACKEND_URL}/search?query=${query}`)
       .then(r => r.json())
       .then(setResults);
   };

@@ -1,3 +1,4 @@
+import {functionalStagingActive} from '../staging-functional';
 /** No sentiment filter and no automatic strikes. Every new item needs a human decision. */
 export function moderationSignals(text: string): string[] {
   const value = text.normalize('NFKC').toLowerCase();
@@ -26,5 +27,5 @@ export function restriction(confirmed: Date[], now = new Date()) {
   const until = last && dates.length >= 2 ? calendarMonths(last, dates.length === 2 ? 1 : 6) : null;
   return {level: dates.length, blocked: !!until && until > now, until};
 }
-export const contentModerationEnabled = () => process.env.CASHBACK_CONTENT_MODERATION === 'true';
+export const contentModerationEnabled = () => (process.env.CASHBACK_CONTENT_MODERATION === 'true' || functionalStagingActive());
 export const CURRENT_FORUM_RULES_VERSION = '2026-10-22-reviews-v1';

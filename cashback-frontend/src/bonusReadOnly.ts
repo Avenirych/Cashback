@@ -1,6 +1,7 @@
 import {registrationIsolated} from './registrationIsolation';
 /** Read-only access to the reviewed historical backend; writes remain isolated. */
 export function localBonusReadOnly(href=window.location.href):boolean {
+ if(process.env.REACT_APP_STAGING==='true')return false;
  if(process.env.REACT_APP_BONUS_READ_ONLY!=='true'||
  process.env.REACT_APP_DEMO_ONLY!=='true'||process.env.REACT_APP_REGISTRATION_ISOLATED!=='true')return false;
  try{

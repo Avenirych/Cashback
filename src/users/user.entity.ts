@@ -29,6 +29,18 @@ export class User {
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
   balance: number;
 
+  @Column({ type: 'integer', name: 'session_version', default: 0, select: false })
+  sessionVersion: number;
+
+  @Column({type:'bytea',name:'password_reset_digest',nullable:true,select:false})
+  passwordResetDigest: Buffer | null;
+
+  @Column({type:'timestamptz',name:'password_reset_expires_at',nullable:true,select:false})
+  passwordResetExpiresAt: Date | null;
+
+  @Column({type:'integer',name:'password_reset_session_version',nullable:true,select:false})
+  passwordResetSessionVersion: number | null;
+
   @Column({ type: 'boolean', default: false })
   email_verified: boolean;
 

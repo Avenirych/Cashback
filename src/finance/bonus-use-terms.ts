@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import type {EntityManager} from 'typeorm';
 import {applicationWindow,ApplicationWindow,canApply,purchaseCap,BONUS_USE_RULES} from './bonus-use-policy';
 import {PolicyContext} from './policy-context';
@@ -11,6 +12,7 @@ export class BonusUseTerms {
   if(m?.connection!==this.c.source||!r||r.connection!==this.c.source||r.manager!==m||r.isReleased||!r.isTransactionActive)throw Error('Active caller transaction required');
  }
  async attach(m:EntityManager,lot:string,basis:'receipt'|'transfer',reference:string){
+  assertFinancialWritesAllowed();
   this.check(m);
   const old=await m.query('SELECT basis,reference FROM finance_bonus_use_terms WHERE lot=$1',[lot]);
   if(old.length){if(old[0].basis!==basis||old[0].reference!==reference)throw Error('Application terms conflict');return;}

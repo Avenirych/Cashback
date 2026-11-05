@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import {createHash,randomUUID} from 'node:crypto';
 import type {DataSource,EntityManager} from 'typeorm';
 import {FinanceService} from './finance.service';
@@ -29,6 +30,7 @@ export type LotResult={status:'completed'|'pending_review';amountPence:string;re
 export class LotOperations {
  constructor(private readonly source:DataSource,private readonly ledger:FinanceService,private readonly authority:LotAuthority=new DisabledLotAuthority()){}
  async execute(manager:EntityManager,principal:string,key:string,input:LotCommand):Promise<LotResult>{
+  assertFinancialWritesAllowed();
   const r=manager?.queryRunner;
   if(manager?.connection!==this.source||!r||r.connection!==this.source||r.manager!==manager||r.isReleased||!r.isTransactionActive)throw new Error('Active caller transaction required');
   if(!/^[A-Za-z0-9:_-]{8,160}$/.test(key))throw new Error('Stable command key required');

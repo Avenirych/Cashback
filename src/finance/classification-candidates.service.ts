@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable, Inject, Optional } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import type { EntityManager } from 'typeorm';
@@ -24,6 +25,7 @@ export class ClassificationCandidatesService {
  private base(part:any){return evidenceHash([part.id,part.receiptId,part.currency,part.offsetPence,part.amountPence,part.category,part.sourceNamespace,part.sourceEventId,part.basisReference,[...part.documentReferences].sort()]);}
  private response(c:any,op:any,replay:boolean){return {candidateId:c.id,requestId:c.requestId,originalPartId:c.originalPartId,baseVersion:c.baseVersion,fingerprint:c.fingerprint,metadata:c.metadata,operationVersion:c.operationVersion,createdAt:new Date(c.createdAt).toISOString(),replay,blocked:op.state!=='eligible',stale:c.operationVersion!==op.version,applicationImplemented:false as const};}
  async createLinkedRequestWithManager(m:EntityManager,principal:string,input:{commandKey:string;parentRequestId:string;contextId:string;reason:string}){
+  assertFinancialWritesAllowed();
   this.active(m);fields(input,['commandKey','parentRequestId','contextId','reason']);const c={commandKey:key(input.commandKey),parentRequestId:ref(input.parentRequestId),contextId:ref(input.contextId),reason:text(input.reason)};
   const a=await this.corrections.authorizeForCorrectionWithManager(m,principal,c.contextId,'request_classification_correction');const x=await this.request(m,c.parentRequestId,c.contextId);
   const ancestry=await m.query('WITH RECURSIVE ancestry AS (SELECT id,"participantId","linkedFromRequestId" FROM public.finance_classification_correction_requests WHERE id=$1 UNION ALL SELECT p.id,p."participantId",p."linkedFromRequestId" FROM public.finance_classification_correction_requests p JOIN ancestry a ON p.id=a."linkedFromRequestId") SELECT id,"participantId" FROM ancestry',[x.r.id]);if(ancestry.some((v:any)=>!v.participantId))throw Error('Historical linked identity is unverified');
@@ -32,6 +34,7 @@ export class ClassificationCandidatesService {
   const id=randomUUID();await m.query('INSERT INTO public.finance_classification_correction_requests(id,"commandKey","requestHash","partId",reason,"actorId","contextId",status,"participantId","linkedFromRequestId") VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',[id,c.commandKey,hash,x.r.partId,c.reason,a.principalId,a.contextId,'requested',a.participantId,x.r.id]);return {requestId:id,linkedFromRequestId:x.r.id,replay:false};
  }
  async createCandidateWithManager(m:EntityManager,principal:string,input:CandidateCommand){
+  assertFinancialWritesAllowed();
   this.active(m);fields(input,['commandKey','requestId','contextId','expectedBaseVersion','expectedOperationVersion','metadata']);fields(input.metadata,['category','sourceNamespace','sourceEventId','basisReference','documentReferences']);if(input.expectedBaseVersion!==0||!Number.isSafeInteger(input.expectedOperationVersion)||input.expectedOperationVersion<1)throw Error('Unsupported candidate base/evidence version');
   const expectedOperationVersion=input.expectedOperationVersion;
   const ctx=ref(input.contextId),rid=ref(input.requestId),k=key(input.commandKey);const metadata={...input.metadata,documentReferences:[...input.metadata.documentReferences]};const a=await this.corrections.authorizeForCorrectionWithManager(m,principal,ctx,'request_classification_correction');const x=await this.request(m,rid,ctx);if(x.r.participantId!==a.participantId)throw Error('Trusted candidate initiator must own request');
@@ -43,6 +46,7 @@ export class ClassificationCandidatesService {
   const [c]=await m.query('INSERT INTO public.finance_classification_correction_candidates(id,"requestId","originalPartId","baseVersion","baseHash",metadata,"operationId","operationVersion","actorId","participantId","contextId",fingerprint,"intentFingerprint","verificationId","verifierReference","commandKey","requestHash") VALUES($1,$2,$3,$4,$5,$6::jsonb,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING *',[id,rid,x.part.id,0,baseHash,JSON.stringify(normalized),x.op.id,x.op.version,a.principalId,a.participantId,a.contextId,fingerprint,intentFingerprint,ref(proof.verificationId),proof.verifierReference,k,hash]);return this.response(c,x.op,false);
  }
  async reviewCandidateWithManager(m:EntityManager,principal:string,input:ExactCandidateReviewCommand){
+  assertFinancialWritesAllowed();
   this.active(m);fields(input,['commandKey','candidateId','fingerprint','contextId','decision','reason','basisReference','expectedOperationVersion']);if(!['approved','rejected'].includes(input.decision)||!Number.isSafeInteger(input.expectedOperationVersion)||input.expectedOperationVersion<1||typeof input.fingerprint!=='string'||!/^[0-9a-f]{64}$/.test(input.fingerprint))throw Error('Invalid exact candidate decision');
   const c={commandKey:key(input.commandKey),candidateId:ref(input.candidateId),fingerprint:input.fingerprint,contextId:ref(input.contextId),decision:input.decision,reason:text(input.reason),basisReference:ref(input.basisReference),version:input.expectedOperationVersion};const a=await this.corrections.authorizeForCorrectionWithManager(m,principal,c.contextId,'review_classification_correction');
   const [hint]=await m.query('SELECT * FROM public.finance_classification_correction_candidates WHERE id=$1',[c.candidateId]);if(!hint||hint.contextId!==c.contextId)throw Error('Unknown candidate in context');const x=await this.request(m,hint.requestId,c.contextId);await this.corrections.assertIndependentWithManager(m,x.r,a.participantId);if(hint.participantId===a.participantId)throw Error('Independent candidate participant required');

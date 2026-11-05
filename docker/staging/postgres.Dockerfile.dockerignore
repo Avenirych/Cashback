@@ -1,0 +1,35 @@
+# Staging-only allowlist; takes precedence over root .dockerignore.
+**
+!docker/
+!docker/staging/
+!docker/staging/postgres.Dockerfile
+!docker/staging/postgres-entry.sh
+!docker/staging/pg_hba.conf
+
+# Secret/data exclusions apply after allowlists, including extensionless file secrets.
+**/node_modules
+**/.git
+**/.env*
+**/.npmrc
+**/*.pem
+**/*.key
+**/*.pfx
+**/*.p12
+**/*.dpapi
+**/*.dump
+**/*.db
+**/*.sqlite*
+**/secrets
+**/.secrets
+**/db_password
+**/jwt_secret
+**/smtp_password
+**/pg_owner_password
+**/web_key
+**/mail_key
+**/pg_key
+**/mail_auth
+**/build
+**/dist
+**/coverage
+**/*.log

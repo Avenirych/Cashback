@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable, Inject, Optional } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import type { EntityManager } from 'typeorm';
@@ -20,6 +21,7 @@ export class ClassificationCorrectionsService {
  constructor(private readonly ds:DataSource,private readonly evidence:EvidenceService,@Optional() @Inject(CORRECTION_AUTHORITY) private readonly authority?:CorrectionAuthority){}
  private active(m:EntityManager){const r=m?.queryRunner;if(m?.connection!==this.ds||!r||r.connection!==this.ds||r.manager!==m||!r.isTransactionActive||r.isReleased)throw Error('Active correction transaction manager required');}
  async authorizeForCorrectionWithManager(m:EntityManager,principal:string,context:string,right:CorrectionRight){
+  assertFinancialWritesAllowed();
   this.active(m);const [isolation]=await m.query('SHOW transaction_isolation');if(isolation?.transaction_isolation!=='read committed')throw Error('Correction review currently requires READ COMMITTED; future application needs SERIALIZABLE');
   await m.query('SELECT pg_advisory_xact_lock(726405, 0)');if(!this.authority)throw Error('Trusted correction authority is not configured');
   const a=await this.authority.authorizeWithManager(m,ref(principal),context,right);
@@ -35,6 +37,7 @@ export class ClassificationCorrectionsService {
  }
  private result(r:any,replay:boolean){return {requestId:r.id,partId:r.partId,reason:r.reason,createdAt:new Date(r.createdAt).toISOString(),status:'requested' as const,replay};}
  async requestCorrectionWithManager(m:EntityManager,principal:string,input:CorrectionRequestCommand){
+  assertFinancialWritesAllowed();
   fields(input,['commandKey','partId','contextId','reason']);const c={commandKey:key(input.commandKey),partId:ref(input.partId),contextId:ref(input.contextId),reason:reason(input.reason)};
   const a=await this.authorizeForCorrectionWithManager(m,principal,c.contextId,'request_classification_correction');await this.lockPart(m,c.partId,c.contextId);
   const hash=evidenceHash([c.partId,c.reason,a]);const [old]=await m.query('SELECT * FROM public.finance_classification_correction_requests WHERE "commandKey"=$1',[c.commandKey]);
@@ -42,10 +45,12 @@ export class ClassificationCorrectionsService {
   const id=randomUUID();const [r]=await m.query('INSERT INTO public.finance_classification_correction_requests(id,"commandKey","requestHash","partId",reason,"actorId","contextId",status,"participantId") VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',[id,c.commandKey,hash,c.partId,c.reason,a.principalId,a.contextId,'requested',a.participantId]);return this.result(r,false);
  }
  async lockRequestWithManager(m:EntityManager,requestId:string,context:string){
+  assertFinancialWritesAllowed();
   const [origin]=await m.query('SELECT * FROM public.finance_classification_correction_requests WHERE id=$1',[requestId]);if(!origin||origin.contextId!==context)throw Error('Unknown correction request in context');
   const part=await this.lockPart(m,origin.partId,context);const [r]=await m.query('SELECT * FROM public.finance_classification_correction_requests WHERE id=$1 FOR UPDATE',[requestId]);return {r,...part};
  }
  async assertIndependentWithManager(m:EntityManager,r:any,participantId:string):Promise<void>{
+  assertFinancialWritesAllowed();
   if(!r.participantId)throw Error('Historical correction identity is unverified');
   if(r.participantId===participantId)throw Error('Independent correction participant required');
   if(r.linkedFromRequestId){const rows=await m.query('WITH RECURSIVE ancestry AS (SELECT id,"participantId","linkedFromRequestId" FROM public.finance_classification_correction_requests WHERE id=$1 UNION ALL SELECT p.id,p."participantId",p."linkedFromRequestId" FROM public.finance_classification_correction_requests p JOIN ancestry a ON p.id=a."linkedFromRequestId") SELECT id,"participantId" FROM ancestry',[r.id]);if(rows.some((x:any)=>!x.participantId||x.participantId===participantId))throw Error('Independent verified ancestry participant required');}
@@ -55,9 +60,11 @@ export class ClassificationCorrectionsService {
   return {requestId:r.id,status,operationVersion:op.version,blocked:op.state!=='eligible',decisionId:now?.id??null,applicationImplemented:false};
  }
  async stateWithManager(m:EntityManager,principal:string,requestId:string,contextId:string):Promise<CorrectionCurrentState>{
+  assertFinancialWritesAllowed();
   const ctx=ref(contextId);await this.authorizeForCorrectionWithManager(m,principal,ctx,'review_classification_correction');const {r,op}=await this.lockRequestWithManager(m,ref(requestId),ctx);const rows=await m.query('SELECT * FROM public.finance_classification_correction_decisions WHERE "requestId"=$1 ORDER BY "operationVersion",id',[r.id]);return this.current(r,op,rows);
  }
  async reviewWithManager(m:EntityManager,principal:string,input:ReviewCorrectionCommand){
+  assertFinancialWritesAllowed();
   fields(input,['commandKey','requestId','contextId','decision','reason','basisReference','expectedOperationVersion']);
   if(!['approved','rejected'].includes(input.decision)||!Number.isSafeInteger(input.expectedOperationVersion)||input.expectedOperationVersion<1)throw Error('Invalid correction decision/version');
   const c={commandKey:key(input.commandKey),requestId:ref(input.requestId),contextId:ref(input.contextId),decision:input.decision,reason:reason(input.reason),basisReference:ref(input.basisReference),expectedOperationVersion:input.expectedOperationVersion};

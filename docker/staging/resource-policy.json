@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "services": {
+    "postgres": {
+      "mem_limit": "512m",
+      "memswap_limit": "512m",
+      "cpus": 0.25,
+      "pids_limit": 128
+    },
+    "backend": {
+      "mem_limit": "640m",
+      "memswap_limit": "640m",
+      "cpus": 0.4,
+      "pids_limit": 128
+    },
+    "mail": {
+      "mem_limit": "128m",
+      "memswap_limit": "128m",
+      "cpus": 0.1,
+      "pids_limit": 64
+    },
+    "frontend": {
+      "mem_limit": "128m",
+      "memswap_limit": "128m",
+      "cpus": 0.1,
+      "pids_limit": 64
+    }
+  },
+  "minimumGuestMemTotalMiB": 2800,
+  "minimumGuestAvailableMiB": 2304,
+  "minimumGuestFreeGiB": 10,
+  "minimumHostDFreeGiB": 80,
+  "minimumHostAvailableGiB": 2,
+  "guestEngineId": "9c7d502b-f027-4b4d-bb41-0c57d5b10907",
+  "dataRoot": "/var/lib/docker",
+  "maximumSyntheticPgVolumeGiB": 3,
+  "maximumAvatarVolumeGiB": 0.25,
+  "volumeQuotaEnforced": false,
+  "volumeQuotaStatus": "BLOCKED: ext4 local named-volume hard quota not configured; a free-space check is not a quota.",
+  "buildsInCurrentVmAllowed": false,
+  "postgresSettings": {
+    "shared_buffers": "64MB",
+    "max_connections": "20",
+    "work_mem": "2MB",
+    "maintenance_work_mem": "32MB",
+    "max_wal_size": "256MB",
+    "log_statement": "none",
+    "log_min_error_statement": "panic",
+    "log_parameter_max_length": "0",
+    "log_parameter_max_length_on_error": "0"
+  }
+}

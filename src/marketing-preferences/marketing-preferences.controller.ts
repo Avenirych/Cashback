@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MarketingPreferencesService } from './marketing-preferences.service';
@@ -14,6 +15,7 @@ export class MarketingPreferencesController {
     return this.service.getPreferences(req.user.id);
   }
 
+  @NonFinancialMutation()
   @Post()
   updatePreferences(@Req() req: PreferencesRequest, @Body() body: unknown) {
     return this.service.updatePreferences(req.user.id, parseMarketingPreferences(body));

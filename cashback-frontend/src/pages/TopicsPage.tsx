@@ -1,3 +1,4 @@
+import {useFunctionalPermission,functionalStagingBuild} from '../components/FunctionalStagingGate';
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router-dom";
@@ -35,7 +36,8 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
     forumBanned,
   } = useAuth();
 
-  const canWrite =
+  const publicationAllowed=useFunctionalPermission('publication');
+  const canWrite = publicationAllowed &&
     !!user?.email_verified &&
     !!token &&
     forumSessionActive &&
@@ -197,7 +199,7 @@ export default function TopicsPage({ lang }: TopicsPageProps) {
           ))}
 
         {/* Обмен бонусами: компактный трей, изначально закрыт */}
-        {canWrite && (
+        {canWrite && !functionalStagingBuild && (
           <details
             style={{
               marginTop: 16,

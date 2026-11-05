@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,6 +15,7 @@ export class CashbackService {
   ) {}
 
   async addCashback(userId: number, amount: number) {
+  assertFinancialWritesAllowed();
     const user = await this.usersService.getById(userId);
     if (!user) throw new BadRequestException('User not found');
 

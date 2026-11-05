@@ -1,10 +1,11 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useEffect, useState } from "react";
 
 export default function Transactions() {
   const [tx, setTx] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/transactions")
+    fetch(`${LEGACY_BACKEND_URL}/transactions`)
       .then(r => r.json())
       .then(setTx);
   }, []);

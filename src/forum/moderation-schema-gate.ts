@@ -1,3 +1,4 @@
+import {functionalStagingActive,functionalWriteAllowed} from '../staging-functional';
 import {Injectable,OnApplicationBootstrap,ServiceUnavailableException} from '@nestjs/common';
 import {DataSource} from 'typeorm';
 import type {Request,Response,NextFunction} from 'express';
@@ -5,6 +6,7 @@ import {localDemoReviewsEnabled} from './local-demo-reviews';
 export const MODERATION_SCHEMA_VERSION=3;
 export function forumWriteBarrier(req:Request,res:Response,next:NextFunction){
  const path=req.path.toLowerCase().replace(/\/+$/,'')||'/';
+ if(functionalStagingActive()&&(['GET','HEAD','OPTIONS'].includes(req.method.toUpperCase())||functionalWriteAllowed(req.method,path))){next();return;}
  const demo=localDemoReviewsEnabled();
  if(process.env.CASHBACK_DEMO_ONLY==='true' && ((!demo && path==='/auth/register' && req.method.toUpperCase()==='POST') || path==='/forum/moderation'||path.startsWith('/forum/moderation/'))){res.status(503).json({message:'Demo mode: registration and moderation operations are closed'});return;}
  // These authenticated personal-profile operations cannot publish a topic/post/review.

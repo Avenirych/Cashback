@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { PromoService } from './promo.service';
 
@@ -15,6 +16,7 @@ export class PromoController {
     return this.promoService.getPromoByCode(code);
   }
 
+  @NonFinancialMutation()
   @Post()
   createPromo(@Body() body: any) {
     return this.promoService.createPromo(body);

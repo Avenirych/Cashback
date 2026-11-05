@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,6 +19,7 @@ export class BonusTransferService {
   ) {}
 
   async transfer(senderId: number, receiverId: number, amount: number) {
+  assertFinancialWritesAllowed();
     const sender = await this.usersService.getById(senderId);
     if (!sender) throw new BadRequestException('Sender not found');
 

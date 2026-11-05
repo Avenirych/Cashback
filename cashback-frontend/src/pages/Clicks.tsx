@@ -1,10 +1,11 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useEffect, useState } from "react";
 
 export default function Clicks() {
   const [clicks, setClicks] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/clicks")
+    fetch(`${LEGACY_BACKEND_URL}/clicks`)
       .then(r => r.json())
       .then(setClicks);
   }, []);

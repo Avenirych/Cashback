@@ -16,7 +16,7 @@ describe('Registration capability isolation', () => {
   const users = { getByEmail: jest.fn(), create: jest.fn(), consumeEmailToken: jest.fn(), findByEmailToken: jest.fn(), update: jest.fn() };
   const mail = { sendVerificationEmail: jest.fn() };
   const jwt = { sign: jest.fn().mockReturnValue('synthetic-session-result') };
-  const fixture = { id: 42, email: 'synthetic@example.test', name: 'Synthetic', balance: 0, avatar_url: null, created_at: new Date(), email_verified: false };
+  const fixture = { sessionVersion: 0, id: 42, email: 'synthetic@example.test', name: 'Synthetic', balance: 0, avatar_url: null, created_at: new Date(), email_verified: false };
   let errorLog: jest.SpyInstance;
   beforeAll(async () => {
     const auth = new AuthService(users as unknown as UsersService, jwt as unknown as JwtService, mail as unknown as MailService);

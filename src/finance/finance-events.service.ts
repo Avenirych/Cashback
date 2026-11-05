@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable } from '@nestjs/common';
 import type { EntityManager } from 'typeorm';
 import { createHash } from 'node:crypto';
@@ -10,6 +11,7 @@ export class FinanceEventsService {
  constructor(private readonly finance: FinanceService) {}
  /** All results provisional until caller commit; errors must abort caller command. */
  async postEventWithManager(manager: EntityManager, input: FinancialEvent, postings: readonly Posting[]): Promise<{journalId:string;eventId:string;replay:boolean}> {
+  assertFinancialWritesAllowed();
   const event = snapshotFinancialEvent(input);
   const lines = postings.map(line => ({ ...line }));
   const hash = createHash('sha256').update(JSON.stringify(event)).digest('hex');

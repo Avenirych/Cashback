@@ -1,0 +1,3 @@
+import {hashAccountPassword,verifyAccountPassword} from './account-password';
+test('normal application bcrypt10 hashing, correct and obsolete credentials',async()=>{const old='OldSynthetic!123',next='NextSynthetic!456';const before=await hashAccountPassword(old),after=await hashAccountPassword(next);expect(after).toMatch(/^\$2[ab]\$10\$/);expect(await verifyAccountPassword(next,after)).toBe(true);expect(await verifyAccountPassword(old,after)).toBe(false);expect(await verifyAccountPassword(next,before)).toBe(false)});
+test.each(['','weak','SyntheticWithoutDigits!'])('reject unsafe password %s',async p=>{await expect(hashAccountPassword(p)).rejects.toThrow()});

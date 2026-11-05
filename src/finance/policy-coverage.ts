@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import type {EntityManager} from 'typeorm';
 import {randomUUID} from 'node:crypto';
 import {PolicyContext} from './policy-context';
@@ -6,6 +7,7 @@ import {policyPence} from './owner-policy';
 export class PolicyCoverage {
  constructor(private readonly c:PolicyContext){}
  async release(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{allocation:string;amount:string;releaseVerified:boolean}>(m,principal,'release_coverage',reference);
   if(this.c.policy!==POLICY_21)throw Error('Coverage coordination policy required');
   return this.c.command(m,actor,key,{action:'release_coverage',facts:f,proof},async()=>{

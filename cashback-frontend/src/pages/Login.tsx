@@ -6,6 +6,7 @@ import MoneyTree from "../components/MoneyTree";
 import { validateEmail } from "../utils/emailValidator";
 import { LoginFailure, LoginFailureKind } from "../loginErrors";
 import messages from "../content/loginMessages.json";
+import {passwordText} from "../passwordApi";
 import "./Login.css";
 
 export default function Login({ lang }: { lang: string; onLangChange: (lang: string) => void }) {
@@ -47,6 +48,7 @@ export default function Login({ lang }: { lang: string; onLangChange: (lang: str
         <div className="login-card">
           <div className="login-title"><ForumLogo size={32}/><h1>{t.title}</h1></div>
           <p>{t.intro}</p>
+          {location.state?.passwordUpdated===true&&<p role="status">{passwordText(lang).success}</p>}
           {error && <div className="login-error" role="alert" tabIndex={-1} ref={errorRef}>{t.errors[error]}</div>}
           <form onSubmit={submit} aria-busy={loading}>
             <div>
@@ -65,7 +67,7 @@ export default function Login({ lang }: { lang: string; onLangChange: (lang: str
             </div>
             <button type="submit" disabled={loading || !valid}>{loading ? t.loading : t.submit}</button>
           </form>
-          <div className="login-recovery"><p>{t.forgot}</p><p>{t.recoveryUnavailable} <Link to="/contacts">{t.contacts}</Link></p></div>
+          <div className="login-recovery"><Link to="/forgot-password">{passwordText(lang).forgot}</Link></div>
           <p className="login-register">{t.noAccount}{" "}<Link to={reviewNext ? "/register?next=" + encodeURIComponent(reviewNext) : "/register"}>{t.register}</Link></p>
         </div>
         <aside className="login-illustration" aria-hidden="true"><MoneyTree/></aside>

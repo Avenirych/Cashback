@@ -35,11 +35,13 @@ import MyActivity from "./pages/MyActivity";
 import TopicsPage from "./pages/TopicsPage";
 import Topic from "./pages/Topic";
 import Login from "./pages/Login";
+import PasswordRecovery from "./pages/PasswordRecovery";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import ReviewEntry from "./pages/ReviewEntry";
 import ModerationPolicy from "./pages/ModerationPolicy";
-import DemoClosed from "./components/DemoClosed";
+import FunctionalStagingGate,{functionalStagingBuild} from "./components/FunctionalStagingGate";
+import ModerationCenter from "./pages/ModerationCenter";
 import ReviewHistory from './pages/ReviewHistory';
 import Shop from "./pages/Shop";
 import PartnerNotConnected from "./pages/PartnerNotConnected";
@@ -55,10 +57,12 @@ export function AppRoutes() {
       <CookieConsent />
 
       <Routes>
+        <Route path="/forgot-password" element={<PasswordRecovery key="request" mode="request"/>}/>
+        <Route path="/reset-password" element={<PasswordRecovery key="confirm" mode="confirm"/>}/>
         <Route path="/activity-limits" element={<ActivityRules/>}/>
-        <Route path="/forum/reviews/new" element={process.env.REACT_APP_DEMO_ONLY==='true'&&process.env.REACT_APP_LOCAL_DEMO_REVIEWS!=='true'?<DemoClosed/>:<ReviewEntry />} />
+        <Route path="/forum/reviews/new" element={<FunctionalStagingGate permission="publication"><ReviewEntry /></FunctionalStagingGate>} />
         <Route path="/forum/reviews/history" element={<ReviewHistory/>}/>
-        <Route path="/forum/moderation" element={<ModerationPolicy />} />
+        <Route path="/forum/moderation" element={functionalStagingBuild?<FunctionalStagingGate permission="moderation"><ModerationCenter /></FunctionalStagingGate>:<ModerationPolicy />} />
         <Route path="/" element={<Welcome lang={L} />} />
         <Route path="/welcome" element={<Welcome lang={L} />} />
         <Route path="/product-offers" element={<ProductOffers />} />
@@ -111,7 +115,7 @@ export function AppRoutes() {
           <Route path="/my-activity" element={<MyActivity />} />
           <Route
             path="/forum/register"
-            element={process.env.REACT_APP_DEMO_ONLY==='true'&&process.env.REACT_APP_LOCAL_DEMO_REVIEWS!=='true'?<DemoClosed/>:<ForumRegister />}
+            element={<FunctionalStagingGate permission="forumRegistration"><ForumRegister /></FunctionalStagingGate>}
           />
           <Route
             path="/dashboard"

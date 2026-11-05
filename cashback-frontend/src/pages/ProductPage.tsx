@@ -1,3 +1,4 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -6,7 +7,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/${id}`)
+    fetch(`${LEGACY_BACKEND_URL}/products/${id}`)
       .then(r => r.json())
       .then(setProduct);
   }, [id]);

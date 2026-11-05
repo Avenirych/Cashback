@@ -1,7 +1,8 @@
 import {BadRequestException,Controller,Get,Inject,Module,Req,ServiceUnavailableException,UseGuards} from '@nestjs/common';
 import type {DynamicModule} from '@nestjs/common';
 import type {DataSource} from 'typeorm';
-import {FINANCE_READER,FinanceJwtGuard,FinanceJwtStrategy} from './finance-jwt';
+import {FINANCE_READER,FINANCE_SESSION_AUTHORITY,FinanceJwtGuard,FinanceJwtStrategy} from './finance-jwt';
+import type {FinanceSessionAuthority} from '../auth/session-revocation.service';
 export {FINANCE_READER} from './finance-jwt';
 import {BonusUseSnapshot} from './bonus-use-snapshot';
 import {JwtLedgerAuthority} from './jwt-ledger-authority';
@@ -39,8 +40,9 @@ export class FinanceReadController {
 }
 @Module({})
 export class FinanceReadModule {
- static prepare(source:DataSource):DynamicModule{
+ static prepare(source:DataSource,sessions:FinanceSessionAuthority):DynamicModule{
+  if(!sessions||typeof sessions.verifyFinance!=='function')throw Error('App-primary session authority required');
   if((source.options as {name?:string}).name!=='finance-readonly'||(source.options as {username?:string}).username!=='cashback_finance_ro'||source.options.synchronize||source.options.migrationsRun)throw Error('Dedicated non-migrating finance-readonly source required');
-  return{module:FinanceReadModule,controllers:[FinanceReadController],providers:[FinanceJwtStrategy,FinanceJwtGuard,{provide:FINANCE_READER,useValue:source}]};
+  return{module:FinanceReadModule,controllers:[FinanceReadController],providers:[FinanceJwtStrategy,FinanceJwtGuard,{provide:FINANCE_SESSION_AUTHORITY,useValue:sessions},{provide:FINANCE_READER,useValue:source}]};
  }
 }

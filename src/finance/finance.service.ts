@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
 import { DataSource } from 'typeorm';
@@ -9,6 +10,7 @@ export class FinanceService {
   constructor(private readonly dataSource: DataSource) {}
   /** Explicit internal primitive only; no controllers, workers or automatic calls. */
   async post(eventKey: string, input: readonly Posting[]): Promise<{ journalId: string; replay: boolean }> {
+  assertFinancialWritesAllowed();
     this.validateInput(eventKey, input);
     // Snapshot before awaiting the transaction: caller mutations cannot alter it.
     const lines = input.map(line => ({ ...line }));
@@ -17,6 +19,7 @@ export class FinanceService {
 
   /** Caller owns commit/rollback. A sealed journal is still provisional until outer commit. */
   async postWithManager(manager: EntityManager, eventKey: string, input: readonly Posting[]): Promise<{ journalId: string; replay: boolean }> {
+  assertFinancialWritesAllowed();
     const runner = manager?.queryRunner;
     if (manager?.connection !== this.dataSource || !runner || runner.connection !== this.dataSource ||
         runner.manager !== manager || runner.isReleased || !runner.isTransactionActive) {

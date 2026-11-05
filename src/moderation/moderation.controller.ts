@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import { Controller, Post, Body, UseGuards, Req, Get, Param } from '@nestjs/common';
 import { ModerationService } from './moderation.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -7,6 +8,7 @@ import type { Request } from 'express';
 export class ModerationController {
   constructor(private readonly moderationService: ModerationService) {}
 
+  @NonFinancialMutation()
   @UseGuards(JwtAuthGuard)
   @Post('report')
   createReport(@Req() req: Request, @Body() body: any) {
@@ -25,6 +27,7 @@ export class ModerationController {
     return this.moderationService.getReports();
   }
 
+  @NonFinancialMutation()
   @Post('report/:id/status')
   updateStatus(@Param('id') id: number, @Body() body: any) {
     return this.moderationService.updateStatus(id, body.status);

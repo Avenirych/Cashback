@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,6 +17,7 @@ export class BalanceService {
   ) {}
 
   async addOperation(userId: number, type: string, amount: number, description?: string) {
+  assertFinancialWritesAllowed();
     const user = await this.usersService.getById(userId);
     if (!user) throw new Error('User not found');
 

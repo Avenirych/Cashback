@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import {
   Controller,
   Post,
@@ -31,6 +32,7 @@ export class ForumController {
     private readonly forumUserService: ForumUserService,
   ) {}
 
+  @NonFinancialMutation()
   @Post('register')
   @UseGuards(JwtAuthGuard)
   register(
@@ -57,12 +59,14 @@ export class ForumController {
     return this.forumUserService.publicProfile(username);
   }
 
+  @NonFinancialMutation()
   @Patch('profile')
   @UseGuards(JwtAuthGuard)
   updateProfile(@Req() req: ForumRequest, @Body() body: unknown) {
     return this.forumUserService.updateProfile(req.user.id, body);
   }
 
+  @NonFinancialMutation()
   @Post('avatar')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
@@ -82,12 +86,14 @@ export class ForumController {
     return this.forumService.getTopics();
   }
 
+  @NonFinancialMutation()
   @Post('topic')
   @UseGuards(JwtAuthGuard)
   createTopic(@Req() req: ForumRequest, @Body('title') title: unknown, @Headers('idempotency-key') key?: string) {
     return key ? this.forumService.createTopic(req.user.id, title, key) : this.forumService.createTopic(req.user.id, title);
   }
 
+  @NonFinancialMutation()
   @Post('post')
   @UseGuards(JwtAuthGuard)
   createPost(
@@ -113,6 +119,7 @@ export class ForumController {
     return this.forumService.getPosts(topicId);
   }
 
+  @NonFinancialMutation()
   @Delete('topic/:id')
   @UseGuards(JwtAuthGuard)
   async deleteTopic(

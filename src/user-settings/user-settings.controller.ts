@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { UserSettingsService } from './user-settings.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -15,6 +16,7 @@ export class UserSettingsController {
     return this.settingsService.getSettings(user.id);
   }
 
+  @NonFinancialMutation()
   @UseGuards(JwtAuthGuard)
   @Post('me')
   updateMySettings(@Req() req: Request, @Body() body: any) {

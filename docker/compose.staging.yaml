@@ -1,0 +1,312 @@
+# Standalone staging only; no deployment authorization.
+name: cashback-staging-b02
+x-hardening:
+  restart: 'no'
+  cap_drop:
+    - ALL
+  security_opt:
+    - 'no-new-privileges:true'
+  read_only: true
+  pids_limit: 256
+services:
+  postgres:
+    build:
+      context: ..
+      dockerfile: docker/staging/postgres.Dockerfile
+      args:
+        POSTGRES_IMAGE: 'postgres:17.11-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5'
+    environment:
+      POSTGRES_DB: cashback_staging_app
+      POSTGRES_USER: cashback_staging_owner
+      POSTGRES_PASSWORD_FILE: /run/secrets/pg_owner_password
+      POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256 --auth-local=scram-sha-256'
+    secrets:
+      - pg_owner_password
+      - pg_cert
+      - pg_key
+    volumes:
+      - 'staging-pg-data:/var/lib/postgresql/data'
+    tmpfs:
+      - '/run/staging-tls:size=1m,mode=0700'
+      - '/var/run/postgresql:size=16m'
+      - '/tmp:size=64m'
+    networks:
+      - database
+    security_opt:
+      - 'no-new-privileges:true'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U cashback_staging_owner -d cashback_staging_app
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.25
+    pids_limit: 128
+    platform: linux/amd64
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+        max-file: '2'
+    shm_size: 128m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    command:
+      - postgres
+      - '-c'
+      - shared_buffers=64MB
+      - '-c'
+      - max_connections=20
+      - '-c'
+      - work_mem=2MB
+      - '-c'
+      - maintenance_work_mem=32MB
+      - '-c'
+      - max_wal_size=256MB
+      - '-c'
+      - log_statement=none
+      - '-c'
+      - log_min_error_statement=panic
+      - '-c'
+      - log_parameter_max_length=0
+      - '-c'
+      - log_parameter_max_length_on_error=0
+    restart: 'no'
+  mail:
+    restart: 'no'
+    cap_drop:
+      - ALL
+    security_opt:
+      - 'no-new-privileges:true'
+    read_only: true
+    pids_limit: 64
+    image: 'axllent/mailpit:v1.32.0@sha256:0790692be935ea4420d085694f7985b1f692ca6a8771ab0e0bd8ba75ac180498'
+    user: '1000:1000'
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: '0'
+    environment:
+      MP_SMTP_BIND_ADDR: '0.0.0.0:587'
+      MP_UI_BIND_ADDR: '127.0.0.1:8025'
+      MP_DATABASE: /tmp/mailpit.db
+      MP_SMTP_TLS_CERT: /run/secrets/mail_cert
+      MP_SMTP_TLS_KEY: /run/secrets/mail_key
+      MP_SMTP_REQUIRE_STARTTLS: 'true'
+      MP_SMTP_AUTH_FILE: /run/secrets/mail_auth
+      MP_SMTP_AUTH_ACCEPT_ANY: 'false'
+      MP_SMTP_AUTH_ALLOW_INSECURE: 'false'
+      MP_SMTP_ALLOWED_RECIPIENTS: '^[A-Za-z0-9._+-]+@example[.]invalid$$'
+      MP_SMTP_DISABLE_RDNS: 'true'
+      MP_SMTP_RELAY_ALL: 'false'
+    secrets:
+      - mail_cert
+      - mail_key
+      - mail_auth
+    tmpfs:
+      - '/tmp:size=32m,uid=1000,gid=1000,mode=0700'
+    networks:
+      - mail
+    healthcheck:
+      test:
+        - CMD
+        - /mailpit
+        - readyz
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.1
+    platform: linux/amd64
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+        max-file: '2'
+  backend:
+    restart: 'no'
+    cap_drop:
+      - ALL
+    security_opt:
+      - 'no-new-privileges:true'
+    read_only: true
+    pids_limit: 128
+    build:
+      context: ..
+      dockerfile: docker/staging/backend.Dockerfile
+      args:
+        NODE_IMAGE: 'node:24.22.2-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c'
+    environment:
+      NODE_ENV: production
+      CASHBACK_BACKEND_PROFILE: staging
+      HOST: 0.0.0.0
+      PORT: '3001'
+      DB_HOST: postgres
+      DB_PORT: '5432'
+      DB_NAME: cashback_staging_app
+      DB_USER: cashback_staging_runtime
+      DB_SSL: 'true'
+      STAGING_DB_SYSTEM_IDENTIFIER: '${STAGING_DB_SYSTEM_IDENTIFIER:?Independently attest the new isolated PG cluster before starting backend}'
+      NODE_EXTRA_CA_CERTS: /run/secrets/staging_ca
+      FRONTEND_URL: '${STAGING_FRONTEND_ORIGIN:?Supply approved HTTPS staging origin}'
+      VERIFICATION_FRONTEND_URL: '${STAGING_FRONTEND_ORIGIN:?Supply approved HTTPS staging origin}'
+      SMTP_HOST: mail
+      SMTP_PORT: '587'
+      SMTP_SECURE: 'false'
+      SMTP_REQUIRE_TLS: 'true'
+      SMTP_USER: cashback_staging_mail
+      SMTP_FROM: noreply@example.invalid
+      HISTORICAL_LOCAL: 'false'
+      HISTORICAL_CONTAINER: 'false'
+      USE_ETHEREAL: 'false'
+      CASHBACK_DEMO_ONLY: 'true'
+      CASHBACK_ACTIVITY_LIMITS: 'true'
+      CASHBACK_FORUM_READ_ONLY: 'true'
+      CASHBACK_PUBLIC_CONTENT: 'false'
+      CASHBACK_CONTENT_MODERATION: 'false'
+      CASHBACK_LOCAL_DEMO_REVIEWS: 'false'
+      CASHBACK_FINANCIAL_ADMISSION: 'false'
+      CASHBACK_FINANCIAL_API: 'false'
+      CASHBACK_FINANCIAL_WRITES: 'false'
+      DB_MIGRATIONS_RUN: 'false'
+      TYPEORM_SYNCHRONIZE: 'false'
+      NODE_OPTIONS: '--max-old-space-size=384'
+    secrets:
+      - db_password
+      - jwt_secret
+      - smtp_password
+      - staging_ca
+    volumes:
+      - 'staging-avatars:/app/public/avatars'
+    tmpfs:
+      - '/tmp:size=64m,uid=1000,gid=1000,mode=0700'
+    networks:
+      - application
+      - database
+      - mail
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mail:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - '-e'
+        - >-
+          fetch('http://127.0.0.1:3001/auth/profile').then(r=>process.exit(r.status===401?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    mem_limit: 640m
+    memswap_limit: 640m
+    cpus: 0.4
+    platform: linux/amd64
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+        max-file: '2'
+  frontend:
+    restart: 'no'
+    cap_drop:
+      - ALL
+    security_opt:
+      - 'no-new-privileges:true'
+    read_only: true
+    pids_limit: 64
+    build:
+      context: ..
+      dockerfile: docker/staging/frontend.Dockerfile
+      args:
+        NODE_IMAGE: 'node:24.22.2-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c'
+        NGINX_IMAGE: 'nginx:1.28.3-alpine@sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236'
+    user: '101:101'
+    ports:
+      - '127.0.0.1:33004:8443'
+    tmpfs:
+      - '/tmp:size=32m,uid=101,gid=101,mode=0700'
+    networks:
+      - application
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - '-q'
+        - '-O'
+        - /dev/null
+        - 'http://127.0.0.1:8081/healthz'
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.1
+    platform: linux/amd64
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+        max-file: '2'
+    environment:
+      STAGING_FRONTEND_ORIGIN: '${STAGING_FRONTEND_ORIGIN:?Supply owner-approved HTTPS origin}'
+    secrets:
+      - web_cert
+      - web_key
+      - tester_ca
+      - tester_crl
+networks:
+  application:
+    internal: true
+  database:
+    internal: true
+  mail:
+    internal: true
+volumes:
+  staging-pg-data: null
+  staging-avatars: null
+secrets:
+  pg_owner_password:
+    file: '${STAGING_SECRET_DIR:?Supply external ACL-protected secret directory}/pg_owner_password'
+  db_password:
+    file: '${STAGING_SECRET_DIR:?Required}/db_password'
+  jwt_secret:
+    file: '${STAGING_SECRET_DIR:?Required}/jwt_secret'
+  smtp_password:
+    file: '${STAGING_SECRET_DIR:?Required}/smtp_password'
+  pg_cert:
+    file: '${STAGING_SECRET_DIR:?Required}/pg_cert'
+  pg_key:
+    file: '${STAGING_SECRET_DIR:?Required}/pg_key'
+  mail_cert:
+    file: '${STAGING_SECRET_DIR:?Required}/mail_cert'
+  mail_key:
+    file: '${STAGING_SECRET_DIR:?Required}/mail_key'
+  mail_auth:
+    file: '${STAGING_SECRET_DIR:?Required}/mail_auth'
+  staging_ca:
+    file: '${STAGING_SECRET_DIR:?Required}/staging_ca'
+  web_cert:
+    file: '${STAGING_SECRET_DIR:?External guest secret directory required}/web_cert'
+  web_key:
+    file: '${STAGING_SECRET_DIR:?External guest secret directory required}/web_key'
+  tester_ca:
+    file: '${STAGING_SECRET_DIR:?External guest secret directory required}/tester_ca'
+  tester_crl:
+    file: '${STAGING_SECRET_DIR:?External guest secret directory required}/tester_crl'

@@ -24,7 +24,7 @@ test.each(['http://127.0.0.1:3005','http://localhost:3005','http://localhost:300
  (nodemailer.createTransport as jest.Mock).mockReturnValue({sendMail:jest.fn(async message=>{sent.push(message);return {};})});
  const users:any={
  getByEmail:jest.fn(async()=>account??null),
- create:jest.fn(async data=>account={id:42,...data}),
+ create:jest.fn(async data=>account={id:42,sessionVersion:0,...data}),
  update:jest.fn(async(_id,data)=>account={...account,...data}),
  consumeEmailToken:jest.fn(async token=>{
   if(!account.email_token||account.email_token!==token)return null;

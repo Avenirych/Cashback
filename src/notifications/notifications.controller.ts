@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 
@@ -5,6 +6,7 @@ import { NotificationsService } from './notifications.service';
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
+  @NonFinancialMutation()
   @Post(':userId')
   send(
     @Param('userId') userId: number,
@@ -20,6 +22,7 @@ export class NotificationsController {
     return this.notificationsService.getUserNotifications(userId);
   }
 
+  @NonFinancialMutation()
   @Post('read/:id')
   markAsRead(@Param('id') id: number) {
     return this.notificationsService.markAsRead(id);

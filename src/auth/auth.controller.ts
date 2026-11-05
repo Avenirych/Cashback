@@ -1,3 +1,5 @@
+import {functionalStagingActive,syntheticEmail} from '../staging-functional';
+import { NonFinancialMutation } from '../financial-write-deny';
 import {
   Controller,
   Post,
@@ -9,17 +11,20 @@ import {
   BadRequestException,
   HttpException,
   Header,
+  HttpCode,
   Optional,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { SessionRevocationService } from './session-revocation.service';
 import {ActivityService} from '../activity/activity.service';
 
 interface AuthenticatedRequest {
   user: {
     id: number;
     email: string;
+    sv: number;
     name?: string;
   };
 }
@@ -57,6 +62,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     @Optional() private readonly activity?:ActivityService,
+    @Optional() private readonly sessions?: SessionRevocationService,
   ) {}
 
   private limited<T>(action:'registration'|'failed_login'|'resend',email:unknown,req:{socket?:{remoteAddress?:string}},work:()=>Promise<T>){
@@ -64,6 +70,7 @@ export class AuthController {
     return this.activity?this.activity.authAttempt(email,req.socket?.remoteAddress||'unknown',action,work):work();
   }
 
+  @NonFinancialMutation()
   @Post('register')
   async register(@Body() body: RegisterBody,@Request() req:{socket?:{remoteAddress?:string}; headers?:{origin?:string}}={}) {
     if (!body) {
@@ -72,6 +79,7 @@ export class AuthController {
       );
     }
 
+    if(functionalStagingActive()&&!syntheticEmail(body.email))throw new BadRequestException('Synthetic staging email required');
     return this.limited('registration',body.email,req,()=>this.authService.register(
       body.email,
       body.password,
@@ -87,6 +95,7 @@ export class AuthController {
     return this.authService.verifyEmail(token);
   }
 
+  @NonFinancialMutation()
   @Post('resend-verification')
   async resendVerification(
     @Body() body: ResendVerificationBody,
@@ -96,6 +105,7 @@ export class AuthController {
       throw new BadRequestException('Email is required');
     }
 
+    if(functionalStagingActive()&&!syntheticEmail(body.email))throw new BadRequestException('Synthetic staging email required');
     if(!this.activity?.enabled())this.checkResendLimit(req.ip || req.socket?.remoteAddress || 'unknown');
     return this.limited('resend',body.email,req,()=>this.authService.resendVerificationEmail(
       body.email,
@@ -103,6 +113,7 @@ export class AuthController {
     ));
   }
 
+  @NonFinancialMutation()
   @Post('login')
   async login(@Body() body: LoginBody,@Request() req:{socket?:{remoteAddress?:string}}={}) {
     if (!body) {
@@ -115,6 +126,16 @@ export class AuthController {
       body.email,
       body.password,
     ));
+  }
+
+  @NonFinancialMutation()
+  @Post('logout-all')
+  @HttpCode(204)
+  @Header('Cache-Control', 'no-store')
+  @UseGuards(JwtAuthGuard)
+  async logoutAll(@Request() req: AuthenticatedRequest): Promise<void> {
+    if (!this.sessions) throw new ServiceUnavailableException('Session revocation unavailable');
+    await this.sessions.logoutAll(req.user.id, req.user.sv);
   }
 
   @Get('profile')

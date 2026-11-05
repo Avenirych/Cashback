@@ -20,7 +20,7 @@ import { MarketingPreferencesService } from '../marketing-preferences/marketing-
 
 const secret = 'synthetic-user-existence-regression-key';
 const jwt = new JwtService({ secret, signOptions: { expiresIn: '24h' } });
-const fixture = { id: 42, email: 'synthetic@example.test', name: 'Synthetic', balance: 0, avatar_url: null, created_at: new Date(), email_verified: false };
+const fixture = { sessionVersion: 0, id: 42, email: 'synthetic@example.test', name: 'Synthetic', balance: 0, avatar_url: null, created_at: new Date(), email_verified: false };
 
 describe('JWT current user identity gate', () => {
   let app: INestApplication;
@@ -32,7 +32,7 @@ describe('JWT current user identity gate', () => {
   const bonus = { getSnapshot: jest.fn() };
   const marketing = { getPreferences: jest.fn() };
   const paths = ['/auth/profile', '/users/42', '/forum/status', '/api/bonus/snapshot', '/user/marketing-preferences'];
-  const own = jwt.sign({ sub: 42, email: fixture.email, name: fixture.name });
+  const own = jwt.sign({ sv: 0, sub: 42, email: fixture.email, name: fixture.name });
   beforeAll(async () => {
     process.env.JWT_SECRET = secret;
     const module = await Test.createTestingModule({
@@ -58,9 +58,9 @@ describe('JWT current user identity gate', () => {
   }
   it.each([false, true])('existing account authenticated when email_verified=%s', async verified => {
     users.getById.mockResolvedValue({ ...fixture, email_verified: verified });
-    expect(await strategy.validate({ sub: 42, email: fixture.email, name: fixture.name })).toEqual({ id: 42, email: fixture.email });
+    expect(await strategy.validate({ sv: 0, sub: 42, email: fixture.email, name: fixture.name })).toEqual({ id: 42, email: fixture.email, sv: 0 });
     await request(app.getHttpServer()).get('/auth/profile').set('Authorization', `Bearer ${own}`).expect(200);
-    expect(auth.profile).toHaveBeenCalledWith({ id: 42, email: fixture.email });
+    expect(auth.profile).toHaveBeenCalledWith({ id: 42, email: fixture.email, sv: 0 });
   });
   it.each(paths)('deleted account rejected before controller at %s', async path => {
     users.getById.mockResolvedValue(null);
@@ -71,19 +71,19 @@ describe('JWT current user identity gate', () => {
     await request(app.getHttpServer()).patch('/users/42').set('Authorization', `Bearer ${own}`).send({ name: 'Updated' }).expect(401); noDownstream();
   });
   it.each([undefined, null, '', '42', 0, -1, 1.5, true, {}, [], 2147483648, Number.MAX_SAFE_INTEGER + 1])('invalid signed sub %p fails without lookup', async sub => {
-    const token = jwt.sign({ sub, email: fixture.email });
+    const token = jwt.sign({ sub, email: fixture.email, sv:0 });
     await request(app.getHttpServer()).get('/auth/profile').set('Authorization', `Bearer ${token}`).expect(401);
     expect(users.getById).not.toHaveBeenCalled(); noDownstream();
   });
   it.each([NaN, Infinity, -Infinity])('rejects nonfinite sub directly %p', async sub => {
-    await expect(strategy.validate({ sub })).rejects.toMatchObject({ status: 401 }); expect(users.getById).not.toHaveBeenCalled();
+    await expect(strategy.validate({ sub, sv:0 })).rejects.toMatchObject({ status: 401 }); expect(users.getById).not.toHaveBeenCalled();
   });
   it('rejects a missing/nonobject payload', async () => {
     for (const payload of [null, undefined, [], 'unsupported', {}]) await expect(strategy.validate(payload)).rejects.toMatchObject({ status: 401 });
     expect(users.getById).not.toHaveBeenCalled();
   });
   it('invalid signature and expiry rejected before lookup', async () => {
-    for (const token of [new JwtService({ secret: 'different-synthetic-key' }).sign({ sub: 42 }), jwt.sign({ sub: 42 }, { expiresIn: -1 })]) {
+    for (const token of [new JwtService({ secret: 'different-synthetic-key' }).sign({ sv: 0, sub: 42 }), jwt.sign({ sv: 0, sub: 42 }, { expiresIn: -1 })]) {
       await request(app.getHttpServer()).get('/auth/profile').set('Authorization', `Bearer ${token}`).expect(401);
     }
     expect(users.getById).not.toHaveBeenCalled(); noDownstream();
@@ -94,7 +94,7 @@ describe('JWT current user identity gate', () => {
     expect(response.body.message).toBe('Authentication temporarily unavailable');
     expect(JSON.stringify(response.body)).not.toContain('synthetic-sensitive-database-details'); noDownstream();
   });
-  it('old token survives email confirmation and each request queries current user', async () => {
+  it('versioned token survives email confirmation and each request queries current user', async () => {
     await request(app.getHttpServer()).get('/auth/profile').set('Authorization', `Bearer ${own}`).expect(200);
     users.getById.mockResolvedValue({ ...fixture, email_verified: true });
     await request(app.getHttpServer()).get('/auth/profile').set('Authorization', `Bearer ${own}`).expect(200);
@@ -124,5 +124,15 @@ describe('JWT current user identity gate', () => {
   it('public register is not globally JWT guarded', async () => {
     await request(app.getHttpServer()).post('/auth/register').send({ email: fixture.email, password: 'synthetic-only', name: fixture.name }).expect(201);
     expect(auth.register).toHaveBeenCalled(); expect(users.getById).not.toHaveBeenCalled();
+  });
+
+  it.each(paths)('legacy JWT without sv is rejected before downstream at %s',async path=>{
+    const legacy=jwt.sign({sub:42,email:fixture.email});
+    await request(app.getHttpServer()).get(path).set('Authorization',`Bearer ${legacy}`).expect(401);
+    expect(users.getById).not.toHaveBeenCalled();noDownstream();
+  });
+  it.each(paths)('revoked version cannot authorize downstream at %s',async path=>{
+    users.getById.mockResolvedValue({...fixture,sessionVersion:1});
+    await request(app.getHttpServer()).get(path).set('Authorization',`Bearer ${own}`).expect(401);noDownstream();
   });
 });

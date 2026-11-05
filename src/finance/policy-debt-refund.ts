@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import {randomUUID} from 'node:crypto';
 import type {EntityManager} from 'typeorm';
 import {PolicyContext,digest} from './policy-context';
@@ -52,10 +53,12 @@ export class PolicyDebtRefund {
   await this.c.record(m,'refund',scope,f.refundId,result,journal.journalId);return result;
  }
  async collect(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts}=await this.c.enter<{confirmationEvidence:string}>(m,principal,'collect_debt',reference);
   return this.c.command(m,actor,key,{action:'collect_debt',facts,proof},async()=>this.collectOwned(m,actor));
  }
  async collectOwned(m:EntityManager,actor:string){
+  assertFinancialWritesAllowed();
   const rows=await m.query('SELECT d.*,a."balancePence",to_char(e."confirmedAt" AT TIME ZONE \'UTC\',\'YYYY-MM-DD"T"HH24:MI:SS.US"Z"\') AS confirmed FROM finance_verified_debts d JOIN finance_accounts a ON a.id=d.account LEFT JOIN finance_policy_debt_evidence e ON e.debt=d.id WHERE d.debtor=$1 AND a."balancePence">0 FOR UPDATE OF a',[actor]);
   if(!rows.length)return {status:'completed',collected:'0'};
   const priority=debtPriority<{id:string;confirmedAt:string|null;balancePence:string;cap:string;account:string}>(rows.map((r:any)=>({...r,confirmedAt:r.confirmed})));
@@ -75,6 +78,7 @@ export class PolicyDebtRefund {
   return {status:'completed',collected:total.toString(),journal:journal.journalId,allocations};
  }
  async refund(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{source:string;orderId:string;refundId:string;version:number;full:boolean;revisedCommission:string|null;currency:string;verified:boolean;payoutReconciled:boolean;confirmedAt:string;restorationOwners?:string[]}>(m,principal,'refund_cashback',reference,f=>this.c.policy===POLICY_21?(f.restorationOwners||[]):[]);
   return this.c.command(m,actor,key,{action:'refund_cashback',facts:f,proof},async()=>{
    if(f.verified!==true||f.payoutReconciled!==true||f.currency!=='GBP')return {status:'pending_review',reason:'VERIFIED_REFUND_BASIS_AND_PAYOUT_STATE_REQUIRED'};
@@ -120,6 +124,7 @@ export class PolicyDebtRefund {
   });
  }
  async externalRepayment(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{receipt:string;debt:string;amount:string}>(m,principal,'external_repayment',reference);
   return this.c.command(m,actor,key,{action:'external_repayment',facts:f,proof},async()=>{
    const amount=policyPence(f.amount);if(amount<=0n)throw Error('Positive repayment required');
@@ -138,6 +143,7 @@ export class PolicyDebtRefund {
   });
  }
  async feeLiability(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{expenseJournal:string;terms:string|null;buyerLiable:boolean;providerEvidence:string|null;confirmedAt:string}>(m,principal,'fee_liability',reference);
   return this.c.command(m,actor,key,{action:'fee_liability',facts:f,proof},async()=>{
    if(f.buyerLiable!==true||!f.terms||!f.providerEvidence)return {status:'pending_review',reason:'NO_AUTOMATIC_CUSTOMER_FEE_LIABILITY'};
@@ -150,6 +156,7 @@ export class PolicyDebtRefund {
   });
  }
  async linkedRecovery(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{recipient:string;lot:string;debt:string;amount:string;lineageVerified:boolean}>(m,principal,'linked_recovery',reference,f=>[f.recipient]);
   return this.c.command(m,actor,key,{action:'linked_recovery',facts:f,proof},async()=>{
    const [l]=await m.query('SELECT l.*,p.owner AS parent_owner,a."balancePence" FROM finance_bonus_lots l JOIN finance_bonus_lots p ON p.id=l.parent JOIN finance_accounts a ON a.id=l.available WHERE l.id=$1 FOR UPDATE OF l,a',[f.lot]);
@@ -160,6 +167,7 @@ export class PolicyDebtRefund {
   });
  }
  async recalculateReservation(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{reservation:string;selection:string;click:string;purchaseRecalculationVerified:boolean}>(m,principal,'debt_reservation_recalculation',reference);
   return this.c.command(m,actor,key,{action:'debt_reservation_recalculation',facts:f,proof},async()=>{
    if(f.purchaseRecalculationVerified!==true)return {status:'pending_review',reason:'SEPARATE_SAFE_PURCHASE_RECALCULATION_REQUIRED'};

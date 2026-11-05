@@ -1,0 +1,36 @@
+name: cashback-browser-e2e
+services:
+  browser:
+    profiles: [e2e]
+    image: sha256:a707919d613b7e7ed9a8714b51fe782704436b468144966c747318271dcf9203
+    pull_policy: never
+    user: "1000:1000"
+    read_only: true
+    init: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+      - seccomp=./staging/e2e/seccomp-chromium.json
+    mem_limit: 768m
+    memswap_limit: 768m
+    cpus: 0.5
+    pids_limit: 192
+    shm_size: 128m
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=256m,mode=1777
+    environment:
+      HOME: /tmp/home
+      NODE_EXTRA_CA_CERTS: /tls/ca.pem
+    extra_hosts:
+      - "cashback-staging.test:${E2E_GATEWAY_IP:?isolated gateway IP required}"
+    volumes:
+      - ./staging/e2e:/tests:ro
+      - ${E2E_CLIENT_DIR:?tmpfs client directory required}:/tls:ro
+      - ${E2E_OUTPUT_DIR:?bounded output directory required}:/out
+    entrypoint: [sh, /tests/entrypoint.sh]
+    networks: [application]
+    restart: "no"
+networks:
+  application:
+    external: true
+    name: cashback-staging-b02_application

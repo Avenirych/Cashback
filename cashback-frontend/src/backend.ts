@@ -1,5 +1,6 @@
+if (process.env.REACT_APP_STAGING === 'true' && process.env.REACT_APP_API_BASE !== '/api') throw new Error('STAGING_API_CONFIGURATION_REFUSED');
 /** Shared historical backend origin; configuration only. */
-export const BACKEND_URL = (process.env.REACT_APP_API_BASE || 'http://localhost:3001').replace(/\/+$/, '');
+export const BACKEND_URL = (process.env.REACT_APP_STAGING === 'true' ? '/api' : (process.env.REACT_APP_API_BASE || 'http://localhost:3001')).replace(/\/+$/, '');
 
 export async function backendFetch(url: string, init: RequestInit = {}): Promise<Response> {
   const controller = new AbortController();
@@ -24,3 +25,6 @@ export async function backendFetch(url: string, init: RequestInit = {}): Promise
     init.signal?.removeEventListener('abort', cancel);
   }
 }
+
+/** Legacy catalog pages retain their local port outside staging. */
+export const LEGACY_BACKEND_URL = process.env.REACT_APP_STAGING === 'true' ? BACKEND_URL : 'http://localhost:3000';

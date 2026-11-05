@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import {createHash,randomUUID} from 'node:crypto';
 import type {DataSource,EntityManager} from 'typeorm';
 import {assertPence} from './money';
@@ -26,6 +27,7 @@ const hash=(v:unknown)=>createHash('sha256').update(JSON.stringify(v)).digest('h
 export class PurchaseLifecycle {
  constructor(private readonly source:DataSource,private readonly authority:LifecycleAuthority=new DisabledLifecycleAuthority()){}
  async record(m:EntityManager,principal:string,reference:string){
+  assertFinancialWritesAllowed();
   const r=m?.queryRunner;if(m?.connection!==this.source||!r||r.connection!==this.source||r.manager!==m||r.isReleased||!r.isTransactionActive)throw Error('Active caller transaction required');
   const raw=await this.authority.verify(m,principal,reference);
   const v:LifecycleEvidence={actor:raw.actor,proof:raw.proof,source:raw.source,event:raw.event,orderSource:raw.orderSource,orderId:raw.orderId,version:raw.version,kind:raw.kind,eligible:raw.eligible,rankPence:raw.rankPence,metricReference:raw.metricReference,groupFinal:raw.groupFinal,finalityReference:raw.finalityReference,refundPence:raw.refundPence,payoutState:raw.payoutState};

@@ -1,0 +1,209 @@
+[
+  {
+    "kind": "OBJECT_DATABASE",
+    "object": "cashback_staging_app",
+    "privilege": "connect"
+  },
+  {
+    "kind": "OBJECT_SCHEMA",
+    "object": "public",
+    "privilege": "usage"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "users",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "users",
+    "privilege": "insert"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "users",
+    "privilege": "update",
+    "columns": [
+      "email",
+      "name",
+      "first_name",
+      "last_name",
+      "phone_e164",
+      "avatar_url",
+      "password",
+      "email_verified",
+      "email_token",
+      "email_token_expires_at"
+    ]
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "forum_users",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "forum_topics",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "forum_posts",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "topic",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "post",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "marketing_preferences",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "marketing_preferences",
+    "privilege": "insert"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "marketing_preferences",
+    "privilege": "update",
+    "columns": [
+      "accountUpdates",
+      "specialOffers",
+      "partnerRecommendations",
+      "smsMarketing",
+      "smsMarketingGrantedAt",
+      "smsMarketingRevokedAt",
+      "smsMarketingConsentVersion",
+      "updatedAt"
+    ]
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limits_schema",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_policies",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_user_plans",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_usage",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_usage",
+    "privilege": "insert"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_usage",
+    "privilege": "update"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_usage",
+    "privilege": "delete"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_operations",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_operations",
+    "privilege": "insert"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_operations",
+    "privilege": "update"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_operations",
+    "privilege": "delete"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_security_events",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_security_events",
+    "privilege": "insert"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_security_events",
+    "privilege": "update"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_security_events",
+    "privilege": "delete"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_appeals",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_appeals",
+    "privilege": "insert"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_appeals",
+    "privilege": "update"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_limit_appeals",
+    "privilege": "delete"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_partner_events",
+    "privilege": "select"
+  },
+  {
+    "kind": "OBJECT_TABLE",
+    "object": "activity_partner_events",
+    "privilege": "insert"
+  },
+  {
+    "kind": "OBJECT_SEQUENCE",
+    "object": "users_id_seq",
+    "privilege": "usage"
+  },
+  {
+    "kind": "OBJECT_SEQUENCE",
+    "object": "marketing_preferences_id_seq",
+    "privilege": "usage"
+  },
+  {
+    "kind": "OBJECT_FUNCTION",
+    "object": "pg_catalog.pg_control_system",
+    "privilege": "execute"
+  }
+]

@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import { Controller, Get, Param, Post, Body } from '@nestjs/common';
 import { SellersService } from './sellers.service';
 
@@ -15,6 +16,7 @@ export class SellersController {
     return this.sellersService.getSeller(id);
   }
 
+  @NonFinancialMutation()
   @Post()
   createSeller(@Body() body: any) {
     return this.sellersService.createSeller(body);

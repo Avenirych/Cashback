@@ -9,6 +9,10 @@ import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { MailModule } from '../mail/mail.module';
 import { User } from '../users/user.entity';
+import {PasswordSecurityService} from './password-security.service';
+import {PasswordSecurityController} from './password-security.controller';
+import {PasswordMailWorker} from './password-mail.worker';
+import {ActivityModule} from '../activity/activity.module';
 
 @Module({
   imports: [
@@ -20,9 +24,10 @@ import { User } from '../users/user.entity';
     PassportModule,
     UsersModule,
     MailModule,
+    ActivityModule,
   ],
-  providers: [AuthService, JwtStrategy],
-  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy, PasswordSecurityService, PasswordMailWorker],
+  controllers: [AuthController, PasswordSecurityController],
   exports: [AuthService],
 })
 export class AuthModule {}

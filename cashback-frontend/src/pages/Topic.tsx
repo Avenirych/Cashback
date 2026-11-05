@@ -1,3 +1,4 @@
+import {useFunctionalPermission} from '../components/FunctionalStagingGate';
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -15,7 +16,8 @@ interface ForumTopic { id: number; caseId?:number; body?:string; rating?:number;
 export default function Topic({ lang }: { lang: string; onLangChange?: (lang: string) => void }) {
   const { id } = useParams();
   const { user, token, forumUser, forumSessionActive, forumBanned } = useAuth();
-  const canWrite = !!user?.email_verified && !!token && forumSessionActive && !!forumUser && !forumUser.banned && !forumBanned;
+  const publicationAllowed=useFunctionalPermission('publication');
+  const canWrite = publicationAllowed && !!user?.email_verified && !!token && forumSessionActive && !!forumUser && !forumUser.banned && !forumBanned;
   const [topic, setTopic] = useState<ForumTopic | null>(null);
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [message, setMessage] = useState("");

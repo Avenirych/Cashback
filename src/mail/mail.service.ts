@@ -1,6 +1,9 @@
+import { backendConfiguration } from '../backend-configuration';
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { verificationFrontendOrigin } from './verification-origin';
+import {passwordTemplate} from './password-templates';
+import type {PasswordLocale} from '../auth/password-recovery-policy';
 
 type MailMode = 'smtp' | 'ethereal' | 'preview';
 
@@ -12,6 +15,7 @@ export class MailService {
   private mode: MailMode = 'preview';
 
   constructor() {
+    if (process.env.CASHBACK_BACKEND_PROFILE === 'staging' || process.env.CASHBACK_BACKEND_PROFILE === 'production') backendConfiguration();
     this.initPromise = this.initializeTransporter();
   }
 
@@ -23,7 +27,9 @@ export class MailService {
     try {
       // Real SMTP: used whenever SMTP_HOST is configured.
       if (process.env.SMTP_HOST) {
+        const staging = process.env.CASHBACK_BACKEND_PROFILE === 'staging' ? backendConfiguration().smtp : null;
         this.transporter = nodemailer.createTransport({
+          ...(staging ? { requireTLS: staging.requireTLS, tls: staging.tls } : {}),
           host: process.env.SMTP_HOST,
           connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 10000,
           port: parseInt(process.env.SMTP_PORT || '587', 10),
@@ -164,4 +170,24 @@ export class MailService {
   ): Promise<string | null> {
     return this.sendSafely('resend-verification', email, token, userName, requestOrigin);
   }
+  async assertPasswordDeliveryReady():Promise<void>{
+    await this.initPromise;
+    if(this.mode!=='smtp'||!this.transporter)throw new Error('Password delivery unavailable');
+    // Strict profile validation, including the explicit isolated historical origin.
+    backendConfiguration();
+  }
+  async sendPasswordResetEmail(email:string,raw:string,name:string,locale:PasswordLocale):Promise<void>{
+    try{
+      if(!/^[a-f0-9]{64}$/.test(raw))throw new Error('Password capability invalid');
+      await this.assertPasswordDeliveryReady();
+      const origin=backendConfiguration().verificationOrigin;
+      const link=new URL('/reset-password',origin);link.searchParams.set('token',raw);
+      await this.transporter!.sendMail({from:process.env.SMTP_FROM||'Cashback+ <noreply@cashback-plus.app>',to:email,...passwordTemplate('reset_request',name,locale,link.toString())});
+    }catch{throw new Error('Password delivery failed');}
+  }
+  async sendPasswordChangedEmail(email:string,name:string,locale:PasswordLocale):Promise<void>{
+    try{await this.assertPasswordDeliveryReady();await this.transporter!.sendMail({from:process.env.SMTP_FROM||'Cashback+ <noreply@cashback-plus.app>',to:email,...passwordTemplate('password_changed',name,locale)});}
+    catch{throw new Error('Password delivery failed');}
+  }
+
 }

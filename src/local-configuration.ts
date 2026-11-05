@@ -1,3 +1,5 @@
+import { validateJwtConfigurationInput } from './auth/jwt-configuration-policy';
+
 /** Configuration only: no database activity or application imports. */
 export function required(name: string, env: NodeJS.ProcessEnv = process.env): string {
   const value = env[name];
@@ -6,11 +8,12 @@ export function required(name: string, env: NodeJS.ProcessEnv = process.env): st
 }
 /** Validate without trimming/replacing the signing key used by existing sessions. */
 export function requiredJwtSecret(env: NodeJS.ProcessEnv = process.env): string {
-  const value = env.JWT_SECRET;
-  if (typeof value !== 'string' || !value.trim() || /[\r\n\0]/.test(value)) {
+  try {
+    return validateJwtConfigurationInput({ secret: env.JWT_SECRET }).secret;
+  } catch {
+    // Keep the historical error contract without exposing rejected configuration.
     throw new Error('HISTORICAL_CONFIG_REQUIRED_JWT_SECRET');
   }
-  return value;
 }
 export function localConfiguration(env: NodeJS.ProcessEnv = process.env) {
   if (required('HISTORICAL_LOCAL', env) !== 'true') throw new Error('HISTORICAL_LOCAL_OPT_IN_REQUIRED');

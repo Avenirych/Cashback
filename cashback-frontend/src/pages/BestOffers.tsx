@@ -1,10 +1,11 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useEffect, useState } from "react";
 
 export default function BestOffers() {
   const [offers, setOffers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/products/best")
+    fetch(`${LEGACY_BACKEND_URL}/products/best`)
       .then(r => r.json())
       .then(setOffers);
   }, []);

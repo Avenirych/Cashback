@@ -1,3 +1,6 @@
+// Isolated business-rule fixture only: production denial is tested unmocked in financial-write-deny.spec.ts.
+// Preserve every existing money/authorization/invariant assertion; this mock is not a runtime activation path.
+jest.mock('../financial-write-deny', () => ({ ...jest.requireActual('../financial-write-deny'), assertFinancialWritesAllowed: jest.fn() }));
 import { DataSource } from 'typeorm';
 import type { EntityManager } from 'typeorm';
 import { FinanceService } from './finance.service';

@@ -63,7 +63,8 @@ interface AuthContextType {
   verifyEmail: (token: string) => Promise<void>;
   checkVerification: (expectedUserId?: number) => Promise<boolean>;
   resendVerification: (email: string) => Promise<ResendResult>;
-  logout: () => void;
+  logout: () => Promise<boolean>;
+  clearSessionAfterPasswordChange: (expectedToken: string) => boolean;
   forumUser: ForumUserData | null;
   forumSessionActive: boolean;
   forumLoading: boolean;
@@ -631,6 +632,7 @@ export const AuthProvider = ({
     email: string;
     password: string;
   }) => {
+    const revision = ++authRevision.current;
     let response: Response;
     try {
       response = await fetch(`${API_URL}/auth/login`, {
@@ -646,6 +648,7 @@ export const AuthProvider = ({
     let result;
     try { result = await response.json(); }
     catch { throw new LoginFailure("server"); }
+    if (revision !== authRevision.current) throw new Error("Session changed");
     applySessionPersistent(result.access_token, result.user);
   };
 
@@ -657,6 +660,7 @@ export const AuthProvider = ({
     email: string;
     password: string;
   }): Promise<RegisterResult> => {
+    const revision = ++authRevision.current;
     const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -670,6 +674,7 @@ export const AuthProvider = ({
     }
 
     const result = JSON.parse(text);
+    if (revision !== authRevision.current) throw new Error("Session changed");
     applySessionPersistent(result.access_token, result.user);
 
     if (!result.user.email_verified) {
@@ -762,7 +767,22 @@ export const AuthProvider = ({
     return false;
   };
 
-  const logout = () => {
+  // Local cleanup after the server already committed password+sv; no second POST.
+  const clearSessionAfterPasswordChange = (expectedToken: string): boolean => {
+    if (session.current.token !== expectedToken) return false;
+    clearReviewIntent();
+    authRevision.current++;
+    session.current = { token: null, user: null };
+    resetForum();
+    storageRemove("local", TOKEN_KEY);
+    clearPendingVerification();
+    setToken(null); setUser(null);
+    setIsEmailVerificationPending(false); setLoading(false);
+    return true;
+  };
+
+  const logout = async (): Promise<boolean> => {
+    const bearer = session.current.token;
     clearReviewIntent();
     authRevision.current++;
     session.current = { token: null, user: null };
@@ -775,6 +795,16 @@ export const AuthProvider = ({
     setUser(null);
     setIsEmailVerificationPending(false);
     setLoading(false);
+    if (!bearer) return false;
+    const abort = new AbortController();
+    const timeout = setTimeout(() => abort.abort(), 5000);
+    try {
+      const response = await fetch(`${API_URL}/auth/logout-all`, {
+        method: "POST", headers: { Authorization: `Bearer ${bearer}` }, signal: abort.signal,
+      });
+      return response.status === 204;
+    } catch { return false; }
+    finally { clearTimeout(timeout); }
   };
 
   return (
@@ -790,6 +820,7 @@ export const AuthProvider = ({
         checkVerification,
         resendVerification,
         logout,
+        clearSessionAfterPasswordChange,
         forumUser,
         forumSessionActive,
         forumLoading,

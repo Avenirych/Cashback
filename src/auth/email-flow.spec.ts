@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../mail/mail.service';
 import { User } from '../users/user.entity';
 const token = 'a'.repeat(64);
-const account = {id: 9, email: 'test@example.test', name: 'Buyer', email_verified: false} as User;
+const account = {sessionVersion: 0, id: 9, email: 'test@example.test', name: 'Buyer', email_verified: false} as User;
 function setup() {
  const users = { consumeEmailToken: jest.fn(), getByEmail: jest.fn(), update: jest.fn().mockResolvedValue(account) };
  const mail = {sendResendVerificationEmail: jest.fn().mockResolvedValue(null)};
@@ -19,10 +19,10 @@ test('valid token returns server-verified session and never token fields', async
 test.each(['', 'invalid', 'x'.repeat(64)])('invalid token rejected without consuming: %s',async value=>{const {users,service}=setup();await expect(service.verifyEmail(value)).rejects.toThrow('Invalid or expired');expect(users.consumeEmailToken).not.toHaveBeenCalled();});
 test.each(['expired','reused','unknown'])('%s token fails closed',async()=>{const {users,service}=setup();users.consumeEmailToken.mockResolvedValue(null);await expect(service.verifyEmail(token)).rejects.toThrow('Invalid or expired');});
 test('single-use atomic update enforces expiry and removes token',async()=>{
- const query:any={update:jest.fn().mockReturnThis(),set:jest.fn().mockReturnThis(),where:jest.fn().mockReturnThis(),returning:jest.fn().mockReturnThis(),execute:jest.fn().mockResolvedValue({raw:[{...account,email_verified:true}]})};
+ const query:any={update:jest.fn().mockReturnThis(),set:jest.fn().mockReturnThis(),where:jest.fn().mockReturnThis(),returning:jest.fn().mockReturnThis(),execute:jest.fn().mockResolvedValue({raw:[{...account,email_verified:true,session_version:account.sessionVersion}]})};
  query.addSelect=jest.fn().mockReturnThis();query.getOne=jest.fn().mockResolvedValue({...account,email_verified:true});
- const repo:any={createQueryBuilder:()=>query,findOne:jest.fn(),create:()=>({}),metadata:{columns:['id','email','name','email_verified'].map(name=>({databaseName:name,setEntityValue:(u:any,v:any)=>{u[name]=v}}))},manager:{connection:{driver:{prepareHydratedValue:(v:any)=>v}}}};
- const users=new UsersService(repo);expect((await users.consumeEmailToken(token))?.email_verified).toBe(true);
+ const repo:any={createQueryBuilder:()=>query,findOne:jest.fn(),create:()=>({}),metadata:{columns:[...['id','email','name','email_verified'].map(name=>({databaseName:name,setEntityValue:(u:any,v:any)=>{u[name]=v}})),{databaseName:'session_version',setEntityValue:(u:any,v:any)=>{u.sessionVersion=v}}]},manager:{connection:{driver:{prepareHydratedValue:(v:any)=>v}}}};
+ const users=new UsersService(repo);const consumed=await users.consumeEmailToken(token);expect(consumed?.email_verified).toBe(true);expect(consumed?.sessionVersion).toBe(0);
  expect(query.where.mock.calls[0][0]).toContain('email_verified = false');expect(query.where.mock.calls[0][0]).toContain('email_token_expires_at > CURRENT_TIMESTAMP');expect(query.set).toHaveBeenCalledWith({email_verified:true,email_token:null,email_token_expires_at:null});
  expect(query.returning).toHaveBeenCalledWith('*');expect(repo.findOne).not.toHaveBeenCalled();
  query.execute.mockResolvedValue({raw:[]});expect(await users.consumeEmailToken(token)).toBeNull();

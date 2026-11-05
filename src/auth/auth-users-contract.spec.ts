@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 jest.mock('bcrypt', () => ({ hash: jest.fn().mockResolvedValue('synthetic-hash'), compare: jest.fn().mockResolvedValue(true) }));
 
 describe('AuthService / UsersService internal contract', () => {
-  const fixture = { id:101, email:'fixture@example.invalid', name:'Fixture', password:'synthetic-hash', balance:0, avatar_url:null, email_verified:false, email_token:'a'.repeat(64), email_token_expires_at:new Date(Date.now()+86400000), created_at:new Date() };
+  const fixture = { sessionVersion:0, id:101, email:'fixture@example.invalid', name:'Fixture', password:'synthetic-hash', balance:0, avatar_url:null, email_verified:false, email_token:'a'.repeat(64), email_token_expires_at:new Date(Date.now()+86400000), created_at:new Date() };
   const users={getByEmail:jest.fn(),create:jest.fn(),consumeEmailToken:jest.fn(),findByEmailToken:jest.fn(),update:jest.fn(),getById:jest.fn(),getOwnProfile:jest.fn()};
   const mail={sendVerificationEmail:jest.fn().mockResolvedValue(null)};
   const jwt={sign:jest.fn().mockReturnValue('synthetic-jwt')};
@@ -38,7 +38,7 @@ describe('AuthService / UsersService internal contract', () => {
     const res=await auth.register('fixture@example.invalid','Synthetic1!','Fixture',{firstName:'Fixture',lastName:'Buyer',phone_e164:'+12025550123'});
     expect(bcrypt.hash).toHaveBeenCalledWith('Synthetic1!',10);
     expect(users.create).toHaveBeenCalledWith(expect.objectContaining({password:'synthetic-hash',balance:0,email_verified:false}));
-    expect(res.user).not.toHaveProperty('password');expect(res.user).not.toHaveProperty('email_token');
+    expect(res.user).not.toHaveProperty('password');expect(res.user).not.toHaveProperty('email_token');expect(res.user).not.toHaveProperty('sessionVersion');expect(res.user).not.toHaveProperty('sv');
     expect(users.create).toHaveBeenCalledWith(expect.objectContaining({phone_e164:'+12025550123',firstName:'Fixture',lastName:'Buyer'}));
     expect(res.user).toHaveProperty('phone_e164',null);expect(res.user).not.toHaveProperty('phone_verified');
   });
@@ -56,7 +56,7 @@ describe('AuthService / UsersService internal contract', () => {
     users.getByEmail.mockResolvedValue(fixture);
     const login = await auth.login(fixture.email, 'synthetic-password');
     expect(login.user).toHaveProperty('phone_e164',null);expect(login.user).not.toHaveProperty('phone_verified');
-    expect(jwt.sign).toHaveBeenCalledWith({sub:fixture.id,email:fixture.email,name:fixture.name});
+    expect(jwt.sign).toHaveBeenCalledWith({sub:fixture.id,email:fixture.email,name:fixture.name,sv:fixture.sessionVersion});
     users.getById.mockResolvedValue({...fixture,phone_e164:null});
     expect(await auth.profile({id:fixture.id,email:fixture.email})).toMatchObject({phone_e164:null});
     expect(users.getById).toHaveBeenCalledWith(fixture.id,true);

@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import {createHash,randomUUID} from 'node:crypto';
 import type {DataSource,EntityManager} from 'typeorm';
 import {FinanceEventsService} from './finance-events.service';
@@ -33,6 +34,7 @@ type Result={status:'completed'|'pending_review';amountPence:string;reason?:stri
 export class ReceiptSettlement {
  constructor(private readonly source:DataSource,private readonly events:FinanceEventsService,private readonly authority:SettlementAuthority=new DisabledSettlementAuthority()){}
  async execute(m:EntityManager,principal:string,reference:string):Promise<Result>{
+  assertFinancialWritesAllowed();
   const runner=m?.queryRunner;if(m?.connection!==this.source||!runner||runner.connection!==this.source||runner.manager!==m||runner.isReleased||!runner.isTransactionActive)throw new Error('Active caller transaction required');
   await m.query('SELECT pg_advisory_xact_lock(726405,0)');
   await m.query('SELECT pg_advisory_xact_lock(726412,0)');

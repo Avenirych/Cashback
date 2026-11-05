@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import {createHash,randomUUID} from 'node:crypto';
 import type {DataSource,EntityManager} from 'typeorm';
 import {FinanceEventsService} from './finance-events.service';
@@ -19,6 +20,7 @@ export class PolicyContext {
   return (await m.query('SELECT to_char(clock_timestamp() AT TIME ZONE \'UTC\',\'YYYY-MM-DD"T"HH24:MI:SS.US"Z"\') AS t'))[0].t as string;
  }
  async enter<T>(m:EntityManager,principal:string,action:string,reference:string,related?:(facts:T)=>readonly string[]){
+  assertFinancialWritesAllowed();
   const r=m?.queryRunner;if(m?.connection!==this.source||!r||r.connection!==this.source||r.manager!==m||r.isReleased||!r.isTransactionActive)throw Error('Active caller transaction required');
   const value=await this.authority.verify(m,principal,action,reference);
   for(const x of [value.actor,value.proof])if(typeof x!=='string'||!/^[A-Za-z0-9:_-]{1,160}$/.test(x))throw Error('Verified actor/proof required');
@@ -31,10 +33,12 @@ export class PolicyContext {
  }
  async get(m:EntityManager,kind:string,scope:string,key:string){return (await m.query('SELECT payload,hash,journal,sequence,to_char("ingestedAt" AT TIME ZONE \'UTC\',\'YYYY-MM-DD"T"HH24:MI:SS.US"Z"\') AS ingested FROM finance_policy_records WHERE kind=$1 AND scope=$2 AND key=$3',[kind,scope,key]))[0];}
  async record(m:EntityManager,kind:string,scope:string,key:string,payload:unknown,journal?:string,serverReceivedAt?:string){
+  assertFinancialWritesAllowed();
   const hash=digest(payload);await m.query('INSERT INTO finance_policy_records(kind,scope,key,policy,payload,hash,journal,"ingestedAt") VALUES($1,$2,$3,$4,$5::jsonb,$6,$7,COALESCE($8::timestamptz,clock_timestamp())) ON CONFLICT(kind,scope,key) DO NOTHING',[kind,scope,key,this.policy,json(payload),hash,journal||null,serverReceivedAt||null]);
   const prior=await this.get(m,kind,scope,key);if(prior.hash!==hash||prior.journal!==(journal||null))throw Error('OWNER_POLICY_EVENT_CONFLICT');return prior;
  }
  async command(m:EntityManager,actor:string,key:string,request:unknown,fn:()=>Promise<Record<string,unknown>>){
+  assertFinancialWritesAllowed();
   if(!/^[A-Za-z0-9:_-]{8,120}$/.test(key))throw Error('Stable policy command key required');
   // Reverify authority on every call, but a rotated verification reference is
   // audit provenance, not a different economic command. First proof is retained.
@@ -44,9 +48,11 @@ export class PolicyContext {
   const result=await fn();await this.record(m,'command',actor,key,{requestHash:hash,request,result,policy:OWNER_POLICY});return result;
  }
  async account(m:EntityManager,key:string,owner:string,kind:string,side:'credit'|'debit',nonnegative=true){
+  assertFinancialWritesAllowed();
   if(key.length>160)key='policy:'+digest(key);
   await m.query('INSERT INTO finance_accounts(id,"accountKey",kind,"ownerReference","normalSide",nonnegative) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT("accountKey") DO NOTHING',[randomUUID(),key,kind,owner,side,nonnegative]);
   const [a]=await m.query('SELECT * FROM finance_accounts WHERE "accountKey"=$1',[key]);if(a.kind!==kind||a.ownerReference!==owner||a.normalSide!==side||a.nonnegative!==nonnegative)throw Error('Policy account identity mismatch');return a.id as string;
  }
- async post(m:EntityManager,lines:Posting[]){const id=randomUUID();return this.events.postEventWithManager(m,{type:'finance.journal.posted',schemaVersion:1,eventId:id,idempotencyKey:'policy:'+id,operationId:id,createdAt:new Date().toISOString(),data:{currency:'GBP'}},lines);}
+ async post(m:EntityManager,lines:Posting[]){
+  assertFinancialWritesAllowed();const id=randomUUID();return this.events.postEventWithManager(m,{type:'finance.journal.posted',schemaVersion:1,eventId:id,idempotencyKey:'policy:'+id,operationId:id,createdAt:new Date().toISOString(),data:{currency:'GBP'}},lines);}
 }

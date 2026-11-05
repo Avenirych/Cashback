@@ -6,7 +6,8 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import { isSessionVersion } from './session-version';
+import {hashAccountPassword,verifyAccountPassword} from './account-password';
 import * as crypto from 'crypto';
 import { UsersService } from '../users/users.service';
 import { normalizePhone } from '../users/phone-normalization';
@@ -58,9 +59,11 @@ export class AuthService {
   }
 
   private createAccessToken(user: User): string {
+    if (!isSessionVersion(user.sessionVersion)) throw new ServiceUnavailableException('Session authority unavailable');
     const uuid = serverAccountUuid(user);
     return this.jwtService.sign({
       sub: user.id,
+      sv: user.sessionVersion,
       ...(uuid ? {account_uuid: uuid} : {}),
       email: user.email,
       name: user.name,
@@ -114,7 +117,7 @@ export class AuthService {
       throw new BadRequestException('User with this email already exists');
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await hashAccountPassword(password);
     const emailToken = this.generateEmailToken();
 
     let user: User;
@@ -238,7 +241,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const valid = await bcrypt.compare(password, user.password);
+    const valid = await verifyAccountPassword(password, user.password);
 
     if (!valid) {
       throw new UnauthorizedException('Invalid credentials');

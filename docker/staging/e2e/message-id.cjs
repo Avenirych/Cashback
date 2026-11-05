@@ -1,0 +1,1 @@
+const fs=require('fs'),s=JSON.parse(fs.readFileSync('/tmp/browser-state.json')),list=JSON.parse(fs.readFileSync(0,'utf8'));const m=(list.messages||[]).filter(x=>(x.To||[]).some(t=>t.Address===s.email));if(m.length!==1||!/^[-a-zA-Z0-9]+$/.test(m[0].ID))process.exit(2);process.stdout.write(m[0].ID);

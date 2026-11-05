@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import { Controller, Post, Body, NotFoundException } from '@nestjs/common';
 import { ClicksService } from './clicks.service';
 import { ProductsService } from '../products/products.service';
@@ -9,6 +10,7 @@ export class ClicksController {
     private readonly productsService: ProductsService,
   ) {}
 
+  @NonFinancialMutation()
   @Post()
   async registerClick(@Body() body: { offerId: number }) {
     const offer = await this.productsService.getOfferById(body.offerId);

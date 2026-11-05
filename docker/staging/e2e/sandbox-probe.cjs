@@ -1,0 +1,2 @@
+const {chromium}=require('/e2e/node_modules/playwright');
+(async()=>{const b=await chromium.launch({headless:true,channel:"chromium",chromiumSandbox:true});console.log('LAUNCH_PASS');const p=await b.newPage();await p.setContent('<h1>Sandbox diagnostic</h1><button>Test</button>');if(await p.locator('h1').innerText()!=='Sandbox diagnostic')throw Error('DOM_FAILED');console.log('BROWSER_DOM_PASS');await p.goto('chrome://sandbox');const text=await p.locator('body').innerText();console.log(text);await b.close();})().catch(e=>{console.error(String(e.message));process.exitCode=1});

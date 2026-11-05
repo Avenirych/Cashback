@@ -1,0 +1,9 @@
+# Explicit opt-in overlay; never used alone. Original profile remains unchanged.
+services:
+  backend:
+    environment:
+      CASHBACK_STAGING_WORKFLOWS: synthetic-v1
+  frontend:
+    build:
+      args:
+        STAGING_WORKFLOWS: synthetic-v1

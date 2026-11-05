@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import {BonusUseTerms} from './bonus-use-terms';
 import {BONUS_USE_RULES} from './bonus-use-policy';
 import {returnDestinations,recordGiftRecovery,cancelGiftGroup,GiftEvidence} from './policy-gift';
@@ -10,6 +11,7 @@ import {chooseOrder,eligibleValue,OWNER_POLICY,utc,RankedOrder,policyPence} from
 type Observation={orderSource:string;orderId:string;click:string;version:number;messageSource:string;messageId:string;eligible:boolean;placedAt:string|null;amount:string|null;amountReference:string|null;items?:{id:string;kind:'product'|'delivery'|'excluded';eligible:boolean;afterDiscount:string}[];merchantCap:string|null;mandatoryCaps:string[]|null;restrictionsComplete:boolean;terms:string|null;finality:boolean};
 export class PolicyPurchase {
  async reserve(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{click:string;amount:string}>(m,principal,'reserve_fifo',reference);
   if(this.c.policy!==POLICY_21)throw Error('FIFO policy approval required');
   return this.c.command(m,actor,key,{action:'reserve_fifo',facts:f,proof,...(this.useTerms?{applicationRules:BONUS_USE_RULES}:{})},async()=>{
@@ -24,6 +26,7 @@ export class PolicyPurchase {
  }
  constructor(private readonly c:PolicyContext,private readonly useTerms?:BonusUseTerms){}
  async ingest(m:EntityManager,principal:string,reference:string){
+  assertFinancialWritesAllowed();
   // Capture server receipt before potentially delayed verification/actor-lock
   // scheduling. Nothing is accepted/persisted until authority verification succeeds.
   const received=await this.c.serverReceiptTime(m);
@@ -48,6 +51,7 @@ export class PolicyPurchase {
   return {status:'recorded',firstIngested:(await this.c.get(m,'seller_ingestion',f.messageSource,f.messageId)).ingested,replay:!!prior};
  }
  async select(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{click:string;complete:boolean;terminalProof:string|null;versions:{source:string;id:string;version:number}[]}>(m,principal,'select',reference);
   return this.c.command(m,actor,key,{action:'select',facts:f,proof},async()=>{
    const [click]=await m.query('SELECT * FROM finance_purchase_clicks WHERE id=$1 FOR UPDATE',[f.click]);if(!click||click.buyerReference!==actor)throw Error('Click owner mismatch');
@@ -74,6 +78,7 @@ export class PolicyPurchase {
   });
  }
  async apply(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{click:string;selection:string;reservation:string;currentVersionsVerified:boolean;possibleCashbackPence?:string}&GiftEvidence>(m,principal,'apply_bonus',reference,f=>this.c.policy===POLICY_21?(f.giftOrigins||[]):[]);
   return this.c.command(m,actor,key,{action:'apply_bonus',facts:f,proof,...(this.useTerms?{applicationRules:BONUS_USE_RULES}:{})},async()=>{
    const selected=await this.c.get(m,'selection',f.click,f.selection);
@@ -120,6 +125,7 @@ export class PolicyPurchase {
   });
  }
  async cancel(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{click:string;selection:string;cancelledOrder:[string,string];cancellationVerified:boolean;reservation:string}&GiftEvidence>(m,principal,'cancel_winner',reference,f=>this.c.policy===POLICY_21?(f.giftOrigins||[]):[]);
   return this.c.command(m,actor,key,{action:'cancel_winner',facts:f,proof},async()=>{
    const selection=await this.c.get(m,'selection',f.click,f.selection);

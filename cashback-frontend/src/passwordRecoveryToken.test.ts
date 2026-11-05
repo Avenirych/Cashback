@@ -1,0 +1,5 @@
+// Synthetic capability is generated only in memory during a future test run.
+const capability=()=>Array.from(crypto.getRandomValues(new Uint8Array(32))).map(v=>v.toString(16).padStart(2,'0')).join('');
+beforeEach(()=>{jest.resetModules();history.replaceState(null,'','/');});
+test('startup removes token and hash from URL without network or storage',()=>{const value=capability();history.replaceState(null,'','/reset-password?token='+value+'#fragment');const set=jest.spyOn(Storage.prototype,'setItem');const module=require('./passwordRecoveryToken');expect(location.pathname).toBe('/reset-password');expect(location.search).toBe('');expect(location.hash).toBe('');expect(module.captureRecoveryToken()===value).toBe(true);module.clearRecoveryToken();expect(module.captureRecoveryToken()).toBeNull();expect(set).not.toHaveBeenCalled();set.mockRestore();});
+test('malformed and duplicate tokens fail closed',()=>{history.replaceState(null,'','/reset-password?token=invalid&token=invalid');const module=require('./passwordRecoveryToken');expect(module.captureRecoveryToken()).toBeNull();expect(location.search).toBe('');});

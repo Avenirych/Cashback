@@ -1,3 +1,4 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useState } from "react";
 
 export default function Compare() {
@@ -5,7 +6,7 @@ export default function Compare() {
   const [offers, setOffers] = useState([]);
 
   const compare = () => {
-    fetch(`http://localhost:3000/products/compare?ids=${ids}`)
+    fetch(`${LEGACY_BACKEND_URL}/products/compare?ids=${ids}`)
       .then(r => r.json())
       .then(setOffers);
   };

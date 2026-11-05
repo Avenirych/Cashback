@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import type { EntityManager } from 'typeorm';
@@ -22,6 +23,7 @@ export class BankReceiptsService {
  constructor(private readonly dataSource:DataSource,private readonly events:FinanceEventsService,
   @Optional() @Inject(BANK_EVIDENCE_VERIFIER) private readonly verifier?:BankEvidenceVerifier) {}
  async registerWithManager(manager:EntityManager,input:RegisterBankReceiptCommand):Promise<{receiptId:string;lotId:string;journalId:string;eventId:string;replay:boolean}> {
+  assertFinancialWritesAllowed();
   const runner=manager?.queryRunner;
   if(manager?.connection!==this.dataSource||!runner||runner.connection!==this.dataSource||runner.manager!==manager||runner.isReleased||!runner.isTransactionActive)throw new Error('Active receipt transaction manager required');
   if(!this.verifier)throw new Error('Trusted bank evidence verifier is not configured');

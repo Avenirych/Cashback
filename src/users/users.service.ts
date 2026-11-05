@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import {
   Injectable,
   NotFoundException,
@@ -17,7 +18,7 @@ export class UsersService {
 
   /** Capture UUID from the same row; absent pre-migration JSON key is NULL. */
   private async identityRow(query: SelectQueryBuilder<User>): Promise<User | null> {
-    const { entities, raw } = await query.addSelect("to_jsonb(u)->>'account_uuid'", 'auth_account_uuid').getRawAndEntities();
+    const { entities, raw } = await query.addSelect('u.sessionVersion').addSelect("to_jsonb(u)->>'account_uuid'", 'auth_account_uuid').getRawAndEntities();
     if (!entities.length && !raw.length) return null;
     if (entities.length !== 1 || raw.length !== 1 || raw[0].u_id !== entities[0].id) throw new ServiceUnavailableException('Account identity unavailable');
     return rememberServerIdentity(entities[0], raw[0].auth_account_uuid);
@@ -48,6 +49,7 @@ export class UsersService {
   }
 
   async create(data: Partial<User>): Promise<User> {
+    if (data.balance !== undefined && String(data.balance) !== '0') assertFinancialWritesAllowed();
     const user = this.userRepo.create(data);
     const result = await this.userRepo.createQueryBuilder().insert().into(User).values(user).returning('*').execute();
     if (result.raw.length !== 1) throw new ServiceUnavailableException('Account creation unavailable');
@@ -58,6 +60,7 @@ export class UsersService {
     id: number,
     data: Partial<User>,
   ): Promise<User> {
+    if (Object.prototype.hasOwnProperty.call(data, 'balance')) assertFinancialWritesAllowed();
     await this.userRepo.update(id, data);
 
     const user = await this.getById(id);
@@ -73,6 +76,7 @@ export class UsersService {
     userId: number,
     newBalance: number,
   ): Promise<User> {
+  assertFinancialWritesAllowed();
     const user = await this.getById(userId);
 
     if (!user) {

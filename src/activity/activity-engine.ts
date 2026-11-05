@@ -1,6 +1,6 @@
 import {createHash,randomUUID} from 'node:crypto';
 import {BadRequestException,ConflictException,HttpException} from '@nestjs/common';
-export type Action='video'|'research'|'review'|'topic'|'post'|'failed_login'|'registration'|'resend'|'registration_total'|'sensitive';
+export type Action='video'|'research'|'review'|'topic'|'post'|'failed_login'|'registration'|'resend'|'registration_total'|'sensitive'|'password_reset_request'|'password_reset_confirm'|'password_change';
 export type Mode='demo'|'real'|'security';
 export interface Sql {query(sql:string,params?:unknown[]):Promise<any[]>;queryRunner?:{isTransactionActive?:boolean}}
 export interface Command {subject:string;userId?:number;action:Action;partner:string;mode:Mode;key:string;material:string}
@@ -9,6 +9,7 @@ export function boundary(period:string,now:Date){
  const start=new Date(now),end=new Date(now);
  if(period==='month'){start.setUTCDate(1);start.setUTCHours(0,0,0,0);end.setTime(start.getTime());end.setUTCMonth(end.getUTCMonth()+1);}
  else if(period==='day'){start.setUTCHours(0,0,0,0);end.setTime(start.getTime()+86400000);}
+ else if(period==='hour'){start.setTime(Math.floor(now.getTime()/3600000)*3600000);end.setTime(start.getTime()+3600000);}
  else if(period==='quarter_hour'||period==='minute'){const ms=period==='minute'?60000:900000;start.setTime(Math.floor(now.getTime()/ms)*ms);end.setTime(start.getTime()+ms);}
  else throw new BadRequestException('Invalid period');
  return {start:start.toISOString(),end:end.toISOString()};
@@ -16,7 +17,7 @@ export function boundary(period:string,now:Date){
 // PostgreSQL TypeORM returns UPDATE/DELETE as [rows, affectedCount].
 export function returnedRows(result:any[]):any[]{return Array.isArray(result[0])&&typeof result[1]==='number'?result[0]:result;}
 export class ActivityEngine {
- private validate(c:Command){if(!['video','research','review','topic','post','failed_login','registration','resend','registration_total','sensitive'].includes(c.action)||!['demo','real','security'].includes(c.mode)||typeof c.subject!=='string'||!/^[-a-zA-Z0-9_:]{1,160}$/.test(c.subject)||typeof c.partner!=='string'||!/^[-a-zA-Z0-9_*:]{1,100}$/.test(c.partner)||typeof c.key!=='string'||!/^[-a-zA-Z0-9_:]{8,160}$/.test(c.key)||typeof c.material!=='string'||c.material.length>20000)throw new BadRequestException('Invalid activity command');}
+ private validate(c:Command){if(!['video','research','review','topic','post','failed_login','registration','resend','registration_total','sensitive','password_reset_request','password_reset_confirm','password_change'].includes(c.action)||!['demo','real','security'].includes(c.mode)||typeof c.subject!=='string'||!/^[-a-zA-Z0-9_:]{1,160}$/.test(c.subject)||typeof c.partner!=='string'||!/^[-a-zA-Z0-9_*:]{1,100}$/.test(c.partner)||typeof c.key!=='string'||!/^[-a-zA-Z0-9_:]{8,160}$/.test(c.key)||typeof c.material!=='string'||c.material.length>20000)throw new BadRequestException('Invalid activity command');}
  async lock(m:Sql,subject:string,action:string,mode:string){if(m.queryRunner?.isTransactionActive!==true)throw new Error('Active PostgreSQL transaction required');await m.query('SELECT pg_advisory_xact_lock(729211,hashtext($1))',[JSON.stringify([subject,action,mode])]);}
  async reserve(m:Sql,c:Command){
   this.validate(c);await this.lock(m,c.subject,c.action,c.mode);

@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import type {EntityManager} from 'typeorm';
 import {PolicyContext} from './policy-context';
 import {OWNER_POLICY,sixMonthsUtc,utc,policyPence} from './owner-policy';
@@ -7,6 +8,7 @@ type ClaimFacts={lots:string[];excluded?:{lot:string;restrictionEvidence:string}
 export class PolicyPayout {
  constructor(private readonly c:PolicyContext,private readonly isolatedClock?:()=>string){}
  async claim(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<ClaimFacts>(m,principal,'payout_claim',reference);
   return this.c.command(m,actor,key,{action:'payout_claim',facts:f,proof},async()=>{
    const now=this.isolatedClock?this.isolatedClock():await this.c.serverReceiptTime(m);
@@ -42,6 +44,7 @@ export class PolicyPayout {
   });
  }
  async outcome(m:EntityManager,principal:string,key:string,reference:string){
+  assertFinancialWritesAllowed();
   const {actor,proof,facts:f}=await this.c.enter<{attempt:string;providerMessage:string;state:'success'|'failed'|'unknown';reconciled:boolean;currency:string;quote:string;principalPaid:string|null;bankFee:string|null;transferFee:string|null}>(m,principal,'payout_outcome',reference);
   return this.c.command(m,actor,key,{action:'payout_outcome',facts:f,proof},async()=>{
    const p=await this.c.get(m,'payout',actor,f.attempt);if(!p)throw Error('Owned payout attempt required');const job=p.payload;

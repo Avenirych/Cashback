@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import {MemoryRouter, Route, Routes} from 'react-router-dom';
 import Login from './Login';
 import messages from '../content/loginMessages.json';
+import {passwordText} from '../passwordApi';
 import {LoginFailure} from '../loginErrors';
 let mockLogin=jest.fn();
 let mockPending=false;
@@ -18,9 +19,9 @@ function mount(lang='ru',path='/login'){return render(<MemoryRouter initialEntri
 function fill(lang:keyof typeof messages='ru'){fireEvent.change(screen.getByLabelText(messages[lang].email),{target:{value:'buyer@example.test'}});fireEvent.change(screen.getByLabelText(messages[lang].password),{target:{value:'old-password'}});}
 test.each(['ru','en','de','fr']as const)('%s complete copy, labels, autocomplete, genuine links and no fake reset route',lang=>{
  const v=mount(lang.toUpperCase()),t=messages[lang];expect(screen.getByRole('heading',{level:1})).toHaveTextContent(t.title);
- for(const text of [t.intro,t.forgot,t.recoveryUnavailable,t.securityTitle,t.security,t.attempts,t.importantTitle,t.important,t.age])expect(v.container).toHaveTextContent(text);
- expect(screen.getByRole('link',{name:t.register})).toHaveAttribute('href','/register');expect(screen.getByRole('link',{name:t.privacyLink})).toHaveAttribute('href','/privacy');expect(screen.getByRole('link',{name:t.contacts})).toHaveAttribute('href','/contacts');
- expect(screen.queryByRole('link',{name:t.forgot})).not.toBeInTheDocument();expect(screen.getByLabelText(t.email)).toHaveAttribute('autocomplete','email');expect(screen.getByLabelText(t.password)).toHaveAttribute('autocomplete','current-password');expect(screen.getByRole('button',{name:t.submit})).toBeDisabled();
+ for(const text of [t.intro,passwordText(lang).forgot,t.securityTitle,t.security,t.attempts,t.importantTitle,t.important,t.age])expect(v.container).toHaveTextContent(text);
+ expect(screen.getByRole('link',{name:t.register})).toHaveAttribute('href','/register');expect(screen.getByRole('link',{name:t.privacyLink})).toHaveAttribute('href','/privacy');expect(screen.getByRole('link',{name:passwordText(lang).forgot})).toHaveAttribute('href','/forgot-password');
+ expect(screen.getByLabelText(t.email)).toHaveAttribute('autocomplete','email');expect(screen.getByLabelText(t.password)).toHaveAttribute('autocomplete','current-password');expect(screen.getByRole('button',{name:t.submit})).toBeDisabled();
  if(lang!=='ru')expect(v.container.textContent).not.toMatch(/[А-Яа-яЁё]/);
 });
 test('existing email validation prevents requests and localizes errors',()=>{mount('de');fireEvent.change(screen.getByLabelText(messages.de.email),{target:{value:'a..b@example.test'}});expect(screen.getByRole('alert')).toHaveTextContent(messages.de.errors.email);fireEvent.submit(document.querySelector('form')!);expect(mockLogin).not.toHaveBeenCalled();});

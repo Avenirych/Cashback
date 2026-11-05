@@ -1,14 +1,16 @@
+import {functionalStagingBarrier} from './staging-functional';
 import {forumWriteBarrier} from './forum/moderation-schema-gate';
-import { localConfiguration } from './local-configuration';
+import { backendConfiguration } from './backend-configuration';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'node:path';
 
 async function bootstrap() {
-  const config = localConfiguration();
+  const config = backendConfiguration();
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.use(functionalStagingBarrier);
   app.use(forumWriteBarrier);
   app.useStaticAssets(join(process.cwd(), 'public', 'avatars'), {
     prefix: '/avatars/',

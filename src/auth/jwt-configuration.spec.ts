@@ -31,7 +31,7 @@ async function testModule(value: unknown) {
   return Test.createTestingModule({
     imports: [JwtConfigurationModule, JwtModule.registerAsync(jwtRegistrationOptions), PassportModule],
     controllers: [ProbeController],
-    providers: [JwtStrategy, { provide: UsersService, useValue: { getById: jest.fn().mockResolvedValue({ id: 42, email: "synthetic@example.test", email_verified: false }) } }],
+    providers: [JwtStrategy, { provide: UsersService, useValue: { getById: jest.fn().mockResolvedValue({ id: 42, email: "synthetic@example.test", email_verified: false, sessionVersion: 0 }) } }],
   }).overrideProvider(ConfigService).useValue(configured(value)).compile();
 }
 
@@ -75,7 +75,7 @@ describe('Shared JWT configuration', () => {
     afterAll(async () => { await app.close(); });
 
     it('accepts signer JWT and preserves algorithm, TTL and payload', async () => {
-      const claims = { sub: 42, email: 'synthetic@example.test', name: 'Synthetic' };
+      const claims = { sv: 0, sub: 42, email: 'synthetic@example.test', name: 'Synthetic' };
       const token = jwt.sign(claims);
       const decoded = jwt.decode(token, { complete: true }) as {
         header: { alg: string }; payload: typeof claims & { iat: number; exp: number };
@@ -85,17 +85,17 @@ describe('Shared JWT configuration', () => {
       expect(decoded.payload.exp - decoded.payload.iat).toBe(86400);
       await request(app.getHttpServer()).get('/jwt-probe')
         .set('Authorization', `Bearer ${token}`).expect(200)
-        .expect({ id: 42, email: claims.email });
+        .expect({ id: 42, email: claims.email, sv: 0 });
     });
 
     it('rejects a different signature', async () => {
-      const wrong = new JwtService({ secret: 'different-synthetic-key' }).sign({ sub: 42 });
+      const wrong = new JwtService({ secret: 'different-synthetic-key' }).sign({ sv: 0, sub: 42 });
       await request(app.getHttpServer()).get('/jwt-probe')
         .set('Authorization', `Bearer ${wrong}`).expect(401);
     });
 
     it('keeps expiration verification enabled', async () => {
-      const expired = jwt.sign({ sub: 42 }, { expiresIn: -1 });
+      const expired = jwt.sign({ sv: 0, sub: 42 }, { expiresIn: -1 });
       await request(app.getHttpServer()).get('/jwt-probe')
         .set('Authorization', `Bearer ${expired}`).expect(401);
     });

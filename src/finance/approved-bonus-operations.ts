@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import type {EntityManager} from 'typeorm';
 import {LotOperations,LotCommand} from './lot-operations';
 import {ReceiptSettlement} from './receipt-settlement';
@@ -23,6 +24,7 @@ export class ApprovedBonusOperations {
   await m.query('SELECT effective FROM finance_bonus_use_activation');
  }
  async settle(m:EntityManager,principal:string,reference:string){
+  assertFinancialWritesAllowed();
   await this.prepare(m);
   const result=await this.receipts.execute(m,principal,reference);
   if(result.status==='completed'&&result.lotId){
@@ -36,6 +38,7 @@ export class ApprovedBonusOperations {
   return result;
  }
  async transfer(m:EntityManager,principal:string,key:string,command:Extract<LotCommand,{action:'transfer'}>){
+  assertFinancialWritesAllowed();
   await this.prepare(m);
   const result=await this.lots.execute(m,principal,key,command);
   if(result.status==='completed'&&result.lotId){

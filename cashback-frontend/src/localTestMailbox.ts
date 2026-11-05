@@ -5,9 +5,10 @@ export function localTestMailboxEnabled(
   origin = window.location.origin,
   api = BACKEND_URL
 ): boolean {
+  if (process.env.REACT_APP_STAGING === "true") return false;
   return mode === "development" && (
     (["http://127.0.0.1:3005", "http://localhost:3005"].includes(origin) && api === "/api") ||
     (origin === "http://localhost:3004" && api === "http://127.0.0.1:3006")
   );
 }
-export const LOCAL_TEST_MAILBOX_URL = "http://127.0.0.1:8036/";
+export const LOCAL_TEST_MAILBOX_URL = process.env.REACT_APP_STAGING === "true" ? "" : "http://127.0.0.1:8036/";

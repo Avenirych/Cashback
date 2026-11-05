@@ -16,8 +16,8 @@ describe('JWT payload shape and PostgreSQL identity bounds', () => {
     expect(users.getById).not.toHaveBeenCalled();
   });
   it('accepts maximum PostgreSQL int32 identity only when persisted identity matches', async () => {
-    users.getById.mockResolvedValue({id:2147483647,email:'persisted@example.test',email_verified:false});
-    await expect(strategy.validate({sub:2147483647,email:'claim@example.test'})).resolves.toEqual({id:2147483647,email:'persisted@example.test'});
+    users.getById.mockResolvedValue({id:2147483647,email:'persisted@example.test',email_verified:false,sessionVersion:0});
+    await expect(strategy.validate({sub:2147483647,email:'claim@example.test',sv:0})).resolves.toEqual({id:2147483647,email:'persisted@example.test',sv:0});
     expect(users.getById).toHaveBeenCalledWith(2147483647);
   });
 });

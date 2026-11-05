@@ -26,6 +26,7 @@ beforeEach(() => {
   localStorage.clear(); sessionStorage.clear();
   localStorage.setItem("cashback_token", "main-token");
   global.fetch = jest.fn(async (url) => {
+    if (String(url).endsWith("/auth/logout-all")) return response(null, 204);
     if (String(url).endsWith("/auth/profile")) return response(mainUser);
     if (String(url).endsWith("/forum/status")) return response({ registered: true, forumUser: profile });
     throw new Error(`Unexpected request ${url}`);
@@ -89,7 +90,7 @@ test("stale status response cannot reactivate forum after exit", async () => {
 test("stale status response is ignored after main logout", async () => {
   let finish!: (data: unknown) => void;
   (fetch as jest.Mock).mockImplementation(async (url) =>
-    String(url).endsWith("/auth/profile") ? response(mainUser) : new Promise(resolve => { finish = resolve; }));
+    String(url).endsWith("/auth/profile") ? response(mainUser) : String(url).endsWith("/auth/logout-all") ? response(null,204) : new Promise(resolve => { finish = resolve; }));
   mount(); await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
   fireEvent.click(screen.getByText("logout"));
   await act(async () => { finish(response({ registered: true, forumUser: profile })); });
@@ -254,4 +255,66 @@ test.each([401,429,503,403])('login status %s never leaks backend response detai
 test('network failure receives a safe login category without exposing transport details',async()=>{
  localStorage.clear();(fetch as jest.Mock).mockRejectedValue(new TypeError('private endpoint details'));mount();let failure:any;
  await act(async()=>{failure=await auth.login({email:'buyer@example.test',password:'synthetic'}).catch(e=>e)});expect(failure.kind).toBe('network');expect(failure.message).not.toContain('private endpoint');
+});
+
+
+test.each([204,401,503])('logout status %s reports server confirmation accurately and clears locally', async status => {
+  mount();await waitFor(()=>expect(auth.forumUser?.id).toBe(profile.id));
+  (fetch as jest.Mock).mockResolvedValueOnce(response(null,status));
+  let confirmed: boolean | undefined;
+  await act(async()=>{confirmed=await auth.logout();});
+  expect(confirmed).toBe(status===204);
+  expect(auth.user).toBeNull();expect(auth.token).toBeNull();expect(localStorage.getItem('cashback_token')).toBeNull();
+  const calls=(fetch as jest.Mock).mock.calls.filter(([url])=>String(url).endsWith('/auth/logout-all'));
+  expect(calls).toHaveLength(1);expect(calls[0][1]).toMatchObject({method:'POST',headers:{Authorization:'Bearer main-token'}});
+  await act(async()=>{expect(await auth.logout()).toBe(false);});
+  expect((fetch as jest.Mock).mock.calls.filter(([url])=>String(url).endsWith('/auth/logout-all'))).toHaveLength(1);
+});
+
+test('logout network failure clears locally without reporting server revocation or retrying',async()=>{
+  mount();await waitFor(()=>expect(auth.forumUser?.id).toBe(profile.id));
+  (fetch as jest.Mock).mockRejectedValueOnce(new Error('synthetic network failure'));
+  await act(async()=>{expect(await auth.logout()).toBe(false);});
+  expect(auth.token).toBeNull();expect(localStorage.getItem('cashback_token')).toBeNull();
+  expect((fetch as jest.Mock).mock.calls.filter(([url])=>String(url).endsWith('/auth/logout-all'))).toHaveLength(1);
+});
+
+test('logout timeout aborts only its request and remains unconfirmed',async()=>{
+  mount();await waitFor(()=>expect(auth.forumUser?.id).toBe(profile.id));
+  jest.useFakeTimers();
+  try {
+    let signal: AbortSignal | undefined;
+    (fetch as jest.Mock).mockImplementationOnce((_url,options:RequestInit)=>new Promise((_resolve,reject)=>{
+      signal=options.signal!;signal.addEventListener('abort',()=>reject(new DOMException('Aborted','AbortError')));
+    }));
+    let pending!:Promise<boolean>;act(()=>{pending=auth.logout();});
+    expect(auth.token).toBeNull();
+    await act(async()=>{jest.advanceTimersByTime(5000);expect(await pending).toBe(false);});
+    expect(signal?.aborted).toBe(true);
+    expect((fetch as jest.Mock).mock.calls.filter(([url])=>String(url).endsWith('/auth/logout-all'))).toHaveLength(1);
+  } finally {jest.useRealTimers();}
+});
+
+test('a late login response cannot restore a locally logged-out session',async()=>{
+  localStorage.clear();mount();
+  let finish!:(value:unknown)=>void;
+  (fetch as jest.Mock).mockImplementationOnce(()=>new Promise(resolve=>{finish=resolve;}));
+  let pending!:Promise<unknown>;act(()=>{pending=auth.login({email:mainUser.email,password:'synthetic-only'}).catch(error=>error);});
+  await act(async()=>{expect(await auth.logout()).toBe(false);});
+  await act(async()=>{finish(response({access_token:'late-token',user:mainUser}));expect(await pending).toBeInstanceOf(Error);});
+  expect(auth.token).toBeNull();expect(localStorage.getItem('cashback_token')).toBeNull();
+});
+
+// Password change has already revoked sv on the server. Do not POST logout-all again.
+test("password-change local cleanup removes only the matching session without a second mutation",async()=>{
+ mount();await screen.findByText("42:main-token");
+ const count=(fetch as jest.Mock).mock.calls.length;
+ act(()=>{expect(auth.clearSessionAfterPasswordChange("different-session")).toBe(false);});
+ expect(auth.user?.id).toBe(42);
+ act(()=>{expect(auth.clearSessionAfterPasswordChange("main-token")).toBe(true);});
+ expect(auth.user).toBeNull();expect(auth.token).toBeNull();
+ expect(localStorage.getItem("cashback_token")).toBeNull();
+ expect(sessionStorage.getItem("cashback_pending_auth")).toBeNull();
+ expect((fetch as jest.Mock).mock.calls.length).toBe(count);
+ expect(typeof auth.register).toBe("function");expect(typeof auth.verifyEmail).toBe("function");
 });

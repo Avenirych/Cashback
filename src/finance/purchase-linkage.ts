@@ -1,3 +1,4 @@
+import { assertFinancialWritesAllowed } from '../financial-write-deny';
 import { createHash } from 'node:crypto';
 import type { DataSource, EntityManager } from 'typeorm';
 
@@ -31,6 +32,7 @@ export class PurchaseLinkageService {
       if(typeof value!=='string'||!/^[A-Za-z0-9:_-]{1,160}$/.test(value))throw new Error('Invalid trusted linkage identity');
   }
   async recordClickWithManager(manager: EntityManager, principal: string, proofReference: string) {
+  assertFinancialWritesAllowed();
     this.assertManager(manager);
     const facts={...(await this.authority.verifyClick(manager,principal,proofReference))};this.validate(facts);
     const hash=createHash('sha256').update(JSON.stringify([facts.clickId,facts.buyerReference,facts.partnerReference,facts.offerReference])).digest('hex');
@@ -40,6 +42,7 @@ export class PurchaseLinkageService {
     return {clickId:facts.clickId,moneyMovedPence:0n};
   }
   async recordOrderWithManager(manager: EntityManager, principal: string, proofReference: string) {
+  assertFinancialWritesAllowed();
     this.assertManager(manager);
     const facts={...(await this.authority.verifyOrder(manager,principal,proofReference))};this.validate(facts);
     if(!/^[A-Za-z0-9:_-]{1,160}$/.test(facts.sourceNamespace)||!/^[A-Za-z0-9:_-]{1,160}$/.test(facts.orderId))throw new Error('Invalid trusted order identity');

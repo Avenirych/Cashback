@@ -13,6 +13,7 @@ import {
   getOnboardingMessages,
 } from "../onboarding";
 import MarketingPreferencesPanel from "../components/MarketingPreferencesPanel";
+import PasswordRecovery from "./PasswordRecovery";
 import WiseAccountNotice from "../components/WiseAccountNotice";
 import { validateEmail } from "../utils/emailValidator";
 import "./Profile.css";
@@ -556,7 +557,8 @@ export default function Profile() {
       <section className="profile-section" id="profile-security" aria-labelledby="profile-security-title">
         <h2 id="profile-security-title">{copy.security}</h2>
         <p data-testid="login-history-unavailable">{copy.historyUnavailable}</p>
-        <p>{copy.securityText}</p><p>{copy.passwordHelp}</p>
+        <p>{copy.securityText}</p>
+        <PasswordRecovery key={user?.id} mode="change"/>
         <a href="mailto:support@cashbackplus.uk">{copy.support}</a>
       </section>
 

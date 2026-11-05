@@ -1,6 +1,8 @@
+import {functionalStagingActive,syntheticEmail} from '../staging-functional';
 import {BadRequestException, ConflictException, ForbiddenException, HttpException, Injectable, ServiceUnavailableException,Optional} from '@nestjs/common';
 import {ActivityService} from '../activity/activity.service';
 import {DataSource, EntityManager} from 'typeorm';
+import {lockCurrentSession} from '../auth/session-revocation.service';
 import {createHash} from 'node:crypto';
 import {contentModerationEnabled, moderationSignals, restriction, CURRENT_FORUM_RULES_VERSION} from './moderation-policy';
 
@@ -18,11 +20,26 @@ export class ContentModerationService {
     catch {throw new ServiceUnavailableException('Cannot establish moderation readiness');}
   }
   async configuration() {
-    if (!contentModerationEnabled() || process.env.CASHBACK_FORUM_READ_ONLY==='true') return {enabled:false};
+    if (!contentModerationEnabled() || (process.env.CASHBACK_FORUM_READ_ONLY==='true'&&!functionalStagingActive())) return {enabled:false};
     try { return await this.tx(async m => {await this.publicationReady(m);return {enabled:true};}); } catch { return {enabled:false}; }
   }
+  /** Read-only UI capability; never grants or caches a role or bypasses mutation RBAC. */
+  async stagingAccess(userId:number) {
+    if(!functionalStagingActive()||!contentModerationEnabled())throw new ForbiddenException('Functional staging access unavailable');
+    return this.tx(async m=>{
+      id(userId);
+      const [u]=await m.query('SELECT id,email,email_verified FROM users WHERE id=$1',[userId]);
+      if(!u||u.email_verified!==true||!syntheticEmail(u.email))throw new ForbiddenException('Verified synthetic account required');
+      await this.publicationReady(m);
+      const [f]=await m.query('SELECT banned,agreed_to_rules,rules_version FROM forum_users WHERE user_id=$1',[userId]);
+      const member=!!f&&f.banned===false&&f.agreed_to_rules===true&&f.rules_version===CURRENT_FORUM_RULES_VERSION;
+      const publication=member&&!(await this.limits(m,userId)).blocked;
+      const moderation=member&&(await m.query('SELECT user_id FROM forum_moderators WHERE user_id=$1 AND active=true',[userId])).length>0;
+      return {profile:'synthetic-v1' as const,userId,permissions:{forumRegistration:!f||f.banned===false,publication,moderation}};
+    },true);
+  }
   private async publicationReady(m:EntityManager) {
-    if(process.env.CASHBACK_PUBLIC_CONTENT!=='true')throw new ServiceUnavailableException('Public content is not activated');
+    if(process.env.CASHBACK_PUBLIC_CONTENT!=='true'&&!functionalStagingActive())throw new ServiceUnavailableException('Public content is not activated');
     // Checked on every submission, not cached in JWTs or inferred from a demo UI.
     const rows=await m.query(`SELECT fm.user_id FROM forum_moderators fm
       JOIN users u ON u.id=fm.user_id JOIN forum_users f ON f.user_id=u.id
@@ -44,7 +61,7 @@ export class ContentModerationService {
     });
   }
   private async tx<T>(work: (m: EntityManager) => Promise<T>, readOnly=false): Promise<T> {
-    if (!readOnly && (process.env.CASHBACK_FORUM_READ_ONLY==='true' || !contentModerationEnabled())) throw new ServiceUnavailableException('Content moderation is not activated');
+    if (!readOnly && ((process.env.CASHBACK_FORUM_READ_ONLY==='true'&&!functionalStagingActive()) || !contentModerationEnabled())) throw new ServiceUnavailableException('Content moderation is not activated');
     try {
       return await this.db.transaction(async m => {
         if(readOnly)await m.query('SET TRANSACTION READ ONLY');
@@ -154,13 +171,16 @@ export class ContentModerationService {
     if(!c || c.author_id!==probe.author_id)throw new ConflictException('Case changed; retry');
     return c;
   }
-  async decide(actor: number, caseId: number, decision: 'publish' | 'confirm' | 'hold', reason: unknown) {
+  async decide(actor: number, caseId: number, decision: 'publish' | 'confirm' | 'hold', reason: unknown, sessionVersion: unknown = undefined) {
     const explanation = text(reason,3,2000);
     if (!['publish','confirm','hold'].includes(decision)) throw new BadRequestException('Invalid decision');
     return this.tx(async m => {
+      await lockCurrentSession(m,actor,sessionVersion);
       await this.moderator(m,actor); const c = await this.lockedCase(m,caseId);
       if(c.material_erased_at)throw new ConflictException('Material was erased; cannot republish or adjudicate it');
       if (c.author_id === actor) throw new ForbiddenException('Cannot moderate your own material');
+        // The existing author advisory lock and case row lock last until commit.
+        if (c.needs_review !== true) throw new ConflictException('Case has no pending moderation request');
       if ((c.confirmed_at && !c.revoked_at) || (c.revoked_at && decision !== 'publish')) throw new ConflictException('Use the appeal process for a confirmed decision');
       if (decision === 'publish') {
         const table = c.kind === 'post' ? 'forum_posts':'forum_topics';
@@ -168,7 +188,8 @@ export class ContentModerationService {
         const previouslyPublished=await m.query("SELECT id FROM forum_moderation_events WHERE case_id=$1 AND action='publish' LIMIT 1",[caseId]);
         if(!previouslyPublished.length){await this.member(m,c.author_id);if((await this.limits(m,c.author_id)).blocked)throw new ForbiddenException('Author publication restriction is active');}
       }
-      await m.query("UPDATE forum_content_cases SET state=$2,needs_review=$3,decision_by=$4,confirmed_at=CASE WHEN $5::boolean THEN clock_timestamp() ELSE confirmed_at END WHERE id=$1",[caseId,decision === 'publish' ? 'published':'hidden',false,actor,decision === 'confirm']);
+      const [changed, affected] = await m.query("UPDATE forum_content_cases SET state=$2,needs_review=$3,decision_by=$4,confirmed_at=CASE WHEN $5::boolean THEN clock_timestamp() ELSE confirmed_at END WHERE id=$1 AND needs_review=true RETURNING id",[caseId,decision === 'publish' ? 'published':'hidden',false,actor,decision === 'confirm']);
+        if (affected !== 1 || !Array.isArray(changed) || changed.length !== 1 || Number(changed[0]?.id) !== caseId) throw new ConflictException('Moderation request changed');
       await this.event(m,c,actor,decision,explanation);
       return {caseId,status:decision,restriction:await this.limits(m,c.author_id)};
     });
@@ -196,9 +217,10 @@ export class ContentModerationService {
       return {accepted:true};
     });
   }
-  async resolveAppeal(actor: number, caseId: number, revoke: boolean, reason: unknown, manual = false) {
+  async resolveAppeal(actor: number, caseId: number, revoke: boolean, reason: unknown, manual = false, sessionVersion: unknown = undefined) {
     const explanation=text(reason,3,2000);
     return this.tx(async m => {
+      await lockCurrentSession(m,actor,sessionVersion);
       await this.moderator(m,actor); const c=await this.lockedCase(m,caseId);
       if (actor===c.author_id || actor===c.decision_by) throw new ForbiddenException('An independent moderator must review this appeal');
       const [a]=await m.query('SELECT * FROM forum_content_appeals WHERE case_id=$1 AND outcome IS NULL FOR UPDATE',[caseId]);

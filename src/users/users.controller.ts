@@ -1,3 +1,4 @@
+import { NonFinancialMutation } from '../financial-write-deny';
 import {
   Controller, Get, Patch, Param, Body, Req, UseGuards,
   ParseIntPipe, ForbiddenException, NotFoundException, UnauthorizedException,
@@ -33,6 +34,7 @@ export class UsersController {
     return safeUserDto(user);
   }
 
+  @NonFinancialMutation()
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   async update(

@@ -1,10 +1,11 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useEffect, useState } from "react";
 
 export default function Partners() {
   const [partners, setPartners] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/partners")
+    fetch(`${LEGACY_BACKEND_URL}/partners`)
       .then(r => r.json())
       .then(setPartners);
   }, []);

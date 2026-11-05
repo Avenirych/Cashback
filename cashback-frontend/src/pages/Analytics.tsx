@@ -1,3 +1,4 @@
+import { LEGACY_BACKEND_URL } from '../backend';
 import { useEffect, useMemo, useState } from "react";
 import {readCookieConsent, subscribeCookieConsent} from '../cookieConsent';
 
@@ -48,7 +49,7 @@ export default function Analytics() {
         if (typeFilter !== "all") params.append("type", typeFilter);
 
         const res = await fetch(
-          `http://localhost:3000/analytics/events?${params.toString()}`,
+          `${LEGACY_BACKEND_URL}/analytics/events?${params.toString()}`,
           {signal:controller.signal}
         );
         if (!res.ok) {
