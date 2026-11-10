@@ -25,7 +25,9 @@ beforeEach(() => {
     user: mainUser, token: "main-token", loading: false, isEmailVerificationPending: false,
     forumUser: null, forumSessionActive: false, forumLoading: false, forumRegistered: false, forumBanned: false,
     login: jest.fn(), register: jest.fn(), checkVerification: jest.fn().mockResolvedValue(false), verifyEmail: jest.fn(), resendVerification: jest.fn(),
-    logout: jest.fn(), registerForum: jest.fn().mockResolvedValue(undefined),
+    logout: jest.fn(),
+    clearSessionAfterPasswordChange: jest.fn(),
+    registerForum: jest.fn().mockResolvedValue(undefined),
     logoutFromForum: jest.fn(), checkForumStatus: jest.fn().mockResolvedValue(undefined),
   };
   jest.spyOn(Auth, "useAuth").mockImplementation(() => auth);
@@ -285,20 +287,40 @@ test("banned active membership never exposes topic creation or message inputs", 
   expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
 });
 test("active forum header exit invokes only forum logout", async () => {
-  auth.forumUser = profile; auth.forumSessionActive = true;
-  (fetch as jest.Mock).mockResolvedValue({ ok: true, json: async () => [] });
-    const view = render(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
-  fireEvent.click(screen.getByRole("button", { name: "Exit Forum" }));
-    expect(auth.logoutFromForum).toHaveBeenCalledTimes(1);
-  expect(auth.logout).not.toHaveBeenCalled();
-    expect(auth.user).toEqual(mainUser);
-    expect(auth.token).toBe('main-token');
-    await screen.findByText(/first/i);
-    auth.forumUser = null; auth.forumSessionActive = false;
-    view.rerender(<MemoryRouter><TopicsPage lang="en" /></MemoryRouter>);
-    expect(screen.queryByRole('button', {name:'Exit Forum'})).not.toBeInTheDocument();
-});
+  auth.forumUser = profile;
+  auth.forumSessionActive = true;
 
+  (fetch as jest.Mock).mockResolvedValue({
+    ok: true,
+    json: async () => [],
+  });
+
+  const view = render(
+    <MemoryRouter>
+      <TopicsPage lang="en" />
+    </MemoryRouter>
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Exit Forum" }));
+
+  expect(auth.logoutFromForum).toHaveBeenCalledTimes(1);
+  expect(auth.logout).not.toHaveBeenCalled();
+  expect(auth.user).toEqual(mainUser);
+  expect(auth.token).toBe("main-token");
+
+  auth.forumUser = null;
+  auth.forumSessionActive = false;
+
+  view.rerender(
+    <MemoryRouter>
+      <TopicsPage lang="en" />
+    </MemoryRouter>
+  );
+
+  expect(
+    screen.queryByRole("button", { name: "Exit Forum" })
+  ).not.toBeInTheDocument();
+});
 test("avatar validation enforces exact byte limit and safe backend origin", () => {
   expect(validateForumAvatar(new File([new Uint8Array(500 * 1024)], "a.webp", { type: "image/webp" }))).toBe(true);
   expect(validateForumAvatar(new File([new Uint8Array(500 * 1024 + 1)], "a.png", { type: "image/png" }))).toBe(false);

@@ -8,7 +8,7 @@ jest.mock('../context/AuthContext',()=>({useAuth:()=>({token:'synthetic-session'
 jest.mock('../context/LanguageContext',()=>({useLang:()=>({lang:mockLang})}));
 jest.mock('../passwordRecoveryToken',()=>({captureRecoveryToken:()=>mockCapability,clearRecoveryToken:()=>{mockCapability=null;}}));
 jest.mock('../passwordApi',()=>({...jest.requireActual('../passwordApi'),passwordRequest:jest.fn()}));
-const capability=()=>Array.from(crypto.getRandomValues(new Uint8Array(32))).map(v=>v.toString(16).padStart(2,'0')).join('');
+const capability = () => 'a'.repeat(64);
 beforeEach(()=>{jest.clearAllMocks();mockLang='en';mockCapability=capability();mockClear.mockReturnValue(true);(passwordRequest as jest.Mock).mockResolvedValue(undefined);});
 function fill(){fireEvent.change(screen.getByLabelText('New password'),{target:{value:'Replacement!123'}});fireEvent.change(screen.getByLabelText('Confirm new password'),{target:{value:'Replacement!123'}});}
 test('recovery request shows neutral message',async()=>{render(<PasswordRecovery mode="request"/>);fireEvent.change(screen.getByLabelText('Email'),{target:{value:'unknown@example.invalid'}});fireEvent.submit(screen.getByRole('form'));expect(await screen.findByRole('status')).toHaveTextContent(passwordText('en').neutral);expect(passwordRequest).toHaveBeenCalledTimes(1);});

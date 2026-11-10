@@ -64,7 +64,7 @@ describe('Registration capability isolation', () => {
       const serialized = JSON.stringify(response.body) + JSON.stringify(response.headers) + JSON.stringify(errorLog.mock.calls);
       for (const forbidden of [data.email_token, 'verify-email?', 'synthetic-sensitive-error', 'synthetic-hash']) expect(serialized).not.toContain(forbidden);
       expect(response.body.verification_email_sent).toBe(delivery !== 'failure');
-      expect(jwt.sign).toHaveBeenCalledWith({ sub: fixture.id, email: fixture.email, name: data.name });
+      expect(jwt.sign).toHaveBeenCalledWith({ sub: fixture.id, sv: 0, email: fixture.email, name: data.name });
       if (delivery !== 'failure') {
         users.consumeEmailToken.mockResolvedValue({ ...fixture, ...data, email_verified:true });
         users.update.mockResolvedValue({ ...fixture, email_verified: true });

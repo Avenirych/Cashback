@@ -115,7 +115,10 @@ test('no backend/schema startup override and existing concurrency gate stays clo
   // Current application delegates database options to this pure, fail-closed factory.
   const current=localConfiguration({HISTORICAL_LOCAL:'true',HISTORICAL_CONTAINER:'true',DB_HOST:'historical-postgres',DB_NAME:'cashback_historical_03573b7',DB_USER:'cashback_hist_runtime',DB_PORT:'5432',DB_PASSWORD:'synthetic-only',JWT_SECRET:'x'.repeat(40),FRONTEND_URL:'http://localhost:3004',PORT:'3006',HOST:'0.0.0.0',SMTP_HOST:'historical-mailpit',SMTP_PORT:'1025',USE_ETHEREAL:'false'});
   expect(current.database).toMatchObject({synchronize:false,migrationsRun:false,installExtensions:false});
-  expect(readFileSync(resolve(root,'src/app.module.ts'),'utf8')).toContain('TypeOrmModule.forRoot(localConfiguration().database)');
+  const appModule=readFileSync(resolve(root,'src/app.module.ts'),'utf8');
+  expect(appModule).toContain('TypeOrmModule.forRootAsync({');
+  expect(appModule).toContain('useFactory: () => backendConfiguration().database');
+  expect(appModule).toContain('dataSourceFactory: createBackendDataSource');
   // The old generic CLI data source was deliberately archived, not reactivated.
   expect(existsSync(resolve(root,'src/data-source.ts'))).toBe(false);
   const historicalSource=readFileSync(resolve(__dirname,'legacy-source/src/docker-phone-migration-data-source.ts'),'utf8');

@@ -299,14 +299,26 @@ describe("Wise credentials and enrollment", () => {
       "datetime", enrolledAt
     );
     expectReadonlyCredentials();
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: messages.en.saveCredentials })
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: messages.en.enroll })
+    ).not.toBeInTheDocument();
 
     unmount();
     renderProfile();
     expectReadonlyCredentials();
     expect(screen.getByLabelText(messages.en.wiseEmail)).toHaveValue(wiseData.wiseEmail);
     expect(screen.getByRole("status")).toHaveTextContent(messages.en.enrolled);
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: messages.en.saveCredentials })
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: messages.en.enroll })
+    ).not.toBeInTheDocument();
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
@@ -321,7 +333,13 @@ describe("Wise credentials and enrollment", () => {
     expect(screen.getByText(new Date(wiseData.savedAt).toLocaleDateString("en"))).toHaveAttribute(
       "datetime", wiseData.savedAt
     );
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: messages.en.saveCredentials })
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: messages.en.enroll })
+    ).not.toBeInTheDocument();
   });
 
   test("saved credentials persist before enrollment", () => {

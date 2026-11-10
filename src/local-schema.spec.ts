@@ -19,7 +19,30 @@ test('reviewed baseline has every historical loaded entity column without a data
    expect(declaration).toBeDefined();
    const additive=readFileSync(join(__dirname,'../docker/historical/migrations/20261020-extended-registration.sql'),'utf8');
    const reviewedDeclaration=declaration+(entity.tableName==='users'?' '+Array.from(additive.matchAll(/ADD COLUMN ([a-z0-9_]+) (varchar\(\d+\))/g),m=>m[1]+' '+m[2]).join(' '):'');
-   for(const column of entity.columns)expect(reviewedDeclaration).toMatch(new RegExp('(?:^|[\\s,])"?'+column.databaseName+'"?\\s','m'));
+if(entity.tableName==='users'){
+    const sessionMigration=readFileSync(join(__dirname,'migrations/1793836800000-AddSessionVersion.ts'),'utf8');
+    expect(sessionMigration).toMatch(/ADD COLUMN "session_version" integer NOT NULL DEFAULT 0/);
+    expect(sessionMigration).toContain('CK_users_session_version_nonnegative');
+  }
+  for(const column of entity.columns){
+    if(entity.tableName==='users'){
+      const migrationColumns: Record<string,string> = {
+        session_version: '1793836800000-AddSessionVersion.ts',
+        password_reset_digest: '1793836801000-AddPasswordRecovery.ts',
+        password_reset_expires_at: '1793836801000-AddPasswordRecovery.ts',
+        password_reset_session_version: '1793836801000-AddPasswordRecovery.ts'
+      };
+      const migrationFile=migrationColumns[column.databaseName];
+      if(migrationFile){
+        const migration=readFileSync(join(__dirname,'migrations',migrationFile),'utf8');
+        expect(migration).toMatch(
+          new RegExp('ADD COLUMN "?'+column.databaseName+'"?\\s+')
+        );
+        continue;
+      }
+    }
+    expect(reviewedDeclaration).toMatch(new RegExp('(?:^|[\\s,])"?'+column.databaseName+'"?\\s','m'));
+  }
  }
  expect(connect).not.toHaveBeenCalled();
  expect(sql).toContain("current_database() <> 'cashback_historical_03573b7'");

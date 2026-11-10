@@ -16,7 +16,7 @@ import { parseMarketingPreferences } from './marketing-preferences.dto';
 
 const secret = 'synthetic-marketing-regression-key';
 const jwt = new JwtService({ secret, signOptions: { expiresIn: '24h' } });
-const token = jwt.sign({ sub: 42, email: 'synthetic@example.test' });
+const token = jwt.sign({ sub: 42, sv: 0, email: 'synthetic@example.test' });
 const smsDefaults = { smsMarketing: false, smsMarketingGrantedAt: null, smsMarketingRevokedAt: null, smsMarketingConsentVersion: null };
 const existing = () => ({ id: 7, userId: 42, accountUpdates: true, specialOffers: true, partnerRecommendations: false, ...smsDefaults, createdAt: new Date('2026-01-01'), updatedAt: new Date('2026-01-02') });
 const defaults = { id: null, userId: 42, accountUpdates: true, specialOffers: false, partnerRecommendations: false, ...smsDefaults, createdAt: null, updatedAt: null };
@@ -38,7 +38,7 @@ describe('Marketing HTTP contract with real JWT and mocked transaction manager',
   });
   afterAll(async () => { await app.close(); });
   beforeEach(() => {
-    jest.clearAllMocks(); users.getById.mockResolvedValue({ id: 42, email_verified: false });
+    jest.clearAllMocks(); users.getById.mockResolvedValue({ id: 42, sessionVersion: 0, email_verified: false });
     read.find.mockResolvedValue([]); lockedUsers.findOne.mockResolvedValue({ id: 42, email_verified: false });
     write.find.mockResolvedValue([]); write.create.mockImplementation(data => ({ ...data }));
     write.save.mockImplementation(async data => ({ ...data, id: data.id ?? 7, createdAt: data.createdAt ?? new Date() }));
@@ -55,7 +55,7 @@ describe('Marketing HTTP contract with real JWT and mocked transaction manager',
     expect(read.find).not.toHaveBeenCalled(); expect(source.transaction).not.toHaveBeenCalled();
   });
   it.each([false, true])('verified=%s GET defaults is read-only including repeated read and foreign query', async verified => {
-    users.getById.mockResolvedValue({ id: 42, email_verified: verified });
+    users.getById.mockResolvedValue({ id: 42, sessionVersion: 0, email_verified: verified });
     for (let i = 0; i < 2; i++) await request(app.getHttpServer()).get('/user/marketing-preferences?userId=99').set('Authorization', `Bearer ${token}`).expect(200).expect(defaults);
     expect(read.find).toHaveBeenCalledWith({ where: { userId: 42 }, order: { id: 'ASC' }, take: 2 }); noGetWrites();
   });
@@ -65,7 +65,7 @@ describe('Marketing HTTP contract with real JWT and mocked transaction manager',
     expect(r.body).toEqual({ ...existing(), createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-02T00:00:00.000Z' }); noGetWrites();
   });
   it.each([false, true])('verified=%s empty POST creates previous flag defaults under user lock', async verified => {
-    users.getById.mockResolvedValue({ id: 42, email_verified: verified });
+    users.getById.mockResolvedValue({ id: 42, sessionVersion: 0, email_verified: verified });
     const r = await request(app.getHttpServer()).post('/user/marketing-preferences').set('Authorization', `Bearer ${token}`).send({}).expect(201);
     expect(r.body).toMatchObject({ id: 7, userId: 42, accountUpdates: true, specialOffers: false, partnerRecommendations: false });
     expect(Object.keys(r.body).sort()).toEqual(Object.keys(defaults).sort());
