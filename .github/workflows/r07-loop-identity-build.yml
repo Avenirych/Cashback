@@ -1,0 +1,119 @@
+name: R07 loop identity test build
+
+on:
+  push:
+    branches:
+      - r07/loop-identity-build
+    paths:
+      - .github/workflows/r07-loop-identity-build.yml
+      - tools/r07-loop-identity/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r07-loop-identity-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'Avenirych/Cashback' && github.event_name == 'push' && github.ref == 'refs/heads/r07/loop-identity-build'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Prepare official musl toolchain in disposable CI image
+        shell: bash
+        run: |
+          set -euo pipefail
+          context="$(mktemp -d "$RUNNER_TEMP/r07-toolchain.XXXXXX")"
+          cp tools/r07-loop-identity/toolchain.lock "$context/toolchain.lock"
+          cat > "$context/Dockerfile" <<'DOCKERFILE'
+          FROM docker.io/library/alpine@sha256:0f49f331d9212aff11b932863be4eb01cdf962969aa86dab7d1ee21ac6f5f52b
+          COPY toolchain.lock /toolchain.lock
+          RUN set -eu; set -o pipefail; \
+              mkdir -p /toolchain-repo/x86_64; \
+              repo=https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64; \
+              wget -O /toolchain-repo/x86_64/APKINDEX.tar.gz "$repo/APKINDEX.tar.gz"; \
+              printf '%s  %s\n' 820b86abfe4283351dd1b768845eb910db39e8b7e0b6d3e0c413c496d5dbd95b /toolchain-repo/x86_64/APKINDEX.tar.gz | sha256sum -c -; \
+              pins="$(awk '$1=="pkg"{print $2}' /toolchain.lock)"; \
+              test -n "$pins"; \
+              set -- $pins; test "$#" -eq 17; \
+              for pin in "$@"; do \
+                case "$pin" in *[!a-zA-Z0-9+_.=-]*) exit 81 ;; esac; \
+                name="${pin%%=*}"; version="${pin#*=}"; \
+                test "$name" != "$version"; \
+                wget -O "/toolchain-repo/x86_64/$name-$version.apk" "$repo/$name-$version.apk"; \
+              done; \
+              printf '/toolchain-repo\n' > /tmp/toolchain-repositories; \
+              apk --no-network --repositories-file /tmp/toolchain-repositories add "$@"; \
+              cd /toolchain-repo/x86_64; \
+              sha256sum *.apk APKINDEX.tar.gz > /toolchain-archives.sha256; \
+              awk 'BEGIN{RS="";FS="\n"} {p="";v="";for(i=1;i<=NF;i++){if($i~/^P:/)p=substr($i,3);if($i~/^V:/)v=substr($i,3)}print p"="v}' /lib/apk/db/installed | sort > /toolchain-installed.txt
+          DOCKERFILE
+          base='docker.io/library/alpine@sha256:0f49f331d9212aff11b932863be4eb01cdf962969aa86dab7d1ee21ac6f5f52b'
+          docker pull --platform linux/amd64 "$base"
+          test "$(docker image inspect --format '{{.Os}}/{{.Architecture}}' "$base")" = linux/amd64
+          test "$(docker image inspect --format '{{.Id}}' "$base")" = sha256:3ea06e4cb95e726ea6c6cc4377570ac4c4050d78710004cbd631ca809daf7e8e
+          docker build --no-cache --pull=false --network=default --platform linux/amd64 \
+            --tag r07-loop-toolchain:ci "$context"
+          image="$(docker image inspect --format '{{.Id}}' r07-loop-toolchain:ci)"
+          [[ "$image" =~ ^sha256:[0-9a-f]{64}$ ]]
+          echo "R07_TOOLCHAIN_ID=$image" >> "$GITHUB_ENV"
+
+      - name: Compile twice and run mocks offline
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$(mktemp -d "$RUNNER_TEMP/r07-loop-identity.XXXXXX")"
+          echo "R07_OUT=$out" >> "$GITHUB_ENV"
+          docker run --rm --platform linux/amd64 \
+            --network none --read-only --cap-drop ALL \
+            --security-opt no-new-privileges=true \
+            --user "$(id -u):$(id -g)" --pids-limit 128 \
+            --memory 1g --cpus 2 \
+            --tmpfs /tmp:rw,nosuid,nodev,noexec,size=128m \
+            --mount "type=bind,src=$GITHUB_WORKSPACE/tools/r07-loop-identity,dst=/src,readonly" \
+            --mount "type=bind,src=$out,dst=/out" \
+            "$R07_TOOLCHAIN_ID" /bin/sh /src/build.sh
+          test -d "$out/artifact" && test ! -L "$out/artifact"
+          test -f "$out/checks.log" && test ! -L "$out/checks.log"
+          for name in r07-loop-identity r07-loop-identity.c mock-harness.c build.sh toolchain.lock \
+            SOURCE_SHA256SUMS BINARY_SHA256SUMS elf-header.txt elf-programs.txt elf-dynamic.txt \
+            verification.txt toolchain-installed.txt toolchain-archives.sha256; do
+            test -f "$out/artifact/$name" && test ! -L "$out/artifact/$name"
+          done
+          test "$(find "$out/artifact" -mindepth 1 -maxdepth 1 | wc -l)" -eq 13
+          cp "$out/checks.log" "$out/artifact/checks.log"
+          printf 'commit=%s\nbase_image=%s\nci_toolchain_id=%s\n' "$GITHUB_SHA" \
+            'sha256:0f49f331d9212aff11b932863be4eb01cdf962969aa86dab7d1ee21ac6f5f52b' \
+            "$R07_TOOLCHAIN_ID" > "$out/artifact/build-reference.txt"
+          cat "$out/artifact/verification.txt"
+
+      - name: Upload successful review artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: r07-loop-identity-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.R07_OUT }}/artifact/r07-loop-identity
+            ${{ env.R07_OUT }}/artifact/r07-loop-identity.c
+            ${{ env.R07_OUT }}/artifact/mock-harness.c
+            ${{ env.R07_OUT }}/artifact/build.sh
+            ${{ env.R07_OUT }}/artifact/toolchain.lock
+            ${{ env.R07_OUT }}/artifact/SOURCE_SHA256SUMS
+            ${{ env.R07_OUT }}/artifact/BINARY_SHA256SUMS
+            ${{ env.R07_OUT }}/artifact/elf-header.txt
+            ${{ env.R07_OUT }}/artifact/elf-programs.txt
+            ${{ env.R07_OUT }}/artifact/elf-dynamic.txt
+            ${{ env.R07_OUT }}/artifact/verification.txt
+            ${{ env.R07_OUT }}/artifact/toolchain-installed.txt
+            ${{ env.R07_OUT }}/artifact/toolchain-archives.sha256
+            ${{ env.R07_OUT }}/artifact/checks.log
+            ${{ env.R07_OUT }}/artifact/build-reference.txt
+          if-no-files-found: error
+          retention-days: 3
+          include-hidden-files: false

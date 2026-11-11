@@ -1,0 +1,29 @@
+# Selected: Docker Official Image + official signed Alpine repository.
+base_image docker.io/library/alpine@sha256:0f49f331d9212aff11b932863be4eb01cdf962969aa86dab7d1ee21ac6f5f52b
+base_config_sha256 3ea06e4cb95e726ea6c6cc4377570ac4c4050d78710004cbd631ca809daf7e8e
+platform linux/amd64
+repository https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64
+index_sha256 820b86abfe4283351dd1b768845eb910db39e8b7e0b6d3e0c413c496d5dbd95b
+gcc_version 15.2.0
+binutils_version 2.45.1
+linux_headers_version 7.0.0
+# isl26 explicitly resolves the two-provider libisl.so.23 ambiguity.
+pkg binutils=2.45.1-r1
+pkg gcc=15.2.0-r5
+pkg gmp=6.3.0-r4
+pkg isl26=0.26-r2
+pkg jansson=2.15.0-r0
+pkg libatomic=15.2.0-r5
+pkg libgcc=15.2.0-r5
+pkg libgcc-static=15.2.0-r5
+pkg libgomp=15.2.0-r5
+pkg libstdc++=15.2.0-r5
+pkg linux-headers=7.0.0-r1
+pkg mpc1=1.3.1-r1
+pkg mpfr4=4.2.2-r0
+pkg musl=1.2.6-r3
+pkg musl-dev=1.2.6-r3
+pkg zlib=1.4-r0
+pkg zstd-libs=1.5.7-r2
+checkout 1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+upload_artifact ea165f8d65b6e75b540449e92b4886f43607fa02
